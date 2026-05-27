@@ -10,7 +10,7 @@ Plataforma interactiva de estudio para las certificaciones **LPIC-1, LPIC-2 y LP
 - **143 subtemas** completos con teoria, comandos clave y ejercicios
 - **1.976 flashcards** con repeticion espaciada (algoritmo SM-2, tipo Anki)
 - **1.430+ preguntas de practica** con explicaciones detalladas
-- **4 simulacros de examen** con temporizador y correccion automatica
+- **8 simulacros de examen** con temporizador y correccion automatica
 - **4 laboratorios practicos** con escenarios reales
 - **Grafo interactivo** de nodos conectados (estilo Obsidian)
 - **Quizzes interactivos** con puntuacion y modo examen/practica

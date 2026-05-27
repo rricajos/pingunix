@@ -33,6 +33,10 @@ Practica con condiciones reales: 60 preguntas, 90 minutos, correccion automatica
 | 102-500 | LPIC-1 | [[lpic-1/102-exam/simulacro-102|Simulacro 102]] |
 | 201-450 | LPIC-2 | [[lpic-2/201-exam/simulacro-201|Simulacro 201]] |
 | 202-450 | LPIC-2 | [[lpic-2/202-exam/simulacro-202|Simulacro 202]] |
+| 300 | LPIC-3 | [[lpic-3/300-entornos-mixtos/simulacro-300|Simulacro 300]] |
+| 303 | LPIC-3 | [[lpic-3/303-seguridad/simulacro-303|Simulacro 303]] |
+| 305 | LPIC-3 | [[lpic-3/305-virtualizacion/simulacro-305|Simulacro 305]] |
+| 306 | LPIC-3 | [[lpic-3/306-alta-disponibilidad/simulacro-306|Simulacro 306]] |
 
 ## [[hacking-vault/index|Hacking Vault]]
 
@@ -61,7 +65,7 @@ Base de conocimientos de seguridad ofensiva y defensiva.
 | Subtemas LPIC | 143 (42 + 41 + 60) |
 | Flashcards | 1.976 |
 | Preguntas de practica | 1.430+ |
-| Simulacros de examen | 4 |
+| Simulacros de examen | 8 |
 | Laboratorios practicos | 4 |
 
 <div id="study-portability"></div>

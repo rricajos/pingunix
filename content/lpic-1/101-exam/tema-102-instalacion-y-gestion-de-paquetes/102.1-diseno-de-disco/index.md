@@ -51,8 +51,7 @@ Disenar un esquema de particionado de disco para un sistema Linux. Esto incluye 
 
 ## Contenido
 
-| Recurso | Estado |
-|---------|--------|
-| [Teoria](notas/teoria.md) | Completo |
-| [Comandos clave](notas/comandos-clave.md) | Completo |
-| [Ejercicios](ejercicios/ejercicios.md) | Completo |
+- [[teoria|Teoria]] — Conceptos y explicaciones detalladas
+- [[comandos-clave|Comandos clave]] — Referencia rapida de comandos
+- [[ejercicios|Ejercicios]] — Preguntas de practica
+- [[flashcards|Flashcards]] — Tarjetas de repaso espaciado

@@ -38,8 +38,7 @@ El candidato debe ser capaz de crear y gestionar enlaces duros y simbolicos a un
 
 ## Contenido
 
-| Seccion | Recurso | Estado |
-|---------|---------|--------|
-| Teoria completa | [notas/teoria.md](notas/teoria.md) | Completado |
-| Comandos clave | [notas/comandos-clave.md](notas/comandos-clave.md) | Completado |
-| Ejercicios | [ejercicios/ejercicios.md](ejercicios/ejercicios.md) | Completado |
+- [[teoria|Teoria]] — Conceptos y explicaciones detalladas
+- [[comandos-clave|Comandos clave]] — Referencia rapida de comandos
+- [[ejercicios|Ejercicios]] — Preguntas de practica
+- [[flashcards|Flashcards]] — Tarjetas de repaso espaciado

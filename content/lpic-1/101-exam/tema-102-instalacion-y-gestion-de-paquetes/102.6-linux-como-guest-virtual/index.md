@@ -45,8 +45,7 @@ Comprender las implicaciones de la virtualizacion y la computacion en la nube en
 
 ## Contenido
 
-| Recurso | Estado |
-|---------|--------|
-| [Teoria](notas/teoria.md) | Completo |
-| [Comandos clave](notas/comandos-clave.md) | Completo |
-| [Ejercicios](ejercicios/ejercicios.md) | Completo |
+- [[teoria|Teoria]] — Conceptos y explicaciones detalladas
+- [[comandos-clave|Comandos clave]] — Referencia rapida de comandos
+- [[ejercicios|Ejercicios]] — Preguntas de practica
+- [[flashcards|Flashcards]] — Tarjetas de repaso espaciado

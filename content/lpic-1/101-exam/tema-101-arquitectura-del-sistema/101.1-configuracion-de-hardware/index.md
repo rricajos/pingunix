@@ -36,11 +36,10 @@ Habilitar y configurar hardware fundamental del sistema.
 
 ## Contenido
 
-| Recurso | Descripcion | Estado |
-|---------|-------------|--------|
-| [Teoria](notas/teoria.md) | BIOS/UEFI, /sys, /proc, /dev, udev, modulos del kernel | Completado |
-| [Comandos clave](notas/comandos-clave.md) | Referencia rapida con tablas comparativas | Completado |
-| [Ejercicios](ejercicios/ejercicios.md) | 10 preguntas tipo examen + 3 ejercicios practicos | Completado |
+- [[teoria|Teoria]] — Conceptos y explicaciones detalladas
+- [[comandos-clave|Comandos clave]] — Referencia rapida de comandos
+- [[ejercicios|Ejercicios]] — Preguntas de practica
+- [[flashcards|Flashcards]] — Tarjetas de repaso espaciado
 
 ## Scripts de practica
 

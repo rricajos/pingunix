@@ -49,8 +49,8 @@ Usar los comandos basicos de Linux para gestionar archivos y directorios. Incluy
 - `file globbing`
 
 ## Contenido
-| Recurso | Estado |
-|---------|--------|
-| [Teoria](notas/teoria.md) | Completado |
-| [Comandos clave](notas/comandos-clave.md) | Completado |
-| [Ejercicios](ejercicios/ejercicios.md) | Completado |
+
+- [[teoria|Teoria]] — Conceptos y explicaciones detalladas
+- [[comandos-clave|Comandos clave]] — Referencia rapida de comandos
+- [[ejercicios|Ejercicios]] — Preguntas de practica
+- [[flashcards|Flashcards]] — Tarjetas de repaso espaciado

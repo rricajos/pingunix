@@ -24,6 +24,15 @@ Practica con simulacros completos que replican las condiciones reales del examen
 | 201-450 | Capacidad, kernel, arranque, filesystems, almacenamiento, red, mantenimiento | [[lpic-2/201-exam/simulacro-201|Simulacro 201]] |
 | 202-450 | DNS, HTTP, comparticion, LDAP/PAM, correo, seguridad | [[lpic-2/202-exam/simulacro-202|Simulacro 202]] |
 
+## LPIC-3: Profesional Linux Enterprise
+
+| Examen | Temas | Enlace |
+|--------|-------|--------|
+| 300 | Samba, Active Directory, FreeIPA, NFS Kerberos | [[lpic-3/300-entornos-mixtos/simulacro-300|Simulacro 300]] |
+| 303 | PKI, cifrado, SELinux/AppArmor, IDS, nftables, VPN, pentesting | [[lpic-3/303-seguridad/simulacro-303|Simulacro 303]] |
+| 305 | KVM, Xen, Docker, Kubernetes, Terraform, Packer, Vagrant | [[lpic-3/305-virtualizacion/simulacro-305|Simulacro 305]] |
+| 306 | Pacemaker, DRBD, GlusterFS, Ceph, RAID/LVM avanzado, bonding | [[lpic-3/306-alta-disponibilidad/simulacro-306|Simulacro 306]] |
+
 ## Instrucciones
 
 1. **Prepara tu entorno**: Busca un lugar tranquilo, sin interrupciones

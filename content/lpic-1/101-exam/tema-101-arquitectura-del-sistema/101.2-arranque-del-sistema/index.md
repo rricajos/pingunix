@@ -34,8 +34,8 @@ Guiar al sistema a lo largo del proceso de arranque.
 - `/var/log/boot.log`, `/var/log/messages`, `/var/log/dmesg`
 
 ## Contenido
-| Recurso | Descripcion | Estado |
-|---------|-------------|--------|
-| [Teoria](notas/teoria.md) | Secuencia completa de arranque | Completado |
-| [Comandos clave](notas/comandos-clave.md) | Referencia rapida | Completado |
-| [Ejercicios](ejercicios/ejercicios.md) | Preguntas tipo examen | Completado |
+
+- [[teoria|Teoria]] — Conceptos y explicaciones detalladas
+- [[comandos-clave|Comandos clave]] — Referencia rapida de comandos
+- [[ejercicios|Ejercicios]] — Preguntas de practica
+- [[flashcards|Flashcards]] — Tarjetas de repaso espaciado

@@ -42,8 +42,7 @@ El candidato debe ser capaz de configurar particiones de disco y crear sistemas 
 
 ## Contenido
 
-| Seccion | Recurso | Estado |
-|---------|---------|--------|
-| Teoria completa | [notas/teoria.md](notas/teoria.md) | Completado |
-| Comandos clave | [notas/comandos-clave.md](notas/comandos-clave.md) | Completado |
-| Ejercicios | [ejercicios/ejercicios.md](ejercicios/ejercicios.md) | Completado |
+- [[teoria|Teoria]] — Conceptos y explicaciones detalladas
+- [[comandos-clave|Comandos clave]] — Referencia rapida de comandos
+- [[ejercicios|Ejercicios]] — Preguntas de practica
+- [[flashcards|Flashcards]] — Tarjetas de repaso espaciado

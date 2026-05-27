@@ -35,8 +35,8 @@ Establecer el nivel de ejecucion o target de arranque del sistema y cambiar entr
 - `wall`
 
 ## Contenido
-| Recurso | Descripcion | Estado |
-|---------|-------------|--------|
-| [Teoria](notas/teoria.md) | SysVinit, systemd, runlevels y targets | Completado |
-| [Comandos clave](notas/comandos-clave.md) | Referencia rapida | Completado |
-| [Ejercicios](ejercicios/ejercicios.md) | Preguntas tipo examen | Completado |
+
+- [[teoria|Teoria]] — Conceptos y explicaciones detalladas
+- [[comandos-clave|Comandos clave]] — Referencia rapida de comandos
+- [[ejercicios|Ejercicios]] — Preguntas de practica
+- [[flashcards|Flashcards]] — Tarjetas de repaso espaciado
