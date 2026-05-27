@@ -23,13 +23,26 @@ Examenes 201-450 y 202-450 — 41 subtemas
 ### [[lpic-3/index|LPIC-3: Profesional Linux Enterprise]]
 4 especializaciones: [[lpic-3/300-entornos-mixtos/index|300]], [[lpic-3/303-seguridad/index|303]], [[lpic-3/305-virtualizacion/index|305]], [[lpic-3/306-alta-disponibilidad/index|306]]
 
+## [[simulacros/index|Simulacros de Examen]]
+
+Practica con condiciones reales: 60 preguntas, 90 minutos, correccion automatica.
+
+| Examen | Certificacion | Enlace |
+|--------|---------------|--------|
+| 101-500 | LPIC-1 | [[lpic-1/101-exam/simulacro-101|Simulacro 101]] |
+| 102-500 | LPIC-1 | [[lpic-1/102-exam/simulacro-102|Simulacro 102]] |
+| 201-450 | LPIC-2 | [[lpic-2/201-exam/simulacro-201|Simulacro 201]] |
+| 202-450 | LPIC-2 | [[lpic-2/202-exam/simulacro-202|Simulacro 202]] |
+
 ## [[hacking-vault/index|Hacking Vault]]
 
 Base de conocimientos de seguridad ofensiva y defensiva.
 
-- [[hacking-vault/ofensivo/index|Ofensivo]] — Reconocimiento, enumeracion, explotacion, post-explotacion
-- [[hacking-vault/defensivo/index|Defensivo]] — Hardening, blue team, firewalls, criptografia
-- [[hacking-vault/laboratorios/index|Laboratorios]] — Escenarios practicos
+- [[hacking-vault/ofensivo/reconocimiento/index|Reconocimiento]] — OSINT, Nmap, subdominios
+- [[hacking-vault/ofensivo/explotacion/index|Explotacion]] — OWASP Top 10, Metasploit, privesc
+- [[hacking-vault/defensivo/hardening/index|Hardening]] — CIS, SSH, kernel, auditd
+- [[hacking-vault/defensivo/blue-team/index|Blue Team]] — IR, SIEM, forense
+- [[hacking-vault/laboratorios/index|Laboratorios]] — 4 escenarios practicos
 
 ## [[recursos/index|Recursos]]
 
@@ -39,5 +52,16 @@ Base de conocimientos de seguridad ofensiva y defensiva.
 - [[recursos/comandos-rapidos/comandos-hacking|Comandos rapidos Hacking]]
 - [[recursos/enlaces-utiles|Enlaces utiles]]
 - [[recursos/libros-recomendados|Libros recomendados]]
+
+## Estadisticas del proyecto
+
+| Metrica | Valor |
+|---------|-------|
+| Paginas totales | 807 |
+| Subtemas LPIC | 143 (42 + 41 + 60) |
+| Flashcards | 1.976 |
+| Preguntas de practica | 1.430+ |
+| Simulacros de examen | 4 |
+| Laboratorios practicos | 4 |
 
 <div id="study-portability"></div>
