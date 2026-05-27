@@ -1405,17 +1405,201 @@
     }
   }
 
+  // ---------------------------------------------------------------------------
+  // Exam Simulator
+  // ---------------------------------------------------------------------------
+
+  var examTimerInterval = null
+
+  function initExamSimulator() {
+    var sims = document.querySelectorAll(".exam-simulator")
+    if (!sims.length) return
+
+    sims.forEach(function (sim) {
+      // Hide all answer details initially
+      var answers = sim.querySelectorAll(".exam-answer")
+      answers.forEach(function (a) { a.style.display = "none" })
+
+      // Make checkboxes into radio-like behavior per question
+      var questions = sim.querySelectorAll(".exam-question")
+      questions.forEach(function (q) {
+        var items = q.querySelectorAll("li")
+        items.forEach(function (li) {
+          li.style.cursor = "pointer"
+          li.addEventListener("click", function () {
+            // Deselect siblings
+            items.forEach(function (s) {
+              s.classList.remove("exam-selected")
+              var cb = s.querySelector("input[type=checkbox]")
+              if (cb) cb.checked = false
+            })
+            // Select this one
+            li.classList.add("exam-selected")
+            var cb = li.querySelector("input[type=checkbox]")
+            if (cb) cb.checked = true
+          })
+        })
+      })
+    })
+  }
+
+  window.startExamTimer = function (simEl) {
+    var duration = parseInt(simEl.getAttribute("data-duration") || "90", 10)
+    var timerDiv = simEl.querySelector(".exam-timer")
+    var timeSpan = simEl.querySelector(".exam-time")
+    var submitBtn = simEl.querySelector(".exam-submit-btn")
+
+    if (timerDiv) timerDiv.style.display = "block"
+    if (submitBtn) submitBtn.style.display = "inline-block"
+
+    var remaining = duration * 60 // seconds
+
+    function updateDisplay() {
+      var mins = Math.floor(remaining / 60)
+      var secs = remaining % 60
+      if (timeSpan) {
+        timeSpan.textContent = mins + ":" + (secs < 10 ? "0" : "") + secs
+      }
+      if (remaining <= 300 && timerDiv) {
+        timerDiv.classList.add("exam-timer-warning")
+      }
+    }
+
+    updateDisplay()
+
+    if (examTimerInterval) clearInterval(examTimerInterval)
+    examTimerInterval = setInterval(function () {
+      remaining--
+      updateDisplay()
+      if (remaining <= 0) {
+        clearInterval(examTimerInterval)
+        window.gradeExam(simEl)
+      }
+    }, 1000)
+  }
+
+  window.gradeExam = function (simEl) {
+    if (examTimerInterval) {
+      clearInterval(examTimerInterval)
+      examTimerInterval = null
+    }
+
+    var questions = simEl.querySelectorAll(".exam-question")
+    var correct = 0
+    var total = questions.length
+    var subtemaStats = {}
+
+    questions.forEach(function (q) {
+      var correctLetter = (q.getAttribute("data-correct") || "").trim().toLowerCase()
+      var subtema = q.getAttribute("data-subtema") || "?"
+      var selected = q.querySelector("li.exam-selected")
+      var userLetter = ""
+
+      if (selected) {
+        var text = selected.textContent.trim()
+        var letterMatch = text.match(/^([a-d])\)/)
+        if (letterMatch) userLetter = letterMatch[1]
+      }
+
+      var isCorrect = userLetter === correctLetter
+
+      // Visual feedback
+      q.classList.add(isCorrect ? "exam-correct" : "exam-wrong")
+      if (!isCorrect) {
+        // Highlight the correct option
+        var items = q.querySelectorAll("li")
+        items.forEach(function (li) {
+          var t = li.textContent.trim()
+          if (t.indexOf(correctLetter + ")") === 0) {
+            li.classList.add("exam-correct-option")
+          }
+        })
+      }
+
+      // Show answer explanation
+      var answerDetail = q.querySelector(".exam-answer")
+      if (answerDetail) answerDetail.style.display = "block"
+
+      if (isCorrect) correct++
+
+      // Track per-subtema
+      if (!subtemaStats[subtema]) subtemaStats[subtema] = { correct: 0, total: 0 }
+      subtemaStats[subtema].total++
+      if (isCorrect) subtemaStats[subtema].correct++
+    })
+
+    // Show results
+    var resultsDiv = simEl.querySelector(".exam-results")
+    if (resultsDiv) {
+      resultsDiv.style.display = "block"
+      var pct = total > 0 ? Math.round((correct / total) * 100) : 0
+      var passed = pct >= 65
+
+      var scoreDiv = resultsDiv.querySelector(".exam-score")
+      if (scoreDiv) {
+        scoreDiv.innerHTML =
+          '<h3 class="' + (passed ? "exam-passed" : "exam-failed") + '">' +
+          (passed ? "APROBADO" : "SUSPENSO") + " - " + pct + "%" +
+          "</h3>" +
+          "<p>" + correct + " de " + total + " preguntas correctas</p>"
+      }
+
+      var breakdownDiv = resultsDiv.querySelector(".exam-breakdown")
+      if (breakdownDiv) {
+        var html = "<h4>Desglose por subtema:</h4><table><tr><th>Subtema</th><th>Aciertos</th><th>%</th></tr>"
+        Object.keys(subtemaStats).sort().forEach(function (st) {
+          var s = subtemaStats[st]
+          var stPct = Math.round((s.correct / s.total) * 100)
+          html += "<tr><td>" + st + "</td><td>" + s.correct + "/" + s.total +
+            "</td><td>" + stPct + "%</td></tr>"
+        })
+        html += "</table>"
+        breakdownDiv.innerHTML = html
+      }
+    }
+
+    // Hide submit, show timer as final
+    var submitBtn = simEl.querySelector(".exam-submit-btn")
+    if (submitBtn) submitBtn.style.display = "none"
+    var timerDiv = simEl.querySelector(".exam-timer")
+    if (timerDiv) timerDiv.innerHTML = "<strong>Examen finalizado</strong>"
+
+    // Scroll to results
+    if (resultsDiv) resultsDiv.scrollIntoView({ behavior: "smooth" })
+
+    // Save to localStorage
+    var examId = simEl.getAttribute("data-exam") || "unknown"
+    lsSet(LS_PREFIX + "exam:" + examId, {
+      date: new Date().toISOString(),
+      score: pct,
+      correct: correct,
+      total: total,
+      breakdown: subtemaStats
+    })
+  }
+
+  // ---------------------------------------------------------------------------
+  // Entry point — detect page type and initialize
+  // ---------------------------------------------------------------------------
+
   // Initial load
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", detectAndInit)
+    document.addEventListener("DOMContentLoaded", function () {
+      detectAndInit()
+      initExamSimulator()
+    })
   } else {
     detectAndInit()
+    initExamSimulator()
   }
 
   // Quartz SPA navigation event
   document.addEventListener("nav", function () {
     // Quartz fires "nav" after SPA page transitions. Re-detect and initialize.
     // Use a small delay to ensure the new DOM is fully rendered.
-    setTimeout(detectAndInit, 50)
+    setTimeout(function () {
+      detectAndInit()
+      initExamSimulator()
+    }, 50)
   })
 })()
