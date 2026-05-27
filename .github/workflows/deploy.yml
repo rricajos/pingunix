@@ -40,11 +40,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Fix CLI permissions
+        run: chmod +x quartz/bootstrap-cli.mjs
+
       - name: Install Quartz plugins
-        run: npx quartz plugin install
+        run: npm run quartz -- plugin install
 
       - name: Build Quartz site
-        run: npx quartz build
+        run: npm run quartz -- build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
