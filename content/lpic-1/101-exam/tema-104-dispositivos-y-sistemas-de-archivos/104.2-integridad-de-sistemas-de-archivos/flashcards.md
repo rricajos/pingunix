@@ -5,6 +5,7 @@ tags:
   - flashcards
   - repaso
 tipo: flashcards
+certificacion: lpic-1
 subtema: "104.2"
 ---
 
