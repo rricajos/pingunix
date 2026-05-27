@@ -1,5 +1,5 @@
 /**
- * Genera archivos flashcards.md para cada subtema LPIC-1
+ * Genera archivos flashcards.md para cada subtema LPIC-1, LPIC-2 y LPIC-3
  * extrayendo preguntas de ejercicios.md y conceptos clave de teoria.md
  */
 
@@ -7,7 +7,11 @@ import { readdirSync, statSync, readFileSync, writeFileSync, existsSync } from '
 import { join, dirname, basename } from 'path'
 
 const CONTENT = join(process.cwd(), 'content')
-const LPIC1 = join(CONTENT, 'lpic-1')
+const CERTS = [
+  { name: 'lpic-1', dir: join(CONTENT, 'lpic-1'), tag: 'lpic-1' },
+  { name: 'lpic-2', dir: join(CONTENT, 'lpic-2'), tag: 'lpic-2' },
+  { name: 'lpic-3', dir: join(CONTENT, 'lpic-3'), tag: 'lpic-3' },
+]
 
 // ── Find all subtopic directories ──
 function findSubtopicDirs(dir) {
@@ -118,14 +122,15 @@ function extractFromTheory(filepath) {
 }
 
 // ── Generate flashcard markdown ──
-function generateFlashcardMd(subtemaNum, title, cards) {
+function generateFlashcardMd(subtemaNum, title, cards, certTag) {
   let md = `---
 title: "${subtemaNum} - Flashcards"
 tags:
-  - lpic-1
+  - ${certTag}
   - flashcards
   - repaso
 tipo: flashcards
+certificacion: ${certTag}
 subtema: "${subtemaNum}"
 ---
 
@@ -166,47 +171,58 @@ subtema: "${subtemaNum}"
 }
 
 // ── Main ──
-console.log('=== Generando flashcards para LPIC-1 ===\n')
+let grandTotal = 0
 
-const subtopicDirs = findSubtopicDirs(LPIC1)
-let totalCards = 0
-
-for (const dir of subtopicDirs) {
-  const dirName = basename(dir)
-  const subtemaMatch = dirName.match(/^(\d+\.\d+)-(.+)/)
-  if (!subtemaMatch) continue
-
-  const subtemaNum = subtemaMatch[1]
-  const subtemaSlug = subtemaMatch[2]
-  const title = subtemaSlug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
-
-  const ejerciciosPath = join(dir, 'ejercicios.md')
-  const teoriaPath = join(dir, 'teoria.md')
-
-  const exerciseCards = extractFromExercises(ejerciciosPath)
-  const theoryCards = extractFromTheory(teoriaPath)
-
-  // Deduplicate by checking similar questions
-  const allCards = [...exerciseCards]
-  for (const tc of theoryCards) {
-    const isDup = allCards.some(ec =>
-      ec.question.toLowerCase().includes(tc.question.toLowerCase().substring(0, 30)) ||
-      tc.question.toLowerCase().includes(ec.question.toLowerCase().substring(0, 30))
-    )
-    if (!isDup) allCards.push(tc)
-  }
-
-  if (allCards.length === 0) {
-    console.log(`  SKIP: ${subtemaNum} - sin contenido para flashcards`)
+for (const cert of CERTS) {
+  if (!existsSync(cert.dir)) {
+    console.log(`\n⏭ ${cert.name.toUpperCase()} - directorio no encontrado, saltando`)
     continue
   }
+  console.log(`\n=== Generando flashcards para ${cert.name.toUpperCase()} ===\n`)
 
-  const flashcardMd = generateFlashcardMd(subtemaNum, title, allCards)
-  const outputPath = join(dir, 'flashcards.md')
-  writeFileSync(outputPath, flashcardMd, 'utf-8')
+  const subtopicDirs = findSubtopicDirs(cert.dir)
+  let certTotal = 0
 
-  console.log(`  ${subtemaNum}: ${allCards.length} tarjetas (${exerciseCards.length} ejercicios + ${allCards.length - exerciseCards.length} teoria)`)
-  totalCards += allCards.length
+  for (const dir of subtopicDirs) {
+    const dirName = basename(dir)
+    const subtemaMatch = dirName.match(/^(\d+\.\d+)-(.+)/)
+    if (!subtemaMatch) continue
+
+    const subtemaNum = subtemaMatch[1]
+    const subtemaSlug = subtemaMatch[2]
+    const title = subtemaSlug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+
+    const ejerciciosPath = join(dir, 'ejercicios.md')
+    const teoriaPath = join(dir, 'teoria.md')
+
+    const exerciseCards = extractFromExercises(ejerciciosPath)
+    const theoryCards = extractFromTheory(teoriaPath)
+
+    // Deduplicate by checking similar questions
+    const allCards = [...exerciseCards]
+    for (const tc of theoryCards) {
+      const isDup = allCards.some(ec =>
+        ec.question.toLowerCase().includes(tc.question.toLowerCase().substring(0, 30)) ||
+        tc.question.toLowerCase().includes(ec.question.toLowerCase().substring(0, 30))
+      )
+      if (!isDup) allCards.push(tc)
+    }
+
+    if (allCards.length === 0) {
+      console.log(`  SKIP: ${subtemaNum} - sin contenido para flashcards`)
+      continue
+    }
+
+    const flashcardMd = generateFlashcardMd(subtemaNum, title, allCards, cert.tag)
+    const outputPath = join(dir, 'flashcards.md')
+    writeFileSync(outputPath, flashcardMd, 'utf-8')
+
+    console.log(`  ${subtemaNum}: ${allCards.length} tarjetas (${exerciseCards.length} ejercicios + ${allCards.length - exerciseCards.length} teoria)`)
+    certTotal += allCards.length
+  }
+
+  console.log(`\n  Subtotal ${cert.name.toUpperCase()}: ${certTotal} flashcards`)
+  grandTotal += certTotal
 }
 
-console.log(`\n=== Total: ${totalCards} flashcards generadas ===`)
+console.log(`\n=== TOTAL GLOBAL: ${grandTotal} flashcards generadas ===`)
