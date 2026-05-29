@@ -5,7 +5,7 @@ configuration:
   enableSPA: true
   enablePopovers: true
   locale: es-ES
-  baseUrl: rricajos.github.io/unix
+  baseUrl: rricajos.github.io/pingunix
   ignorePatterns:
     - private
     - templates
@@ -191,7 +191,7 @@ plugins:
     enabled: true
     options:
       links:
-        GitHub: https://github.com/rricajos/unix
+        GitHub: https://github.com/rricajos/pingunix
         "LPI Official": https://www.lpi.org
         "Autor": https://github.com/rricajos
   - source: github:quartz-community/spacer

@@ -2,7 +2,7 @@
 
 Plataforma interactiva de estudio para las certificaciones **LPIC-1, LPIC-2 y LPIC-3** del Linux Professional Institute, y base de conocimientos de **seguridad ofensiva y defensiva**.
 
-**[Acceder al sitio web](https://rricajos.github.io/unix)**
+**[Acceder al sitio web](https://rricajos.github.io/pingunix)**
 
 ## Caracteristicas
 
