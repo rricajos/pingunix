@@ -201,3 +201,273 @@ d) `dmesg -c`
 La opcion `-T` de `dmesg` muestra las marcas de tiempo en formato legible para humanos (fecha y hora completas) en lugar de los segundos desde el arranque del sistema. La opcion `-H` muestra el formato legible para humanos (human-readable) con paginacion. La opcion `-l` filtra por nivel de severidad (por ejemplo, `dmesg -l err`). La opcion `-c` muestra los mensajes y limpia el buffer.
 
 </details>
+
+---
+
+### Pregunta 11
+
+Que comando de `journalctl` muestra los logs del arranque anterior al actual?
+
+a) `journalctl -b 0`
+b) `journalctl -b -1`
+c) `journalctl --previous-boot`
+d) `journalctl -k -1`
+
+<details><summary>Respuesta</summary>
+
+**b) `journalctl -b -1`**
+
+`journalctl -b -1` muestra los logs del arranque anterior al actual. La opcion `-b` sin argumento o `-b 0` muestra los logs del arranque actual. `-b -2` mostraria los del arranque anterior al anterior, y asi sucesivamente. Para ver la lista de arranques disponibles se usa `journalctl --list-boots`. Esta funcionalidad requiere que el journal sea persistente (almacenado en `/var/log/journal/`); con almacenamiento volatil solo se dispone del arranque actual.
+
+</details>
+
+---
+
+### Pregunta 12
+
+Que regla de rsyslog registra todos los mensajes de prioridad `info` o superior, EXCEPTO los de la facility `mail`?
+
+a) `*.info;mail.none /var/log/messages`
+b) `*.info;!mail /var/log/messages`
+c) `*.info -mail /var/log/messages`
+d) `info.*;mail.exclude /var/log/messages`
+
+<details><summary>Respuesta</summary>
+
+**a) `*.info;mail.none /var/log/messages`**
+
+La regla `*.info;mail.none /var/log/messages` registra todos los mensajes (`*`) con prioridad `info` o superior, excepto los de la facility `mail` (indicado por `.none`). El punto y coma `;` separa multiples selectores en una misma regla. El modificador `.none` excluye completamente una facility. Se pueden excluir multiples facilities: `*.info;mail.none;cron.none /var/log/messages`.
+
+</details>
+
+---
+
+### Pregunta 13
+
+Donde almacena journald los logs de forma volatil (se pierden al reiniciar)?
+
+a) `/var/log/journal/`
+b) `/run/log/journal/`
+c) `/tmp/journal/`
+d) `/var/log/syslog`
+
+<details><summary>Respuesta</summary>
+
+**b) `/run/log/journal/`**
+
+Cuando el journal de systemd esta configurado como volatil (o cuando `Storage=auto` y no existe `/var/log/journal/`), los logs se almacenan en `/run/log/journal/`. El directorio `/run/` es un sistema de archivos en RAM (tmpfs), por lo que su contenido se pierde al reiniciar el sistema. Para almacenamiento persistente se usa `/var/log/journal/`. Con `Storage=persistent` en `/etc/systemd/journald.conf`, journald crea automaticamente el directorio `/var/log/journal/` si no existe.
+
+</details>
+
+---
+
+### Pregunta 14
+
+Que opcion de `journalctl` permite seguir los logs en tiempo real, similar a `tail -f`?
+
+a) `journalctl -t`
+b) `journalctl -r`
+c) `journalctl -f`
+d) `journalctl --live`
+
+<details><summary>Respuesta</summary>
+
+**c) `journalctl -f`**
+
+`journalctl -f` (follow) muestra las ultimas entradas del journal y sigue mostrando las nuevas entradas en tiempo real, de forma similar a `tail -f` en archivos de log tradicionales. Se puede combinar con otros filtros: `journalctl -f -u sshd` sigue los logs del servicio sshd en tiempo real, o `journalctl -f -p err` sigue solo los mensajes con prioridad error o superior. La opcion `-r` muestra los logs en orden inverso (mas recientes primero).
+
+</details>
+
+---
+
+### Pregunta 15
+
+Que facility de syslog se usa para mensajes del kernel?
+
+a) `daemon`
+b) `kern`
+c) `syslog`
+d) `system`
+
+<details><summary>Respuesta</summary>
+
+**b) `kern`**
+
+La facility `kern` se usa para mensajes del kernel de Linux. Otras facilities importantes son: `auth`/`authpriv` (autenticacion y seguridad), `cron` (servicio cron), `daemon` (demonios del sistema), `mail` (sistema de correo), `user` (aplicaciones de usuario), `lpr` (sistema de impresion), `syslog` (mensajes internos del propio syslog), y `local0` a `local7` (8 facilities para uso personalizado). La facility `system` no existe en syslog.
+
+</details>
+
+---
+
+### Pregunta 16
+
+Que directiva de logrotate evita rotar un archivo si esta vacio?
+
+a) `missingok`
+b) `notifempty`
+c) `noempty`
+d) `skipempty`
+
+<details><summary>Respuesta</summary>
+
+**b) `notifempty`**
+
+La directiva `notifempty` de logrotate indica que no se debe rotar el archivo si esta vacio, evitando crear archivos rotados innecesarios. `missingok` indica que no se genere un error si el archivo de log no existe. Otras directivas comunes: `compress` (comprimir archivos rotados), `delaycompress` (comprimir en la siguiente rotacion), `copytruncate` (copiar y truncar en vez de mover), y `dateext` (usar fecha como extension).
+
+</details>
+
+---
+
+### Pregunta 17
+
+Que comando reduce el tamano del journal de systemd eliminando las entradas mas antiguas de 2 semanas?
+
+a) `journalctl --vacuum-size=2weeks`
+b) `journalctl --vacuum-time=2weeks`
+c) `journalctl --clean --older-than=2w`
+d) `systemctl clean journald --time=2weeks`
+
+<details><summary>Respuesta</summary>
+
+**b) `journalctl --vacuum-time=2weeks`**
+
+`journalctl --vacuum-time=2weeks` elimina las entradas del journal que tienen mas de 2 semanas de antiguedad. Para limitar por tamano se usa `--vacuum-size=100M` (reduce a un maximo de 100 MB). Estos comandos realizan una limpieza puntual. Para establecer limites permanentes se configuran las directivas `SystemMaxUse`, `SystemMaxFileSize` y `MaxRetentionSec` en `/etc/systemd/journald.conf`. Para ver el espacio usado: `journalctl --disk-usage`.
+
+</details>
+
+---
+
+### Pregunta 18
+
+Que configuracion en syslog-ng define un objeto de tipo filtro?
+
+a) `source s_local { ... };`
+b) `destination d_auth { ... };`
+c) `filter f_auth { ... };`
+d) `log { ... };`
+
+<details><summary>Respuesta</summary>
+
+**c) `filter f_auth { ... };`**
+
+En syslog-ng, la configuracion se basa en cuatro tipos de objetos: `source` (define de donde se reciben los mensajes), `destination` (define donde se envian), `filter` (define criterios de filtrado como facility y prioridad), y `log` (conecta source, filter y destination). Un filtro tipico seria: `filter f_auth { facility(auth, authpriv); };`. La configuracion se encuentra en `/etc/syslog-ng/syslog-ng.conf`.
+
+</details>
+
+---
+
+### Pregunta 19
+
+Que comando de `journalctl` muestra solo los mensajes del kernel, de forma similar a `dmesg`?
+
+a) `journalctl -u kernel`
+b) `journalctl -k`
+c) `journalctl --kernel-only`
+d) `journalctl -f kern`
+
+<details><summary>Respuesta</summary>
+
+**b) `journalctl -k`**
+
+`journalctl -k` muestra solo los mensajes del kernel, de forma equivalente a `dmesg`. Se puede combinar con otras opciones: `journalctl -k -b -1` muestra los mensajes del kernel del arranque anterior, y `journalctl -k -p err` muestra solo los mensajes del kernel con prioridad error o superior. A diferencia de `dmesg`, que muestra el buffer del anillo del kernel actual, `journalctl -k` puede acceder a mensajes del kernel de arranques anteriores si el journal es persistente.
+
+</details>
+
+---
+
+### Pregunta 20
+
+Que significa el prefijo `-` antes de un archivo de destino en una regla de rsyslog, como en `*.*;auth.none -/var/log/syslog`?
+
+a) Que el archivo se crea si no existe
+b) Que la escritura es asincrona (no se fuerza un sync despues de cada mensaje)
+c) Que el archivo se trunca antes de escribir
+d) Que los mensajes se escriben en orden inverso
+
+<details><summary>Respuesta</summary>
+
+**b) Que la escritura es asincrona (no se fuerza un sync despues de cada mensaje)**
+
+El prefijo `-` antes de la ruta de un archivo en rsyslog indica escritura asincrona: no se fuerza un `sync()` al disco despues de cada mensaje escrito. Esto mejora el rendimiento significativamente, especialmente en sistemas con alto volumen de logs, pero implica un riesgo minimo de perder algunos mensajes si el sistema se apaga abruptamente. Sin el prefijo `-`, rsyslog fuerza un sync despues de cada escritura, lo que es mas seguro pero mas lento.
+
+</details>
+
+---
+
+### Pregunta 21
+
+Escribe el comando para ver los logs del servicio `nginx` usando `journalctl`.
+
+<input type="text" class="fill-blank" data-answer="journalctl -u nginx" data-alt="journalctl -u nginx.service" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**journalctl -u nginx**
+
+El comando `journalctl -u nginx` filtra y muestra solo los logs de la unidad de servicio `nginx` de systemd. La opcion `-u` (unit) acepta el nombre del servicio con o sin el sufijo `.service`. Se puede combinar con otras opciones: `-f` para seguimiento en tiempo real, `-p err` para filtrar por prioridad, `--since "1 hour ago"` para limitar por tiempo, y `-n 50` para mostrar solo las ultimas 50 entradas.
+
+</details>
+
+---
+
+### Pregunta 22
+
+Escribe el comando para enviar un mensaje de prueba a syslog con la etiqueta `mibackup` y prioridad `local0.info`.
+
+<input type="text" class="fill-blank" data-answer="logger -p local0.info -t mibackup" data-alt="logger -t mibackup -p local0.info" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**logger -p local0.info -t mibackup**
+
+El comando `logger` genera mensajes syslog desde la linea de comandos o scripts. La opcion `-p` especifica la facility y prioridad en formato `facility.priority`, y `-t` establece una etiqueta (tag) para identificar el origen del mensaje. El texto del mensaje se puede pasar como argumento: `logger -p local0.info -t mibackup "Backup completado"`. Es una herramienta esencial para registrar eventos en scripts de administracion.
+
+</details>
+
+---
+
+### Pregunta 23
+
+Escribe el comando para ver las ultimas 20 entradas del journal de systemd sin paginador.
+
+<input type="text" class="fill-blank" data-answer="journalctl -n 20 --no-pager" data-alt="journalctl --no-pager -n 20" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**journalctl -n 20 --no-pager**
+
+El comando `journalctl -n 20 --no-pager` muestra las ultimas 20 entradas del journal sin usar un paginador (como `less`), enviando la salida directamente a stdout. La opcion `-n` (lines) limita el numero de entradas mostradas. `--no-pager` es util en scripts o cuando se quiere procesar la salida con otros comandos. Sin `-n`, `journalctl` muestra todas las entradas desde el inicio del journal.
+
+</details>
+
+---
+
+### Pregunta 24
+
+Escribe el comando para forzar la ejecucion de logrotate en modo debug (simulacion sin ejecutar).
+
+<input type="text" class="fill-blank" data-answer="logrotate -d /etc/logrotate.conf" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**logrotate -d /etc/logrotate.conf**
+
+El comando `logrotate -d /etc/logrotate.conf` ejecuta logrotate en modo debug, simulando la rotacion sin realizar ningun cambio real. Es util para verificar que la configuracion es correcta antes de aplicarla. Para forzar una rotacion real: `logrotate -f /etc/logrotate.conf`. Para ejecutar normalmente: `logrotate /etc/logrotate.conf`. Logrotate se ejecuta tipicamente mediante cron de forma diaria.
+
+</details>
+
+---
+
+### Pregunta 25
+
+Escribe el comando para ver el espacio en disco utilizado por el journal de systemd.
+
+<input type="text" class="fill-blank" data-answer="journalctl --disk-usage" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**journalctl --disk-usage**
+
+El comando `journalctl --disk-usage` muestra el espacio en disco total utilizado por los archivos del journal de systemd. Es util para monitorear el crecimiento del journal y decidir si es necesario realizar una limpieza con `journalctl --vacuum-size=TAMANO` o `journalctl --vacuum-time=TIEMPO`. Para limitar permanentemente el tamano, se configura `SystemMaxUse` en `/etc/systemd/journald.conf`.
+
+</details>

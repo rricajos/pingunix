@@ -201,3 +201,273 @@ d) `dig ejemplo.com --answer-only`
 La opcion `+short` de `dig` muestra solo la respuesta (la IP o el valor del registro) sin las secciones QUESTION, AUTHORITY, ADDITIONAL, ni las estadisticas. Otras opciones utiles de dig son: `+noall +answer` para mostrar solo la seccion ANSWER con formato completo, `+trace` para trazar la resolucion completa desde los servidores raiz, y `+nssearch` para encontrar servidores SOA.
 
 </details>
+
+---
+
+### Pregunta 11
+
+Que tipo de registro DNS se utiliza para indicar los servidores de nombres autoritativos de un dominio?
+
+a) MX
+b) CNAME
+c) NS
+d) SOA
+
+<details><summary>Respuesta</summary>
+
+**c) NS**
+
+El registro NS (Name Server) indica los servidores de nombres autoritativos para un dominio. Por ejemplo, `ejemplo.com NS ns1.ejemplo.com` indica que `ns1.ejemplo.com` es un servidor DNS autoritativo para `ejemplo.com`. Se puede consultar con `dig ejemplo.com NS`. El registro MX indica servidores de correo, CNAME define alias y SOA contiene la informacion de inicio de autoridad de la zona.
+
+</details>
+
+---
+
+### Pregunta 12
+
+Cual es la herramienta de consulta DNS mas simple entre `dig`, `host` y `nslookup`?
+
+a) `dig`
+b) `host`
+c) `nslookup`
+d) Las tres son igual de complejas
+
+<details><summary>Respuesta</summary>
+
+**b) `host`**
+
+`host` es la herramienta de consulta DNS mas simple, mostrando resultados concisos y faciles de leer. Por ejemplo, `host ejemplo.com` muestra directamente la IP sin informacion adicional. `dig` es la mas completa y detallada (muestra secciones QUESTION, ANSWER, AUTHORITY, etc.). `nslookup` es la clasica, con modo interactivo y no interactivo. Las tres consultan directamente al servidor DNS, a diferencia de `getent` que usa nsswitch.
+
+</details>
+
+---
+
+### Pregunta 13
+
+Que tipo de registro DNS se usa para crear un alias de un nombre de dominio a otro?
+
+a) A
+b) PTR
+c) CNAME
+d) TXT
+
+<details><summary>Respuesta</summary>
+
+**c) CNAME**
+
+El registro CNAME (Canonical Name) crea un alias de un nombre de dominio a otro nombre de dominio (el nombre canonico). Por ejemplo, `www.ejemplo.com CNAME ejemplo.com` indica que `www.ejemplo.com` es un alias de `ejemplo.com`. Es util para apuntar multiples subdominios a un mismo destino. El registro A resuelve a IPv4, PTR hace resolucion inversa y TXT almacena texto libre (usado para SPF, DKIM, etc.).
+
+</details>
+
+---
+
+### Pregunta 14
+
+Si en `/etc/nsswitch.conf` la linea de hosts dice `hosts: dns files`, que ocurre al resolver un nombre?
+
+a) Se consulta primero `/etc/hosts` y luego DNS
+b) Se consulta primero DNS y luego `/etc/hosts`
+c) Se consultan ambos simultaneamente
+d) Solo se consulta DNS, se ignora `/etc/hosts`
+
+<details><summary>Respuesta</summary>
+
+**b) Se consulta primero DNS y luego `/etc/hosts`**
+
+El orden en la linea `hosts:` de `/etc/nsswitch.conf` define la secuencia de resolucion. Con `hosts: dns files`, primero se consultan los servidores DNS definidos en `/etc/resolv.conf` y solo si DNS no resuelve el nombre se busca en `/etc/hosts` (files). La configuracion mas comun es `hosts: files dns` donde `/etc/hosts` tiene prioridad sobre DNS, pero el orden puede cambiarse segun las necesidades.
+
+</details>
+
+---
+
+### Pregunta 15
+
+Que comando de `nslookup` permite consultar los registros MX de un dominio?
+
+a) `nslookup -mx ejemplo.com`
+b) `nslookup -type=MX ejemplo.com`
+c) `nslookup ejemplo.com --mail`
+d) `nslookup -query mail ejemplo.com`
+
+<details><summary>Respuesta</summary>
+
+**b) `nslookup -type=MX ejemplo.com`**
+
+En `nslookup`, el tipo de registro se especifica con la opcion `-type=` seguida del tipo de registro DNS. `nslookup -type=MX ejemplo.com` consulta los registros MX (servidores de correo) del dominio. Para especificar un servidor DNS: `nslookup ejemplo.com 8.8.8.8`. En modo interactivo, se puede cambiar el tipo con `set type=MX`. Los equivalentes en `dig` y `host` son: `dig ejemplo.com MX` y `host -t MX ejemplo.com`.
+
+</details>
+
+---
+
+### Pregunta 16
+
+Que seccion de la salida de `dig` muestra la respuesta real a la consulta DNS realizada?
+
+a) QUESTION SECTION
+b) ANSWER SECTION
+c) AUTHORITY SECTION
+d) ADDITIONAL SECTION
+
+<details><summary>Respuesta</summary>
+
+**b) ANSWER SECTION**
+
+La salida de `dig` se divide en varias secciones: la QUESTION SECTION muestra lo que se pregunto, la ANSWER SECTION contiene la respuesta real (el registro solicitado), la AUTHORITY SECTION muestra los servidores autoritativos para el dominio y la ADDITIONAL SECTION contiene informacion extra. Ademas, se muestra el tiempo de consulta (Query time) y el servidor DNS que respondio (SERVER). Para ver solo la seccion ANSWER: `dig +noall +answer ejemplo.com`.
+
+</details>
+
+---
+
+### Pregunta 17
+
+Que opcion de `dig` permite trazar la resolucion DNS completa desde los servidores raiz?
+
+a) `dig ejemplo.com +debug`
+b) `dig ejemplo.com +trace`
+c) `dig ejemplo.com +full`
+d) `dig ejemplo.com +recursive`
+
+<details><summary>Respuesta</summary>
+
+**b) `dig ejemplo.com +trace`**
+
+La opcion `+trace` de `dig` muestra el proceso completo de resolucion DNS iterativa desde los servidores raiz hasta la respuesta final. Muestra cada paso: consulta a los servidores raiz, luego a los servidores del TLD (.com), luego a los servidores autoritativos del dominio. Es muy util para diagnosticar problemas de propagacion DNS y entender la jerarquia de resolucion.
+
+</details>
+
+---
+
+### Pregunta 18
+
+Que comando de `resolvectl` muestra los servidores DNS configurados en el sistema cuando se usa systemd-resolved?
+
+a) `resolvectl status`
+b) `resolvectl list-dns`
+c) `resolvectl nameservers`
+d) `resolvectl show-config`
+
+<details><summary>Respuesta</summary>
+
+**a) `resolvectl status`**
+
+El comando `resolvectl status` muestra el estado completo de systemd-resolved, incluyendo los servidores DNS configurados para cada interfaz, el dominio de busqueda, el estado de DNSSEC y DNS sobre TLS. Tambien se puede usar `resolvectl dns` para ver solo los servidores DNS. Otros comandos utiles: `resolvectl query` (resolver nombre), `resolvectl statistics` (estadisticas de cache) y `resolvectl flush-caches` (limpiar cache).
+
+</details>
+
+---
+
+### Pregunta 19
+
+Que ocurre si en `/etc/resolv.conf` se definen tanto la directiva `domain` como `search`?
+
+a) Ambas se aplican conjuntamente
+b) Se genera un error de configuracion
+c) Se usa la ultima directiva definida en el archivo
+d) `domain` siempre tiene prioridad sobre `search`
+
+<details><summary>Respuesta</summary>
+
+**c) Se usa la ultima directiva definida en el archivo**
+
+Las directivas `domain` y `search` en `/etc/resolv.conf` son mutuamente excluyentes. Si ambas estan presentes, se usa la ultima definida en el archivo. `search` es mas flexible que `domain` porque permite especificar multiples dominios de busqueda. Por ejemplo, `search empresa.com test.com` agrega ambos dominios a nombres cortos, mientras que `domain empresa.com` solo agrega uno.
+
+</details>
+
+---
+
+### Pregunta 20
+
+Que registro DNS se utiliza para la resolucion inversa (de direccion IP a nombre de dominio)?
+
+a) A
+b) AAAA
+c) CNAME
+d) PTR
+
+<details><summary>Respuesta</summary>
+
+**d) PTR**
+
+El registro PTR (Pointer) se utiliza para la resolucion inversa, que traduce una direccion IP a un nombre de dominio. Para IPv4, las consultas se hacen en la zona `in-addr.arpa` (por ejemplo, `34.216.184.93.in-addr.arpa`). Con `dig` se realiza usando `dig -x IP`. Con `host` simplemente `host IP`. La resolucion inversa es importante para la verificacion de identidad de servidores de correo y diagnostico de red.
+
+</details>
+
+---
+
+### Pregunta 21
+
+Que comando consulta el registro A de `ejemplo.com` usando el servidor DNS 8.8.8.8 con `dig`?
+
+<input type="text" class="fill-blank" data-answer="dig @8.8.8.8 ejemplo.com" data-alt="dig @8.8.8.8 ejemplo.com A" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**dig @8.8.8.8 ejemplo.com**
+
+En `dig`, el servidor DNS a consultar se especifica con la notacion `@servidor` antes del nombre de dominio. `dig @8.8.8.8 ejemplo.com` consulta el registro A (por defecto) del dominio usando el servidor DNS de Google (8.8.8.8) en lugar del servidor configurado en `/etc/resolv.conf`. Esto es util para diagnosticar problemas de DNS comparando respuestas de diferentes servidores.
+
+</details>
+
+---
+
+### Pregunta 22
+
+Que comando realiza una resolucion inversa de la IP 10.0.0.1 con `dig`?
+
+<input type="text" class="fill-blank" data-answer="dig -x 10.0.0.1" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**dig -x 10.0.0.1**
+
+El comando `dig -x 10.0.0.1` realiza una consulta DNS inversa (PTR) para encontrar el nombre de dominio asociado a la IP 10.0.0.1. Internamente, consulta el registro PTR en la zona `1.0.0.10.in-addr.arpa`. Para obtener solo la respuesta: `dig -x 10.0.0.1 +short`. Con `host` seria simplemente `host 10.0.0.1`.
+
+</details>
+
+---
+
+### Pregunta 23
+
+Que comando resuelve un nombre usando el mecanismo completo de nsswitch (incluyendo `/etc/hosts`)?
+
+<input type="text" class="fill-blank" data-answer="getent hosts ejemplo.com" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**getent hosts ejemplo.com**
+
+El comando `getent hosts ejemplo.com` resuelve el nombre usando el mecanismo completo de NSS (Name Service Switch), siguiendo el orden definido en `/etc/nsswitch.conf`. Si la configuracion es `hosts: files dns`, primero buscara en `/etc/hosts` y luego consultara DNS. A diferencia de `dig`, `host` y `nslookup` que consultan directamente al servidor DNS, `getent` refleja como el sistema realmente resuelve los nombres.
+
+</details>
+
+---
+
+### Pregunta 24
+
+Que comando limpia la cache DNS de systemd-resolved?
+
+<input type="text" class="fill-blank" data-answer="resolvectl flush-caches" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**resolvectl flush-caches**
+
+El comando `resolvectl flush-caches` limpia toda la cache DNS almacenada por systemd-resolved. Esto es util cuando se han realizado cambios en registros DNS y se quiere forzar nuevas consultas. `resolvectl statistics` muestra estadisticas de la cache (hits, misses). `resolvectl` (antes `systemd-resolve`) es la herramienta de linea de comandos para gestionar systemd-resolved.
+
+</details>
+
+---
+
+### Pregunta 25
+
+Que comando consulta los registros MX del dominio empresa.com usando `host`?
+
+<input type="text" class="fill-blank" data-answer="host -t MX empresa.com" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**host -t MX empresa.com**
+
+El comando `host -t MX empresa.com` consulta los registros MX (Mail Exchanger) del dominio, que indican los servidores de correo responsables de recibir email para ese dominio. La opcion `-t` especifica el tipo de registro DNS a consultar. Los equivalentes en otras herramientas son: `dig empresa.com MX` y `nslookup -type=MX empresa.com`.
+
+</details>

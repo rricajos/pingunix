@@ -11,7 +11,7 @@ subtema: "104.1"
 
 # Flashcards: 104.1 - Particiones Y Sistemas De Archivos
 
-> 19 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 34 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="104.1">
 </div>
@@ -199,6 +199,276 @@ subtema: "104.1"
 <div class="flashcard" data-id="104.1-fc-011">
 <div class="flashcard-front">
 
+**P:** En un disco MBR con 2 particiones primarias y 1 extendida, cual seria el nombre del dispositivo de la primera particion logica?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) `/dev/sda5`. En MBR, las particiones logicas siempre se numeran a partir de 5, independientemente del numero de particiones primarias existentes. Los numeros 1-4 estan reservados para particiones primarias y extendidas. En este caso, `sda1` y `sda2` son primarias, `sda3` es la extendida, y las particiones logicas dentro de la extendida empiezan en `sda5`. Incluso si solo hay 2 primarias y 1 extendida (numeradas 1, 2 y 3), la primera logica siempre es `sda5`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.1">
+</div>
+
+<div class="flashcard" data-id="104.1-fc-012">
+<div class="flashcard-front">
+
+**P:** Cual de los siguientes sistemas de archivos soporta snapshots y RAID integrado de forma nativa?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) Btrfs. Btrfs (B-tree File System) es un sistema de archivos moderno que soporta funciones avanzadas como snapshots, compresion, RAID integrado, subvolumenes y la capacidad de abarcar multiples dispositivos. ext4 es robusto y ampliamente utilizado pero no tiene estas funciones integradas. XFS tiene excelente rendimiento y journaling pero tampoco ofrece snapshots o RAID nativos. VFAT es un sistema de archivos simple sin journaling ni funciones avanzadas.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.1">
+</div>
+
+<div class="flashcard" data-id="104.1-fc-013">
+<div class="flashcard-front">
+
+**P:** Que comando de `fdisk` se utiliza para cambiar el tipo de una particion existente?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) `t`. El comando `t` dentro de `fdisk` permite cambiar el tipo (type) de una particion. Despues de presionar `t`, se selecciona la particion y se introduce el codigo hexadecimal del tipo deseado (por ejemplo, `82` para swap, `83` para Linux, `8e` para LVM). El comando `n` crea una nueva particion. El comando `d` elimina una particion. El comando `a` cambia el flag de arranque (bootable).
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.1">
+</div>
+
+<div class="flashcard" data-id="104.1-fc-014">
+<div class="flashcard-front">
+
+**P:** Cual es el tamano maximo de disco que soporta MBR?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) 2 TB. MBR (Master Boot Record) tiene un limite de direccionamiento de 2 TB para el tamano total del disco. Esto se debe a que MBR usa direcciones de 32 bits con sectores de 512 bytes. Para discos mas grandes de 2 TB, se debe usar GPT (GUID Partition Table) que soporta discos de hasta 9.4 ZB (zettabytes). El limite de 2 TB es una razon importante por la cual muchos sistemas modernos han migrado de MBR a GPT.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.1">
+</div>
+
+<div class="flashcard" data-id="104.1-fc-015">
+<div class="flashcard-front">
+
+**P:** Que opcion de `mke2fs` permite establecer la etiqueta (label) de un sistema de archivos ext4 durante su creacion?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `-L`. La opcion `-L` de `mke2fs` asigna una etiqueta (label) al sistema de archivos durante su creacion. Por ejemplo: `mke2fs -t ext4 -L "datos" /dev/sda1`. La etiqueta se puede usar posteriormente para montar el sistema de archivos con `LABEL=datos` en `/etc/fstab`. La opcion `-t` especifica el tipo de sistema de archivos. La opcion `-b` establece el tamano de bloque. La opcion `-m` define el porcentaje de bloques reservados para root.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.1">
+</div>
+
+<div class="flashcard" data-id="104.1-fc-016">
+<div class="flashcard-front">
+
+**P:** Cual de las siguientes afirmaciones sobre ext3 es correcta?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) ext3 es basicamente ext2 con journaling anadido, y es compatible hacia atras con ext2. ext3 es una evolucion de ext2 que anade journaling para mejorar la recuperacion tras fallos del sistema. La compatibilidad hacia atras permite montar una particion ext3 como ext2 (sin journaling). Se puede convertir ext2 a ext3 sin destruir datos usando `tune2fs -j /dev/sdXN`. El journaling registra las operaciones pendientes en un diario, lo que permite una recuperacion rapida sin necesidad de un `fsck` completo.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.1">
+</div>
+
+<div class="flashcard" data-id="104.1-fc-017">
+<div class="flashcard-front">
+
+**P:** Que comando se usa para verificar el swap activo en el sistema?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `swapon --show`. `swapon --show` muestra informacion detallada sobre las areas de swap activas, incluyendo el dispositivo, tipo, tamano y uso. Otros comandos que tambien muestran informacion del swap son `cat /proc/swaps` y `free -h` (que muestra un resumen del uso de memoria y swap). `df -h` muestra el espacio en sistemas de archivos montados pero no incluye el swap. `mkswap` formatea particiones como swap pero no las lista. `mount | grep swap` podria no mostrar nada ya que el swap no se monta en un punto de montaje convencional.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.1">
+</div>
+
+<div class="flashcard" data-id="104.1-fc-018">
+<div class="flashcard-front">
+
+**P:** Que diferencia clave tiene `parted` respecto a `fdisk` y `gdisk` en cuanto a la aplicacion de cambios?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `parted` aplica los cambios inmediatamente sin necesidad de un comando de escritura. Esta es una diferencia critica: `parted` aplica cada operacion de forma inmediata al disco, sin esperar un comando de escritura. En cambio, `fdisk` y `gdisk` almacenan los cambios en memoria y solo los escriben al disco cuando se ejecuta el comando `w`. Esto hace que `parted` sea mas peligroso ante errores porque no se pueden deshacer las operaciones. Con `fdisk`/`gdisk`, se puede salir sin guardar usando `q` si se comete un error.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.1">
+</div>
+
+<div class="flashcard" data-id="104.1-fc-019">
+<div class="flashcard-front">
+
+**P:** Que comando activa un area de swap ya formateada en la particion `/dev/sda2`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) `swapon /dev/sda2`. `swapon` es el comando que activa un area de swap previamente formateada con `mkswap`. La secuencia completa para configurar swap es: (1) crear la particion con `fdisk` y tipo 82, (2) formatear con `mkswap /dev/sda2`, (3) activar con `swapon /dev/sda2`. Para desactivar se usa `swapoff /dev/sda2`. `mount` no se usa para swap ya que no se monta en un punto de montaje. `mkswap` solo formatea, no activa.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.1">
+</div>
+
+<div class="flashcard" data-id="104.1-fc-020">
+<div class="flashcard-front">
+
+**P:** Que sistema de archivos NO tiene journaling?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) ext2. ext2 es el unico de las opciones que no tiene journaling. El journaling fue introducido en ext3 como mejora sobre ext2. ext4, XFS y Btrfs tambien incluyen journaling. La ausencia de journaling en ext2 significa que despues de un apagado inesperado, se necesita un `fsck` completo para verificar la integridad del sistema de archivos, lo cual puede ser muy lento en particiones grandes. Por esta razon, ext2 se recomienda solo para particiones pequenas como `/boot`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.1">
+</div>
+
+<div class="flashcard" data-id="104.1-fc-021">
+<div class="flashcard-front">
+
+**P:** Escribe el comando para crear un sistema de archivos ext4 en la particion `/dev/sdb1`. <input type="text" class="fill-blank" data-answer="mkfs.ext4 /dev/sdb1" data-alt="mkfs -t ext4 /dev/sdb1,mke2fs -t ext4 /dev/sdb1" placeholder="$ escribe aqui...">
+
+</div>
+<div class="flashcard-back">
+
+**R:** mkfs.ext4 /dev/sdb1. Existen varias formas equivalentes de crear un sistema de archivos ext4: `mkfs.ext4 /dev/sdb1`, `mkfs -t ext4 /dev/sdb1` y `mke2fs -t ext4 /dev/sdb1`. Todas ejecutan la misma operacion de formatear la particion con el sistema de archivos ext4. Este comando destruye todos los datos existentes en la particion.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.1">
+</div>
+
+<div class="flashcard" data-id="104.1-fc-022">
+<div class="flashcard-front">
+
+**P:** Escribe el comando para formatear la particion `/dev/sda3` como area de swap. <input type="text" class="fill-blank" data-answer="mkswap /dev/sda3" data-alt="" placeholder="$ escribe aqui...">
+
+</div>
+<div class="flashcard-back">
+
+**R:** mkswap /dev/sda3. `mkswap` prepara una particion o archivo para ser usado como espacio de swap (intercambio). Despues de formatearlo, se activa con `swapon /dev/sda3`. Para que sea permanente, se debe agregar una entrada en `/etc/fstab`. Antes de ejecutar `mkswap`, la particion debe tener el tipo 82 (Linux swap) configurado con `fdisk`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.1">
+</div>
+
+<div class="flashcard" data-id="104.1-fc-023">
+<div class="flashcard-front">
+
+**P:** Escribe el comando para listar todas las particiones de todos los discos del sistema usando `fdisk`. <input type="text" class="fill-blank" data-answer="fdisk -l" data-alt="sudo fdisk -l" placeholder="$ escribe aqui...">
+
+</div>
+<div class="flashcard-back">
+
+**R:** fdisk -l. La opcion `-l` de `fdisk` lista las tablas de particiones de todos los discos detectados en el sistema. Muestra informacion como el tamano del disco, tipo de tabla de particiones (MBR/GPT), y detalles de cada particion (inicio, fin, tamano, tipo). Para listar solo las particiones de un disco especifico se usa `fdisk -l /dev/sda`. Este comando generalmente requiere privilegios de root.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.1">
+</div>
+
+<div class="flashcard" data-id="104.1-fc-024">
+<div class="flashcard-front">
+
+**P:** Escribe el comando `parted` para crear una nueva tabla de particiones GPT en el disco `/dev/sda`. <input type="text" class="fill-blank" data-answer="parted /dev/sda mklabel gpt" data-alt="" placeholder="$ escribe aqui...">
+
+</div>
+<div class="flashcard-back">
+
+**R:** parted /dev/sda mklabel gpt. El comando `parted /dev/sda mklabel gpt` crea una nueva tabla de particiones GPT en el disco especificado. Para crear una tabla MBR se usaria `parted /dev/sda mklabel msdos`. Este comando destruye toda la informacion de particiones existente en el disco. Recuerda que `parted` aplica los cambios inmediatamente, sin necesidad de un comando de escritura adicional.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.1">
+</div>
+
+<div class="flashcard" data-id="104.1-fc-025">
+<div class="flashcard-front">
+
+**P:** Escribe el comando para desactivar todo el swap del sistema. <input type="text" class="fill-blank" data-answer="swapoff -a" data-alt="" placeholder="$ escribe aqui...">
+
+</div>
+<div class="flashcard-back">
+
+**R:** swapoff -a. La opcion `-a` de `swapoff` desactiva todas las areas de swap activas en el sistema. Para desactivar un area de swap especifica se usa `swapoff /dev/sdXN` o `swapoff /swapfile`. Este comando mueve todos los datos del swap de vuelta a la RAM, por lo que es importante asegurarse de tener suficiente memoria RAM disponible antes de desactivar el swap.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.1">
+</div>
+
+<div class="flashcard" data-id="104.1-fc-026">
+<div class="flashcard-front">
+
 **P:** Tip de examen: `mke2fs` es equivalente a `mkfs.ext2/ext3/ext4`. La opcion `-n` (dry-run) es imp...
 
 </div>
@@ -214,43 +484,7 @@ subtema: "104.1"
 <div class="flashcard-deck" data-subtema="104.1">
 </div>
 
-<div class="flashcard" data-id="104.1-fc-012">
-<div class="flashcard-front">
-
-**P:** Que hace el comando `/dev/sda`?
-
-</div>
-<div class="flashcard-back">
-
-**R:** Primer disco SATA/SCSI/USB
-
-</div>
-</div>
-
----
-
-<div class="flashcard-deck" data-subtema="104.1">
-</div>
-
-<div class="flashcard" data-id="104.1-fc-013">
-<div class="flashcard-front">
-
-**P:** Que hace el comando `/dev/sdb`?
-
-</div>
-<div class="flashcard-back">
-
-**R:** Segundo disco SATA/SCSI/USB
-
-</div>
-</div>
-
----
-
-<div class="flashcard-deck" data-subtema="104.1">
-</div>
-
-<div class="flashcard" data-id="104.1-fc-014">
+<div class="flashcard" data-id="104.1-fc-027">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `/dev/sda1`?
@@ -268,7 +502,7 @@ subtema: "104.1"
 <div class="flashcard-deck" data-subtema="104.1">
 </div>
 
-<div class="flashcard" data-id="104.1-fc-015">
+<div class="flashcard" data-id="104.1-fc-028">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `/dev/sda2`?
@@ -286,15 +520,15 @@ subtema: "104.1"
 <div class="flashcard-deck" data-subtema="104.1">
 </div>
 
-<div class="flashcard" data-id="104.1-fc-016">
+<div class="flashcard" data-id="104.1-fc-029">
 <div class="flashcard-front">
 
-**P:** Que hace el comando `/dev/nvme0n1`?
+**P:** Que hace el comando `/dev/nvme0n1p1`?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Primer disco NVMe
+**R:** Primera particion del primer disco NVMe
 
 </div>
 </div>
@@ -304,7 +538,43 @@ subtema: "104.1"
 <div class="flashcard-deck" data-subtema="104.1">
 </div>
 
-<div class="flashcard" data-id="104.1-fc-017">
+<div class="flashcard" data-id="104.1-fc-030">
+<div class="flashcard-front">
+
+**P:** Que hace el comando `/dev/vda`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** Primer disco virtual (KVM/virtio)
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.1">
+</div>
+
+<div class="flashcard" data-id="104.1-fc-031">
+<div class="flashcard-front">
+
+**P:** Que hace el comando `l`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** Listar tipos de particion conocidos
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.1">
+</div>
+
+<div class="flashcard" data-id="104.1-fc-032">
 <div class="flashcard-front">
 
 **P:** Que es/son 1. Dispositivos de bloque en Linux?
@@ -322,7 +592,7 @@ subtema: "104.1"
 <div class="flashcard-deck" data-subtema="104.1">
 </div>
 
-<div class="flashcard" data-id="104.1-fc-018">
+<div class="flashcard" data-id="104.1-fc-033">
 <div class="flashcard-front">
 
 **P:** Que es/son 5. Gestion del espacio swap?
@@ -340,7 +610,7 @@ subtema: "104.1"
 <div class="flashcard-deck" data-subtema="104.1">
 </div>
 
-<div class="flashcard" data-id="104.1-fc-019">
+<div class="flashcard" data-id="104.1-fc-034">
 <div class="flashcard-front">
 
 **P:** Que es/son 6. Puntos clave para el examen?

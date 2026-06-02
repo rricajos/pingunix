@@ -11,7 +11,7 @@ subtema: "103.2"
 
 # Flashcards: 103.2 - Filtros De Texto
 
-> 33 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 47 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="103.2">
 </div>
@@ -163,6 +163,276 @@ subtema: "103.2"
 <div class="flashcard" data-id="103.2-fc-009">
 <div class="flashcard-front">
 
+**P:** Cual es la diferencia entre `cat -n` y `cat -b` al numerar lineas de un archivo?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `-n` numera todas las lineas, `-b` numera solo las lineas no vacias. `cat -n` numera todas las lineas del archivo, incluyendo las lineas vacias. `cat -b` numera solo las lineas que contienen texto, omitiendo las lineas vacias del conteo. El comando `nl` por defecto se comporta como `cat -b`, numerando solo lineas no vacias. Para que `nl` numere todas las lineas se usa `nl -b a`. Esta distincion es relevante para el examen LPIC-1.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.2">
+</div>
+
+<div class="flashcard" data-id="103.2-fc-010">
+<div class="flashcard-front">
+
+**P:** Que hace el comando `tac archivo.txt`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) Muestra el archivo con las lineas en orden inverso (la ultima primero). `tac` es `cat` escrito al reves y hace exactamente eso: invierte el orden de las lineas de un archivo, mostrando la ultima linea primero y la primera al final. No invierte los caracteres dentro de cada linea ni las columnas. Es util para ver logs donde las entradas mas recientes estan al final del archivo. `tac` puede recibir multiples archivos como argumentos, invirtiendo las lineas de cada uno independientemente.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.2">
+</div>
+
+<div class="flashcard" data-id="103.2-fc-011">
+<div class="flashcard-front">
+
+**P:** Un administrador quiere ordenar el archivo `/etc/passwd` numericamente por el tercer campo (UID), usando `:` como delimitador. Cual es el comando correcto?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `sort -t ":" -k 3 -n /etc/passwd`. La opcion `-t ":"` define el delimitador de campos como dos puntos (el separador usado en `/etc/passwd`). `-k 3` indica ordenar por el tercer campo. `-n` indica ordenacion numerica en lugar de alfabetica. Sin `-t`, sort usaria espacios y tabulaciones como delimitadores, lo que no funcionaria para `/etc/passwd`. La opcion A no define el delimitador y fallaria. La opcion C usa `-d` que no es la opcion de delimitador en sort. La opcion D tiene sintaxis inventada.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.2">
+</div>
+
+<div class="flashcard" data-id="103.2-fc-012">
+<div class="flashcard-front">
+
+**P:** Que comando convierte todas las letras minusculas a mayusculas usando `tr`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) `tr 'a-z' 'A-Z' < archivo.txt`. `tr 'a-z' 'A-Z'` traduce (reemplaza) cada letra minuscula por su equivalente mayuscula. Tambien se puede usar con clases de caracteres: `tr '[:lower:]' '[:upper:]'`. La opcion A hace lo contrario (mayusculas a minusculas). La opcion B elimina (`-d`) todas las letras minusculas. La opcion D comprime (`-s`) letras minusculas repetidas. Es importante recordar que `tr` no acepta nombres de archivo como argumento y siempre lee de la entrada estandar.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.2">
+</div>
+
+<div class="flashcard" data-id="103.2-fc-013">
+<div class="flashcard-front">
+
+**P:** Que hace el comando `head -n -3 archivo.txt`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) Muestra todas las lineas excepto las 3 ultimas. Cuando `head` recibe un numero negativo con `-n`, muestra todas las lineas del archivo excepto las N ultimas. Asi, `head -n -3 archivo.txt` muestra todo el contenido menos las 3 ultimas lineas. De forma complementaria, `tail -n +3 archivo.txt` muestra desde la linea 3 hasta el final. `head -n 3` (sin signo negativo) muestra las primeras 3 lineas. Estos modificadores con signo son una herramienta poderosa para extraer rangos especificos de lineas.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.2">
+</div>
+
+<div class="flashcard" data-id="103.2-fc-014">
+<div class="flashcard-front">
+
+**P:** Que comando `paste` une todas las lineas de un archivo en una sola linea separada por comas?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `paste -s -d "," archivo.txt`. La opcion `-s` (serial) de `paste` une todas las lineas del archivo en una sola linea. La opcion `-d ","` establece la coma como delimitador entre los elementos. Sin `-s`, `paste` une lineas de multiples archivos lado a lado (por columnas). Sin `-d`, el delimitador por defecto es el tabulador. La opcion D tambien produciria un resultado similar pero con una coma extra al final, y no es la forma idiomatica de hacerlo.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.2">
+</div>
+
+<div class="flashcard" data-id="103.2-fc-015">
+<div class="flashcard-front">
+
+**P:** Que paginador se considera mas potente que `more` y permite navegar hacia atras y buscar en ambas direcciones?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) `less`. `less` es una version mejorada de `more` que permite navegacion completa en ambas direcciones. Su nombre viene del dicho "less is more". Permite avanzar y retroceder paginas (con `Space`/`b`), buscar hacia adelante (`/patron`) y hacia atras (`?patron`), ir al inicio (`g`) y al final (`G`). Las paginas de manual (`man`) usan `less` como paginador por defecto. `more` solo permite avanzar (con soporte limitado para retroceder en algunos sistemas). `cat` muestra todo el contenido de una vez sin paginacion.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.2">
+</div>
+
+<div class="flashcard" data-id="103.2-fc-016">
+<div class="flashcard-front">
+
+**P:** Que hace la opcion `-i` en el comando `sed -i 's/foo/bar/g' archivo.txt`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) Modifica el archivo directamente (in-place) sin crear una copia. La opcion `-i` de `sed` modifica el archivo directamente en lugar de mostrar el resultado en la salida estandar. Sin `-i`, `sed` muestra el resultado modificado en la terminal pero el archivo original no cambia. Se puede crear un backup automatico anadiendo una extension: `sed -i.bak 's/foo/bar/g' archivo.txt` crea `archivo.txt.bak` con el contenido original antes de modificar. La opcion para ignorar mayusculas es la flag `i` al final del patron: `s/foo/bar/gi`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.2">
+</div>
+
+<div class="flashcard" data-id="103.2-fc-017">
+<div class="flashcard-front">
+
+**P:** Que comando muestra el contenido de un archivo comprimido con gzip sin necesidad de descomprimirlo?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) `zcat archivo.txt.gz`. `zcat` muestra el contenido de archivos comprimidos con gzip (.gz) en la salida estandar sin descomprimirlos en disco. Es equivalente a `gunzip -c`. Para archivos comprimidos con bzip2 (.bz2) se usa `bzcat` y para xz (.xz) se usa `xzcat`. La opcion A intentaria mostrar el contenido binario comprimido, mostrando caracteres ilegibles. La opcion B descomprimiria el archivo en disco (eliminando el .gz). La opcion D muestra informacion de compresion (ratio, tamanos) pero no el contenido.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.2">
+</div>
+
+<div class="flashcard" data-id="103.2-fc-018">
+<div class="flashcard-front">
+
+**P:** Que comando `sed` elimina todas las lineas que contienen la palabra "error" en un archivo?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `sed '/error/d' archivo.txt`. `sed '/error/d'` busca las lineas que contienen el patron "error" y las elimina (`d` = delete). La opcion A sustituye la primera ocurrencia de "error" por nada en cada linea, pero no elimina la linea completa. La opcion C con `-n` y `p` hace lo contrario: muestra solo las lineas que contienen "error". La opcion D tiene una sintaxis invalida. Para eliminar lineas por numero se usa `sed '3d'` (elimina linea 3) o `sed '2,5d'` (elimina lineas 2 a 5).
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.2">
+</div>
+
+<div class="flashcard" data-id="103.2-fc-019">
+<div class="flashcard-front">
+
+**P:** Que comando usarias para numerar todas las lineas de un archivo, incluyendo las vacias, usando `nl`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** nl -b a archivo.txt. `nl -b a` numera todas las lineas del archivo, incluyendo las vacias. La opcion `-b` define el estilo de numeracion del cuerpo: `a` (all) numera todas las lineas, `t` (text, por defecto) numera solo lineas no vacias. Otras opciones utiles de `nl` son `-s '. '` para definir el separador despues del numero, `-w 3` para definir el ancho del numero y `-n rz` para alinear a la derecha con ceros (001, 002...).
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.2">
+</div>
+
+<div class="flashcard" data-id="103.2-fc-020">
+<div class="flashcard-front">
+
+**P:** Que comando usarias para contar el numero de lineas en un archivo?
+
+</div>
+<div class="flashcard-back">
+
+**R:** wc -l archivo.txt. `wc -l` cuenta el numero de lineas de un archivo. Sin opciones, `wc` muestra tres valores: lineas, palabras y bytes. Otras opciones utiles son `-w` (palabras), `-c` (bytes), `-m` (caracteres) y `-L` (longitud de la linea mas larga). `wc -l` se usa frecuentemente con pipes: `ls /etc | wc -l` cuenta cuantos archivos hay en `/etc`, y `cat /etc/passwd | wc -l` cuenta cuantos usuarios hay en el sistema.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.2">
+</div>
+
+<div class="flashcard" data-id="103.2-fc-021">
+<div class="flashcard-front">
+
+**P:** Que comando usarias para convertir tabulaciones en 4 espacios en un archivo?
+
+</div>
+<div class="flashcard-back">
+
+**R:** expand -t 4 archivo.txt. `expand` convierte tabulaciones en espacios. La opcion `-t 4` indica que cada tabulacion se reemplaza por 4 espacios (por defecto son 8). El comando contrario es `unexpand`, que convierte espacios en tabulaciones. `unexpand -a` convierte todos los espacios (no solo los iniciales) y `unexpand -t 4` establece 4 espacios como equivalente a un tabulador. Estos comandos son utiles para estandarizar la indentacion en archivos de texto.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.2">
+</div>
+
+<div class="flashcard" data-id="103.2-fc-022">
+<div class="flashcard-front">
+
+**P:** Que comando reformatea un archivo de texto para que las lineas tengan un maximo de 60 caracteres?
+
+</div>
+<div class="flashcard-back">
+
+**R:** fmt -w 60 archivo.txt. `fmt` reformatea texto ajustando el ancho de las lineas. La opcion `-w 60` establece el ancho maximo en 60 caracteres por linea (por defecto es 75). `fmt` intenta mantener las palabras completas, partiendo las lineas en espacios. La opcion `-u` establece espaciado uniforme (un espacio entre palabras, dos despues de punto). `fmt` es util para reformatear textos que tienen lineas muy largas o muy cortas.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.2">
+</div>
+
+<div class="flashcard" data-id="103.2-fc-023">
+<div class="flashcard-front">
+
+**P:** Que comando usarias para mostrar solo la linea 5 de un archivo usando `sed`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** sed -n '5p' archivo.txt. `sed -n '5p'` muestra unicamente la linea 5 del archivo. La opcion `-n` suprime la salida por defecto de sed (que normalmente imprime todas las lineas) y `p` (print) imprime solo la linea especificada. Sin `-n`, la linea 5 apareceria duplicada. Para mostrar un rango de lineas se usa `sed -n '2,5p'` (lineas 2 a 5). Para mostrar lineas que contienen un patron: `sed -n '/patron/p'`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.2">
+</div>
+
+<div class="flashcard" data-id="103.2-fc-024">
+<div class="flashcard-front">
+
 **P:** Tip de examen: `tac` es simplemente `cat` escrito al reves y hace exactamente eso: invierte el ...
 
 </div>
@@ -178,7 +448,7 @@ subtema: "103.2"
 <div class="flashcard-deck" data-subtema="103.2">
 </div>
 
-<div class="flashcard" data-id="103.2-fc-010">
+<div class="flashcard" data-id="103.2-fc-025">
 <div class="flashcard-front">
 
 **P:** Tip de examen: `less` es mas potente que `more` (permite retroceder, buscar hacia atras). Las p...
@@ -196,7 +466,7 @@ subtema: "103.2"
 <div class="flashcard-deck" data-subtema="103.2">
 </div>
 
-<div class="flashcard" data-id="103.2-fc-011">
+<div class="flashcard" data-id="103.2-fc-026">
 <div class="flashcard-front">
 
 **P:** Tip de examen: `uniq` solo elimina duplicados **adyacentes**. Si las lineas duplicadas no estan...
@@ -214,7 +484,7 @@ subtema: "103.2"
 <div class="flashcard-deck" data-subtema="103.2">
 </div>
 
-<div class="flashcard" data-id="103.2-fc-012">
+<div class="flashcard" data-id="103.2-fc-027">
 <div class="flashcard-front">
 
 **P:** Tip de examen: `-d` define el delimitador (por defecto TAB), `-f` selecciona campos, `-c` selec...
@@ -232,7 +502,7 @@ subtema: "103.2"
 <div class="flashcard-deck" data-subtema="103.2">
 </div>
 
-<div class="flashcard" data-id="103.2-fc-013">
+<div class="flashcard" data-id="103.2-fc-028">
 <div class="flashcard-front">
 
 **P:** Tip de examen: MD5 se considera inseguro para criptografia pero sigue siendo util para verifica...
@@ -250,43 +520,7 @@ subtema: "103.2"
 <div class="flashcard-deck" data-subtema="103.2">
 </div>
 
-<div class="flashcard" data-id="103.2-fc-014">
-<div class="flashcard-front">
-
-**P:** Que hace el comando `Space`?
-
-</div>
-<div class="flashcard-back">
-
-**R:** Avanzar una pagina
-
-</div>
-</div>
-
----
-
-<div class="flashcard-deck" data-subtema="103.2">
-</div>
-
-<div class="flashcard" data-id="103.2-fc-015">
-<div class="flashcard-front">
-
-**P:** Que hace el comando `Enter`?
-
-</div>
-<div class="flashcard-back">
-
-**R:** Avanzar una linea
-
-</div>
-</div>
-
----
-
-<div class="flashcard-deck" data-subtema="103.2">
-</div>
-
-<div class="flashcard" data-id="103.2-fc-016">
+<div class="flashcard" data-id="103.2-fc-029">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `b`?
@@ -304,15 +538,15 @@ subtema: "103.2"
 <div class="flashcard-deck" data-subtema="103.2">
 </div>
 
-<div class="flashcard" data-id="103.2-fc-017">
+<div class="flashcard" data-id="103.2-fc-030">
 <div class="flashcard-front">
 
-**P:** Que hace el comando `/patron`?
+**P:** Que hace el comando `n`?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Buscar hacia adelante
+**R:** Siguiente coincidencia de busqueda
 
 </div>
 </div>
@@ -322,15 +556,15 @@ subtema: "103.2"
 <div class="flashcard-deck" data-subtema="103.2">
 </div>
 
-<div class="flashcard" data-id="103.2-fc-018">
+<div class="flashcard" data-id="103.2-fc-031">
 <div class="flashcard-front">
 
-**P:** Que hace el comando `q`?
+**P:** Que hace el comando `v`?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Salir
+**R:** Abrir el archivo en el editor ($EDITOR)
 
 </div>
 </div>
@@ -340,7 +574,25 @@ subtema: "103.2"
 <div class="flashcard-deck" data-subtema="103.2">
 </div>
 
-<div class="flashcard" data-id="103.2-fc-019">
+<div class="flashcard" data-id="103.2-fc-032">
+<div class="flashcard-front">
+
+**P:** Que hace el comando `-N`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** Alternar numeros de linea (estando dentro de less)
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.2">
+</div>
+
+<div class="flashcard" data-id="103.2-fc-033">
 <div class="flashcard-front">
 
 **P:** Que es/son 2b. Paginadores: less y more?
@@ -358,7 +610,7 @@ subtema: "103.2"
 <div class="flashcard-deck" data-subtema="103.2">
 </div>
 
-<div class="flashcard" data-id="103.2-fc-020">
+<div class="flashcard" data-id="103.2-fc-034">
 <div class="flashcard-front">
 
 **P:** Que es/son 3. sort?
@@ -376,7 +628,7 @@ subtema: "103.2"
 <div class="flashcard-deck" data-subtema="103.2">
 </div>
 
-<div class="flashcard" data-id="103.2-fc-021">
+<div class="flashcard" data-id="103.2-fc-035">
 <div class="flashcard-front">
 
 **P:** Que es/son 4. uniq?
@@ -394,7 +646,7 @@ subtema: "103.2"
 <div class="flashcard-deck" data-subtema="103.2">
 </div>
 
-<div class="flashcard" data-id="103.2-fc-022">
+<div class="flashcard" data-id="103.2-fc-036">
 <div class="flashcard-front">
 
 **P:** Que es/son 5. wc (word count)?
@@ -412,7 +664,7 @@ subtema: "103.2"
 <div class="flashcard-deck" data-subtema="103.2">
 </div>
 
-<div class="flashcard" data-id="103.2-fc-023">
+<div class="flashcard" data-id="103.2-fc-037">
 <div class="flashcard-front">
 
 **P:** Que es/son 6. cut?
@@ -430,7 +682,7 @@ subtema: "103.2"
 <div class="flashcard-deck" data-subtema="103.2">
 </div>
 
-<div class="flashcard" data-id="103.2-fc-024">
+<div class="flashcard" data-id="103.2-fc-038">
 <div class="flashcard-front">
 
 **P:** Que es/son 7. paste?
@@ -448,7 +700,7 @@ subtema: "103.2"
 <div class="flashcard-deck" data-subtema="103.2">
 </div>
 
-<div class="flashcard" data-id="103.2-fc-025">
+<div class="flashcard" data-id="103.2-fc-039">
 <div class="flashcard-front">
 
 **P:** Que es/son 8. join?
@@ -466,7 +718,7 @@ subtema: "103.2"
 <div class="flashcard-deck" data-subtema="103.2">
 </div>
 
-<div class="flashcard" data-id="103.2-fc-026">
+<div class="flashcard" data-id="103.2-fc-040">
 <div class="flashcard-front">
 
 **P:** Que es/son 9. tr (translate)?
@@ -484,7 +736,7 @@ subtema: "103.2"
 <div class="flashcard-deck" data-subtema="103.2">
 </div>
 
-<div class="flashcard" data-id="103.2-fc-027">
+<div class="flashcard" data-id="103.2-fc-041">
 <div class="flashcard-front">
 
 **P:** Que es/son 11. fmt?
@@ -502,7 +754,7 @@ subtema: "103.2"
 <div class="flashcard-deck" data-subtema="103.2">
 </div>
 
-<div class="flashcard" data-id="103.2-fc-028">
+<div class="flashcard" data-id="103.2-fc-042">
 <div class="flashcard-front">
 
 **P:** Que es/son 12. pr?
@@ -520,7 +772,7 @@ subtema: "103.2"
 <div class="flashcard-deck" data-subtema="103.2">
 </div>
 
-<div class="flashcard" data-id="103.2-fc-029">
+<div class="flashcard" data-id="103.2-fc-043">
 <div class="flashcard-front">
 
 **P:** Que es/son 13. nl (numerar lineas)?
@@ -538,7 +790,7 @@ subtema: "103.2"
 <div class="flashcard-deck" data-subtema="103.2">
 </div>
 
-<div class="flashcard" data-id="103.2-fc-030">
+<div class="flashcard" data-id="103.2-fc-044">
 <div class="flashcard-front">
 
 **P:** Que es/son 15. split?
@@ -556,7 +808,7 @@ subtema: "103.2"
 <div class="flashcard-deck" data-subtema="103.2">
 </div>
 
-<div class="flashcard" data-id="103.2-fc-031">
+<div class="flashcard" data-id="103.2-fc-045">
 <div class="flashcard-front">
 
 **P:** Que es/son 16. sed (stream editor)?
@@ -574,7 +826,7 @@ subtema: "103.2"
 <div class="flashcard-deck" data-subtema="103.2">
 </div>
 
-<div class="flashcard" data-id="103.2-fc-032">
+<div class="flashcard" data-id="103.2-fc-046">
 <div class="flashcard-front">
 
 **P:** Que es/son 17. Checksums (sumas de verificacion)?
@@ -592,7 +844,7 @@ subtema: "103.2"
 <div class="flashcard-deck" data-subtema="103.2">
 </div>
 
-<div class="flashcard" data-id="103.2-fc-033">
+<div class="flashcard" data-id="103.2-fc-047">
 <div class="flashcard-front">
 
 **P:** Que es/son 18. Lectores de archivos comprimidos?

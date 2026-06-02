@@ -179,3 +179,243 @@ d) `notify maria pts/3`
 El comando `write` permite enviar un mensaje a un usuario especifico en una terminal determinada. La sintaxis es `write usuario [terminal]`. Despues de ejecutar el comando, se escribe el mensaje linea por linea y se finaliza con Ctrl+D. El comando `wall` no acepta un usuario especifico como destino.
 
 </details>
+
+### Pregunta 11
+
+¿Que secuencia de escape en el archivo `/etc/issue` muestra la version del kernel?
+
+a) `\k`
+b) `\v`
+c) `\r`
+d) `\K`
+
+<details><summary>Respuesta</summary>
+
+**c) `\r`**
+
+En el archivo `/etc/issue`, la secuencia `\r` muestra la version del kernel (release) del sistema. Por ejemplo, podria mostrar "6.1.0-18-amd64". Otras secuencias comunes son `\n` (hostname), `\l` (terminal), `\s` (nombre del SO), `\m` (arquitectura) y `\d` (fecha actual).
+
+</details>
+
+### Pregunta 12
+
+Un administrador quiere programar un reinicio del servidor para las 23:00 e informar a todos los usuarios conectados. ¿Que comando debe usar?
+
+a) `reboot -t 23:00 "Reinicio programado"`
+b) `shutdown -r 23:00 "Reinicio programado a las 23:00"`
+c) `systemctl reboot --schedule 23:00`
+d) `wall "Reinicio a las 23:00" && at 23:00 reboot`
+
+<details><summary>Respuesta</summary>
+
+**b) `shutdown -r 23:00 "Reinicio programado a las 23:00"`**
+
+El comando `shutdown -r` programa un reinicio a la hora especificada. El mensaje entre comillas se envia automaticamente a todos los usuarios conectados mediante `wall`. Ademas, `shutdown` envia avisos periodicos a medida que se acerca la hora programada, dando tiempo a los usuarios para guardar su trabajo.
+
+</details>
+
+### Pregunta 13
+
+¿Que secuencia de escape en `/etc/issue` muestra el nombre de la terminal donde se esta realizando el login?
+
+a) `\n`
+b) `\t`
+c) `\l`
+d) `\s`
+
+<details><summary>Respuesta</summary>
+
+**c) `\l`**
+
+La secuencia `\l` (ele minuscula) en `/etc/issue` muestra el nombre de la terminal (tty) donde el usuario esta iniciando sesion, por ejemplo "tty1", "tty2", etc. No confundir con `\n` que muestra el hostname, ni con `\t` que muestra la hora actual.
+
+</details>
+
+### Pregunta 14
+
+¿Cual es la diferencia principal entre `/etc/motd` y los scripts en `/etc/update-motd.d/`?
+
+a) `/etc/motd` es para SSH y `/etc/update-motd.d/` para consola local
+b) `/etc/motd` es un archivo estatico mientras que `/etc/update-motd.d/` genera contenido dinamico
+c) `/etc/update-motd.d/` solo funciona en sistemas RHEL
+d) No hay diferencia, son sinonimos
+
+<details><summary>Respuesta</summary>
+
+**b) `/etc/motd` es un archivo estatico mientras que `/etc/update-motd.d/` genera contenido dinamico**
+
+El archivo `/etc/motd` contiene un mensaje estatico que el administrador edita manualmente. En distribuciones basadas en Debian/Ubuntu, el directorio `/etc/update-motd.d/` contiene scripts ejecutables que generan contenido dinamico (actualizaciones pendientes, estado del sistema, etc.) cada vez que un usuario inicia sesion.
+
+</details>
+
+### Pregunta 15
+
+¿Que ocurre cuando un usuario con `mesg n` configurado recibe un mensaje de `wall` enviado por root?
+
+a) El mensaje es bloqueado completamente
+b) El mensaje se entrega de todas formas
+c) El mensaje se almacena en un buffer hasta que el usuario ejecute `mesg y`
+d) El mensaje se redirige al correo del usuario
+
+<details><summary>Respuesta</summary>
+
+**b) El mensaje se entrega de todas formas**
+
+Cuando root envia un mensaje con `wall`, este se entrega a todos los usuarios conectados independientemente de su configuracion de `mesg`. La restriccion `mesg n` solo bloquea mensajes de usuarios normales (especialmente los de `write`), pero no los mensajes de wall enviados por root. Esto garantiza que las notificaciones criticas del administrador siempre lleguen.
+
+</details>
+
+### Pregunta 16
+
+Un administrador ha programado un apagado con `shutdown -h +30` pero necesita cancelarlo. ¿Que comando debe ejecutar?
+
+a) `shutdown --stop`
+b) `shutdown -c`
+c) `shutdown --abort`
+d) `systemctl cancel-shutdown`
+
+<details><summary>Respuesta</summary>
+
+**b) `shutdown -c`**
+
+La opcion `-c` (cancel) de `shutdown` cancela un apagado o reinicio previamente programado. Opcionalmente se puede incluir un mensaje que se enviara a todos los usuarios: `shutdown -c "El apagado ha sido cancelado"`. Este mensaje se distribuye automaticamente via `wall`.
+
+</details>
+
+### Pregunta 17
+
+¿En que directorio almacena systemd las solicitudes pendientes de contrasena generadas por `systemd-ask-password`?
+
+a) `/var/run/passwords/`
+b) `/run/systemd/ask-password/`
+c) `/etc/systemd/passwords/`
+d) `/tmp/systemd-passwords/`
+
+<details><summary>Respuesta</summary>
+
+**b) `/run/systemd/ask-password/`**
+
+Las solicitudes de contrasena generadas por `systemd-ask-password` se almacenan como archivos en el directorio `/run/systemd/ask-password/`. Los agentes de contrasena (Plymouth para el arranque grafico, la consola de texto, o wall) monitorizan este directorio para presentar las solicitudes al usuario.
+
+</details>
+
+### Pregunta 18
+
+¿Que secuencia de escape en `/etc/issue` muestra el numero de usuarios actualmente conectados al sistema?
+
+a) `\u`
+b) `\U`
+c) `\c`
+d) `\#`
+
+<details><summary>Respuesta</summary>
+
+**b) `\U`**
+
+La secuencia `\U` en `/etc/issue` muestra el numero de usuarios actualmente conectados al sistema. Muestra un texto como "3 users" o "1 user". Es util para que los usuarios vean la carga del sistema antes de iniciar sesion. Las secuencias de escape de `/etc/issue` son interpretadas por `agetty` y generalmente no funcionan en `/etc/issue.net`.
+
+</details>
+
+### Pregunta 19
+
+¿Que agente de systemd presenta las solicitudes de contrasena en la pantalla de arranque grafica?
+
+a) Console
+b) Wall
+c) Plymouth
+d) Getty
+
+<details><summary>Respuesta</summary>
+
+**c) Plymouth**
+
+Plymouth es el agente que muestra las solicitudes de contrasena de `systemd-ask-password` en la pantalla de arranque grafica (splash screen). Es el mecanismo por el cual se solicita la contrasena de descifrado LUKS de forma visual durante el arranque. Si Plymouth no esta disponible, se utiliza el agente de consola de texto.
+
+</details>
+
+### Pregunta 20
+
+¿Que comando de `shutdown` apaga inmediatamente el sistema?
+
+a) `shutdown -h 0`
+b) `shutdown -h now`
+c) `shutdown --immediate`
+d) Ambas a) y b) son correctas
+
+<details><summary>Respuesta</summary>
+
+**d) Ambas a) y b) son correctas**
+
+Tanto `shutdown -h now` como `shutdown -h 0` inician el apagado inmediato del sistema. La opcion `-h` indica halt (apagar), `now` es un alias para el tiempo "+0" que significa inmediatamente. Tambien se puede usar `+N` para minutos (ej: `+10`) o una hora especifica (ej: `23:00`).
+
+</details>
+
+### Pregunta 21
+
+Escribe el comando para enviar el mensaje "Mantenimiento en 5 minutos" a todos los usuarios conectados al sistema.
+
+<input type="text" class="fill-blank" data-answer="wall 'Mantenimiento en 5 minutos'" data-alt="wall \"Mantenimiento en 5 minutos\"" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**wall 'Mantenimiento en 5 minutos'**
+
+El comando `wall` (Write to ALL) envia un mensaje a todas las terminales de todos los usuarios conectados. El mensaje aparecera precedido de una cabecera indicando quien lo envio y desde que terminal. Es la herramienta estandar para notificaciones urgentes del administrador.
+
+</details>
+
+### Pregunta 22
+
+Escribe el comando para deshabilitar la recepcion de mensajes de otros usuarios en tu terminal.
+
+<input type="text" class="fill-blank" data-answer="mesg n" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**mesg n**
+
+El comando `mesg n` deshabilita los permisos de escritura de otros usuarios en tu terminal, bloqueando los mensajes enviados con `write`. Sin embargo, los mensajes de `wall` enviados por root generalmente no se bloquean. Para volver a habilitar la recepcion se usa `mesg y`.
+
+</details>
+
+### Pregunta 23
+
+Escribe el comando para programar un apagado del sistema en 15 minutos con un mensaje de aviso a los usuarios.
+
+<input type="text" class="fill-blank" data-answer="shutdown -h +15 'El sistema se apagara en 15 minutos'" data-alt="shutdown -h +15 \"El sistema se apagara en 15 minutos\"" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**shutdown -h +15 'El sistema se apagara en 15 minutos'**
+
+El comando `shutdown -h +15` programa el apagado del sistema para dentro de 15 minutos. La opcion `-h` indica halt (apagar) y `+15` especifica el tiempo en minutos. El mensaje entre comillas se envia automaticamente a todos los usuarios conectados. Se pueden enviar avisos adicionales con `wall` si es necesario.
+
+</details>
+
+### Pregunta 24
+
+Escribe el comando para enviar un mensaje al usuario "carlos" que esta conectado en la terminal pts/1.
+
+<input type="text" class="fill-blank" data-answer="write carlos pts/1" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**write carlos pts/1**
+
+El comando `write` permite enviar un mensaje interactivo a un usuario especifico en una terminal determinada. Despues de ejecutar el comando, cada linea que se escriba sera enviada al usuario. La sesion se termina pulsando Ctrl+D. Si el usuario tiene `mesg n`, el mensaje sera rechazado (a menos que el remitente sea root).
+
+</details>
+
+### Pregunta 25
+
+Escribe el comando para cancelar un apagado previamente programado y notificar a los usuarios que ha sido cancelado.
+
+<input type="text" class="fill-blank" data-answer="shutdown -c 'El apagado ha sido cancelado'" data-alt="shutdown -c \"El apagado ha sido cancelado\"" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**shutdown -c 'El apagado ha sido cancelado'**
+
+La opcion `-c` (cancel) de `shutdown` cancela cualquier apagado o reinicio programado previamente. El mensaje opcional se envia a todos los usuarios conectados para informarles de la cancelacion. Es importante siempre incluir un mensaje explicativo para evitar confusion entre los usuarios.
+
+</details>

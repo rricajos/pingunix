@@ -164,3 +164,228 @@ d) `xapi`
 
 `xl` reemplazó a `xm` como herramienta principal de gestión de dominios Xen. `xm` dependía del demonio `xend` que fue eliminado. `xl` interactúa directamente con el hipervisor a través de `libxl`.
 </details>
+
+### Pregunta 11
+
+¿Qué tipo de guest Xen permite ejecutar sistemas operativos Windows sin modificar?
+
+a) PV
+b) HVM
+c) PVH
+d) Todos los tipos
+
+<details><summary>Respuesta</summary>
+
+**b) HVM**
+
+Solo los guests HVM (Hardware Virtual Machine) soportan sistemas operativos sin modificar como Windows, ya que utilizan virtualización completa asistida por hardware (VT-x/AMD-V) y QEMU para emulación de dispositivos. PV requiere kernel modificado y PVH no soporta Windows.
+</details>
+
+### Pregunta 12
+
+En la configuración xl.cfg, ¿qué parámetro especifica el kernel del guest en modo PV (paravirtualizado)?
+
+a) `boot = "kernel"`
+b) `kernel = "/boot/vmlinuz-guest"`
+c) `loader = "/boot/vmlinuz-guest"`
+d) `image = "/boot/vmlinuz-guest"`
+
+<details><summary>Respuesta</summary>
+
+**b) `kernel = "/boot/vmlinuz-guest"`**
+
+En guests PV, el parámetro `kernel` especifica la ruta al kernel del guest que será cargado directamente por el hipervisor. Junto con `ramdisk` (initrd) y `extra` (parámetros del kernel como root), define cómo arranca el guest paravirtualizado sin necesidad de un bootloader.
+</details>
+
+### Pregunta 13
+
+¿Qué comando de xl conecta a la consola serie de un dominio Xen en ejecución?
+
+a) `xl attach mi-vm`
+b) `xl serial mi-vm`
+c) `xl console mi-vm`
+d) `xl terminal mi-vm`
+
+<details><summary>Respuesta</summary>
+
+**c) `xl console mi-vm`**
+
+`xl console` conecta a la consola serie (serial) del dominio especificado, permitiendo interactuar con el sistema operativo del guest. Es equivalente a una conexión serie física. Para desconectar de la consola se usa la combinación de teclas `Ctrl+]`.
+</details>
+
+### Pregunta 14
+
+¿Cuál de las siguientes afirmaciones sobre Dom0 en Xen es correcta?
+
+a) Dom0 es opcional y puede eliminarse después del arranque
+b) Dom0 es el primer dominio que arranca y contiene los drivers de hardware
+c) Dom0 es un dominio sin privilegios como cualquier DomU
+d) Dom0 solo se necesita para guests HVM, no para PV
+
+<details><summary>Respuesta</summary>
+
+**b) Dom0 es el primer dominio que arranca y contiene los drivers de hardware**
+
+Dom0 es el dominio privilegiado esencial en Xen. Arranca primero, tiene acceso directo al hardware, ejecuta los drivers de dispositivos y es necesario para crear y gestionar todos los DomU. Sin Dom0, no se pueden gestionar las máquinas virtuales.
+</details>
+
+### Pregunta 15
+
+¿Qué comando de xl muestra la asignación de vCPUs de todos los dominios activos?
+
+a) `xl cpu-list`
+b) `xl vcpu-list`
+c) `xl show-cpus`
+d) `xl sched-info`
+
+<details><summary>Respuesta</summary>
+
+**b) `xl vcpu-list`**
+
+`xl vcpu-list` muestra la lista de vCPUs asignadas a cada dominio, incluyendo su estado (running, blocked), el tiempo de CPU consumido y la CPU física donde están fijadas (pinned). Es útil para verificar la distribución de recursos de CPU entre dominios.
+</details>
+
+### Pregunta 16
+
+En la configuración de red xl.cfg, ¿qué parámetro limita el ancho de banda de la interfaz virtual de un DomU?
+
+a) `bandwidth=100Mb/s`
+b) `rate=100Mb/s`
+c) `limit=100Mb/s`
+d) `maxrate=100Mb/s`
+
+<details><summary>Respuesta</summary>
+
+**b) `rate=100Mb/s`**
+
+En la configuración de interfaces virtuales (vif) de xl.cfg, el parámetro `rate` limita el ancho de banda disponible para la interfaz. Ejemplo: `vif = ['bridge=xenbr0,rate=100Mb/s']`. Esto permite controlar la cantidad de tráfico de red que cada DomU puede generar.
+</details>
+
+### Pregunta 17
+
+¿Qué backend de almacenamiento en Xen proporciona replicación de bloques en red para alta disponibilidad?
+
+a) NFS
+b) LVM
+c) DRBD
+d) iSCSI
+
+<details><summary>Respuesta</summary>
+
+**c) DRBD**
+
+DRBD (Distributed Replicated Block Device) replica datos a nivel de bloque entre dos servidores en tiempo real, proporcionando alta disponibilidad. En Xen se configura como `disk = ['drbd:recurso,xvda,w']`. Es ideal para escenarios donde se necesita failover automático de almacenamiento.
+</details>
+
+### Pregunta 18
+
+¿Qué estado muestra xentop cuando un dominio Xen está ejecutándose activamente?
+
+a) `a` (active)
+b) `r` (running)
+c) `e` (executing)
+d) `s` (started)
+
+<details><summary>Respuesta</summary>
+
+**b) `r` (running)**
+
+En xentop, el estado de los dominios se representa con letras: `r` para running (ejecutándose), `b` para blocked (bloqueado esperando E/S), `p` para paused (pausado), `s` para shutdown, `c` para crashed y `d` para dying.
+</details>
+
+### Pregunta 19
+
+¿Qué comando de xl envía una señal ACPI de apagado ordenado a un dominio?
+
+a) `xl destroy mi-vm`
+b) `xl poweroff mi-vm`
+c) `xl shutdown mi-vm`
+d) `xl stop mi-vm`
+
+<details><summary>Respuesta</summary>
+
+**c) `xl shutdown mi-vm`**
+
+`xl shutdown` envía una señal ACPI de apagado al dominio, permitiendo que el sistema operativo guest realice un apagado limpio. `xl destroy` fuerza la terminación inmediata sin dar tiempo al guest a cerrar procesos. `xl stop` y `xl poweroff` no son comandos válidos de xl.
+</details>
+
+### Pregunta 20
+
+¿Qué convención de nombres se utiliza para los discos paravirtualizados en Xen?
+
+a) `/dev/sda`, `/dev/sdb`
+b) `/dev/vda`, `/dev/vdb`
+c) `/dev/xvda`, `/dev/xvdb`
+d) `/dev/hda`, `/dev/hdb`
+
+<details><summary>Respuesta</summary>
+
+**c) `/dev/xvda`, `/dev/xvdb`**
+
+Los discos paravirtualizados en Xen usan el prefijo `xvd` (Xen Virtual Disk). `xvda` es el primer disco, `xvdb` el segundo, etc. Los discos emulados en HVM pueden aparecer como `hda`/`sda` dependiendo de la configuración. Los dispositivos `vda` son propios de virtio (KVM/QEMU).
+</details>
+
+### Pregunta 21
+
+¿Qué comando crea e inicia un dominio Xen a partir de un archivo de configuración?
+
+<input type="text" class="fill-blank" data-answer="xl create /etc/xen/mi-vm.cfg" data-alt="xl create mi-vm.cfg" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**xl create /etc/xen/mi-vm.cfg**
+
+`xl create` lee el archivo de configuración especificado (formato xl.cfg) y crea e inicia el dominio inmediatamente. El archivo define todos los parámetros del guest: nombre, memoria, vCPUs, discos, red y tipo de virtualización (PV, HVM o PVH).
+</details>
+
+### Pregunta 22
+
+¿Qué comando lee un valor de la base de datos Xenstore?
+
+<input type="text" class="fill-blank" data-answer="xenstore-read" data-alt="xenstore-read /local/domain/1/name" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**xenstore-read**
+
+`xenstore-read` lee un valor almacenado en la base de datos jerárquica Xenstore. Por ejemplo, `xenstore-read /local/domain/1/name` devuelve el nombre del dominio con ID 1. Xenstore es el mecanismo de comunicación entre Dom0 y los DomU para compartir información de configuración.
+</details>
+
+### Pregunta 23
+
+¿Qué comando lista el contenido de un directorio en Xenstore?
+
+<input type="text" class="fill-blank" data-answer="xenstore-ls" data-alt="xenstore-ls /local/domain" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**xenstore-ls**
+
+`xenstore-ls` muestra el contenido jerárquico de un directorio en Xenstore, listando las claves y valores almacenados. Es útil para depurar la comunicación entre dominios y verificar la configuración de dispositivos virtuales compartidos entre Dom0 y los DomU.
+</details>
+
+### Pregunta 24
+
+¿Qué comando ejecuta xentop en modo batch mostrando una sola iteración?
+
+<input type="text" class="fill-blank" data-answer="xentop -b -i 1" data-alt="xentop --batch -i 1" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**xentop -b -i 1**
+
+`xentop -b` activa el modo batch (no interactivo), útil para scripts y monitorización automatizada. `-i 1` limita la salida a una sola iteración. Se puede cambiar el intervalo de refresco con `-d` (por ejemplo, `-d 5` para cada 5 segundos).
+</details>
+
+### Pregunta 25
+
+¿Qué comando realiza la migración en vivo de un dominio Xen llamado "mi-vm" al host "host2"?
+
+<input type="text" class="fill-blank" data-answer="xl migrate mi-vm host2" data-alt="xl migrate mi-vm host-destino" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**xl migrate mi-vm host2**
+
+`xl migrate` transfiere un dominio en ejecución de un host Xen a otro sin interrupción del servicio (migración en vivo). Requiere almacenamiento compartido entre ambos hosts (NFS, DRBD, etc.), conectividad de red y que ambos hosts ejecuten versiones compatibles de Xen.
+</details>

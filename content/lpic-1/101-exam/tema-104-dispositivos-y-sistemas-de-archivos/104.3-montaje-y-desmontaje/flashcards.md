@@ -11,7 +11,7 @@ subtema: "104.3"
 
 # Flashcards: 104.3 - Montaje Y Desmontaje
 
-> 19 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 34 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="104.3">
 </div>
@@ -199,6 +199,276 @@ subtema: "104.3"
 <div class="flashcard" data-id="104.3-fc-011">
 <div class="flashcard-front">
 
+**P:** Que hace el comando `mount -a`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) Monta todos los sistemas de archivos listados en `/etc/fstab` que no tengan la opcion `noauto`. El comando `mount -a` lee el archivo `/etc/fstab` e intenta montar todos los sistemas de archivos que no tengan la opcion `noauto` en su campo de opciones. Los que ya estan montados se ignoran. Es util despues de modificar `/etc/fstab` para montar las nuevas entradas sin reiniciar. Los sistemas de archivos con `noauto` estan excluidos porque esa opcion indica que se deben montar manualmente.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.3">
+</div>
+
+<div class="flashcard" data-id="104.3-fc-012">
+<div class="flashcard-front">
+
+**P:** Cual es la diferencia entre las opciones `user` y `users` en `/etc/fstab`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `user` permite montar al usuario que lo monto y solo ese usuario puede desmontarlo; `users` permite que cualquier usuario monte y desmonte. Con la opcion `user`, un usuario normal puede montar el sistema de archivos, pero solo el mismo usuario (o root) puede desmontarlo. Con la opcion `users`, cualquier usuario puede montar el sistema de archivos y tambien cualquier usuario puede desmontarlo, no solo el que lo monto. Ambas opciones implican automaticamente `noexec`, `nosuid` y `nodev` por seguridad.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.3">
+</div>
+
+<div class="flashcard" data-id="104.3-fc-013">
+<div class="flashcard-front">
+
+**P:** Un administrador necesita que una particion de datos no bloquee el arranque del sistema si el disco falla. Que opcion debe agregar en `/etc/fstab`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `nofail`. La opcion `nofail` en `/etc/fstab` indica que el sistema no debe reportar un error ni detenerse si el dispositivo no existe o no esta disponible durante el arranque. Esto es especialmente util para discos externos, particiones de datos no criticas o almacenamiento en red que podria no estar disponible al iniciar. Sin `nofail`, un dispositivo ausente podria hacer que el sistema entre en modo de emergencia. `noauto` impide que se monte con `mount -a` pero no evita errores de arranque por si sola.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.3">
+</div>
+
+<div class="flashcard" data-id="104.3-fc-014">
+<div class="flashcard-front">
+
+**P:** Cual de los siguientes comandos muestra los sistemas de archivos montados en formato de arbol junto con el tipo de FS y el UUID?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) `lsblk -f`. `lsblk -f` muestra los dispositivos de bloque en formato de arbol incluyendo el tipo de sistema de archivos, la etiqueta, el UUID y el punto de montaje. Es una herramienta muy visual y completa. `mount` muestra los montajes pero no en formato de arbol y sin UUIDs. `df -hT` muestra espacio en disco con tipo de FS pero sin UUID. `findmnt` muestra montajes en formato de arbol pero no incluye UUID por defecto.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.3">
+</div>
+
+<div class="flashcard" data-id="104.3-fc-015">
+<div class="flashcard-front">
+
+**P:** Que hace la opcion `noatime` cuando se usa como opcion de montaje?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) No actualiza el timestamp de acceso (atime) de los archivos al leerlos. La opcion `noatime` evita que el sistema actualice el timestamp de acceso (atime) cada vez que se lee un archivo. Esto mejora el rendimiento significativamente, especialmente en discos con muchas operaciones de lectura, ya que elimina una escritura innecesaria por cada lectura. La opcion `relatime` (predeterminada en muchas distribuciones) es un compromiso: solo actualiza atime si es mas antiguo que mtime o ctime.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.3">
+</div>
+
+<div class="flashcard" data-id="104.3-fc-016">
+<div class="flashcard-front">
+
+**P:** Si un directorio ya tiene archivos y se monta un sistema de archivos sobre el, que ocurre con los archivos originales del directorio?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) Los archivos quedan ocultos mientras el sistema de archivos este montado y reaparecen al desmontarlo. Cuando se monta un sistema de archivos sobre un directorio que ya contiene archivos, los archivos originales quedan ocultos (no eliminados). El punto de montaje ahora muestra el contenido del sistema de archivos montado. Al desmontar con `umount`, los archivos originales vuelven a ser visibles. Esto no causa perdida de datos pero se recomienda usar directorios vacios como puntos de montaje para evitar confusion.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.3">
+</div>
+
+<div class="flashcard" data-id="104.3-fc-017">
+<div class="flashcard-front">
+
+**P:** Que comando se usa para hacer un "lazy unmount" que desconecta inmediatamente el sistema de archivos pero lo limpia cuando ya no este en uso?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `umount -l /mnt/datos`. La opcion `-l` (lazy unmount) desconecta el sistema de archivos del arbol de directorios inmediatamente, haciendo que no sea accesible para nuevas operaciones. Sin embargo, la limpieza real se realiza cuando todos los procesos que lo estan usando terminan o cierran sus archivos. La opcion `-f` fuerza el desmontaje (util para NFS). El lazy unmount es util cuando el sistema de archivos esta "busy" y no se puede desmontar normalmente, pero se debe usar con precaucion.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.3">
+</div>
+
+<div class="flashcard" data-id="104.3-fc-018">
+<div class="flashcard-front">
+
+**P:** Cual es el archivo de configuracion principal de `autofs` que define los puntos de montaje base?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `/etc/auto.master`. `/etc/auto.master` es el archivo de configuracion principal de `autofs` que define los puntos de montaje base y sus mapas asociados. Cada linea especifica un directorio base, un archivo de mapa con las definiciones de los submontajes y opciones opcionales. Por ejemplo: `/mnt/auto /etc/auto.datos --timeout=60`. Los mapas individuales (como `/etc/auto.datos`) definen los subdirectorios especificos que se montaran automaticamente al acceder a ellos.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.3">
+</div>
+
+<div class="flashcard" data-id="104.3-fc-019">
+<div class="flashcard-front">
+
+**P:** En una unidad systemd `.mount`, que seccion contiene los parametros `What`, `Where` y `Type`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `[Mount]`. La seccion `[Mount]` de una unidad `.mount` de systemd contiene los parametros principales del montaje: `What` (que dispositivo montar), `Where` (donde montarlo, el punto de montaje), `Type` (tipo de sistema de archivos) y `Options` (opciones de montaje). La seccion `[Unit]` contiene la descripcion y dependencias. La seccion `[Install]` define cuando se habilita la unidad. `[Service]` no se usa en unidades `.mount`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.3">
+</div>
+
+<div class="flashcard" data-id="104.3-fc-020">
+<div class="flashcard-front">
+
+**P:** Que opcion de montaje es necesaria para montar una imagen ISO como si fuera un dispositivo de bloque?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `loop`. La opcion `loop` crea un dispositivo de bucle (`/dev/loopN`) que permite tratar un archivo regular (como una imagen ISO) como si fuera un dispositivo de bloque. Sin esta opcion, `mount` no puede montar archivos directamente. El comando completo seria: `mount -o loop imagen.iso /mnt/iso`. Opcionalmente se puede especificar el tipo con `-t iso9660`. La opcion `ro` es para solo lectura y `bind` es para vincular directorios, no para montar archivos.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.3">
+</div>
+
+<div class="flashcard" data-id="104.3-fc-021">
+<div class="flashcard-front">
+
+**P:** Escribe el comando para montar la particion `/dev/sdb1` en el directorio `/mnt/datos`. <input type="text" class="fill-blank" data-answer="mount /dev/sdb1 /mnt/datos" data-alt="" placeholder="$ escribe aqui...">
+
+</div>
+<div class="flashcard-back">
+
+**R:** mount /dev/sdb1 /mnt/datos. El comando `mount` con el dispositivo y el punto de montaje monta la particion. Linux detecta automaticamente el tipo de sistema de archivos en la mayoria de casos. Si se necesita especificar el tipo, se usa `mount -t ext4 /dev/sdb1 /mnt/datos`. El directorio `/mnt/datos` debe existir previamente. Solo root puede ejecutar este comando a menos que la entrada en `/etc/fstab` tenga la opcion `user` o `users`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.3">
+</div>
+
+<div class="flashcard" data-id="104.3-fc-022">
+<div class="flashcard-front">
+
+**P:** Escribe el comando para desmontar el sistema de archivos montado en `/mnt/usb`. <input type="text" class="fill-blank" data-answer="umount /mnt/usb" data-alt="" placeholder="$ escribe aqui...">
+
+</div>
+<div class="flashcard-back">
+
+**R:** umount /mnt/usb. El comando es `umount` (sin la primera 'n', no "unmount") seguido del punto de montaje o del dispositivo. Si recibe el error "target is busy", se puede usar `lsof /mnt/usb` o `fuser -mv /mnt/usb` para identificar los procesos que estan usando el sistema de archivos. Como alternativa se puede usar `umount -l` (lazy) para un desmontaje diferido.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.3">
+</div>
+
+<div class="flashcard" data-id="104.3-fc-023">
+<div class="flashcard-front">
+
+**P:** Escribe el comando para remontar la particion raiz como solo lectura sin desmontarla. <input type="text" class="fill-blank" data-answer="mount -o remount,ro /" data-alt="" placeholder="$ escribe aqui...">
+
+</div>
+<div class="flashcard-back">
+
+**R:** mount -o remount,ro /. La opcion `remount` permite cambiar las opciones de un sistema de archivos ya montado sin necesidad de desmontarlo. Esto es especialmente util para la particion raiz (`/`), que no se puede desmontar mientras el sistema esta en ejecucion. Remontar como solo lectura (`ro`) es un paso necesario antes de ejecutar `fsck` en la particion raiz. Para volver a lectura-escritura se usa `mount -o remount,rw /`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.3">
+</div>
+
+<div class="flashcard" data-id="104.3-fc-024">
+<div class="flashcard-front">
+
+**P:** Escribe el comando para ver el UUID de todos los dispositivos de bloque del sistema. <input type="text" class="fill-blank" data-answer="blkid" data-alt="sudo blkid,lsblk -f" placeholder="$ escribe aqui...">
+
+</div>
+<div class="flashcard-back">
+
+**R:** blkid. El comando `blkid` muestra el UUID, tipo de sistema de archivos y etiqueta de todos los dispositivos de bloque del sistema. Su salida tipica es: `/dev/sda1: UUID="xxxx" TYPE="ext4" LABEL="root"`. Los UUIDs son importantes para `/etc/fstab` ya que son identificadores unicos que no cambian al agregar o quitar discos, a diferencia de los nombres como `/dev/sda1`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.3">
+</div>
+
+<div class="flashcard" data-id="104.3-fc-025">
+<div class="flashcard-front">
+
+**P:** Escribe el comando para montar una imagen ISO llamada `ubuntu.iso` en el directorio `/mnt/iso` como solo lectura. <input type="text" class="fill-blank" data-answer="mount -o loop,ro ubuntu.iso /mnt/iso" data-alt="mount -o loop,ro ./ubuntu.iso /mnt/iso" placeholder="$ escribe aqui...">
+
+</div>
+<div class="flashcard-back">
+
+**R:** mount -o loop,ro ubuntu.iso /mnt/iso. La opcion `loop` permite montar un archivo como si fuera un dispositivo de bloque, creando un dispositivo loop virtual. La opcion `ro` monta en modo solo lectura, lo cual es apropiado para imagenes ISO que normalmente no se modifican. El directorio `/mnt/iso` debe existir previamente. Opcionalmente se puede especificar el tipo con `-t iso9660`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.3">
+</div>
+
+<div class="flashcard" data-id="104.3-fc-026">
+<div class="flashcard-front">
+
 **P:** Tip de examen: `/proc/mounts` es la fuente autoritativa de montajes actuales. `/etc/fstab` es l...
 
 </div>
@@ -214,25 +484,7 @@ subtema: "104.3"
 <div class="flashcard-deck" data-subtema="104.3">
 </div>
 
-<div class="flashcard" data-id="104.3-fc-012">
-<div class="flashcard-front">
-
-**P:** Que hace el comando `ro`?
-
-</div>
-<div class="flashcard-back">
-
-**R:** Solo lectura (read-only)
-
-</div>
-</div>
-
----
-
-<div class="flashcard-deck" data-subtema="104.3">
-</div>
-
-<div class="flashcard" data-id="104.3-fc-013">
+<div class="flashcard" data-id="104.3-fc-027">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `rw`?
@@ -250,7 +502,7 @@ subtema: "104.3"
 <div class="flashcard-deck" data-subtema="104.3">
 </div>
 
-<div class="flashcard" data-id="104.3-fc-014">
+<div class="flashcard" data-id="104.3-fc-028">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `noexec`?
@@ -268,7 +520,7 @@ subtema: "104.3"
 <div class="flashcard-deck" data-subtema="104.3">
 </div>
 
-<div class="flashcard" data-id="104.3-fc-015">
+<div class="flashcard" data-id="104.3-fc-029">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `exec`?
@@ -286,15 +538,15 @@ subtema: "104.3"
 <div class="flashcard-deck" data-subtema="104.3">
 </div>
 
-<div class="flashcard" data-id="104.3-fc-016">
+<div class="flashcard" data-id="104.3-fc-030">
 <div class="flashcard-front">
 
-**P:** Que hace el comando `nosuid`?
+**P:** Que hace el comando `suid`?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Ignorar bits SUID y SGID
+**R:** Respetar SUID/SGID (predeterminado)
 
 </div>
 </div>
@@ -304,7 +556,25 @@ subtema: "104.3"
 <div class="flashcard-deck" data-subtema="104.3">
 </div>
 
-<div class="flashcard" data-id="104.3-fc-017">
+<div class="flashcard" data-id="104.3-fc-031">
+<div class="flashcard-front">
+
+**P:** Que hace el comando `nodev`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** No interpretar dispositivos especiales
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.3">
+</div>
+
+<div class="flashcard" data-id="104.3-fc-032">
 <div class="flashcard-front">
 
 **P:** Que es/son 1. Concepto de montaje?
@@ -322,7 +592,7 @@ subtema: "104.3"
 <div class="flashcard-deck" data-subtema="104.3">
 </div>
 
-<div class="flashcard" data-id="104.3-fc-018">
+<div class="flashcard" data-id="104.3-fc-033">
 <div class="flashcard-front">
 
 **P:** Que es/son 6. Unidades de montaje de systemd?
@@ -340,7 +610,7 @@ subtema: "104.3"
 <div class="flashcard-deck" data-subtema="104.3">
 </div>
 
-<div class="flashcard" data-id="104.3-fc-019">
+<div class="flashcard" data-id="104.3-fc-034">
 <div class="flashcard-front">
 
 **P:** Que es/son 7. Puntos clave para el examen?

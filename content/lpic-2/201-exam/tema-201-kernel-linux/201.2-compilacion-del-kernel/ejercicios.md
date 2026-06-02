@@ -199,3 +199,273 @@ d) Solo actualiza la configuracion de GRUB
 
 `make install` copia la imagen del kernel (`vmlinuz`), la tabla de simbolos (`System.map`) y la configuracion (`.config`) al directorio `/boot/` con el sufijo de version apropiado. Ademas, ejecuta el script `/sbin/installkernel` si existe, que en muchas distribuciones actualiza automaticamente la configuracion del bootloader (GRUB). No compila ni instala modulos.
 </details>
+
+---
+
+### Pregunta 11
+
+Un administrador ejecuta `make defconfig`. ¿Que efecto tiene este comando?
+
+a) Restaura la configuracion anterior desde un backup automatico
+b) Genera un archivo `.config` con la configuracion por defecto para la arquitectura actual
+c) Elimina el archivo `.config` existente sin crear uno nuevo
+d) Compila el kernel con las opciones por defecto
+
+<details><summary>Respuesta</summary>
+
+**b) Genera un archivo `.config` con la configuracion por defecto para la arquitectura actual**
+
+`make defconfig` crea un archivo `.config` nuevo basado en los valores por defecto definidos por los desarrolladores del kernel para la arquitectura del sistema actual (x86, ARM, etc.). Esto sobrescribe cualquier `.config` existente. Es util como punto de partida cuando no se tiene una configuracion previa o se quiere empezar desde cero con valores razonables.
+
+</details>
+
+---
+
+### Pregunta 12
+
+¿Que target de make genera un archivo `.config` con todas las opciones configuradas como modulos donde sea posible?
+
+a) `make modconfig`
+b) `make allmodconfig`
+c) `make allconfig`
+d) `make moduleconfig`
+
+<details><summary>Respuesta</summary>
+
+**b) `make allmodconfig`**
+
+`make allmodconfig` crea una configuracion donde todas las opciones que pueden ser compiladas como modulos se configuran como tales (`=m`), y las que solo pueden ser built-in se establecen como `=y`. Esto maximiza la flexibilidad del kernel resultante. Es opuesto a `make allyesconfig` que compila todo como built-in.
+
+</details>
+
+---
+
+### Pregunta 13
+
+Despues de compilar un kernel personalizado, ¿que comando debe ejecutarse para generar el archivo initramfs en una distribucion basada en Debian?
+
+a) `dracut --force`
+b) `mkinitramfs -o /boot/initrd.img-<version> <version>`
+c) `mkinitrd /boot/initrd-<version>.img <version>`
+d) `initramfs-build <version>`
+
+<details><summary>Respuesta</summary>
+
+**b) `mkinitramfs -o /boot/initrd.img-<version> <version>`**
+
+En distribuciones basadas en Debian/Ubuntu, `mkinitramfs` es la herramienta para generar la imagen initramfs. La opcion `-o` especifica el archivo de salida y el parametro final es la version del kernel. Tambien se puede usar `update-initramfs -c -k <version>` para crear o `update-initramfs -u -k <version>` para actualizar. `dracut` es la herramienta de Red Hat/Fedora. `mkinitrd` es la herramienta legacy.
+
+</details>
+
+---
+
+### Pregunta 14
+
+¿Cual es la diferencia entre `make distclean` y `make mrproper`?
+
+a) Son identicos en funcionalidad
+b) `make distclean` ademas de lo que hace `mrproper`, elimina archivos de editor, backups y archivos de parches
+c) `make mrproper` es mas agresivo que `make distclean`
+d) `make distclean` solo limpia archivos objeto, `make mrproper` elimina todo
+
+<details><summary>Respuesta</summary>
+
+**b) `make distclean` ademas de lo que hace `mrproper`, elimina archivos de editor, backups y archivos de parches**
+
+La jerarquia de limpieza es: `make clean` (archivos objeto, conserva .config) < `make mrproper` (todo lo de clean mas .config y archivos de configuracion) < `make distclean` (todo lo de mrproper mas archivos de editor como .orig, .rej, archivos de parche y tags). `make distclean` deja el codigo fuente exactamente como fue descargado.
+
+</details>
+
+---
+
+### Pregunta 15
+
+Un administrador quiere compilar un kernel para una placa ARM desde un equipo x86_64. ¿Que variables debe especificar en el comando `make`?
+
+a) `TARGET=arm` y `COMPILER=arm-gcc`
+b) `ARCH=arm` y `CROSS_COMPILE=arm-linux-gnueabihf-`
+c) `PLATFORM=arm` y `CC=arm-gcc`
+d) `CPU=arm` y `TOOLCHAIN=arm-linux`
+
+<details><summary>Respuesta</summary>
+
+**b) `ARCH=arm` y `CROSS_COMPILE=arm-linux-gnueabihf-`**
+
+Para la compilacion cruzada del kernel, se deben especificar dos variables: `ARCH` define la arquitectura objetivo (arm, arm64, mips, etc.) y `CROSS_COMPILE` define el prefijo del toolchain de compilacion cruzada (que incluye el guion final). Por ejemplo: `make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- menuconfig`.
+
+</details>
+
+---
+
+### Pregunta 16
+
+¿Que opcion de configuracion del kernel permite agregar un sufijo personalizado al nombre de version, como "-produccion"?
+
+a) `CONFIG_VERSION_SUFFIX`
+b) `CONFIG_LOCALVERSION`
+c) `CONFIG_KERNEL_NAME`
+d) `CONFIG_EXTRAVERSION`
+
+<details><summary>Respuesta</summary>
+
+**b) `CONFIG_LOCALVERSION`**
+
+`CONFIG_LOCALVERSION` en el archivo `.config` permite agregar un sufijo personalizado a la version del kernel. Por ejemplo, `CONFIG_LOCALVERSION="-produccion"` resultaria en una version como `5.15.60-produccion`. Tambien se puede especificar en la linea de comandos con `make LOCALVERSION="-produccion"`. `EXTRAVERSION` se define en el Makefile y no es configurable desde `.config`.
+
+</details>
+
+---
+
+### Pregunta 17
+
+¿Que herramienta de configuracion del kernel solo pregunta por las opciones nuevas que no existian en la version anterior del `.config`?
+
+a) `make menuconfig`
+b) `make config`
+c) `make oldconfig`
+d) `make defconfig`
+
+<details><summary>Respuesta</summary>
+
+**c) `make oldconfig`**
+
+`make oldconfig` lee el archivo `.config` existente y solo presenta preguntas interactivas para las opciones que son nuevas en la version actual del kernel y que no existian en la configuracion anterior. Es la herramienta ideal para migrar configuraciones entre versiones del kernel. `make olddefconfig` es similar pero acepta automaticamente los valores por defecto sin preguntar.
+
+</details>
+
+---
+
+### Pregunta 18
+
+¿Donde se encuentra el enlace simbolico `build` que apunta al codigo fuente o headers del kernel y que es utilizado por herramientas de compilacion de modulos externos?
+
+a) `/usr/src/build`
+b) `/lib/modules/$(uname -r)/build`
+c) `/boot/build`
+d) `/etc/kernel/build`
+
+<details><summary>Respuesta</summary>
+
+**b) `/lib/modules/$(uname -r)/build`**
+
+El enlace simbolico `build` en `/lib/modules/<version>/` apunta tipicamente a los headers o al directorio de fuentes del kernel utilizado para compilar esa version. Es utilizado por herramientas como DKMS y otros sistemas de compilacion de modulos externos para localizar los headers y archivos de configuracion necesarios para compilar modulos compatibles con el kernel instalado.
+
+</details>
+
+---
+
+### Pregunta 19
+
+¿Que archivo de configuracion debe existir en el directorio de un modulo gestionado por DKMS para definir las instrucciones de compilacion?
+
+a) `Makefile`
+b) `module.conf`
+c) `dkms.conf`
+d) `build.cfg`
+
+<details><summary>Respuesta</summary>
+
+**c) `dkms.conf`**
+
+El archivo `dkms.conf` es el archivo de configuracion obligatorio para modulos gestionados por DKMS. Se encuentra en `/usr/src/<modulo>-<version>/dkms.conf` y contiene variables como `PACKAGE_NAME`, `PACKAGE_VERSION`, `BUILT_MODULE_NAME`, `DEST_MODULE_LOCATION` y las instrucciones de compilacion (`MAKE`). La opcion `AUTOINSTALL="yes"` permite la recompilacion automatica al instalar un nuevo kernel.
+
+</details>
+
+---
+
+### Pregunta 20
+
+¿Que interfaz grafica basada en Qt se puede utilizar para configurar las opciones del kernel?
+
+a) `make gconfig`
+b) `make xconfig`
+c) `make qtconfig`
+d) `make guiconfig`
+
+<details><summary>Respuesta</summary>
+
+**b) `make xconfig`**
+
+`make xconfig` utiliza la biblioteca Qt para presentar una interfaz grafica completa de configuracion del kernel. Requiere las bibliotecas Qt de desarrollo instaladas en el sistema. `make gconfig` es la alternativa basada en GTK. `make menuconfig` y `make nconfig` son interfaces basadas en texto (ncurses). Las opciones `qtconfig` y `guiconfig` no existen.
+
+</details>
+
+---
+
+### Pregunta 21
+
+¿Que comando compila el kernel y los modulos utilizando tantos hilos de compilacion como nucleos de CPU tenga el sistema?
+
+<input type="text" class="fill-blank" data-answer="make -j$(nproc)" data-alt="make -j `nproc`" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**make -j$(nproc)**
+
+El comando `make -j$(nproc)` utiliza la sustitucion de comandos `$(nproc)` para obtener automaticamente el numero de nucleos de CPU y pasarlo como argumento a la opcion `-j` (jobs) de `make`. Esto paraleliza la compilacion utilizando todos los nucleos disponibles, reduciendo significativamente el tiempo de compilacion del kernel.
+
+</details>
+
+---
+
+### Pregunta 22
+
+¿Que comando instala los modulos compilados del kernel en el directorio `/lib/modules/<version>/`?
+
+<input type="text" class="fill-blank" data-answer="make modules_install" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**make modules_install**
+
+El comando `make modules_install` copia todos los modulos compilados (archivos `.ko`) al directorio `/lib/modules/<version>/` organizados en subdirectorios por categoria. Tambien genera el archivo `modules.dep` con las dependencias entre modulos. Este paso debe ejecutarse despues de `make modules` y antes de `make install`.
+
+</details>
+
+---
+
+### Pregunta 23
+
+¿Que comando regenera la imagen initramfs para el kernel actual usando `dracut` forzando la sobreescritura si ya existe?
+
+<input type="text" class="fill-blank" data-answer="dracut --force" data-alt="dracut -f" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**dracut --force**
+
+El comando `dracut --force` regenera la imagen initramfs para el kernel en ejecucion, sobrescribiendo la imagen existente si la hay. Sin `--force`, dracut se negaria a sobrescribir un archivo existente. Es la herramienta estandar en distribuciones Red Hat, Fedora, CentOS y SUSE para gestionar imagenes initramfs.
+
+</details>
+
+---
+
+### Pregunta 24
+
+¿Que comando instala los headers del kernel actual en una distribucion basada en Debian?
+
+<input type="text" class="fill-blank" data-answer="apt-get install linux-headers-$(uname -r)" data-alt="apt install linux-headers-$(uname -r)" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**apt-get install linux-headers-$(uname -r)**
+
+Los headers del kernel son necesarios para compilar modulos externos (como drivers de NVIDIA, VirtualBox, etc.). En Debian/Ubuntu se instalan con `apt-get install linux-headers-$(uname -r)`, que descarga e instala los archivos de cabecera especificos para la version del kernel en ejecucion en `/usr/src/linux-headers-$(uname -r)/`.
+
+</details>
+
+---
+
+### Pregunta 25
+
+¿Que comando elimina completamente todos los archivos generados de la compilacion del kernel, incluyendo el archivo `.config`?
+
+<input type="text" class="fill-blank" data-answer="make mrproper" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**make mrproper**
+
+El comando `make mrproper` realiza una limpieza completa del directorio del codigo fuente del kernel, eliminando todos los archivos generados durante la compilacion, incluyendo archivos objeto (`.o`), la imagen del kernel, y crucialmente, el archivo de configuracion `.config`. Es mas agresivo que `make clean`, que preserva `.config`. Siempre se debe respaldar `.config` antes de ejecutar `make mrproper`.
+
+</details>

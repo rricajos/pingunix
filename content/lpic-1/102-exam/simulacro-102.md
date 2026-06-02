@@ -21,7 +21,7 @@ examen: "102"
 <button class="exam-submit-btn" style="display:none;" onclick="gradeExam(this.parentElement.parentElement);">Corregir examen</button>
 </div>
 
-<div class="exam-question" data-id="q-1" data-subtema="105.1" data-correct="B">
+<div class="exam-question" data-id="q-1" data-subtema="105.1" data-correct="b">
 
 ### Pregunta 1 (Subtema 105.1)
 
@@ -45,7 +45,7 @@ La variable `$PATH` contiene una lista de directorios separados por dos puntos (
 
 ---
 
-<div class="exam-question" data-id="q-2" data-subtema="105.1" data-correct="C">
+<div class="exam-question" data-id="q-2" data-subtema="105.1" data-correct="c">
 
 ### Pregunta 2 (Subtema 105.1)
 
@@ -69,7 +69,7 @@ El archivo `/etc/profile` es un script de configuración global que se ejecuta p
 
 ---
 
-<div class="exam-question" data-id="q-3" data-subtema="105.1" data-correct="A">
+<div class="exam-question" data-id="q-3" data-subtema="105.1" data-correct="a">
 
 ### Pregunta 3 (Subtema 105.1)
 
@@ -93,7 +93,7 @@ El comando `export -f` exporta una función definida en el shell actual para que
 
 ---
 
-<div class="exam-question" data-id="q-4" data-subtema="105.2" data-correct="D">
+<div class="exam-question" data-id="q-4" data-subtema="105.2" data-correct="d">
 
 ### Pregunta 4 (Subtema 105.2)
 
@@ -117,7 +117,7 @@ La secuencia `#!` (conocida como shebang) seguida de la ruta al intérprete indi
 
 ---
 
-<div class="exam-question" data-id="q-5" data-subtema="105.2" data-correct="B">
+<div class="exam-question" data-id="q-5" data-subtema="105.2" data-correct="b">
 
 ### Pregunta 5 (Subtema 105.2)
 
@@ -141,7 +141,7 @@ En Bash, la variable especial `$?` contiene el código de salida del último com
 
 ---
 
-<div class="exam-question" data-id="q-6" data-subtema="105.2" data-correct="C">
+<div class="exam-question" data-id="q-6" data-subtema="105.2" data-correct="c">
 
 ### Pregunta 6 (Subtema 105.2)
 
@@ -165,7 +165,7 @@ El operador `-f` comprueba si la ruta corresponde a un archivo regular existente
 
 ---
 
-<div class="exam-question" data-id="q-7" data-subtema="106.1" data-correct="A">
+<div class="exam-question" data-id="q-7" data-subtema="106.1" data-correct="a">
 
 ### Pregunta 7 (Subtema 106.1)
 
@@ -189,7 +189,7 @@ La variable `$DISPLAY` indica a las aplicaciones del sistema X Window a qué ser
 
 ---
 
-<div class="exam-question" data-id="q-8" data-subtema="106.1" data-correct="D">
+<div class="exam-question" data-id="q-8" data-subtema="106.1" data-correct="d">
 
 ### Pregunta 8 (Subtema 106.1)
 
@@ -213,7 +213,7 @@ Openbox es un gestor de ventanas ligero y altamente configurable. GNOME, KDE Pla
 
 ---
 
-<div class="exam-question" data-id="q-9" data-subtema="106.2" data-correct="B">
+<div class="exam-question" data-id="q-9" data-subtema="106.2" data-correct="b">
 
 ### Pregunta 9 (Subtema 106.2)
 
@@ -237,7 +237,7 @@ XDMCP (X Display Manager Control Protocol) es un protocolo nativo del sistema X 
 
 ---
 
-<div class="exam-question" data-id="q-10" data-subtema="106.3" data-correct="C">
+<div class="exam-question" data-id="q-10" data-subtema="106.3" data-correct="c">
 
 ### Pregunta 10 (Subtema 106.3)
 
@@ -261,7 +261,7 @@ XDMCP (X Display Manager Control Protocol) es un protocolo nativo del sistema X 
 
 ---
 
-<div class="exam-question" data-id="q-11" data-subtema="107.1" data-correct="B">
+<div class="exam-question" data-id="q-11" data-subtema="107.1" data-correct="b">
 
 ### Pregunta 11 (Subtema 107.1)
 
@@ -285,7 +285,7 @@ XDMCP (X Display Manager Control Protocol) es un protocolo nativo del sistema X 
 
 ---
 
-<div class="exam-question" data-id="q-12" data-subtema="107.1" data-correct="A">
+<div class="exam-question" data-id="q-12" data-subtema="107.1" data-correct="a">
 
 ### Pregunta 12 (Subtema 107.1)
 
@@ -309,7 +309,7 @@ El archivo `/etc/shadow` almacena las contraseñas cifradas (hash) de los usuari
 
 ---
 
-<div class="exam-question" data-id="q-13" data-subtema="107.1" data-correct="D">
+<div class="exam-question" data-id="q-13" data-subtema="107.1" data-correct="d">
 
 ### Pregunta 13 (Subtema 107.1)
 
@@ -333,7 +333,7 @@ La opción `-d` de `useradd` especifica el directorio home del usuario. `-s` def
 
 ---
 
-<div class="exam-question" data-id="q-14" data-subtema="107.1" data-correct="C">
+<div class="exam-question" data-id="q-14" data-subtema="107.1" data-correct="c">
 
 ### Pregunta 14 (Subtema 107.1)
 
@@ -357,7 +357,7 @@ El comando `usermod` permite modificar las propiedades de una cuenta de usuario 
 
 ---
 
-<div class="exam-question" data-id="q-15" data-subtema="107.1" data-correct="B">
+<div class="exam-question" data-id="q-15" data-subtema="107.1" data-correct="b">
 
 ### Pregunta 15 (Subtema 107.1)
 
@@ -381,7 +381,7 @@ El formato de `/etc/passwd` es: `usuario:x:UID:GID:GECOS:home:shell`. El tercer 
 
 ---
 
-<div class="exam-question" data-id="q-16" data-subtema="107.1" data-correct="A">
+<div class="exam-question" data-id="q-16" data-subtema="107.1" data-correct="a">
 
 ### Pregunta 16 (Subtema 107.1)
 
@@ -405,7 +405,7 @@ El comando `chsh` (change shell) permite cambiar el shell de inicio de sesión d
 
 ---
 
-<div class="exam-question" data-id="q-17" data-subtema="107.2" data-correct="D">
+<div class="exam-question" data-id="q-17" data-subtema="107.2" data-correct="d">
 
 ### Pregunta 17 (Subtema 107.2)
 
@@ -429,7 +429,7 @@ El comando `chsh` (change shell) permite cambiar el shell de inicio de sesión d
 
 ---
 
-<div class="exam-question" data-id="q-18" data-subtema="107.2" data-correct="B">
+<div class="exam-question" data-id="q-18" data-subtema="107.2" data-correct="b">
 
 ### Pregunta 18 (Subtema 107.2)
 
@@ -453,7 +453,7 @@ Los cinco campos de cron son: minuto, hora, día del mes, mes, día de la semana
 
 ---
 
-<div class="exam-question" data-id="q-19" data-subtema="107.2" data-correct="C">
+<div class="exam-question" data-id="q-19" data-subtema="107.2" data-correct="c">
 
 ### Pregunta 19 (Subtema 107.2)
 
@@ -477,7 +477,7 @@ El archivo `/etc/cron.deny` contiene una lista de usuarios que no pueden usar `c
 
 ---
 
-<div class="exam-question" data-id="q-20" data-subtema="107.2" data-correct="A">
+<div class="exam-question" data-id="q-20" data-subtema="107.2" data-correct="a">
 
 ### Pregunta 20 (Subtema 107.2)
 
@@ -501,7 +501,7 @@ Los scripts colocados en `/etc/cron.daily/` son ejecutados automáticamente una 
 
 ---
 
-<div class="exam-question" data-id="q-21" data-subtema="107.3" data-correct="B">
+<div class="exam-question" data-id="q-21" data-subtema="107.3" data-correct="b">
 
 ### Pregunta 21 (Subtema 107.3)
 
@@ -525,7 +525,7 @@ Los scripts colocados en `/etc/cron.daily/` son ejecutados automáticamente una 
 
 ---
 
-<div class="exam-question" data-id="q-22" data-subtema="107.3" data-correct="D">
+<div class="exam-question" data-id="q-22" data-subtema="107.3" data-correct="d">
 
 ### Pregunta 22 (Subtema 107.3)
 
@@ -549,7 +549,7 @@ La variable `$TZ` permite establecer la zona horaria para un usuario o proceso. 
 
 ---
 
-<div class="exam-question" data-id="q-23" data-subtema="108.1" data-correct="C">
+<div class="exam-question" data-id="q-23" data-subtema="108.1" data-correct="c">
 
 ### Pregunta 23 (Subtema 108.1)
 
@@ -573,7 +573,7 @@ La variable `$TZ` permite establecer la zona horaria para un usuario o proceso. 
 
 ---
 
-<div class="exam-question" data-id="q-24" data-subtema="108.1" data-correct="A">
+<div class="exam-question" data-id="q-24" data-subtema="108.1" data-correct="a">
 
 ### Pregunta 24 (Subtema 108.1)
 
@@ -597,7 +597,7 @@ La variable `$TZ` permite establecer la zona horaria para un usuario o proceso. 
 
 ---
 
-<div class="exam-question" data-id="q-25" data-subtema="108.1" data-correct="B">
+<div class="exam-question" data-id="q-25" data-subtema="108.1" data-correct="b">
 
 ### Pregunta 25 (Subtema 108.1)
 
@@ -621,7 +621,7 @@ El comando `hwclock --systohc` (system to hardware clock) copia la hora actual d
 
 ---
 
-<div class="exam-question" data-id="q-26" data-subtema="108.2" data-correct="D">
+<div class="exam-question" data-id="q-26" data-subtema="108.2" data-correct="d">
 
 ### Pregunta 26 (Subtema 108.2)
 
@@ -645,7 +645,7 @@ El archivo `/etc/rsyslog.conf` es el fichero de configuración principal del dem
 
 ---
 
-<div class="exam-question" data-id="q-27" data-subtema="108.2" data-correct="A">
+<div class="exam-question" data-id="q-27" data-subtema="108.2" data-correct="a">
 
 ### Pregunta 27 (Subtema 108.2)
 
@@ -669,7 +669,7 @@ El archivo `/etc/rsyslog.conf` es el fichero de configuración principal del dem
 
 ---
 
-<div class="exam-question" data-id="q-28" data-subtema="108.2" data-correct="C">
+<div class="exam-question" data-id="q-28" data-subtema="108.2" data-correct="c">
 
 ### Pregunta 28 (Subtema 108.2)
 
@@ -693,7 +693,7 @@ La facilidad `kern` en syslog corresponde a los mensajes generados por el kernel
 
 ---
 
-<div class="exam-question" data-id="q-29" data-subtema="108.2" data-correct="B">
+<div class="exam-question" data-id="q-29" data-subtema="108.2" data-correct="b">
 
 ### Pregunta 29 (Subtema 108.2)
 
@@ -717,7 +717,7 @@ El comando `logger` permite enviar mensajes al sistema de logging (syslog/rsyslo
 
 ---
 
-<div class="exam-question" data-id="q-30" data-subtema="108.3" data-correct="A">
+<div class="exam-question" data-id="q-30" data-subtema="108.3" data-correct="a">
 
 ### Pregunta 30 (Subtema 108.3)
 
@@ -741,7 +741,7 @@ El comando `postfix` se utiliza para controlar el servicio MTA Postfix (start, s
 
 ---
 
-<div class="exam-question" data-id="q-31" data-subtema="108.3" data-correct="D">
+<div class="exam-question" data-id="q-31" data-subtema="108.3" data-correct="d">
 
 ### Pregunta 31 (Subtema 108.3)
 
@@ -765,7 +765,7 @@ El archivo `~/.forward` en el directorio home de un usuario permite redirigir su
 
 ---
 
-<div class="exam-question" data-id="q-32" data-subtema="108.4" data-correct="B">
+<div class="exam-question" data-id="q-32" data-subtema="108.4" data-correct="b">
 
 ### Pregunta 32 (Subtema 108.4)
 
@@ -789,7 +789,7 @@ El archivo `/etc/cups/printers.conf` contiene las definiciones de las impresoras
 
 ---
 
-<div class="exam-question" data-id="q-33" data-subtema="109.1" data-correct="C">
+<div class="exam-question" data-id="q-33" data-subtema="109.1" data-correct="c">
 
 ### Pregunta 33 (Subtema 109.1)
 
@@ -813,7 +813,7 @@ Un prefijo /24 significa que los primeros 24 bits de la dirección IP pertenecen
 
 ---
 
-<div class="exam-question" data-id="q-34" data-subtema="109.1" data-correct="A">
+<div class="exam-question" data-id="q-34" data-subtema="109.1" data-correct="a">
 
 ### Pregunta 34 (Subtema 109.1)
 
@@ -837,7 +837,7 @@ Los rangos privados definidos por RFC 1918 son: `10.0.0.0/8`, `172.16.0.0/12` y 
 
 ---
 
-<div class="exam-question" data-id="q-35" data-subtema="109.1" data-correct="D">
+<div class="exam-question" data-id="q-35" data-subtema="109.1" data-correct="d">
 
 ### Pregunta 35 (Subtema 109.1)
 
@@ -861,7 +861,7 @@ Una dirección IPv6 tiene 128 bits de longitud, frente a los 32 bits de IPv4. Se
 
 ---
 
-<div class="exam-question" data-id="q-36" data-subtema="109.1" data-correct="B">
+<div class="exam-question" data-id="q-36" data-subtema="109.1" data-correct="b">
 
 ### Pregunta 36 (Subtema 109.1)
 
@@ -885,7 +885,7 @@ La dirección de loopback en IPv6 es `::1` (equivalente a `0000:0000:0000:0000:0
 
 ---
 
-<div class="exam-question" data-id="q-37" data-subtema="109.1" data-correct="C">
+<div class="exam-question" data-id="q-37" data-subtema="109.1" data-correct="c">
 
 ### Pregunta 37 (Subtema 109.1)
 
@@ -909,7 +909,7 @@ TCP (Transmission Control Protocol) proporciona una transmisión fiable y orient
 
 ---
 
-<div class="exam-question" data-id="q-38" data-subtema="109.2" data-correct="A">
+<div class="exam-question" data-id="q-38" data-subtema="109.2" data-correct="a">
 
 ### Pregunta 38 (Subtema 109.2)
 
@@ -933,7 +933,7 @@ El comando `ip` del paquete iproute2 es el reemplazo moderno de `ifconfig`, `rou
 
 ---
 
-<div class="exam-question" data-id="q-39" data-subtema="109.2" data-correct="B">
+<div class="exam-question" data-id="q-39" data-subtema="109.2" data-correct="b">
 
 ### Pregunta 39 (Subtema 109.2)
 
@@ -957,7 +957,7 @@ El comando `ip` del paquete iproute2 es el reemplazo moderno de `ifconfig`, `rou
 
 ---
 
-<div class="exam-question" data-id="q-40" data-subtema="109.2" data-correct="D">
+<div class="exam-question" data-id="q-40" data-subtema="109.2" data-correct="d">
 
 ### Pregunta 40 (Subtema 109.2)
 
@@ -981,7 +981,7 @@ El archivo `/etc/resolv.conf` contiene las directivas `nameserver` que especific
 
 ---
 
-<div class="exam-question" data-id="q-41" data-subtema="109.2" data-correct="C">
+<div class="exam-question" data-id="q-41" data-subtema="109.2" data-correct="c">
 
 ### Pregunta 41 (Subtema 109.2)
 
@@ -1005,7 +1005,7 @@ El archivo `/etc/nsswitch.conf` (Name Service Switch) define el orden de búsque
 
 ---
 
-<div class="exam-question" data-id="q-42" data-subtema="109.3" data-correct="B">
+<div class="exam-question" data-id="q-42" data-subtema="109.3" data-correct="b">
 
 ### Pregunta 42 (Subtema 109.3)
 
@@ -1029,7 +1029,7 @@ El archivo `/etc/nsswitch.conf` (Name Service Switch) define el orden de búsque
 
 ---
 
-<div class="exam-question" data-id="q-43" data-subtema="109.3" data-correct="A">
+<div class="exam-question" data-id="q-43" data-subtema="109.3" data-correct="a">
 
 ### Pregunta 43 (Subtema 109.3)
 
@@ -1053,7 +1053,7 @@ El archivo `/etc/nsswitch.conf` (Name Service Switch) define el orden de búsque
 
 ---
 
-<div class="exam-question" data-id="q-44" data-subtema="109.3" data-correct="D">
+<div class="exam-question" data-id="q-44" data-subtema="109.3" data-correct="d">
 
 ### Pregunta 44 (Subtema 109.3)
 
@@ -1077,7 +1077,7 @@ La opción `-I` de `traceroute` hace que utilice paquetes ICMP Echo Request en l
 
 ---
 
-<div class="exam-question" data-id="q-45" data-subtema="109.3" data-correct="C">
+<div class="exam-question" data-id="q-45" data-subtema="109.3" data-correct="c">
 
 ### Pregunta 45 (Subtema 109.3)
 
@@ -1101,7 +1101,7 @@ El puerto 443 es el puerto estándar para HTTPS (HTTP sobre TLS/SSL). El puerto 
 
 ---
 
-<div class="exam-question" data-id="q-46" data-subtema="109.4" data-correct="B">
+<div class="exam-question" data-id="q-46" data-subtema="109.4" data-correct="b">
 
 ### Pregunta 46 (Subtema 109.4)
 
@@ -1125,7 +1125,7 @@ El puerto 443 es el puerto estándar para HTTPS (HTTP sobre TLS/SSL). El puerto 
 
 ---
 
-<div class="exam-question" data-id="q-47" data-subtema="109.4" data-correct="A">
+<div class="exam-question" data-id="q-47" data-subtema="109.4" data-correct="a">
 
 ### Pregunta 47 (Subtema 109.4)
 
@@ -1149,7 +1149,7 @@ El puerto 443 es el puerto estándar para HTTPS (HTTP sobre TLS/SSL). El puerto 
 
 ---
 
-<div class="exam-question" data-id="q-48" data-subtema="110.1" data-correct="C">
+<div class="exam-question" data-id="q-48" data-subtema="110.1" data-correct="c">
 
 ### Pregunta 48 (Subtema 110.1)
 
@@ -1173,7 +1173,7 @@ El puerto 443 es el puerto estándar para HTTPS (HTTP sobre TLS/SSL). El puerto 
 
 ---
 
-<div class="exam-question" data-id="q-49" data-subtema="110.1" data-correct="B">
+<div class="exam-question" data-id="q-49" data-subtema="110.1" data-correct="b">
 
 ### Pregunta 49 (Subtema 110.1)
 
@@ -1197,7 +1197,7 @@ El bit SUID (Set User ID) hace que cuando un usuario ejecute el archivo, el proc
 
 ---
 
-<div class="exam-question" data-id="q-50" data-subtema="110.1" data-correct="D">
+<div class="exam-question" data-id="q-50" data-subtema="110.1" data-correct="d">
 
 ### Pregunta 50 (Subtema 110.1)
 
@@ -1221,7 +1221,7 @@ Los archivos se crean con permisos base `666` menos la máscara. Con umask `0022
 
 ---
 
-<div class="exam-question" data-id="q-51" data-subtema="110.1" data-correct="A">
+<div class="exam-question" data-id="q-51" data-subtema="110.1" data-correct="a">
 
 ### Pregunta 51 (Subtema 110.1)
 
@@ -1245,7 +1245,7 @@ El comando `find / -perm -4000` busca en todo el sistema archivos que tengan el 
 
 ---
 
-<div class="exam-question" data-id="q-52" data-subtema="110.1" data-correct="C">
+<div class="exam-question" data-id="q-52" data-subtema="110.1" data-correct="c">
 
 ### Pregunta 52 (Subtema 110.1)
 
@@ -1269,7 +1269,7 @@ El sticky bit (representado con `t` en los permisos) en un directorio impide que
 
 ---
 
-<div class="exam-question" data-id="q-53" data-subtema="110.2" data-correct="B">
+<div class="exam-question" data-id="q-53" data-subtema="110.2" data-correct="b">
 
 ### Pregunta 53 (Subtema 110.2)
 
@@ -1293,7 +1293,7 @@ El sticky bit (representado con `t` en los permisos) en un directorio impide que
 
 ---
 
-<div class="exam-question" data-id="q-54" data-subtema="110.2" data-correct="D">
+<div class="exam-question" data-id="q-54" data-subtema="110.2" data-correct="d">
 
 ### Pregunta 54 (Subtema 110.2)
 
@@ -1317,7 +1317,7 @@ La cadena INPUT de iptables filtra los paquetes entrantes que están destinados 
 
 ---
 
-<div class="exam-question" data-id="q-55" data-subtema="110.2" data-correct="A">
+<div class="exam-question" data-id="q-55" data-subtema="110.2" data-correct="a">
 
 ### Pregunta 55 (Subtema 110.2)
 
@@ -1341,7 +1341,7 @@ El comando `iptables -L --line-numbers` lista todas las reglas activas en las ca
 
 ---
 
-<div class="exam-question" data-id="q-56" data-subtema="110.3" data-correct="C">
+<div class="exam-question" data-id="q-56" data-subtema="110.3" data-correct="c">
 
 ### Pregunta 56 (Subtema 110.3)
 
@@ -1365,7 +1365,7 @@ El comando `iptables -L --line-numbers` lista todas las reglas activas en las ca
 
 ---
 
-<div class="exam-question" data-id="q-57" data-subtema="110.3" data-correct="B">
+<div class="exam-question" data-id="q-57" data-subtema="110.3" data-correct="b">
 
 ### Pregunta 57 (Subtema 110.3)
 
@@ -1389,7 +1389,7 @@ El archivo de clave privada SSH debe tener permisos `600` (lectura y escritura s
 
 ---
 
-<div class="exam-question" data-id="q-58" data-subtema="110.3" data-correct="A">
+<div class="exam-question" data-id="q-58" data-subtema="110.3" data-correct="a">
 
 ### Pregunta 58 (Subtema 110.3)
 
@@ -1413,7 +1413,7 @@ La directiva `PermitRootLogin no` en el archivo de configuración del servidor S
 
 ---
 
-<div class="exam-question" data-id="q-59" data-subtema="110.3" data-correct="D">
+<div class="exam-question" data-id="q-59" data-subtema="110.3" data-correct="d">
 
 ### Pregunta 59 (Subtema 110.3)
 
@@ -1437,7 +1437,7 @@ La directiva `PermitRootLogin no` en el archivo de configuración del servidor S
 
 ---
 
-<div class="exam-question" data-id="q-60" data-subtema="110.3" data-correct="B">
+<div class="exam-question" data-id="q-60" data-subtema="110.3" data-correct="b">
 
 ### Pregunta 60 (Subtema 110.3)
 

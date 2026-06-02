@@ -201,3 +201,243 @@ d) `pacman`
 `zypper` es el gestor de paquetes de alto nivel para distribuciones SUSE (openSUSE y SLES). Utiliza RPM como formato de paquetes de bajo nivel, al igual que yum/dnf. Los comandos principales de zypper son: `zypper install` (o `zypper in`) para instalar, `zypper remove` (o `zypper rm`) para desinstalar, `zypper search` (o `zypper se`) para buscar, `zypper update` (o `zypper up`) para actualizar, y `zypper refresh` (o `zypper ref`) para actualizar la lista de repositorios.
 
 </details>
+
+### Pregunta 11
+
+Que comando de `rpm` verifica la integridad de todos los paquetes instalados en el sistema?
+
+a) `rpm -qa`
+b) `rpm -Va`
+c) `rpm -K`
+d) `rpm -qla`
+
+<details><summary>Respuesta</summary>
+
+**b) `rpm -Va`**
+
+`rpm -V` (verify) verifica la integridad de un paquete instalado comparando los archivos actuales con la informacion almacenada en la base de datos RPM. Al anadir `a` (all), se verifican todos los paquetes instalados en el sistema. `rpm -qa` lista todos los paquetes instalados pero no verifica su integridad. `rpm -K` verifica la firma GPG de un archivo `.rpm`, no de paquetes instalados. `rpm -qla` no es una combinacion valida.
+
+</details>
+
+### Pregunta 12
+
+Cual es la funcion del comando `rpm -F paquete.rpm`?
+
+a) Instala el paquete aunque ya exista una version instalada
+b) Fuerza la instalacion ignorando dependencias
+c) Solo actualiza el paquete si ya esta instalado; si no existe, no hace nada
+d) Muestra los archivos del paquete sin instalarlo
+
+<details><summary>Respuesta</summary>
+
+**c) Solo actualiza el paquete si ya esta instalado; si no existe, no hace nada**
+
+`rpm -F` (freshen) es una opcion que solo actualiza paquetes que ya estan instalados en el sistema. Si el paquete no esta previamente instalado, el comando simplemente no hace nada (no da error). Esto es util cuando se tienen varios archivos `.rpm` y solo se quieren actualizar los que ya estan presentes. En cambio, `rpm -U` instala el paquete si no existe y lo actualiza si ya esta instalado, siendo la opcion mas versatil.
+
+</details>
+
+### Pregunta 13
+
+Donde se almacenan los archivos de configuracion de repositorios en sistemas que usan yum o dnf?
+
+a) `/etc/apt/sources.list.d/`
+b) `/etc/yum.repos.d/`
+c) `/var/lib/rpm/repos/`
+d) `/usr/share/yum/repos/`
+
+<details><summary>Respuesta</summary>
+
+**b) `/etc/yum.repos.d/`**
+
+Los archivos de configuracion de repositorios para yum y dnf se almacenan en `/etc/yum.repos.d/` con extension `.repo`. Cada archivo puede contener la definicion de uno o varios repositorios con campos como `baseurl`, `enabled`, `gpgcheck` y `gpgkey`. Tanto yum como dnf comparten este mismo directorio de repositorios. La opcion A corresponde al sistema Debian/Ubuntu. La base de datos RPM en `/var/lib/rpm/` almacena informacion de paquetes instalados, no repositorios.
+
+</details>
+
+### Pregunta 14
+
+Un administrador quiere deshacer la ultima transaccion realizada con yum que instalo un paquete incorrecto. Que comando debe usar?
+
+a) `yum rollback last`
+b) `yum history undo last`
+c) `yum undo`
+d) `yum history undo <id>`
+
+<details><summary>Respuesta</summary>
+
+**d) `yum history undo <id>`**
+
+`yum history undo <id>` deshace una transaccion especifica identificada por su numero de ID. Primero se puede consultar el historial con `yum history` para ver las transacciones realizadas y obtener el ID correspondiente. `yum history info <id>` muestra los detalles de una transaccion. Los comandos `yum rollback last` y `yum undo` no son sintaxis validas. Este mecanismo tambien funciona con `dnf history undo <id>`.
+
+</details>
+
+### Pregunta 15
+
+Que comando de zypper se utiliza para actualizar la lista de paquetes disponibles desde los repositorios configurados?
+
+a) `zypper update`
+b) `zypper refresh`
+c) `zypper install --refresh`
+d) `zypper repos --update`
+
+<details><summary>Respuesta</summary>
+
+**b) `zypper refresh`**
+
+`zypper refresh` (abreviado `zypper ref`) actualiza los metadatos de los repositorios configurados, descargando la informacion mas reciente sobre paquetes disponibles. Esto es equivalente a `apt update` en Debian/Ubuntu. `zypper update` (o `zypper up`) actualiza los paquetes instalados, no los metadatos de repositorios. En yum/dnf la actualizacion de metadatos se realiza automaticamente al ejecutar comandos, mientras que en zypper es un paso explicito.
+
+</details>
+
+### Pregunta 16
+
+Que comando muestra los scripts que se ejecutan antes y despues de la instalacion de un paquete RPM instalado?
+
+a) `rpm -ql --scripts paquete`
+b) `rpm -q --scripts paquete`
+c) `rpm -qi --pre paquete`
+d) `rpm -qp --triggers paquete`
+
+<details><summary>Respuesta</summary>
+
+**b) `rpm -q --scripts paquete`**
+
+`rpm -q --scripts paquete` muestra los scripts de pre-instalacion, post-instalacion, pre-desinstalacion y post-desinstalacion asociados a un paquete instalado. Estos scripts se ejecutan automaticamente durante las operaciones de instalacion o desinstalacion. Para consultar los scripts de un archivo `.rpm` sin instalarlo, se anade el flag `-p`: `rpm -qp --scripts paquete.rpm`. Las demas opciones no tienen la sintaxis correcta para esta consulta.
+
+</details>
+
+### Pregunta 17
+
+Que diferencia existe entre `yum remove` y `yum erase`?
+
+a) `yum remove` elimina el paquete pero conserva la configuracion, `yum erase` elimina todo
+b) `yum erase` elimina las dependencias huerfanas y `yum remove` no
+c) Son equivalentes, ambos desinstalan el paquete y sus archivos
+d) `yum erase` solo funciona en dnf, no en yum
+
+<details><summary>Respuesta</summary>
+
+**c) Son equivalentes, ambos desinstalan el paquete y sus archivos**
+
+En yum, `remove` y `erase` son sinonimos y realizan exactamente la misma operacion: desinstalan el paquete especificado del sistema. A diferencia del mundo Debian donde `dpkg -r` y `dpkg -P` (purge) tienen comportamientos distintos respecto a los archivos de configuracion, en RPM no existe esta distincion. RPM siempre elimina los archivos del paquete, aunque puede renombrar archivos de configuracion modificados a `.rpmsave`.
+
+</details>
+
+### Pregunta 18
+
+En la salida de `rpm -V`, que indica el caracter `M` en la posicion correspondiente?
+
+a) El archivo ha sido movido a otra ubicacion
+b) El checksum MD5 del archivo ha cambiado
+c) Los permisos o el tipo del archivo han cambiado
+d) La fecha de modificacion ha cambiado
+
+<details><summary>Respuesta</summary>
+
+**c) Los permisos o el tipo del archivo han cambiado**
+
+En la verificacion con `rpm -V`, cada posicion del resultado indica un tipo de cambio: `S` (tamano), `M` (permisos/modo), `5` (checksum MD5), `D` (dispositivo), `L` (enlace simbolico), `U` (usuario propietario), `G` (grupo propietario), `T` (fecha de modificacion). El caracter `M` se refiere a Mode, es decir, los permisos del archivo o su tipo han sido modificados respecto al estado original del paquete. Un punto (`.`) indica que no hay cambios en esa posicion.
+
+</details>
+
+### Pregunta 19
+
+Que comando de dnf permite habilitar un repositorio que esta desactivado?
+
+a) `dnf repo enable repo_id`
+b) `dnf config-manager --set-enabled repo_id`
+c) `dnf activate repo_id`
+d) `dnf repolist --enable repo_id`
+
+<details><summary>Respuesta</summary>
+
+**b) `dnf config-manager --set-enabled repo_id`**
+
+`dnf config-manager` es una herramienta exclusiva de DNF para gestionar repositorios desde la linea de comandos. Con `--set-enabled` se habilita un repositorio y con `--set-disabled` se deshabilita. Tambien permite anadir repositorios con `--add-repo URL`. En yum, la gestion de repositorios se hacia editando directamente los archivos `.repo` en `/etc/yum.repos.d/`. En zypper, el equivalente seria `zypper modifyrepo -e alias`.
+
+</details>
+
+### Pregunta 20
+
+Un administrador necesita instalar un grupo de paquetes de desarrollo en un sistema CentOS. Cual es el comando correcto?
+
+a) `yum install development`
+b) `yum groupinstall "Development Tools"`
+c) `yum package-group "Development Tools"`
+d) `rpm -ivh "Development Tools"`
+
+<details><summary>Respuesta</summary>
+
+**b) `yum groupinstall "Development Tools"`**
+
+`yum groupinstall` (o `yum group install`) instala un grupo completo de paquetes relacionados. "Development Tools" es un grupo comun que incluye compiladores como `gcc`, `make` y otras herramientas de desarrollo. Se puede ver la lista de grupos disponibles con `yum grouplist` y la informacion de un grupo con `yum groupinfo "Development Tools"`. En dnf la sintaxis es identica: `dnf group install "Development Tools"`. Los nombres de grupo suelen ir entre comillas porque contienen espacios.
+
+</details>
+
+### Pregunta 21
+
+Que comando usarias para listar los archivos de configuracion de un paquete RPM instalado?
+
+<input type="text" class="fill-blank" data-answer="rpm -qc paquete" data-alt="rpm -qc" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**rpm -qc paquete**
+
+El flag `-qc` combina la consulta (`-q`) con la opcion de archivos de configuracion (`-c`), mostrando solo los archivos de configuracion asociados al paquete especificado. De forma similar, `-qd` muestra los archivos de documentacion y `-ql` muestra todos los archivos del paquete. Para consultar un archivo `.rpm` sin instalar, se anade `-p`: `rpm -qpc paquete.rpm`.
+
+</details>
+
+### Pregunta 22
+
+Que comando usarias para importar una clave GPG de un repositorio en un sistema RPM?
+
+<input type="text" class="fill-blank" data-answer="rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY" data-alt="rpm --import" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY**
+
+`rpm --import` se utiliza para importar claves publicas GPG al llavero de RPM, lo que permite verificar las firmas de los paquetes descargados. La ruta tipica de las claves GPG en sistemas Red Hat es `/etc/pki/rpm-gpg/`. Una vez importada la clave, `rpm -K paquete.rpm` o `rpm --checksig paquete.rpm` pueden verificar la firma del paquete contra la clave importada.
+
+</details>
+
+### Pregunta 23
+
+Que comando usarias para ver el contenido de un paquete `.rpm` sin instalarlo, utilizando `rpm2cpio`?
+
+<input type="text" class="fill-blank" data-answer="rpm2cpio paquete.rpm | cpio -t" data-alt="rpm2cpio paquete.rpm | cpio -it" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**rpm2cpio paquete.rpm | cpio -t**
+
+`rpm2cpio` convierte un paquete `.rpm` al formato cpio, y `cpio -t` lista el contenido del archivo cpio sin extraerlo. Para extraer los archivos se usaria `cpio -idmv` en lugar de `-t`. Esta tecnica es util para inspeccionar el contenido de un paquete antes de instalarlo o para recuperar archivos especificos sin necesidad de una instalacion completa.
+
+</details>
+
+### Pregunta 24
+
+Que comando de yum usarias para buscar que paquete proporciona el archivo `/usr/bin/wget`?
+
+<input type="text" class="fill-blank" data-answer="yum provides /usr/bin/wget" data-alt="yum provides '/usr/bin/wget',dnf provides /usr/bin/wget" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**yum provides /usr/bin/wget**
+
+`yum provides` busca en todos los repositorios configurados que paquete contiene el archivo especificado, incluso si el paquete no esta instalado. Tambien acepta comodines: `yum provides "*/wget"`. En dnf la sintaxis es identica: `dnf provides /usr/bin/wget`. El equivalente en sistemas Debian es `apt-file search`. Para paquetes ya instalados se puede usar `rpm -qf /usr/bin/wget`.
+
+</details>
+
+### Pregunta 25
+
+Que comando limpias toda la cache de yum (metadatos y paquetes descargados)?
+
+<input type="text" class="fill-blank" data-answer="yum clean all" data-alt="dnf clean all" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**yum clean all**
+
+`yum clean all` elimina toda la cache de yum, incluyendo los paquetes descargados, los metadatos de repositorios, las cabeceras y otros datos almacenados. Opciones mas especificas incluyen `yum clean packages` (solo paquetes) y `yum clean metadata` (solo metadatos). Despues de limpiar la cache, se puede regenerar con `yum makecache`. En dnf el comando equivalente es `dnf clean all`.
+
+</details>

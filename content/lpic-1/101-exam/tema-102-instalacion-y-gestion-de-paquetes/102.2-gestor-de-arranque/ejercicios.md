@@ -201,3 +201,243 @@ d) `boot.cfg`, se edita directamente pero requiere `grub-install` despues
 GRUB Legacy usa el archivo `/boot/grub/menu.lst` (en Debian/Ubuntu) o `/boot/grub/grub.conf` (en Red Hat/CentOS) como configuracion, y se edita directamente. No existe un equivalente a `grub-mkconfig` o `update-grub` en GRUB Legacy. En contraste, GRUB2 usa `grub.cfg` que se genera automaticamente a partir de `/etc/default/grub` y los scripts de `/etc/grub.d/`. Esta es una diferencia fundamental entre ambas versiones.
 
 </details>
+
+### Pregunta 11
+
+Cual es la ubicacion del archivo de configuracion principal de GRUB2 en un sistema Red Hat/CentOS?
+
+a) /boot/grub/grub.cfg
+b) /boot/grub2/grub.cfg
+c) /etc/grub2/grub.cfg
+d) /boot/grub/menu.lst
+
+<details><summary>Respuesta</summary>
+
+**b) /boot/grub2/grub.cfg**
+
+En Red Hat/CentOS/Fedora, GRUB2 almacena su archivo de configuracion en `/boot/grub2/grub.cfg` y los comandos llevan el prefijo `grub2-` (por ejemplo, `grub2-mkconfig`, `grub2-install`). En Debian/Ubuntu, la ubicacion es `/boot/grub/grub.cfg`. El archivo `menu.lst` pertenece a GRUB Legacy, no a GRUB2.
+
+</details>
+
+### Pregunta 12
+
+Que tecla se debe mantener pulsada durante el arranque para mostrar un menu de GRUB2 que esta oculto en un sistema con BIOS?
+
+a) Esc
+b) F2
+c) Shift
+d) Tab
+
+<details><summary>Respuesta</summary>
+
+**c) Shift**
+
+En sistemas con BIOS, se debe mantener pulsada la tecla `Shift` durante el arranque para forzar la aparicion de un menu de GRUB2 oculto (cuando `GRUB_TIMEOUT_STYLE=hidden` esta configurado). En sistemas con UEFI, se pulsa la tecla `Esc`. Esto es importante para acceder al menu cuando se necesita editar parametros del kernel o seleccionar una entrada diferente.
+
+</details>
+
+### Pregunta 13
+
+En GRUB Legacy, como se identifica la primera particion del primer disco duro?
+
+a) (hd0,1)
+b) (hd1,1)
+c) (hd0,0)
+d) (hd1,0)
+
+<details><summary>Respuesta</summary>
+
+**c) (hd0,0)**
+
+En GRUB Legacy, tanto los discos como las particiones se numeran desde 0. Por lo tanto, la primera particion del primer disco es `(hd0,0)`. Esto difiere de GRUB2, donde los discos se numeran desde 0 pero las particiones desde 1, haciendo que la primera particion del primer disco sea `(hd0,1)`. Esta diferencia en la numeracion es un punto importante para el examen.
+
+</details>
+
+### Pregunta 14
+
+Que herramienta se utiliza para gestionar las entradas de arranque almacenadas en la NVRAM de UEFI?
+
+a) grub-install
+b) update-grub
+c) efibootmgr
+d) bootctl
+
+<details><summary>Respuesta</summary>
+
+**c) efibootmgr**
+
+`efibootmgr` es la herramienta para gestionar las entradas de arranque UEFI almacenadas en la NVRAM del firmware. Permite listar las entradas (`efibootmgr -v`), cambiar el orden de arranque (`efibootmgr -o 0002,0001`), y establecer una entrada para el proximo reinicio (`efibootmgr -n 0002`). No debe confundirse con `grub-install`, que instala GRUB en el disco.
+
+</details>
+
+### Pregunta 15
+
+Que valor de la variable GRUB_TIMEOUT en /etc/default/grub hace que el menu espere indefinidamente la seleccion del usuario?
+
+a) 0
+b) -1
+c) 999
+d) infinite
+
+<details><summary>Respuesta</summary>
+
+**b) -1**
+
+El valor `-1` en `GRUB_TIMEOUT` hace que GRUB2 espere indefinidamente hasta que el usuario seleccione una entrada del menu. El valor `0` arranca inmediatamente la entrada por defecto sin mostrar el menu. Cualquier valor positivo indica los segundos de espera antes de arrancar automaticamente. `infinite` y `999` no son valores especiales reconocidos.
+
+</details>
+
+### Pregunta 16
+
+En la consola de GRUB2 (prompt grub>), que secuencia de comandos se necesita para arrancar manualmente un sistema Linux?
+
+a) mount, kernel, boot
+b) set root, linux, initrd, boot
+c) load, execute, start
+d) root, chainloader, boot
+
+<details><summary>Respuesta</summary>
+
+**b) set root, linux, initrd, boot**
+
+Para arrancar manualmente desde la consola de GRUB2, se sigue esta secuencia: 1) `set root=(hd0,1)` para establecer la particion que contiene /boot, 2) `linux /vmlinuz root=/dev/sda1` para cargar el kernel especificando la particion raiz, 3) `initrd /initrd.img` para cargar la imagen initramfs, y 4) `boot` para iniciar el arranque. La opcion (d) con `chainloader` se usa para arrancar otros bootloaders (como Windows).
+
+</details>
+
+### Pregunta 17
+
+Que script del directorio /etc/grub.d/ se utiliza para anadir entradas personalizadas al menu de GRUB2?
+
+a) 00_header
+b) 10_linux
+c) 30_os-prober
+d) 40_custom
+
+<details><summary>Respuesta</summary>
+
+**d) 40_custom**
+
+El script `40_custom` en `/etc/grub.d/` esta destinado a las entradas personalizadas del administrador. Su contenido se incluye directamente en `grub.cfg` al regenerar la configuracion. `00_header` genera la configuracion general, `10_linux` detecta los kernels Linux instalados, y `30_os-prober` detecta otros sistemas operativos. Solo se ejecutan los scripts que tienen permisos de ejecucion.
+
+</details>
+
+### Pregunta 18
+
+Que combinacion de teclas se usa para arrancar con los cambios temporales despues de editar una entrada del menu de GRUB2?
+
+a) Ctrl+S
+b) F5
+c) Ctrl+X o F10
+d) Enter
+
+<details><summary>Respuesta</summary>
+
+**c) Ctrl+X o F10**
+
+Despues de editar una entrada del menu de GRUB2 (con la tecla `e`), se pulsa `Ctrl+X` o `F10` para arrancar con los cambios temporales. Pulsar `Esc` cancela la edicion y vuelve al menu. Estos cambios son temporales y se pierden en el siguiente reinicio. Para cambios permanentes se debe editar `/etc/default/grub` y regenerar `grub.cfg`.
+
+</details>
+
+### Pregunta 19
+
+Cual es la diferencia entre el prompt `grub>` y `grub rescue>`?
+
+a) No hay diferencia, son nombres alternativos para la misma consola
+b) `grub>` aparece cuando GRUB no puede encontrar sus modulos; `grub rescue>` es la consola normal
+c) `grub>` es la consola completa con todos los comandos; `grub rescue>` aparece cuando GRUB no puede encontrar sus modulos y solo tiene comandos basicos
+d) `grub rescue>` es la consola de GRUB Legacy y `grub>` es de GRUB2
+
+<details><summary>Respuesta</summary>
+
+**c) `grub>` es la consola completa con todos los comandos; `grub rescue>` aparece cuando GRUB no puede encontrar sus modulos y solo tiene comandos basicos**
+
+El prompt `grub>` aparece cuando GRUB ha cargado sus modulos correctamente pero no encontro `grub.cfg` o el usuario presiono `c`. Tiene acceso a todos los comandos. El prompt `grub rescue>` aparece cuando GRUB no puede encontrar sus propios modulos (por ejemplo, tras redimensionar particiones). Solo dispone de comandos basicos como `ls`, `set` e `insmod`. Para recuperarse desde `grub rescue>` se debe usar `set prefix=` para indicar la ubicacion de los modulos.
+
+</details>
+
+### Pregunta 20
+
+Que variable de /etc/default/grub controla si se detectan automaticamente otros sistemas operativos instalados?
+
+a) GRUB_DISABLE_RECOVERY
+b) GRUB_DISABLE_OS_PROBER
+c) GRUB_DEFAULT
+d) GRUB_TERMINAL
+
+<details><summary>Respuesta</summary>
+
+**b) GRUB_DISABLE_OS_PROBER**
+
+La variable `GRUB_DISABLE_OS_PROBER` controla si el script `30_os-prober` detecta automaticamente otros sistemas operativos al regenerar `grub.cfg`. Si se establece a `true`, no se buscaran otros sistemas operativos. Si es `false`, os-prober buscara sistemas como Windows u otras instalaciones de Linux y creara entradas de menu para ellos. `GRUB_DISABLE_RECOVERY` controla si se muestran las entradas de recuperacion.
+
+</details>
+
+### Pregunta 21
+
+Que comando se ejecuta en Debian/Ubuntu para regenerar el archivo grub.cfg despues de modificar /etc/default/grub?
+
+<input type="text" class="fill-blank" data-answer="update-grub" data-alt="grub-mkconfig -o /boot/grub/grub.cfg" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**update-grub**
+
+`update-grub` es un wrapper de Debian/Ubuntu equivalente a `grub-mkconfig -o /boot/grub/grub.cfg`. Lee la configuracion de `/etc/default/grub` y ejecuta los scripts de `/etc/grub.d/` para generar el archivo `grub.cfg`. En Red Hat/CentOS se usa `grub2-mkconfig -o /boot/grub2/grub.cfg`.
+
+</details>
+
+### Pregunta 22
+
+Que comando se usa para instalar GRUB2 en el MBR del disco /dev/sda en un sistema con BIOS?
+
+<input type="text" class="fill-blank" data-answer="grub-install /dev/sda" data-alt="grub2-install /dev/sda" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**grub-install /dev/sda**
+
+`grub-install /dev/sda` instala GRUB2 en el MBR del disco especificado. Se indica el disco completo (no una particion). En Red Hat/CentOS el comando es `grub2-install /dev/sda`. Para sistemas UEFI se requiere `--target=x86_64-efi --efi-directory=/boot/efi`.
+
+</details>
+
+### Pregunta 23
+
+En la consola de GRUB2, que comando lista los discos y particiones disponibles?
+
+<input type="text" class="fill-blank" data-answer="ls" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**ls**
+
+En la consola de GRUB2 (`grub>` o `grub rescue>`), el comando `ls` lista todos los discos y particiones disponibles, mostrando entradas como `(hd0)`, `(hd0,1)`, `(hd0,2)`, etc. Se puede usar `ls (hd0,1)/` para listar el contenido de una particion especifica y verificar si contiene los archivos de arranque.
+
+</details>
+
+### Pregunta 24
+
+Que comando de GRUB2 se usa para generar el archivo de configuracion y guardarlo directamente en la ruta indicada?
+
+<input type="text" class="fill-blank" data-answer="grub-mkconfig" data-alt="grub2-mkconfig" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**grub-mkconfig**
+
+`grub-mkconfig` genera el archivo de configuracion de GRUB2 a partir de `/etc/default/grub` y los scripts de `/etc/grub.d/`. Se usa con la opcion `-o` para especificar la ruta de salida: `grub-mkconfig -o /boot/grub/grub.cfg`. Sin `-o`, muestra el resultado por pantalla sin guardarlo. En Red Hat/CentOS es `grub2-mkconfig`.
+
+</details>
+
+### Pregunta 25
+
+Que comando permite listar las entradas de arranque UEFI almacenadas en la NVRAM del firmware?
+
+<input type="text" class="fill-blank" data-answer="efibootmgr" data-alt="efibootmgr -v" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**efibootmgr**
+
+`efibootmgr` sin opciones lista las entradas de arranque UEFI con su numero, nombre y orden. Con `-v` (verbose) muestra informacion detallada incluyendo las rutas de los cargadores. Permite gestionar el orden de arranque y crear o eliminar entradas de arranque UEFI.
+
+</details>

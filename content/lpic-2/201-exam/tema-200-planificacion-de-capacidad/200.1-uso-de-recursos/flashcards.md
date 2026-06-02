@@ -11,7 +11,7 @@ subtema: "200.1"
 
 # Flashcards: 200.1 - Uso De Recursos
 
-> 18 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 33 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="200.1">
 </div>
@@ -199,6 +199,276 @@ subtema: "200.1"
 <div class="flashcard" data-id="200.1-fc-011">
 <div class="flashcard-front">
 
+**P:** En la salida de `vmstat`, la columna `st` muestra un valor consistentemente alto. ¿Que indica esto?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) La CPU esta siendo parcialmente utilizada por el hipervisor (steal time), tipico en entornos virtualizados. La columna `st` (steal time) en `vmstat` muestra el porcentaje de tiempo que la CPU virtual esta esperando mientras el hipervisor atiende a otras maquinas virtuales. Un valor alto indica que la maquina virtual no esta recibiendo suficientes recursos de CPU del host fisico, lo que es comun en entornos de virtualizacion sobrevendidos.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="200.1">
+</div>
+
+<div class="flashcard" data-id="200.1-fc-012">
+<div class="flashcard-front">
+
+**P:** Un administrador ejecuta `sar -n DEV 1 5` en un servidor. ¿Que tipo de informacion obtiene?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) Estadisticas de trafico de red por interfaz, incluyendo paquetes y bytes enviados/recibidos. La opcion `-n DEV` de `sar` muestra estadisticas de red a nivel de interfaz (como eth0, ens33, etc.), incluyendo paquetes recibidos/enviados por segundo (rxpck/s, txpck/s) y kilobytes recibidos/enviados por segundo (rxkB/s, txkB/s). Los parametros `1 5` indican intervalo de 1 segundo durante 5 muestras.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="200.1">
+</div>
+
+<div class="flashcard" data-id="200.1-fc-013">
+<div class="flashcard-front">
+
+**P:** ¿Que herramienta del paquete sysstat permite ver estadisticas de CPU e I/O de disco de forma simultanea con intervalos regulares?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `iostat`. `iostat` pertenece al paquete sysstat y muestra por defecto tanto estadisticas de CPU (avg-cpu) como estadisticas de I/O por dispositivo de disco. Con la opcion `-x` proporciona informacion extendida de I/O. Aunque `sar` tambien puede mostrar ambas, requiere opciones separadas (`-u` para CPU, `-d` para disco). `mpstat` solo muestra estadisticas de CPU.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="200.1">
+</div>
+
+<div class="flashcard" data-id="200.1-fc-014">
+<div class="flashcard-front">
+
+**P:** ¿En que directorio se almacenan tipicamente los archivos de datos historicos generados por `sadc`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `/var/log/sysstat/` o `/var/log/sa/`. El demonio `sadc` (system activity data collector) almacena los datos recopilados en archivos binarios con nombres como `sa01`, `sa02`, etc. (uno por dia del mes) en el directorio `/var/log/sysstat/` (en Debian/Ubuntu) o `/var/log/sa/` (en Red Hat/CentOS). Estos archivos son leidos posteriormente por `sar` con la opcion `-f`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="200.1">
+</div>
+
+<div class="flashcard" data-id="200.1-fc-015">
+<div class="flashcard-front">
+
+**P:** Un sistema de 8 nucleos muestra un load average de 3.0, 3.0, 3.0. ¿Cual de las siguientes interpretaciones es correcta?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) El sistema tiene una carga estable y moderada, utilizando menos de la mitad de su capacidad. Con 8 nucleos, un load average de 3.0 representa menos del 40% de la capacidad total. Los tres valores iguales (1 min, 5 min, 15 min) indican una carga muy estable sin tendencia ascendente ni descendente. El sistema no esta sobrecargado porque el load average esta significativamente por debajo del numero de nucleos disponibles.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="200.1">
+</div>
+
+<div class="flashcard" data-id="200.1-fc-016">
+<div class="flashcard-front">
+
+**P:** ¿Cual de las siguientes afirmaciones sobre `collectd` es correcta?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) Es un demonio ligero basado en plugins que recopila metricas del sistema y las almacena periodicamente. `collectd` es un demonio (servicio en segundo plano) que recopila metricas del sistema a intervalos regulares. Su arquitectura esta basada en plugins (CPU, memoria, disco, red, etc.) y puede almacenar los datos en archivos RRD u otros backends. No es interactivo, no genera alertas por si mismo (eso es Nagios) y no tiene interfaz web propia (para eso se usan herramientas como Grafana o Cacti).
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="200.1">
+</div>
+
+<div class="flashcard" data-id="200.1-fc-017">
+<div class="flashcard-front">
+
+**P:** Un administrador observa en `top` que la linea de CPU muestra `%Cpu(s): 5.0 us, 2.0 sy, 0.0 ni, 12.0 id, 80.0 wa, 0.5 hi, 0.5 si, 0.0 st`. ¿Cual es el problema principal?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) El sistema tiene un cuello de botella de I/O de disco ya que el 80% del tiempo de CPU se gasta esperando operaciones de I/O. El valor `wa` (iowait) del 80% indica que la CPU pasa la mayor parte del tiempo esperando a que se completen operaciones de I/O de disco. Esto es un indicador claro de cuello de botella de disco. El uso real de CPU (`us` + `sy`) es solo del 7%, lo que confirma que el problema no es de CPU sino de disco. El 12% de `id` (idle) es el tiempo restante sin actividad.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="200.1">
+</div>
+
+<div class="flashcard" data-id="200.1-fc-018">
+<div class="flashcard-front">
+
+**P:** ¿Que tecla se presiona en `top` para mostrar la actividad de cada nucleo de CPU por separado en lugar de un promedio global?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) `1`. En `top`, al presionar la tecla `1`, se alterna entre mostrar un resumen global de todas las CPUs y mostrar la actividad de cada nucleo individual (CPU0, CPU1, CPU2, etc.). `P` ordena por uso de CPU, `M` ordena por uso de memoria, y `c` muestra la linea de comandos completa de cada proceso.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="200.1">
+</div>
+
+<div class="flashcard" data-id="200.1-fc-019">
+<div class="flashcard-front">
+
+**P:** ¿Que diferencia fundamental existe entre Cacti y MRTG como herramientas de monitorizacion?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) Cacti ofrece una interfaz web completa con gestion de usuarios y graficos avanzados, mientras que MRTG genera paginas HTML estaticas con graficos basicos. Cacti es una solucion mas avanzada basada en RRDtool que proporciona una interfaz web dinamica, gestion de usuarios y permisos, templates para dispositivos y graficos mas sofisticados. MRTG es mas antiguo y sencillo: genera paginas HTML estaticas con graficos PNG de trafico de red. Ambas herramientas usan SNMP para recopilar datos.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="200.1">
+</div>
+
+<div class="flashcard" data-id="200.1-fc-020">
+<div class="flashcard-front">
+
+**P:** Un servidor muestra en `free -h` que tiene 16 GB de RAM total, 200 MB libres, y 10 GB en buff/cache. ¿Cual es la evaluacion correcta?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) La situacion es normal ya que Linux utiliza la memoria no usada para cache, que se puede liberar para aplicaciones cuando sea necesario. Linux usa automaticamente la RAM disponible como cache de disco (buff/cache) para mejorar el rendimiento. Esta memoria se puede recuperar rapidamente cuando las aplicaciones la necesitan. Por eso, `MemFree` puede ser bajo sin que haya un problema real. El valor importante es `MemAvailable`, que incluye la memoria cache recuperable y da una imagen mas real de la memoria disponible.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="200.1">
+</div>
+
+<div class="flashcard" data-id="200.1-fc-021">
+<div class="flashcard-front">
+
+**P:** ¿Que comando muestra las estadisticas de red de la interfaz `eth0`, incluyendo paquetes transmitidos, recibidos y errores?
+
+</div>
+<div class="flashcard-back">
+
+**R:** ip -s link show eth0. El comando `ip -s link show eth0` muestra estadisticas detalladas de la interfaz de red `eth0`, incluyendo bytes y paquetes transmitidos/recibidos, errores, paquetes descartados y colisiones. La opcion `-s` (statistics) es la que activa la visualizacion de estadisticas.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="200.1">
+</div>
+
+<div class="flashcard" data-id="200.1-fc-022">
+<div class="flashcard-front">
+
+**P:** ¿Que comando de `sar` muestra las estadisticas de uso de memoria del sistema con un intervalo de 2 segundos y 5 muestras?
+
+</div>
+<div class="flashcard-back">
+
+**R:** sar -r 2 5. La opcion `-r` de `sar` muestra estadisticas de uso de memoria (incluyendo memoria total, libre, usada, buffers, cache, swap, etc.). Los parametros `2 5` indican un intervalo de 2 segundos entre muestras y un total de 5 muestras. Otras opciones comunes son `-u` para CPU, `-d` para disco y `-n DEV` para red.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="200.1">
+</div>
+
+<div class="flashcard" data-id="200.1-fc-023">
+<div class="flashcard-front">
+
+**P:** ¿Que comando ejecuta `iostat` en modo extendido con un intervalo de 3 segundos y 4 muestras?
+
+</div>
+<div class="flashcard-back">
+
+**R:** iostat -x 3 4. El comando `iostat -x 3 4` ejecuta iostat con la opcion `-x` (extended) que muestra informacion detallada de I/O por dispositivo, incluyendo campos como `%util`, `await`, `r/s`, `w/s`, entre otros. Los parametros `3 4` significan intervalos de 3 segundos durante 4 muestras consecutivas.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="200.1">
+</div>
+
+<div class="flashcard" data-id="200.1-fc-024">
+<div class="flashcard-front">
+
+**P:** ¿Que comando muestra solo los procesos que estan realizando operaciones de I/O de disco activamente?
+
+</div>
+<div class="flashcard-back">
+
+**R:** iotop -o. El comando `iotop` con la opcion `-o` (only) muestra unicamente los procesos que estan realizando I/O activo en ese momento, filtrando aquellos con actividad cero. Sin esta opcion, `iotop` muestra todos los procesos, incluyendo los que no tienen actividad de I/O, lo que dificulta identificar rapidamente los procesos problematicos.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="200.1">
+</div>
+
+<div class="flashcard" data-id="200.1-fc-025">
+<div class="flashcard-front">
+
+**P:** ¿Que comando muestra el uso de memoria del sistema en formato legible (human-readable) con unidades como GB y MB?
+
+</div>
+<div class="flashcard-back">
+
+**R:** free -h. El comando `free -h` muestra la informacion de uso de memoria (RAM y swap) en formato legible con unidades automaticas (B, KB, MB, GB). Muestra memoria total, usada, libre, compartida, buff/cache y disponible. Es una de las herramientas mas rapidas para obtener una vision general del estado de la memoria del sistema.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="200.1">
+</div>
+
+<div class="flashcard" data-id="200.1-fc-026">
+<div class="flashcard-front">
+
 **P:** Tip de examen: El load average NO es un porcentaje. Es el numero promedio de procesos en cola d...
 
 </div>
@@ -214,7 +484,7 @@ subtema: "200.1"
 <div class="flashcard-deck" data-subtema="200.1">
 </div>
 
-<div class="flashcard" data-id="200.1-fc-012">
+<div class="flashcard" data-id="200.1-fc-027">
 <div class="flashcard-front">
 
 **P:** Tip de examen: Si `wa` (wait) es consistentemente alto, indica un cuello de botella de I/O en d...
@@ -232,7 +502,7 @@ subtema: "200.1"
 <div class="flashcard-deck" data-subtema="200.1">
 </div>
 
-<div class="flashcard" data-id="200.1-fc-013">
+<div class="flashcard" data-id="200.1-fc-028">
 <div class="flashcard-front">
 
 **P:** Tip de examen: Un `%util` cercano a 100% indica que el disco esta saturado. Un `await` alto com...
@@ -250,7 +520,7 @@ subtema: "200.1"
 <div class="flashcard-deck" data-subtema="200.1">
 </div>
 
-<div class="flashcard" data-id="200.1-fc-014">
+<div class="flashcard" data-id="200.1-fc-029">
 <div class="flashcard-front">
 
 **P:** Tip de examen: `sar` es la unica herramienta que permite consultar datos historicos de rendimie...
@@ -268,7 +538,7 @@ subtema: "200.1"
 <div class="flashcard-deck" data-subtema="200.1">
 </div>
 
-<div class="flashcard" data-id="200.1-fc-015">
+<div class="flashcard" data-id="200.1-fc-030">
 <div class="flashcard-front">
 
 **P:** Tip de examen: Si `si` y `so` en `vmstat` son consistentemente mayores que cero, el sistema est...
@@ -286,7 +556,7 @@ subtema: "200.1"
 <div class="flashcard-deck" data-subtema="200.1">
 </div>
 
-<div class="flashcard" data-id="200.1-fc-016">
+<div class="flashcard" data-id="200.1-fc-031">
 <div class="flashcard-front">
 
 **P:** Tip de examen: Debes conocer el proposito de cada herramienta. `collectd` recopila metricas, Na...
@@ -304,15 +574,15 @@ subtema: "200.1"
 <div class="flashcard-deck" data-subtema="200.1">
 </div>
 
-<div class="flashcard" data-id="200.1-fc-017">
+<div class="flashcard" data-id="200.1-fc-032">
 <div class="flashcard-front">
 
-**P:** Que es/son Introduccion?
+**P:** Que es/son Identificacion de cuellos de botella?
 
 </div>
 <div class="flashcard-back">
 
-**R:** La planificacion de capacidad es una de las responsabilidades fundamentales de un administrador de sistemas Linux avanzado. El subtema 200.1 se centra en medir y analizar el uso actual de los recursos
+**R:** Resumen de como identificar el recurso limitante:
 
 </div>
 </div>
@@ -322,15 +592,15 @@ subtema: "200.1"
 <div class="flashcard-deck" data-subtema="200.1">
 </div>
 
-<div class="flashcard" data-id="200.1-fc-018">
+<div class="flashcard" data-id="200.1-fc-033">
 <div class="flashcard-front">
 
-**P:** Que es/son Identificacion de cuellos de botella?
+**P:** Que es/son Archivos y directorios importantes?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Resumen de como identificar el recurso limitante:
+**R:** - `/proc/meminfo` - informacion de memoria
 
 </div>
 </div>

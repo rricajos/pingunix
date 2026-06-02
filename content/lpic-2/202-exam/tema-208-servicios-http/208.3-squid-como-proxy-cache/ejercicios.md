@@ -189,3 +189,273 @@ ICP (Internet Cache Protocol) es el protocolo utilizado por Squid para comunicar
 </details>
 
 ---
+
+### Pregunta 11
+
+¿Qué tipo de ACL en Squid permite filtrar peticiones basándose en una expresión regular aplicada a la URL solicitada?
+
+a) dstdomain
+b) src
+c) url_regex
+d) proto
+
+<details><summary>Respuesta</summary>
+
+**c) url_regex**
+
+La ACL de tipo `url_regex` filtra las peticiones comparando la URL completa con una expresión regular. Por ejemplo, `acl descargas url_regex -i \.exe$ \.torrent$` coincide con URLs que terminen en `.exe` o `.torrent`. La opción `-i` hace la comparación insensible a mayúsculas/minúsculas.
+
+</details>
+
+---
+
+### Pregunta 12
+
+En una jerarquía de caché de Squid, ¿cuál es la diferencia entre un proxy padre (parent) y un proxy hermano (sibling)?
+
+a) El padre solo comparte caché, el hermano reenvía peticiones
+b) El padre reenvía peticiones si no tiene la respuesta en caché, el hermano solo comparte contenido cacheado
+c) No hay diferencia, ambos funcionan igual
+d) El padre usa TCP y el hermano usa UDP
+
+<details><summary>Respuesta</summary>
+
+**b) El padre reenvía peticiones si no tiene la respuesta en caché, el hermano solo comparte contenido cacheado**
+
+Un proxy padre (parent) actúa como intermediario completo: si tiene el objeto en caché lo devuelve, y si no, lo solicita al servidor origen en nombre del proxy que lo consulta. Un proxy hermano (sibling) solo devuelve objetos que ya tiene en su caché; si no los tiene, no realiza la petición al servidor origen. La comunicación entre proxies se realiza mediante ICP (UDP 3130).
+
+</details>
+
+---
+
+### Pregunta 13
+
+¿Cuál es el orden de procesamiento de las reglas `http_access` en Squid?
+
+a) Se aplican todas las reglas y la más restrictiva gana
+b) Se procesan de abajo hacia arriba y se aplica la primera coincidencia
+c) Se procesan de arriba hacia abajo y se aplica la primera coincidencia
+d) Se procesan aleatoriamente según la prioridad de la ACL
+
+<details><summary>Respuesta</summary>
+
+**c) Se procesan de arriba hacia abajo y se aplica la primera coincidencia**
+
+Squid procesa las reglas `http_access` secuencialmente de arriba hacia abajo y aplica la primera regla que coincida con la petición. Por esta razón, el orden es fundamental. Las reglas más específicas deben ir antes que las generales, y la última regla debe ser siempre `http_access deny all` para denegar todo lo que no esté explícitamente permitido.
+
+</details>
+
+---
+
+### Pregunta 14
+
+¿Qué tipo de almacenamiento de caché en Squid utiliza operaciones de E/S asíncronas para mejorar el rendimiento frente al formato estándar UFS?
+
+a) diskd
+b) coss
+c) aufs
+d) rock
+
+<details><summary>Respuesta</summary>
+
+**c) aufs**
+
+AUFS (Asynchronous UFS) es un tipo de almacenamiento de caché que realiza las operaciones de lectura y escritura en disco de forma asíncrona usando hilos, lo que mejora significativamente el rendimiento respecto al UFS estándar que usa E/S síncrona. Se configura con `cache_dir aufs /var/spool/squid 10000 16 256`.
+
+</details>
+
+---
+
+### Pregunta 15
+
+¿Qué directiva de Squid configura el tamaño máximo de un objeto que puede almacenarse en la caché de disco?
+
+a) cache_max_size
+b) maximum_object_size
+c) max_cache_object
+d) object_limit
+
+<details><summary>Respuesta</summary>
+
+**b) maximum_object_size**
+
+La directiva `maximum_object_size` define el tamaño máximo que puede tener un objeto para ser almacenado en la caché de disco. Objetos más grandes no se cachean. Por ejemplo, `maximum_object_size 4 MB`. Para la caché en memoria existe la directiva equivalente `maximum_object_size_in_memory`.
+
+</details>
+
+---
+
+### Pregunta 16
+
+¿Qué regla de iptables se necesita para redirigir el tráfico HTTP al proxy Squid en modo transparente?
+
+a) `iptables -t filter -A INPUT -p tcp --dport 80 -j REDIRECT --to-port 3128`
+b) `iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 3128`
+c) `iptables -t mangle -A FORWARD -p tcp --dport 80 -j REDIRECT --to-port 3128`
+d) `iptables -t nat -A POSTROUTING -p tcp --dport 80 -j REDIRECT --to-port 3128`
+
+<details><summary>Respuesta</summary>
+
+**b) `iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 3128`**
+
+Para el proxy transparente, se usa la tabla `nat` con la cadena `PREROUTING` para interceptar el tráfico HTTP (puerto 80) antes de que sea enrutado y redirigirlo al puerto del proxy Squid (3128). Se usa la acción `REDIRECT` que cambia el puerto de destino del paquete. La cadena PREROUTING es necesaria porque la redirección debe ocurrir antes de la decisión de enrutamiento.
+
+</details>
+
+---
+
+### Pregunta 17
+
+¿Qué archivo de log de Squid registra los eventos del servicio como inicios, paradas y errores de configuración?
+
+a) /var/log/squid/access.log
+b) /var/log/squid/cache.log
+c) /var/log/squid/store.log
+d) /var/log/squid/error.log
+
+<details><summary>Respuesta</summary>
+
+**b) /var/log/squid/cache.log**
+
+El archivo `cache.log` registra los eventos operativos del servicio Squid: inicios y paradas del demonio, errores de configuración, advertencias y mensajes de diagnóstico. El archivo `access.log` registra las peticiones de los clientes, y `store.log` registra los objetos almacenados y eliminados de la caché.
+
+</details>
+
+---
+
+### Pregunta 18
+
+¿Qué directiva de Squid configura el programa de autenticación para validar usuarios con el esquema básico (NCSA)?
+
+a) `authenticate_program basic /usr/lib/squid/basic_ncsa_auth`
+b) `auth_param basic program /usr/lib/squid/basic_ncsa_auth /etc/squid/passwd`
+c) `basic_auth /usr/lib/squid/basic_ncsa_auth /etc/squid/passwd`
+d) `proxy_auth program /usr/lib/squid/basic_ncsa_auth`
+
+<details><summary>Respuesta</summary>
+
+**b) `auth_param basic program /usr/lib/squid/basic_ncsa_auth /etc/squid/passwd`**
+
+La directiva `auth_param basic program` define el programa externo que Squid utiliza para autenticar usuarios con el esquema básico. `basic_ncsa_auth` verifica las credenciales contra un archivo de contraseñas en formato NCSA (creado con `htpasswd`). La directiva `auth_param basic realm` permite configurar el mensaje que ve el usuario.
+
+</details>
+
+---
+
+### Pregunta 19
+
+¿Qué palabra clave se utiliza en la directiva `http_port` de Squid para configurarlo como proxy inverso (acelerador)?
+
+a) reverse
+b) accel
+c) backend
+d) upstream
+
+<details><summary>Respuesta</summary>
+
+**b) accel**
+
+La palabra clave `accel` en la directiva `http_port` configura Squid como proxy inverso (acelerador web). Por ejemplo: `http_port 80 accel defaultsite=www.ejemplo.com vhost`. En este modo, Squid recibe peticiones de clientes externos y las reenvía a los servidores backend definidos con `cache_peer`, cacheando el contenido para mejorar el rendimiento.
+
+</details>
+
+---
+
+### Pregunta 20
+
+¿Qué herramienta de línea de comandos incluida con Squid permite consultar estadísticas de la caché y purgar objetos?
+
+a) squidtool
+b) squidclient
+c) squidctl
+d) squidadmin
+
+<details><summary>Respuesta</summary>
+
+**b) squidclient**
+
+El comando `squidclient` es una herramienta de diagnóstico incluida con Squid que permite consultar estadísticas de la caché (`squidclient mgr:info`), ver el uso de memoria (`squidclient mgr:mem`), consultar contadores de tráfico (`squidclient mgr:counters`) y purgar objetos específicos de la caché (`squidclient -m PURGE http://url`).
+
+</details>
+
+---
+
+### Pregunta 21
+
+¿Qué comando verifica la sintaxis del archivo de configuración de Squid sin iniciar el servicio?
+
+<input type="text" class="fill-blank" data-answer="squid -k parse" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**squid -k parse**
+
+El comando `squid -k parse` lee y analiza el archivo de configuración `squid.conf` reportando errores de sintaxis o directivas desconocidas sin iniciar ni afectar al servicio en ejecución. Es recomendable ejecutarlo después de cada modificación del archivo de configuración y antes de aplicar cambios con `squid -k reconfigure`.
+
+</details>
+
+---
+
+### Pregunta 22
+
+¿Qué comando rota los archivos de log de Squid?
+
+<input type="text" class="fill-blank" data-answer="squid -k rotate" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**squid -k rotate**
+
+El comando `squid -k rotate` cierra los archivos de log actuales, los renombra añadiendo un sufijo numérico (access.log.0, access.log.1, etc.) y abre nuevos archivos de log. Esto permite gestionar el tamaño de los logs sin interrumpir el servicio. Se puede automatizar con una tarea cron o un temporizador de systemd.
+
+</details>
+
+---
+
+### Pregunta 23
+
+¿Qué comando inicializa la estructura de directorios de caché de Squid?
+
+<input type="text" class="fill-blank" data-answer="squid -z" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**squid -z**
+
+El comando `squid -z` crea la estructura de subdirectorios de la caché en disco según la configuración de `cache_dir` en `squid.conf`. Debe ejecutarse antes del primer inicio de Squid y cada vez que se cambie la configuración de `cache_dir`. Los directorios se crean con los niveles L1 y L2 especificados (por ejemplo, 16 y 256).
+
+</details>
+
+---
+
+### Pregunta 24
+
+¿Qué comando de Squid recarga la configuración sin interrumpir las conexiones activas?
+
+<input type="text" class="fill-blank" data-answer="squid -k reconfigure" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**squid -k reconfigure**
+
+El comando `squid -k reconfigure` envía la señal SIGHUP al proceso Squid, haciendo que relea su archivo de configuración sin reiniciar el servicio ni interrumpir las conexiones activas. Los cambios se aplican inmediatamente para las nuevas conexiones. Es equivalente a `systemctl reload squid` en sistemas con systemd.
+
+</details>
+
+---
+
+### Pregunta 25
+
+¿Qué comando permite purgar un objeto específico de la caché de Squid?
+
+<input type="text" class="fill-blank" data-answer="squidclient -m PURGE" data-alt="squidclient -m PURGE http://url" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**squidclient -m PURGE**
+
+El comando `squidclient -m PURGE http://url` envía una solicitud HTTP con el método PURGE a Squid para eliminar un objeto específico de la caché. Por ejemplo: `squidclient -m PURGE http://www.ejemplo.com/imagen.jpg`. Para que funcione, se debe configurar una ACL que permita el método PURGE desde la dirección del administrador.
+
+</details>
+
+---

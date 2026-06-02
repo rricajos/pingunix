@@ -201,3 +201,273 @@ d) La ruta es una ruta de host que esta activa
 En la tabla de rutas, la flag `U` indica que la ruta esta activa (Up) y la flag `G` indica que la ruta usa un gateway (no es directamente conectada). La combinacion `UG` es tipica de la ruta por defecto (0.0.0.0 con gateway). Otras flags: `H` indica que el destino es un host especifico (no una red), `!` indica una ruta de rechazo, `D` indica una ruta creada dinamicamente.
 
 </details>
+
+---
+
+### Pregunta 11
+
+Que comando limita el ping a enviar solamente 4 paquetes ICMP al host 192.168.1.1?
+
+a) `ping -t 4 192.168.1.1`
+b) `ping -n 4 192.168.1.1`
+c) `ping -c 4 192.168.1.1`
+d) `ping -l 4 192.168.1.1`
+
+<details><summary>Respuesta</summary>
+
+**c) `ping -c 4 192.168.1.1`**
+
+La opcion `-c` (count) de `ping` limita el numero de paquetes ICMP Echo Request enviados. `ping -c 4 192.168.1.1` envia exactamente 4 paquetes y luego termina. Sin esta opcion, `ping` en Linux envia paquetes indefinidamente hasta que se presiona Ctrl+C. Otras opciones utiles: `-i` (intervalo entre pings), `-w` (timeout total), `-W` (timeout por paquete), `-s` (tamano del paquete).
+
+</details>
+
+---
+
+### Pregunta 12
+
+Un administrador no puede hacer ping ni al gateway ni a ninguna IP externa, pero la interfaz muestra una direccion IP correcta con `ip addr show`. Cual deberia ser el siguiente paso de diagnostico?
+
+a) Verificar la resolucion DNS
+b) Verificar que la ruta por defecto (gateway) este configurada con `ip route show`
+c) Reiniciar el servicio de red
+d) Verificar el servicio web con `nc -zv`
+
+<details><summary>Respuesta</summary>
+
+**b) Verificar que la ruta por defecto (gateway) este configurada con `ip route show`**
+
+Siguiendo la metodologia de troubleshooting de abajo hacia arriba: la interfaz esta activa y tiene IP (capas 1-2 OK), pero no puede alcanzar el gateway. El siguiente paso logico es verificar la tabla de rutas con `ip route show` para confirmar que existe una ruta por defecto correcta. Si falta el gateway, se agrega con `ip route add default via IP_GATEWAY`. Verificar DNS seria un paso posterior, y reiniciar el servicio no es un diagnostico sistematico.
+
+</details>
+
+---
+
+### Pregunta 13
+
+Que opcion de `traceroute` permite usar ICMP en lugar de UDP para trazar la ruta?
+
+a) `traceroute -T host`
+b) `traceroute -I host`
+c) `traceroute -U host`
+d) `traceroute -P icmp host`
+
+<details><summary>Respuesta</summary>
+
+**b) `traceroute -I host`**
+
+La opcion `-I` de `traceroute` fuerza el uso de ICMP Echo Request en lugar de UDP (que es el metodo por defecto). La opcion `-T` usa TCP en lugar de UDP, lo que es util cuando ICMP y UDP estan bloqueados por firewalls. `traceroute` puede requerir permisos de root dependiendo del metodo. `tracepath` es una alternativa que no requiere root pero tiene menos opciones de configuracion.
+
+</details>
+
+---
+
+### Pregunta 14
+
+Que comando muestra un resumen estadistico de los sockets del sistema con `ss`?
+
+a) `ss -a`
+b) `ss -s`
+c) `ss -i`
+d) `ss --stats`
+
+<details><summary>Respuesta</summary>
+
+**b) `ss -s`**
+
+El comando `ss -s` muestra un resumen estadistico de los sockets del sistema, incluyendo el numero total de sockets, conexiones TCP establecidas, en escucha, cerradas, etc. Es util para tener una vision rapida del estado de la red. `ss -a` muestra todas las conexiones (no un resumen). `ss -o` muestra informacion de temporizadores. Las opciones mas comunes combinadas son `-tulnp` para ver puertos TCP/UDP en escucha con PID.
+
+</details>
+
+---
+
+### Pregunta 15
+
+Que herramienta de diagnostico de red se conoce como la "navaja suiza" por su versatilidad en conexiones de red?
+
+a) `tcpdump`
+b) `mtr`
+c) `netcat (nc)`
+d) `nmap`
+
+<details><summary>Respuesta</summary>
+
+**c) `netcat (nc)`**
+
+`netcat` (comando `nc`) es conocido como la "navaja suiza" de las redes por su versatilidad. Permite verificar puertos abiertos (`nc -zv host puerto`), escuchar en puertos (`nc -l puerto`), transferir archivos, enviar peticiones HTTP manuales y mas. `tcpdump` es un capturador de trafico. `mtr` combina ping y traceroute. `nmap` es un escaner de red y puertos. Netcat es una herramienta fundamental para diagnostico y pruebas de red.
+
+</details>
+
+---
+
+### Pregunta 16
+
+Que comando de `tcpdump` captura solo 20 paquetes en la interfaz eth0 sin resolver nombres?
+
+a) `tcpdump -i eth0 -n -c 20`
+b) `tcpdump -i eth0 -limit 20 -numeric`
+c) `tcpdump -eth0 -n -p 20`
+d) `tcpdump --interface eth0 --count 20 --no-dns`
+
+<details><summary>Respuesta</summary>
+
+**a) `tcpdump -i eth0 -n -c 20`**
+
+Las opciones de `tcpdump` son: `-i eth0` (interfaz especifica), `-n` (no resolver nombres DNS, hace la captura mas rapida), `-c 20` (capturar solo 20 paquetes y terminar). `tcpdump` requiere permisos de root. Otras opciones importantes: `-w archivo.pcap` (guardar captura), `-r archivo.pcap` (leer captura), `-A` (mostrar en ASCII), `port 80` (filtrar por puerto), `host IP` (filtrar por host).
+
+</details>
+
+---
+
+### Pregunta 17
+
+Cual es el comando equivalente de `ping` para IPv6?
+
+a) `ping -v6 host`
+b) `ping --ipv6 host`
+c) `ping6 host`
+d) `pingv6 host`
+
+<details><summary>Respuesta</summary>
+
+**c) `ping6 host`**
+
+El comando `ping6` es el equivalente de `ping` para IPv6. Envia paquetes ICMPv6 Echo Request al host de destino. En versiones modernas de `ping`, tambien se puede usar `ping -6 host` para forzar el uso de IPv6. De forma similar, `traceroute6` y `tracepath6` son las versiones IPv6 de `traceroute` y `tracepath` respectivamente. Tambien se puede usar `traceroute -6` y `tracepath -6`.
+
+</details>
+
+---
+
+### Pregunta 18
+
+En la salida de `mtr`, que columna indica el porcentaje de paquetes perdidos en cada salto?
+
+a) `Avg`
+b) `Snt`
+c) `Loss%`
+d) `StDev`
+
+<details><summary>Respuesta</summary>
+
+**c) `Loss%`**
+
+En la salida de `mtr`, la columna `Loss%` muestra el porcentaje de paquetes perdidos en cada salto (router intermedio). Otras columnas importantes: `Snt` (paquetes enviados), `Last` (ultima latencia), `Avg` (latencia promedio), `Best` (mejor latencia), `Wrst` (peor latencia) y `StDev` (desviacion estandar). `mtr` es especialmente util para detectar donde exactamente hay perdida de paquetes o alta latencia en la ruta.
+
+</details>
+
+---
+
+### Pregunta 19
+
+Que flag en la tabla de rutas indica que el destino es un host especifico y no una red?
+
+a) `U`
+b) `G`
+c) `H`
+d) `D`
+
+<details><summary>Respuesta</summary>
+
+**c) `H`**
+
+La flag `H` (Host) en la tabla de rutas indica que el destino es un host especifico, no una red completa. Una ruta con flags `UGH` significa: ruta activa (U), que usa un gateway (G), con destino a un host especifico (H). La mascara para estas rutas es 255.255.255.255 (/32). Las otras flags son: `U` (ruta activa), `G` (usa gateway), `D` (creada dinamicamente), `M` (modificada), `!` (rechaza paquetes).
+
+</details>
+
+---
+
+### Pregunta 20
+
+Que comando filtra las conexiones del `ss` para mostrar solo las que usan el puerto destino 443?
+
+a) `ss -t port 443`
+b) `ss dport = :443`
+c) `ss --dest-port 443`
+d) `ss -p 443`
+
+<details><summary>Respuesta</summary>
+
+**b) `ss dport = :443`**
+
+El comando `ss dport = :443` filtra las conexiones mostrando solo aquellas cuyo puerto destino es 443 (HTTPS). Tambien se puede usar `ss sport = :22` para filtrar por puerto origen 22. Otras opciones de filtrado incluyen: `ss state established` (solo conexiones establecidas), `ss state listening` (solo en escucha). Estas capacidades de filtrado avanzado son una ventaja de `ss` sobre `netstat`.
+
+</details>
+
+---
+
+### Pregunta 21
+
+Que comando envia exactamente 3 paquetes ICMP al host 10.0.0.1?
+
+<input type="text" class="fill-blank" data-answer="ping -c 3 10.0.0.1" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**ping -c 3 10.0.0.1**
+
+El comando `ping -c 3 10.0.0.1` envia 3 paquetes ICMP Echo Request al host 10.0.0.1 y luego termina. La opcion `-c` (count) limita el numero de paquetes. Sin esta opcion, `ping` en Linux envia paquetes indefinidamente. En la salida se muestra el TTL, el tiempo de ida y vuelta (latencia) y las estadisticas de perdida de paquetes.
+
+</details>
+
+---
+
+### Pregunta 22
+
+Que comando muestra la tabla de rutas IPv6 usando iproute2?
+
+<input type="text" class="fill-blank" data-answer="ip -6 route show" data-alt="ip -6 route" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**ip -6 route show**
+
+El comando `ip -6 route show` (o abreviado `ip -6 route`) muestra la tabla de rutas IPv6 del sistema usando iproute2. Es el equivalente moderno de `route -6` o `route -A inet6` del paquete net-tools. La opcion `-6` indica que se deben mostrar las rutas del protocolo IPv6. Para ver la tabla de rutas IPv4 se usa simplemente `ip route show`.
+
+</details>
+
+---
+
+### Pregunta 23
+
+Que comando verifica si el puerto TCP 22 esta abierto en el host 192.168.1.10 usando netcat?
+
+<input type="text" class="fill-blank" data-answer="nc -zv 192.168.1.10 22" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**nc -zv 192.168.1.10 22**
+
+El comando `nc -zv 192.168.1.10 22` verifica si el puerto TCP 22 esta abierto en el host especificado. La opcion `-z` (zero I/O) realiza solo un escaneo sin enviar datos, y `-v` (verbose) muestra el resultado detallado. Si el puerto esta abierto, `nc` reporta "succeeded" o "open"; si esta cerrado, reporta "refused" o "failed". Para escanear un rango de puertos: `nc -zv host 20-25`.
+
+</details>
+
+---
+
+### Pregunta 24
+
+Que comando muestra todos los puertos TCP y UDP en escucha con informacion del proceso usando la herramienta moderna?
+
+<input type="text" class="fill-blank" data-answer="ss -tulnp" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**ss -tulnp**
+
+El comando `ss -tulnp` es la forma moderna de mostrar puertos en escucha: `-t` (TCP), `-u` (UDP), `-l` (listening/escucha), `-n` (numerico, sin resolver nombres), `-p` (mostrar proceso/PID). `ss` reemplaza a `netstat` del paquete net-tools deprecado. La salida muestra el protocolo, estado, direccion local, direccion remota y el proceso asociado a cada socket.
+
+</details>
+
+---
+
+### Pregunta 25
+
+Que comando guarda una captura de trafico de red de la interfaz eth0 en un archivo llamado captura.pcap?
+
+<input type="text" class="fill-blank" data-answer="tcpdump -i eth0 -w captura.pcap" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**tcpdump -i eth0 -w captura.pcap**
+
+El comando `tcpdump -i eth0 -w captura.pcap` captura todo el trafico de la interfaz eth0 y lo guarda en el archivo `captura.pcap`. La opcion `-i` especifica la interfaz y `-w` el archivo de salida. Para leer la captura posteriormente se usa `tcpdump -r captura.pcap`. `tcpdump` requiere permisos de root para capturar trafico. Se pueden aplicar filtros como `port 80`, `host IP` o `icmp` para capturar solo trafico especifico.
+
+</details>

@@ -211,3 +211,273 @@ d) `e2fsck`
 `debugfs` es un depurador interactivo para sistemas de archivos ext2/ext3/ext4 que permite examinar y modificar estructuras internas a bajo nivel. Con el comando `lsdel` se pueden listar inodos de archivos borrados, y con `undel` se puede intentar recuperarlos. Se abre en modo solo lectura por defecto (`debugfs /dev/sda1`) y en modo escritura con `-w`. `tune2fs` es para ajustar parametros del FS, no para depuracion. `xfs_db` es el depurador equivalente pero para XFS, no para ext. `e2fsck` verifica y repara pero no permite la exploracion interactiva de estructuras.
 
 </details>
+
+---
+
+### Pregunta 11
+
+Que informacion NO almacena un inodo en un sistema de archivos ext4?
+
+a) Los permisos del archivo
+b) El nombre del archivo
+c) El propietario (UID) y grupo (GID)
+d) Los punteros a los bloques de datos en disco
+
+<details><summary>Respuesta</summary>
+
+**b) El nombre del archivo**
+
+El inodo almacena todos los metadatos de un archivo excepto su nombre. El nombre se almacena en la entrada del directorio que apunta al inodo. Un inodo contiene: tipo de archivo, permisos (rwx), propietario y grupo (UID/GID), tamanos, timestamps (atime, mtime, ctime), punteros a los bloques de datos y el conteo de enlaces duros. Esta es la razon por la cual varios enlaces duros con diferentes nombres pueden apuntar al mismo inodo.
+
+</details>
+
+---
+
+### Pregunta 12
+
+Cual es la diferencia entre `tune2fs -l` y `dumpe2fs -h` aplicados a la misma particion ext4?
+
+a) `tune2fs -l` modifica parametros; `dumpe2fs -h` solo los muestra
+b) Ambos muestran informacion del superbloque; la salida es esencialmente la misma
+c) `tune2fs -l` muestra solo la etiqueta; `dumpe2fs -h` muestra informacion completa
+d) `dumpe2fs -h` requiere que el sistema de archivos este montado; `tune2fs -l` no
+
+<details><summary>Respuesta</summary>
+
+**b) Ambos muestran informacion del superbloque; la salida es esencialmente la misma**
+
+Tanto `tune2fs -l` como `dumpe2fs -h` muestran la informacion del superbloque de un sistema ext. La diferencia principal es que `tune2fs` tambien permite modificar parametros (con otras opciones como `-c`, `-i`, `-L`, etc.), mientras que `dumpe2fs` es una herramienta de solo consulta. `dumpe2fs` sin `-h` muestra informacion adicional de los grupos de bloques, incluyendo ubicaciones de superbloques de respaldo. Ninguno de los dos requiere que el sistema de archivos este montado.
+
+</details>
+
+---
+
+### Pregunta 13
+
+Que opcion de `tune2fs` cambia la etiqueta (label) de un sistema de archivos ext4?
+
+a) `tune2fs -c "datos" /dev/sda1`
+b) `tune2fs -L "datos" /dev/sda1`
+c) `tune2fs -m "datos" /dev/sda1`
+d) `tune2fs -U "datos" /dev/sda1`
+
+<details><summary>Respuesta</summary>
+
+**b) `tune2fs -L "datos" /dev/sda1`**
+
+La opcion `-L` de `tune2fs` establece o cambia la etiqueta (label) del sistema de archivos. La etiqueta se puede usar para identificar el sistema de archivos en `/etc/fstab` con `LABEL=datos`. La opcion `-c` establece el maximo de montajes antes de fsck automatico. La opcion `-m` establece el porcentaje de bloques reservados para root. La opcion `-U` cambia el UUID del sistema de archivos.
+
+</details>
+
+---
+
+### Pregunta 14
+
+Que comando muestra el numero de inodo de un archivo especifico?
+
+a) `stat -i archivo.txt`
+b) `ls -i archivo.txt`
+c) `df -i archivo.txt`
+d) `file -i archivo.txt`
+
+<details><summary>Respuesta</summary>
+
+**b) `ls -i archivo.txt`**
+
+La opcion `-i` de `ls` muestra el numero de inodo de cada archivo listado. Por ejemplo, la salida mostraria algo como `12345 archivo.txt`. Otra forma de ver el inodo y mas informacion detallada es con `stat archivo.txt`, que muestra el inodo, permisos, timestamps y mas. `df -i` muestra el uso de inodos por sistema de archivos, no de un archivo individual. `file -i` muestra el tipo MIME del archivo, no su inodo.
+
+</details>
+
+---
+
+### Pregunta 15
+
+Cual es la herramienta de desfragmentacion para sistemas de archivos XFS?
+
+a) `e4defrag`
+b) `xfs_repair`
+c) `xfs_fsr`
+d) `defrag.xfs`
+
+<details><summary>Respuesta</summary>
+
+**c) `xfs_fsr`**
+
+`xfs_fsr` (XFS filesystem reorganizer) es la herramienta de desfragmentacion para sistemas de archivos XFS. A diferencia de la mayoria de herramientas de mantenimiento que requieren el FS desmontado, `xfs_fsr` funciona en sistemas XFS **montados**. Puede desfragmentar todo el sistema o un archivo especifico. `xfs_repair` es para reparar sistemas de archivos XFS danados. `e4defrag` es la herramienta de desfragmentacion para ext4, no para XFS.
+
+</details>
+
+---
+
+### Pregunta 16
+
+Que porcentaje de bloques reserva por defecto `mke2fs` para el usuario root al crear un sistema de archivos ext4?
+
+a) 0%
+b) 1%
+c) 5%
+d) 10%
+
+<details><summary>Respuesta</summary>
+
+**c) 5%**
+
+Por defecto, `mke2fs` reserva el 5% de los bloques totales para uso exclusivo de root. Esto evita que el sistema de archivos se llene completamente, lo que podria impedir que root realice tareas de mantenimiento. Este porcentaje se puede cambiar durante la creacion con `mke2fs -m PORCENTAJE` o despues con `tune2fs -m PORCENTAJE`. Para discos de datos grandes donde root no necesita espacio reservado, es comun reducirlo a 1% o incluso 0% con `tune2fs -m 0 /dev/sdXN`.
+
+</details>
+
+---
+
+### Pregunta 17
+
+Que significa la opcion `-y` cuando se usa con `fsck` o `e2fsck`?
+
+a) Solo verifica sin reparar
+b) Responde "yes" automaticamente a todas las preguntas de reparacion
+c) Fuerza la verificacion aunque el sistema este limpio
+d) Activa el modo verbose (detallado)
+
+<details><summary>Respuesta</summary>
+
+**b) Responde "yes" automaticamente a todas las preguntas de reparacion**
+
+La opcion `-y` de `fsck`/`e2fsck` responde "si" automaticamente a todas las preguntas de reparacion durante la verificacion. Esto es util para automatizar la reparacion sin intervencion del usuario, especialmente en scripts o durante el arranque del sistema. La opcion `-n` solo verifica sin reparar (responde "no" a todo). La opcion `-f` fuerza la verificacion aunque el sistema parezca limpio. La opcion `-v` activa el modo verbose.
+
+</details>
+
+---
+
+### Pregunta 18
+
+Cual de los siguientes comandos es la herramienta correcta para verificar informacion detallada de un sistema de archivos XFS montado en `/mnt/datos`?
+
+a) `dumpe2fs /mnt/datos`
+b) `tune2fs -l /mnt/datos`
+c) `xfs_info /mnt/datos`
+d) `fsck.xfs /mnt/datos`
+
+<details><summary>Respuesta</summary>
+
+**c) `xfs_info /mnt/datos`**
+
+`xfs_info` muestra informacion detallada sobre un sistema de archivos XFS y acepta como argumento el punto de montaje (el FS debe estar montado). A diferencia de `dumpe2fs`, que es especifico para ext2/ext3/ext4, `xfs_info` es especifico para XFS. `dumpe2fs` y `tune2fs -l` no funcionan con XFS ya que son exclusivos para sistemas ext. `fsck.xfs` es un placeholder que no realiza ninguna operacion real; la herramienta de reparacion para XFS es `xfs_repair`.
+
+</details>
+
+---
+
+### Pregunta 19
+
+Que sistemas de archivos incluyen journaling? (Selecciona la opcion correcta)
+
+a) ext2, ext3, ext4
+b) ext3, ext4, XFS, Btrfs
+c) ext2, VFAT, ext3
+d) Solo ext4 y XFS
+
+<details><summary>Respuesta</summary>
+
+**b) ext3, ext4, XFS, Btrfs**
+
+El journaling es un mecanismo que registra las operaciones pendientes antes de aplicarlas, permitiendo una recuperacion rapida tras fallos. ext3, ext4, XFS y Btrfs (que usa Copy-on-Write en lugar de journal tradicional) incluyen journaling. ext2 y VFAT/FAT32 **no** tienen journaling. ext3 fue la primera version de la familia ext en incorporar journaling. La ausencia de journaling en ext2 es la razon por la cual se necesita un `fsck` completo tras un apagado inesperado.
+
+</details>
+
+---
+
+### Pregunta 20
+
+Que opcion de `du` limita la profundidad de la busqueda a un solo nivel de subdirectorios?
+
+a) `du -s`
+b) `du --max-depth=1`
+c) `du -a`
+d) `du -c`
+
+<details><summary>Respuesta</summary>
+
+**b) `du --max-depth=1`**
+
+La opcion `--max-depth=1` (o `-d 1` en versiones modernas) limita la salida de `du` a un nivel de profundidad de subdirectorios. Esto muestra el tamano total de cada subdirectorio inmediato sin desglosar los subdirectorios internos. La opcion `-s` muestra solo el total (summary) sin desglosar subdirectorios. La opcion `-a` incluye archivos individuales ademas de directorios. La opcion `-c` muestra un total general al final de la salida.
+
+</details>
+
+---
+
+### Pregunta 21
+
+Escribe el comando para verificar el uso de inodos en todos los sistemas de archivos montados.
+
+<input type="text" class="fill-blank" data-answer="df -i" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**df -i**
+
+La opcion `-i` de `df` muestra informacion sobre inodos en lugar de bloques: inodos totales, usados, disponibles y porcentaje de uso. Esto es crucial para diagnosticar situaciones donde no se pueden crear archivos nuevos a pesar de tener espacio libre en disco (agotamiento de inodos). Se puede combinar con `-h` para formato legible: `df -ih`.
+
+</details>
+
+---
+
+### Pregunta 22
+
+Escribe el comando para mostrar el resumen del tamano total del directorio `/var/log` en formato legible para humanos.
+
+<input type="text" class="fill-blank" data-answer="du -sh /var/log" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**du -sh /var/log**
+
+La opcion `-s` (summary) muestra solo el total del directorio sin desglosar subdirectorios. La opcion `-h` (human readable) muestra el tamano en formato legible (KB, MB, GB). La combinacion `du -sh` es uno de los usos mas comunes de `du` para averiguar rapidamente cuanto espacio ocupa un directorio.
+
+</details>
+
+---
+
+### Pregunta 23
+
+Escribe el comando para reparar automaticamente un sistema de archivos ext4 en `/dev/sda3` respondiendo "si" a todas las preguntas.
+
+<input type="text" class="fill-blank" data-answer="e2fsck -y /dev/sda3" data-alt="fsck -y /dev/sda3" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**e2fsck -y /dev/sda3**
+
+`e2fsck` es la herramienta especifica para verificar y reparar sistemas ext2/ext3/ext4. La opcion `-y` responde "yes" automaticamente a todas las preguntas de reparacion. Es fundamental que el sistema de archivos este desmontado antes de ejecutar este comando. Tambien se puede usar `fsck -y /dev/sda3` como alternativa generica.
+
+</details>
+
+---
+
+### Pregunta 24
+
+Escribe el comando `tune2fs` para desactivar la verificacion automatica por conteo de montajes en `/dev/sdb1`.
+
+<input type="text" class="fill-blank" data-answer="tune2fs -c 0 /dev/sdb1" data-alt="tune2fs -c -1 /dev/sdb1" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**tune2fs -c 0 /dev/sdb1**
+
+La opcion `-c` de `tune2fs` establece el numero maximo de montajes antes de que `fsck` se ejecute automaticamente. Establecer `-c 0` o `-c -1` desactiva esta verificacion automatica basada en el conteo de montajes. Esto puede ser util en servidores donde se prefiere controlar manualmente cuando se ejecuta `fsck`. Para desactivar tambien la verificacion por tiempo, se usa `tune2fs -i 0 /dev/sdb1`.
+
+</details>
+
+---
+
+### Pregunta 25
+
+Escribe el comando para reparar un sistema de archivos XFS desmontado en `/dev/sda2`.
+
+<input type="text" class="fill-blank" data-answer="xfs_repair /dev/sda2" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**xfs_repair /dev/sda2**
+
+`xfs_repair` es la herramienta especifica para reparar sistemas de archivos XFS. A diferencia de ext, donde se usa `fsck.ext4` o `e2fsck`, para XFS se debe usar `xfs_repair`. Aunque `fsck.xfs` existe en el sistema, es solo un placeholder que no realiza ninguna reparacion real. El sistema de archivos debe estar desmontado antes de ejecutar `xfs_repair`. Para solo verificar sin reparar se usa `xfs_repair -n`.
+
+</details>

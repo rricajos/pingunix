@@ -165,3 +165,243 @@ d) Cifrar disco completo -> Particionar -> Crear LVM
 
 En "LVM sobre LUKS", primero se cifra la partición con `luksFormat`, se abre con `luksOpen`, y luego se crean los componentes LVM (PV, VG, LV) sobre el dispositivo mapeado en `/dev/mapper/`. Todo el contenido LVM queda cifrado con una sola passphrase.
 </details>
+
+### Pregunta 11
+
+¿Qué opción de `cryptsetup luksFormat` especifica el algoritmo hash utilizado para la derivación de clave?
+
+a) `--cipher`
+b) `--hash`
+c) `--key-size`
+d) `--algorithm`
+
+<details><summary>Respuesta</summary>
+
+**b) Correcta**
+
+La opción `--hash` especifica el algoritmo hash usado en la función de derivación de clave (PBKDF2). Por ejemplo, `--hash sha512` utiliza SHA-512 para derivar la clave maestra a partir de la passphrase. Por defecto suele ser SHA-256.
+
+</details>
+
+### Pregunta 12
+
+¿Qué comando permite verificar si una passphrase es correcta para un volumen LUKS sin necesidad de abrirlo?
+
+a) `cryptsetup luksVerify /dev/sdb1`
+b) `cryptsetup luksOpen --test-passphrase /dev/sdb1`
+c) `cryptsetup luksCheck /dev/sdb1`
+d) `cryptsetup luksTest --passphrase /dev/sdb1`
+
+<details><summary>Respuesta</summary>
+
+**b) Correcta**
+
+La opción `--test-passphrase` permite verificar si una passphrase es válida para desbloquear un volumen LUKS sin realmente abrirlo ni crear un mapeo en `/dev/mapper/`. Es útil para comprobar credenciales de forma segura.
+
+</details>
+
+### Pregunta 13
+
+¿Qué opción en `/etc/crypttab` permite el uso de TRIM en dispositivos SSD cifrados con LUKS, y cuál es su implicación de seguridad?
+
+a) `trim` - no tiene implicaciones de seguridad
+b) `discard` - puede revelar qué bloques están en uso y cuáles están vacíos
+c) `ssd` - optimiza automáticamente para dispositivos de estado sólido
+d) `allow-trim` - permite TRIM solo en bloques ya descifrados
+
+<details><summary>Respuesta</summary>
+
+**b) Correcta**
+
+La opción `discard` habilita el paso de comandos TRIM/DISCARD al dispositivo SSD subyacente. Si bien mejora el rendimiento y la vida útil del SSD, tiene una implicación de seguridad: un atacante puede determinar qué sectores del disco contienen datos y cuáles están vacíos, filtrando información sobre el uso del sistema de archivos.
+
+</details>
+
+### Pregunta 14
+
+¿Qué diferencia fundamental existe entre `cryptsetup luksKillSlot` y `cryptsetup luksRemoveKey`?
+
+a) `luksKillSlot` es más seguro que `luksRemoveKey`
+b) `luksKillSlot` elimina un slot por su número; `luksRemoveKey` elimina la clave proporcionando la passphrase
+c) `luksRemoveKey` solo funciona con archivos de clave, no con passphrases
+d) `luksKillSlot` requiere que el volumen esté abierto; `luksRemoveKey` no
+
+<details><summary>Respuesta</summary>
+
+**b) Correcta**
+
+`luksKillSlot` elimina un slot de clave especificando su número (0-7). `luksRemoveKey` solicita al usuario que introduzca la passphrase que desea eliminar, buscando en todos los slots cuál coincide. Ambos comandos requieren autenticación con una clave válida diferente para evitar la eliminación accidental de la última clave.
+
+</details>
+
+### Pregunta 15
+
+Un administrador monta un directorio con eCryptfs y desea habilitar el cifrado de nombres de archivo. ¿Qué opción de montaje debe usar?
+
+a) `ecryptfs_hide_filenames=yes`
+b) `ecryptfs_enable_filename_crypto=yes`
+c) `ecryptfs_encrypt_names=true`
+d) `ecryptfs_filename_encryption=on`
+
+<details><summary>Respuesta</summary>
+
+**b) Correcta**
+
+La opción `ecryptfs_enable_filename_crypto=yes` habilita el cifrado de nombres de archivo en eCryptfs. Por defecto, eCryptfs solo cifra el contenido de los archivos. Con esta opción, los nombres de archivo también se cifran, ocultando la estructura del directorio a usuarios no autorizados.
+
+</details>
+
+### Pregunta 16
+
+¿Qué comando se utiliza para desmontar un sistema de archivos EncFS montado mediante FUSE?
+
+a) `umount /ruta/punto-montaje`
+b) `fusermount -u /ruta/punto-montaje`
+c) `encfs --unmount /ruta/punto-montaje`
+d) `encfsctl unmount /ruta/punto-montaje`
+
+<details><summary>Respuesta</summary>
+
+**b) Correcta**
+
+`fusermount -u` es el comando estándar para desmontar sistemas de archivos FUSE, incluyendo EncFS. Aunque `umount` también puede funcionar en algunos casos, `fusermount -u` es el método correcto y recomendado para sistemas de archivos en espacio de usuario basados en FUSE.
+
+</details>
+
+### Pregunta 17
+
+¿Cuál es el cifrado por defecto utilizado por `cryptsetup luksFormat` en versiones modernas de LUKS2?
+
+a) `aes-cbc-essiv:sha256`
+b) `aes-xts-plain64`
+c) `3des-cbc-plain`
+d) `chacha20-poly1305`
+
+<details><summary>Respuesta</summary>
+
+**b) Correcta**
+
+El cifrado por defecto en LUKS2 moderno es `aes-xts-plain64` con un tamaño de clave de 512 bits (que en modo XTS equivale a 256 bits efectivos). El modo XTS está diseñado específicamente para cifrado de disco y ofrece mejor seguridad que CBC para este caso de uso.
+
+</details>
+
+### Pregunta 18
+
+¿Qué ventaja principal ofrece eCryptfs sobre dm-crypt/LUKS para el cifrado de directorios home individuales?
+
+a) eCryptfs es más rápido que dm-crypt
+b) eCryptfs no necesita una partición dedicada y puede cifrar directorios sobre un sistema de archivos existente
+c) eCryptfs cifra todo el disco de forma transparente
+d) eCryptfs soporta más algoritmos de cifrado
+
+<details><summary>Respuesta</summary>
+
+**b) Correcta**
+
+eCryptfs es un sistema de archivos apilado que cifra archivos individuales sobre un sistema de archivos existente, sin necesidad de particiones o dispositivos de bloque dedicados. Esto lo hace ideal para cifrar directorios home individuales, ya que cada usuario puede tener su propio directorio cifrado independientemente, sin afectar la estructura de particiones del sistema.
+
+</details>
+
+### Pregunta 19
+
+En la configuración de `/etc/crypttab`, ¿qué valor se especifica en el campo de archivo de clave para solicitar una passphrase interactiva durante el arranque?
+
+a) `password`
+b) `interactive`
+c) `none`
+d) `ask`
+
+<details><summary>Respuesta</summary>
+
+**c) Correcta**
+
+El valor `none` en el campo de archivo de clave de `/etc/crypttab` indica que se solicitará una passphrase interactiva al usuario durante el proceso de arranque. Si se especifica una ruta a un archivo, se usará ese archivo como clave sin intervención del usuario.
+
+</details>
+
+### Pregunta 20
+
+¿Qué comando de `cryptsetup` muestra información detallada sobre la cabecera LUKS, incluyendo los slots de clave activos?
+
+a) `cryptsetup luksInfo /dev/sdb1`
+b) `cryptsetup luksDump /dev/sdb1`
+c) `cryptsetup luksStatus /dev/sdb1`
+d) `cryptsetup luksHeader /dev/sdb1`
+
+<details><summary>Respuesta</summary>
+
+**b) Correcta**
+
+`luksDump` muestra información detallada de la cabecera LUKS: versión, UUID, algoritmo de cifrado, hash, tamaño de clave, y el estado de cada uno de los 8 slots de clave (activo/inactivo). No muestra datos sensibles como las claves o passphrases.
+
+</details>
+
+### Pregunta 21
+
+Escribe el comando para abrir (desbloquear) un volumen LUKS en `/dev/sda2` con el nombre de mapeo `datos_seguros`.
+
+<input type="text" class="fill-blank" data-answer="cryptsetup luksOpen /dev/sda2 datos_seguros" data-alt="cryptsetup open --type luks /dev/sda2 datos_seguros,cryptsetup open /dev/sda2 datos_seguros" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**cryptsetup luksOpen /dev/sda2 datos_seguros**
+
+Este comando desbloquea el volumen LUKS y crea el dispositivo mapeado en `/dev/mapper/datos_seguros`. La sintaxis moderna equivalente es `cryptsetup open --type luks /dev/sda2 datos_seguros`. Se solicitará la passphrase para desbloquear.
+
+</details>
+
+### Pregunta 22
+
+Escribe el comando para añadir un archivo de clave (`/root/keyfile`) como método adicional de desbloqueo a un volumen LUKS en `/dev/sdb1`.
+
+<input type="text" class="fill-blank" data-answer="cryptsetup luksAddKey /dev/sdb1 /root/keyfile" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**cryptsetup luksAddKey /dev/sdb1 /root/keyfile**
+
+`luksAddKey` añade una nueva clave a un slot disponible. Se requiere proporcionar una clave existente válida para autorizar la operación. El archivo de clave se especifica como último argumento después del dispositivo.
+
+</details>
+
+### Pregunta 23
+
+Escribe el comando para cambiar la passphrase de un volumen LUKS en `/dev/sdc1`.
+
+<input type="text" class="fill-blank" data-answer="cryptsetup luksChangeKey /dev/sdc1" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**cryptsetup luksChangeKey /dev/sdc1**
+
+`luksChangeKey` solicita primero la passphrase antigua para identificar el slot, y luego pide la nueva passphrase. La operación reemplaza la clave en el mismo slot sin afectar a otros slots ni a la clave maestra del volumen.
+
+</details>
+
+### Pregunta 24
+
+Escribe el comando para crear y montar un directorio cifrado con EncFS, usando `/datos/.cifrado` como directorio cifrado y `/datos/visible` como punto de montaje.
+
+<input type="text" class="fill-blank" data-answer="encfs /datos/.cifrado /datos/visible" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**encfs /datos/.cifrado /datos/visible**
+
+EncFS toma dos argumentos: el directorio donde se almacenarán los datos cifrados y el punto de montaje donde se accederá al contenido descifrado. Si es la primera vez, EncFS preguntará por el modo de configuración (estándar/paranoico) y la passphrase.
+
+</details>
+
+### Pregunta 25
+
+Escribe el comando para cerrar (bloquear) un volumen LUKS mapeado como `datos_cifrados`.
+
+<input type="text" class="fill-blank" data-answer="cryptsetup luksClose datos_cifrados" data-alt="cryptsetup close datos_cifrados" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**cryptsetup luksClose datos_cifrados**
+
+`luksClose` (o su equivalente moderno `close`) cierra el mapeo cifrado y elimina el dispositivo de `/dev/mapper/`. Es fundamental desmontar el sistema de archivos con `umount` antes de cerrar el volumen LUKS para evitar pérdida de datos.
+
+</details>

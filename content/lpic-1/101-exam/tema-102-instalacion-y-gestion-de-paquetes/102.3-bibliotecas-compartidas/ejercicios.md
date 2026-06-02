@@ -201,3 +201,243 @@ d) `libfuse.a` - usado por el enlazador estatico
 En la cadena de enlaces simbolicos, el soname (`libfuse.so.2`) incluye solo la version mayor y es el nombre que los programas compilados contra esta biblioteca buscan en tiempo de ejecucion. El enlace de desarrollo (`libfuse.so`, sin version) es usado por el compilador (`gcc -lfuse`). El archivo real (`libfuse.so.2.9.7`) contiene el codigo compilado. El comando `ldconfig` se encarga de crear y mantener automaticamente los enlaces soname, permitiendo actualizar la version menor y revision sin romper la compatibilidad.
 
 </details>
+
+### Pregunta 11
+
+Que archivo binario contiene la cache indexada de todas las bibliotecas compartidas disponibles en el sistema?
+
+a) /etc/ld.so.conf
+b) /etc/ld.so.cache
+c) /var/cache/ldconfig
+d) /lib/ld-linux.so.2
+
+<details><summary>Respuesta</summary>
+
+**b) /etc/ld.so.cache**
+
+`/etc/ld.so.cache` es un archivo binario que contiene una lista indexada de todas las bibliotecas compartidas disponibles y sus rutas. El cargador dinamico consulta este archivo para localizar rapidamente las bibliotecas en tiempo de ejecucion. Se genera y actualiza con el comando `ldconfig`. No se puede editar ni leer directamente con un editor de texto; para ver su contenido se usa `ldconfig -p`.
+
+</details>
+
+### Pregunta 12
+
+Que extension tienen las bibliotecas estaticas en Linux?
+
+a) .so
+b) .lib
+c) .a
+d) .dll
+
+<details><summary>Respuesta</summary>
+
+**c) .a**
+
+Las bibliotecas estaticas en Linux tienen la extension `.a` (archive). Se enlazan en tiempo de compilacion y su codigo se copia dentro del ejecutable, haciendolo mas grande pero independiente. Las bibliotecas compartidas usan la extension `.so` (shared object). `.dll` es la extension de Windows y `.lib` se usa tambien en Windows.
+
+</details>
+
+### Pregunta 13
+
+En la salida de ldd, que indica el mensaje "not found" junto a una biblioteca?
+
+a) Que la biblioteca esta instalada pero no es compatible con el programa
+b) Que la biblioteca no se encontro en ninguna ubicacion de busqueda y el programa no podra ejecutarse
+c) Que la biblioteca es opcional y el programa funcionara sin ella
+d) Que la biblioteca esta cargada en una version diferente
+
+<details><summary>Respuesta</summary>
+
+**b) Que la biblioteca no se encontro en ninguna ubicacion de busqueda y el programa no podra ejecutarse**
+
+Cuando `ldd` muestra "not found" junto al nombre de una biblioteca, significa que el cargador dinamico no puede encontrarla en las rutas de busqueda (RPATH, LD_LIBRARY_PATH, cache, directorios por defecto). El programa fallara con el error "cannot open shared object file" al intentar ejecutarse. Para resolverlo, se debe instalar la biblioteca y ejecutar `ldconfig`, o configurar la ruta con `LD_LIBRARY_PATH` o `/etc/ld.so.conf.d/`.
+
+</details>
+
+### Pregunta 14
+
+Que hace el comando `ldconfig -v`?
+
+a) Verifica la integridad de todas las bibliotecas instaladas
+b) Muestra el proceso de escaneo de directorios y los enlaces simbolicos creados, de forma detallada
+c) Muestra la version de ldconfig
+d) Elimina la cache y las bibliotecas obsoletas
+
+<details><summary>Respuesta</summary>
+
+**b) Muestra el proceso de escaneo de directorios y los enlaces simbolicos creados, de forma detallada**
+
+`ldconfig -v` (verbose) ejecuta la actualizacion de la cache mostrando cada directorio que escanea y los enlaces simbolicos (soname) que crea para cada biblioteca encontrada. Es util para depurar problemas de bibliotecas y verificar que un directorio o biblioteca especifica esta siendo procesada correctamente por ldconfig.
+
+</details>
+
+### Pregunta 15
+
+Que programa es el responsable de localizar y cargar las bibliotecas compartidas en memoria cuando se ejecuta un programa?
+
+a) ldd
+b) ldconfig
+c) El cargador dinamico (ld-linux.so)
+d) gcc
+
+<details><summary>Respuesta</summary>
+
+**c) El cargador dinamico (ld-linux.so)**
+
+El cargador dinamico (`/lib64/ld-linux-x86-64.so.2` en 64 bits o `/lib/ld-linux.so.2` en 32 bits) es el programa responsable de leer las dependencias del ejecutable (seccion NEEDED del formato ELF), localizar las bibliotecas compartidas necesarias, cargarlas en memoria y resolver los simbolos. `ldd` solo muestra las dependencias, `ldconfig` gestiona la cache, y `gcc` es el compilador.
+
+</details>
+
+### Pregunta 16
+
+Que alternativa segura a ldd se puede usar para ver las dependencias de un ejecutable no confiable?
+
+a) ldconfig -p
+b) objdump -p ejecutable | grep NEEDED
+c) file ejecutable
+d) strings ejecutable
+
+<details><summary>Respuesta</summary>
+
+**b) objdump -p ejecutable | grep NEEDED**
+
+`ldd` puede ejecutar codigo del ejecutable al analizarlo, por lo que no se debe usar con ejecutables no confiables. Las alternativas seguras son `objdump -p ejecutable | grep NEEDED` o `readelf -d ejecutable | grep NEEDED`, que leen la informacion de dependencias directamente de las secciones ELF sin ejecutar el programa. `ldconfig -p` muestra la cache del sistema, no las dependencias de un programa especifico.
+
+</details>
+
+### Pregunta 17
+
+Que sucede cuando se actualiza una biblioteca compartida a una nueva version menor (por ejemplo, de libfoo.so.2.1.0 a libfoo.so.2.2.0)?
+
+a) Todos los programas que la usan dejan de funcionar y deben recompilarse
+b) Los programas siguen funcionando porque el soname (libfoo.so.2) no cambia
+c) El sistema se reinicia automaticamente para cargar la nueva version
+d) Se debe ejecutar ldd en todos los programas afectados para actualizar los enlaces
+
+<details><summary>Respuesta</summary>
+
+**b) Los programas siguen funcionando porque el soname (libfoo.so.2) no cambia**
+
+El soname solo incluye la version mayor (libfoo.so.2), por lo que actualizaciones en la version menor o revision (de 2.1.0 a 2.2.0) no afectan la compatibilidad. El enlace soname sigue apuntando al archivo real actualizado, y los programas buscan el soname al ejecutarse. Solo un cambio en la version mayor (de 2 a 3) indicaria incompatibilidad y requeriria recompilar los programas. Despues de actualizar se debe ejecutar `ldconfig`.
+
+</details>
+
+### Pregunta 18
+
+Cual es el contenido tipico del archivo /etc/ld.so.conf en distribuciones modernas?
+
+a) Una lista de todas las bibliotecas instaladas en el sistema
+b) La linea `include /etc/ld.so.conf.d/*.conf` que incluye archivos de configuracion adicionales
+c) Las variables de entorno para la carga de bibliotecas
+d) La cache binaria de bibliotecas
+
+<details><summary>Respuesta</summary>
+
+**b) La linea `include /etc/ld.so.conf.d/*.conf` que incluye archivos de configuracion adicionales**
+
+En distribuciones modernas, `/etc/ld.so.conf` tipicamente contiene una unica linea `include /etc/ld.so.conf.d/*.conf`, que incluye todos los archivos `.conf` del directorio `/etc/ld.so.conf.d/`. Cada uno de estos archivos contiene una o mas rutas de directorios donde buscar bibliotecas. Esta organizacion modular facilita la gestion: cada aplicacion puede crear su propio archivo de configuracion.
+
+</details>
+
+### Pregunta 19
+
+Por que razon la variable LD_LIBRARY_PATH es ignorada por programas con bit SUID?
+
+a) Porque los programas SUID no pueden usar bibliotecas compartidas
+b) Para evitar que un usuario normal pueda inyectar bibliotecas maliciosas en programas que se ejecutan con privilegios elevados
+c) Porque los programas SUID siempre usan bibliotecas estaticas
+d) Por una limitacion tecnica del formato ELF
+
+<details><summary>Respuesta</summary>
+
+**b) Para evitar que un usuario normal pueda inyectar bibliotecas maliciosas en programas que se ejecutan con privilegios elevados**
+
+Los programas con bit SUID se ejecutan con los privilegios del propietario del archivo (generalmente root). Si `LD_LIBRARY_PATH` no fuera ignorada, un usuario podria establecer esta variable para que apunte a un directorio con bibliotecas maliciosas, y cuando el programa SUID las cargue, el codigo malicioso se ejecutaria con privilegios de root. Ignorar esta variable es una medida de seguridad fundamental del cargador dinamico.
+
+</details>
+
+### Pregunta 20
+
+Que opcion de ldd muestra las dependencias no utilizadas (unused) de un ejecutable?
+
+a) ldd -v
+b) ldd -r
+c) ldd -u
+d) ldd -d
+
+<details><summary>Respuesta</summary>
+
+**c) ldd -u**
+
+La opcion `-u` (unused) de `ldd` muestra las bibliotecas compartidas que estan enlazadas al ejecutable pero que en realidad no se usan (no se referencia ninguno de sus simbolos). Esto puede indicar dependencias innecesarias que podrian eliminarse para optimizar el programa. La opcion `-v` muestra informacion detallada de versiones.
+
+</details>
+
+### Pregunta 21
+
+Que comando muestra las bibliotecas compartidas que necesita un programa ejecutable?
+
+<input type="text" class="fill-blank" data-answer="ldd" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**ldd**
+
+`ldd` seguido de la ruta de un ejecutable muestra las bibliotecas compartidas que necesita, su ubicacion en el sistema y la direccion de memoria donde se cargaran. Por ejemplo: `ldd /bin/ls`. No se debe usar con ejecutables no confiables por razones de seguridad.
+
+</details>
+
+### Pregunta 22
+
+Que comando actualiza la cache de bibliotecas compartidas del sistema?
+
+<input type="text" class="fill-blank" data-answer="ldconfig" data-alt="sudo ldconfig" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**ldconfig**
+
+`ldconfig` escanea los directorios configurados en `/etc/ld.so.conf` y los directorios por defecto, actualiza la cache binaria `/etc/ld.so.cache` y crea los enlaces simbolicos (soname) necesarios. Se debe ejecutar como root despues de instalar bibliotecas manualmente o modificar la configuracion de rutas.
+
+</details>
+
+### Pregunta 23
+
+Que comando muestra el contenido de la cache de bibliotecas compartidas?
+
+<input type="text" class="fill-blank" data-answer="ldconfig -p" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**ldconfig -p**
+
+`ldconfig -p` (print cache) muestra todas las bibliotecas registradas en `/etc/ld.so.cache`, incluyendo el soname, tipo y ruta completa de cada biblioteca. Se puede combinar con `grep` para buscar una biblioteca especifica: `ldconfig -p | grep libssl`.
+
+</details>
+
+### Pregunta 24
+
+Que variable de entorno permite especificar directorios adicionales de busqueda de bibliotecas compartidas sin ser root?
+
+<input type="text" class="fill-blank" data-answer="LD_LIBRARY_PATH" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**LD_LIBRARY_PATH**
+
+`LD_LIBRARY_PATH` es una variable de entorno que permite a cualquier usuario (sin necesidad de root) anadir directorios de busqueda de bibliotecas temporalmente. Se establece con `export LD_LIBRARY_PATH=/ruta/lib`. Tiene mayor prioridad que la cache pero menor que RPATH. No se recomienda para uso permanente; es mejor usar `/etc/ld.so.conf.d/`.
+
+</details>
+
+### Pregunta 25
+
+En que directorio se deben crear archivos .conf con rutas adicionales de busqueda de bibliotecas?
+
+<input type="text" class="fill-blank" data-answer="/etc/ld.so.conf.d/" data-alt="/etc/ld.so.conf.d" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**/etc/ld.so.conf.d/**
+
+Los archivos `.conf` dentro de `/etc/ld.so.conf.d/` contienen rutas adicionales donde el sistema busca bibliotecas compartidas. Cada archivo puede contener una o mas rutas de directorios. Despues de crear o modificar un archivo en este directorio, se debe ejecutar `sudo ldconfig` para actualizar la cache del sistema.
+
+</details>

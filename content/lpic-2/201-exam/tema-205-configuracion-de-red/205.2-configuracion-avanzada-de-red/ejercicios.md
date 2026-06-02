@@ -189,3 +189,273 @@ TBF (Token Bucket Filter) es la qdisc mas sencilla para limitar el ancho de band
 </details>
 
 ---
+
+### Pregunta 11
+
+Que parametro de sysctl controla si un sistema Linux puede actuar como router reenviando paquetes IPv4?
+
+a) `net.ipv4.ip_routing`
+b) `net.ipv4.ip_forward`
+c) `net.ipv4.forwarding`
+d) `net.ipv4.router_enable`
+
+<details>
+<summary>Respuesta</summary>
+
+**b) `net.ipv4.ip_forward`**
+
+El parametro `net.ipv4.ip_forward` controla si el kernel de Linux reenvia paquetes entre interfaces de red. Un valor de `1` habilita el reenvio y un valor de `0` lo deshabilita. Para hacerlo permanente se configura en `/etc/sysctl.conf` o en un archivo en `/etc/sysctl.d/`. Se aplica con `sysctl -p`.
+</details>
+
+---
+
+### Pregunta 12
+
+Que modulo del kernel se necesita cargar para soportar interfaces VLAN con etiquetado 802.1Q?
+
+a) `vlan`
+b) `8021q`
+c) `ieee802`
+d) `vlan_tag`
+
+<details>
+<summary>Respuesta</summary>
+
+**b) `8021q`**
+
+El modulo del kernel `8021q` proporciona soporte para VLANs con etiquetado IEEE 802.1Q. Se carga con `modprobe 8021q`. En la mayoria de distribuciones modernas, el modulo se carga automaticamente al crear una interfaz VLAN. Sin este modulo, no es posible crear subinterfaces VLAN.
+</details>
+
+---
+
+### Pregunta 13
+
+Cual es la tabla de enrutamiento principal que se muestra por defecto al ejecutar `ip route show`?
+
+a) `local` (255)
+b) `main` (254)
+c) `default` (253)
+d) `unspec` (0)
+
+<details>
+<summary>Respuesta</summary>
+
+**b) `main` (254)**
+
+La tabla `main` (numero 254) es la tabla de enrutamiento principal de Linux y es la que se muestra por defecto con `ip route show`. Todas las rutas anadidas con `ip route add` sin especificar tabla se agregan a `main`. La tabla `local` (255) contiene rutas locales y de broadcast gestionadas por el kernel, y la tabla `default` (253) esta normalmente vacia.
+</details>
+
+---
+
+### Pregunta 14
+
+Un administrador desea que el trafico proveniente de la interfaz eth1 utilice una tabla de enrutamiento personalizada llamada "dmz". Que comando debe usar?
+
+a) `ip route add table dmz dev eth1`
+b) `ip rule add iif eth1 table dmz`
+c) `ip table add dmz interface eth1`
+d) `ip policy add eth1 lookup dmz`
+
+<details>
+<summary>Respuesta</summary>
+
+**b) `ip rule add iif eth1 table dmz`**
+
+El comando `ip rule add iif eth1 table dmz` crea una regla de politica de enrutamiento que indica al kernel que todo trafico que ingrese por la interfaz eth1 debe ser enrutado consultando la tabla "dmz" en lugar de la tabla "main". La tabla "dmz" debe estar definida previamente en `/etc/iproute2/rt_tables`.
+</details>
+
+---
+
+### Pregunta 15
+
+Que tipo de tunel se utiliza para encapsular trafico IPv6 dentro de paquetes IPv4?
+
+a) GRE
+b) IPIP
+c) SIT
+d) VXLAN
+
+<details>
+<summary>Respuesta</summary>
+
+**c) SIT**
+
+SIT (Simple Internet Transition) es un mecanismo de tunel disenado especificamente para encapsular paquetes IPv6 dentro de paquetes IPv4, tambien conocido como 6in4. Se crea con `ip tunnel add mode sit`. GRE es un tunel generico IP sobre IP, IPIP encapsula IPv4 sobre IPv4, y VXLAN es una tecnologia de superposicion de capa 2 sobre capa 3.
+</details>
+
+---
+
+### Pregunta 16
+
+En tc (traffic control), que componente clasifica los paquetes y los asigna a una clase especifica?
+
+a) qdisc
+b) class
+c) filter
+d) handle
+
+<details>
+<summary>Respuesta</summary>
+
+**c) filter**
+
+Los filtros (filters) en tc son reglas que examinan los paquetes y los clasifican asignandolos a una clase especifica. Se basan en criterios como direccion IP, puerto, protocolo o marcas del firewall. Las qdisc son disciplinas de colas que gestionan como se envian los paquetes, y las clases son subdivisiones jerarquicas de una qdisc.
+</details>
+
+---
+
+### Pregunta 17
+
+Que parametro del kernel previene ataques de IP spoofing verificando que los paquetes llegan por la interfaz correcta?
+
+a) `/proc/sys/net/ipv4/conf/all/accept_redirects`
+b) `/proc/sys/net/ipv4/conf/all/rp_filter`
+c) `/proc/sys/net/ipv4/tcp_syncookies`
+d) `/proc/sys/net/ipv4/icmp_echo_ignore_broadcasts`
+
+<details>
+<summary>Respuesta</summary>
+
+**b) `/proc/sys/net/ipv4/conf/all/rp_filter`**
+
+El parametro `rp_filter` (Reverse Path Filtering) verifica que la direccion IP de origen de cada paquete recibido sea alcanzable a traves de la interfaz por la que llego. Si la verificacion falla, el paquete se descarta, previniendo ataques de IP spoofing. Un valor de `1` activa la verificacion estricta y `2` la verificacion flexible.
+</details>
+
+---
+
+### Pregunta 18
+
+Que archivo se consulta para ver la informacion detallada de todas las VLANs configuradas en el sistema?
+
+a) `/sys/class/net/vlan/config`
+b) `/proc/net/vlan/config`
+c) `/etc/vlan/config`
+d) `/var/run/vlan/config`
+
+<details>
+<summary>Respuesta</summary>
+
+**b) `/proc/net/vlan/config`**
+
+El archivo `/proc/net/vlan/config` lista todas las interfaces VLAN configuradas en el sistema, mostrando el nombre de la interfaz VLAN, el ID de VLAN y la interfaz fisica padre. Para informacion detallada de una VLAN especifica se consulta `/proc/net/vlan/nombre_interfaz` (por ejemplo, `/proc/net/vlan/eth0.100`).
+</details>
+
+---
+
+### Pregunta 19
+
+Que herramienta legacy se utilizaba para crear y administrar bridges antes de los comandos ip de iproute2?
+
+a) `bridgectl`
+b) `brctl`
+c) `bridge-utils`
+d) `netbridge`
+
+<details>
+<summary>Respuesta</summary>
+
+**b) `brctl`**
+
+El comando `brctl` (del paquete `bridge-utils`) era la herramienta legacy para gestionar bridges de red en Linux. Permite crear bridges (`brctl addbr`), agregar interfaces (`brctl addif`), activar STP (`brctl stp`) y ver el estado (`brctl show`). En sistemas modernos se recomienda usar `ip link add type bridge` e `ip link set master`.
+</details>
+
+---
+
+### Pregunta 20
+
+Que direccion IPv6 se asigna automaticamente a cada interfaz de red y se utiliza para comunicacion local en el segmento de red?
+
+a) Global unicast (2000::/3)
+b) Unique local (fc00::/7)
+c) Link-local (fe80::/10)
+d) Multicast (ff00::/8)
+
+<details>
+<summary>Respuesta</summary>
+
+**c) Link-local (fe80::/10)**
+
+Las direcciones link-local con prefijo fe80::/10 se asignan automaticamente a cada interfaz de red IPv6 activa mediante autoconfig. Son validas unicamente en el segmento de red local y no son enrutables. Son esenciales para el funcionamiento del Neighbor Discovery Protocol (NDP) y para la comunicacion inicial antes de obtener una direccion global.
+</details>
+
+---
+
+### Pregunta 21
+
+Escribe el comando para habilitar temporalmente el reenvio de paquetes IPv4 usando sysctl.
+
+<input type="text" class="fill-blank" data-answer="sysctl -w net.ipv4.ip_forward=1" data-alt="" placeholder="$ escribe aqui...">
+
+<details>
+<summary>Respuesta</summary>
+
+**sysctl -w net.ipv4.ip_forward=1**
+
+El comando `sysctl -w net.ipv4.ip_forward=1` habilita inmediatamente el reenvio de paquetes IPv4 en el kernel. Este cambio es temporal y se pierde al reiniciar. Para hacerlo permanente se debe agregar `net.ipv4.ip_forward = 1` en `/etc/sysctl.conf` y ejecutar `sysctl -p`.
+</details>
+
+---
+
+### Pregunta 22
+
+Escribe el comando para crear una interfaz VLAN con ID 50 sobre la interfaz eth0.
+
+<input type="text" class="fill-blank" data-answer="ip link add link eth0 name eth0.50 type vlan id 50" data-alt="" placeholder="$ escribe aqui...">
+
+<details>
+<summary>Respuesta</summary>
+
+**ip link add link eth0 name eth0.50 type vlan id 50**
+
+El comando `ip link add` con `type vlan` crea una subinterfaz VLAN. Se especifica la interfaz padre con `link`, el nombre con `name` (por convencion `interfaz.vlan_id`), y el ID de VLAN con `id`. Despues de crearla, hay que asignarle una IP y activarla con `ip link set eth0.50 up`.
+</details>
+
+---
+
+### Pregunta 23
+
+Escribe el comando para crear un bridge de red llamado br0 usando la herramienta ip de iproute2.
+
+<input type="text" class="fill-blank" data-answer="ip link add name br0 type bridge" data-alt="ip link add br0 type bridge" placeholder="$ escribe aqui...">
+
+<details>
+<summary>Respuesta</summary>
+
+**ip link add name br0 type bridge**
+
+El comando `ip link add name br0 type bridge` crea una interfaz de bridge virtual llamada br0. Despues de crearla, se agregan interfaces fisicas con `ip link set ethX master br0` y se activa con `ip link set br0 up`. El bridge funciona como un switch virtual de capa 2.
+</details>
+
+---
+
+### Pregunta 24
+
+Escribe el comando para ver las reglas de politica de enrutamiento configuradas en el sistema.
+
+<input type="text" class="fill-blank" data-answer="ip rule show" data-alt="ip rule list,ip rule" placeholder="$ escribe aqui...">
+
+<details>
+<summary>Respuesta</summary>
+
+**ip rule show**
+
+El comando `ip rule show` muestra todas las reglas de politica de enrutamiento (policy routing rules) configuradas. Cada regla tiene una prioridad y determina que tabla de enrutamiento se consulta segun criterios como IP de origen, interfaz de entrada o marca del paquete. Las reglas por defecto son: lookup local (0), lookup main (32766) y lookup default (32767).
+</details>
+
+---
+
+### Pregunta 25
+
+Escribe el comando para eliminar toda la configuracion de traffic control (tc) de la interfaz eth0.
+
+<input type="text" class="fill-blank" data-answer="tc qdisc del dev eth0 root" data-alt="tc qdisc delete dev eth0 root" placeholder="$ escribe aqui...">
+
+<details>
+<summary>Respuesta</summary>
+
+**tc qdisc del dev eth0 root**
+
+El comando `tc qdisc del dev eth0 root` elimina la qdisc raiz y toda la configuracion asociada (clases y filtros) de la interfaz eth0, restaurando la qdisc por defecto del sistema. Es util para limpiar configuraciones de traffic shaping antes de aplicar nuevas reglas.
+</details>
+
+---

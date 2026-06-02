@@ -63,8 +63,8 @@ Base de conocimientos de seguridad ofensiva y defensiva.
 |---------|-------|
 | Paginas totales | 821 |
 | Subtemas LPIC | 143 (42 + 41 + 60) |
-| Flashcards | 2.100 |
-| Preguntas de practica | 1.910+ |
+| Flashcards | 5.050 |
+| Preguntas de practica | 3.559 (MCQ + fill-blank) |
 | Simulacros de examen | 8 |
 | Laboratorios practicos | 4 |
 

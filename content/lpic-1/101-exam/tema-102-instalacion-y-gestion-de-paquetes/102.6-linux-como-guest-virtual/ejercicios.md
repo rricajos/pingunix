@@ -201,3 +201,243 @@ d) HyperThreading o SMT
 KVM (Kernel-based Virtual Machine) requiere extensiones de virtualizacion por hardware: Intel VT-x (en procesadores Intel) o AMD-V / AMD SVM (en procesadores AMD). Estas extensiones deben estar habilitadas en la configuracion del BIOS/UEFI. Se puede verificar su disponibilidad con `grep -E '(vmx|svm)' /proc/cpuinfo`, donde `vmx` indica Intel VT-x y `svm` indica AMD-V. Sin estas extensiones habilitadas, KVM no podra crear maquinas virtuales.
 
 </details>
+
+### Pregunta 11
+
+En la paravirtualizacion, que caracteristica tiene el sistema operativo guest?
+
+a) No necesita ninguna modificacion y cree que se ejecuta en hardware real
+b) Esta modificado para comunicarse directamente con el hipervisor mediante hypercalls
+c) Solo puede ejecutar contenedores, no aplicaciones normales
+d) Requiere obligatoriamente extensiones de hardware Intel VT-x o AMD-V
+
+<details><summary>Respuesta</summary>
+
+**b) Esta modificado para comunicarse directamente con el hipervisor mediante hypercalls**
+
+En la paravirtualizacion, el guest OS sabe que esta virtualizado y esta modificado para comunicarse directamente con el hipervisor usando "hypercalls" en lugar de instrucciones privilegiadas. Esto ofrece mejor rendimiento que la virtualizacion completa sin soporte de hardware. El ejemplo principal es Xen en modo paravirtualizado. En la virtualizacion completa (como KVM o VirtualBox), el guest no necesita modificaciones y cree que se ejecuta en hardware real.
+
+</details>
+
+### Pregunta 12
+
+Que tecnologia de contenedores se caracteriza por no requerir un demonio (daemonless)?
+
+a) Docker
+b) LXC
+c) Podman
+d) containerd
+
+<details><summary>Respuesta</summary>
+
+**c) Podman**
+
+Podman es una alternativa a Docker que se caracteriza por ser "daemonless", es decir, no requiere un demonio en ejecucion para gestionar los contenedores. Cada contenedor se ejecuta como un proceso hijo directo del comando Podman. Docker, en cambio, depende del demonio `dockerd` que se ejecuta continuamente en segundo plano. LXC proporciona contenedores de sistema operativo completo. containerd es un runtime de contenedores de bajo nivel utilizado internamente por Docker y Kubernetes.
+
+</details>
+
+### Pregunta 13
+
+Cual es el modelo de servicio en la nube donde el proveedor gestiona toda la infraestructura incluyendo el sistema operativo y el middleware, y el usuario solo se encarga de su aplicacion y datos?
+
+a) IaaS
+b) PaaS
+c) SaaS
+d) DaaS
+
+<details><summary>Respuesta</summary>
+
+**b) PaaS**
+
+En PaaS (Platform as a Service), el proveedor gestiona el hardware, la virtualizacion, el sistema operativo y el middleware. El usuario solo necesita desarrollar y desplegar su aplicacion y gestionar sus datos. Ejemplos incluyen Heroku, Google App Engine y Azure App Service. En IaaS el usuario tambien debe gestionar el SO y middleware. En SaaS el proveedor gestiona absolutamente todo, incluyendo la aplicacion, y el usuario solo la utiliza (como Gmail u Office 365).
+
+</details>
+
+### Pregunta 14
+
+Que formato de imagen de disco virtual soporta snapshots, compresion y cifrado, y es el formato nativo de QEMU/KVM?
+
+a) RAW
+b) VMDK
+c) qcow2
+d) VDI
+
+<details><summary>Respuesta</summary>
+
+**c) qcow2**
+
+qcow2 (QEMU Copy-On-Write version 2) es el formato nativo de QEMU/KVM. Soporta snapshots (instantaneas del estado del disco), compresion, cifrado y thin provisioning (el archivo solo ocupa el espacio de los datos realmente escritos). El formato RAW tiene mejor rendimiento por acceso directo pero no soporta snapshots ni cifrado, y el archivo ocupa el tamano completo del disco virtual desde el inicio. VMDK es el formato de VMware y VDI es de VirtualBox.
+
+</details>
+
+### Pregunta 15
+
+Despues de clonar una maquina virtual, que comando regenera las claves SSH del host en un sistema Red Hat/CentOS?
+
+a) `dpkg-reconfigure openssh-server`
+b) `ssh-keygen -A`
+c) `ssh-keygen -t rsa`
+d) `systemctl regenerate sshd`
+
+<details><summary>Respuesta</summary>
+
+**b) `ssh-keygen -A`**
+
+`ssh-keygen -A` genera todas las claves de host SSH que faltan (RSA, ECDSA, ED25519) y es el metodo utilizado en sistemas Red Hat/CentOS. Primero se deben eliminar las claves existentes con `rm /etc/ssh/ssh_host_*` y luego ejecutar `ssh-keygen -A`. En Debian/Ubuntu, el metodo equivalente es `dpkg-reconfigure openssh-server`. Si no se regeneran las claves tras la clonacion, los clientes SSH recibiran advertencias de "host key changed" porque el fingerprint sera identico al de la maquina original.
+
+</details>
+
+### Pregunta 16
+
+Que herramienta automatiza la preparacion de una maquina virtual para ser usada como plantilla, eliminando machine-id, claves SSH y otros datos especificos?
+
+a) `virt-manager`
+b) `virt-sysprep`
+c) `cloud-init`
+d) `qemu-img`
+
+<details><summary>Respuesta</summary>
+
+**b) `virt-sysprep`**
+
+`virt-sysprep` es una herramienta que automatiza el proceso de "generalizar" una maquina virtual para convertirla en una plantilla. Elimina datos especificos de la instalacion como `/etc/machine-id`, las claves SSH del host, logs, historial de bash, y otros datos que deben ser unicos por maquina. `virt-manager` es la interfaz grafica para gestionar VMs. `cloud-init` configura instancias en el primer arranque. `qemu-img` gestiona imagenes de disco virtual.
+
+</details>
+
+### Pregunta 17
+
+Cual es la funcion del archivo `/etc/machine-id` y por que es importante tras clonar una VM?
+
+a) Almacena la clave de licencia del sistema operativo
+b) Contiene un identificador hexadecimal unico de 32 caracteres que identifica la instalacion
+c) Guarda la configuracion de red del sistema
+d) Almacena las credenciales de usuario del sistema
+
+<details><summary>Respuesta</summary>
+
+**b) Contiene un identificador hexadecimal unico de 32 caracteres que identifica la instalacion**
+
+`/etc/machine-id` es un identificador hexadecimal unico de 32 caracteres generado durante la instalacion del sistema. Es usado por systemd, D-Bus, DHCP y otros servicios que necesitan identificar de forma unica cada maquina. Al clonar una VM, ambas maquinas tendran el mismo machine-id, lo que causa conflictos. Se regenera eliminando el archivo y ejecutando `systemd-machine-id-setup`. El archivo `/var/lib/dbus/machine-id` normalmente es un enlace simbolico o copia de `/etc/machine-id`.
+
+</details>
+
+### Pregunta 18
+
+Que primera linea debe tener obligatoriamente un archivo de configuracion de cloud-init en formato YAML?
+
+a) `#!/bin/bash`
+b) `#cloud-config`
+c) `---`
+d) `[cloud-init]`
+
+<details><summary>Respuesta</summary>
+
+**b) `#cloud-config`**
+
+La configuracion de cloud-init en formato YAML debe comenzar obligatoriamente con la linea `#cloud-config` para que cloud-init la reconozca como un archivo de configuracion valido. A partir de esa linea, se pueden definir directivas como `hostname`, `users`, `packages`, `runcmd`, etc. `#!/bin/bash` es un shebang para scripts de shell. `---` es el inicio estandar de un documento YAML pero no es lo que cloud-init requiere. cloud-init se ejecuta durante el primer arranque de la instancia.
+
+</details>
+
+### Pregunta 19
+
+Que tipo de bus D-Bus se utiliza para la comunicacion entre servicios del sistema, como los guest agents del hipervisor?
+
+a) Session Bus
+b) System Bus
+c) Network Bus
+d) Virtual Bus
+
+<details><summary>Respuesta</summary>
+
+**b) System Bus**
+
+D-Bus tiene dos tipos de buses: el System Bus y el Session Bus. El System Bus es unico para todo el sistema y se utiliza para la comunicacion entre servicios del sistema, como systemd, los guest agents (qemu-guest-agent, open-vm-tools) y otros daemons. El Session Bus es uno por cada sesion de usuario y se usa para aplicaciones de escritorio. Los guest agents del hipervisor usan el System Bus para recibir solicitudes como apagados limpios, congelar el sistema de archivos o reportar informacion del guest.
+
+</details>
+
+### Pregunta 20
+
+Que controlador paravirtualizado se utiliza en entornos KVM/QEMU para mejorar el rendimiento de la red virtual del guest?
+
+a) e1000
+b) virtio-net
+c) vmxnet3
+d) rtl8139
+
+<details><summary>Respuesta</summary>
+
+**b) virtio-net**
+
+`virtio-net` es el controlador paravirtualizado de red del framework virtio, utilizado en entornos KVM/QEMU. Los controladores virtio ofrecen mejor rendimiento que los controladores emulados (como e1000 o rtl8139) porque el guest sabe que esta virtualizado y se comunica directamente con el hipervisor. Otros controladores virtio incluyen `virtio-blk`/`virtio-scsi` para discos y `virtio-balloon` para gestion de memoria. El kernel Linux incluye soporte nativo para virtio. vmxnet3 es el equivalente de VMware.
+
+</details>
+
+### Pregunta 21
+
+Que comando usarias para detectar si un sistema Linux esta ejecutandose dentro de una maquina virtual y que tipo de hipervisor usa?
+
+<input type="text" class="fill-blank" data-answer="systemd-detect-virt" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**systemd-detect-virt**
+
+`systemd-detect-virt` es el comando estandar para detectar si el sistema esta virtualizado. Devuelve el nombre del hipervisor detectado: `kvm` para KVM/QEMU, `vmware` para VMware, `oracle` para VirtualBox, `xen` para Xen, `microsoft` para Hyper-V, o `none` si es un sistema fisico (con codigo de retorno 1). Otros metodos incluyen `dmidecode -s system-product-name` y `cat /sys/class/dmi/id/product_name`.
+
+</details>
+
+### Pregunta 22
+
+Que comando usarias para regenerar el machine-id del sistema despues de eliminar `/etc/machine-id`?
+
+<input type="text" class="fill-blank" data-answer="systemd-machine-id-setup" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**systemd-machine-id-setup**
+
+Despues de eliminar `/etc/machine-id` con `rm /etc/machine-id`, se ejecuta `systemd-machine-id-setup` para generar un nuevo identificador unico. El procedimiento completo es: `rm /etc/machine-id && systemd-machine-id-setup`. Esto es imprescindible tras clonar una VM para evitar conflictos en D-Bus, DHCP y otros servicios. El comando `dbus-uuidgen --ensure` asegura que `/var/lib/dbus/machine-id` tambien existe.
+
+</details>
+
+### Pregunta 23
+
+Que comando usarias para crear una imagen de disco virtual en formato qcow2 de 20 GB?
+
+<input type="text" class="fill-blank" data-answer="qemu-img create -f qcow2 disco.qcow2 20G" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**qemu-img create -f qcow2 disco.qcow2 20G**
+
+`qemu-img create` es el comando para crear imagenes de disco virtual. La opcion `-f qcow2` especifica el formato qcow2 (Copy-On-Write), que soporta thin provisioning, snapshots y compresion. El nombre del archivo es `disco.qcow2` y `20G` define el tamano maximo del disco virtual. Gracias al thin provisioning, el archivo inicialmente ocupara muy poco espacio y crecera a medida que se escriban datos. Para formato RAW se usaria `-f raw`.
+
+</details>
+
+### Pregunta 24
+
+Que comando usarias para verificar si el procesador soporta extensiones de virtualizacion por hardware?
+
+<input type="text" class="fill-blank" data-answer="grep -E '(vmx|svm)' /proc/cpuinfo" data-alt="grep -E 'vmx|svm' /proc/cpuinfo,egrep '(vmx|svm)' /proc/cpuinfo" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**grep -E '(vmx|svm)' /proc/cpuinfo**
+
+Este comando busca en la informacion del procesador las extensiones de virtualizacion por hardware. `vmx` indica Intel VT-x y `svm` indica AMD-V (Secure Virtual Machine). Si el comando produce salida, el procesador soporta virtualizacion por hardware. Estas extensiones son necesarias para que KVM funcione y deben estar habilitadas en la configuracion del BIOS/UEFI. Tambien se puede verificar con `lsmod | grep kvm` para ver si los modulos kvm_intel o kvm_amd estan cargados.
+
+</details>
+
+### Pregunta 25
+
+Que comando genera un nuevo identificador aleatorio de D-Bus?
+
+<input type="text" class="fill-blank" data-answer="dbus-uuidgen" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**dbus-uuidgen**
+
+`dbus-uuidgen` genera un nuevo UUID (identificador unico universal) aleatorio para D-Bus. Sin opciones, simplemente genera y muestra un nuevo ID. Con `--ensure` se asegura de que `/var/lib/dbus/machine-id` existe (lo crea si no existe). Con `--get` obtiene el machine ID de D-Bus actual. Este comando es importante en el contexto de la clonacion de maquinas virtuales para regenerar identificadores unicos.
+
+</details>

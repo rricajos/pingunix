@@ -11,7 +11,7 @@ subtema: "204.1"
 
 # Flashcards: 204.1 - Configuracion De Raid
 
-> 24 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 39 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="204.1">
 </div>
@@ -199,6 +199,276 @@ subtema: "204.1"
 <div class="flashcard" data-id="204.1-fc-011">
 <div class="flashcard-front">
 
+**P:** Un administrador tiene 5 discos de 2 TB configurados en RAID 5. ¿Cual es la capacidad util total del array?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) 8 TB. En RAID 5, la capacidad util es (N-1) discos, donde N es el numero total de discos activos. Con 5 discos de 2 TB: (5-1) x 2 TB = 8 TB. Un disco equivalente de capacidad se dedica a almacenar la paridad distribuida entre todos los discos, lo que permite tolerar la perdida de un disco sin perder datos.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="204.1">
+</div>
+
+<div class="flashcard" data-id="204.1-fc-012">
+<div class="flashcard-front">
+
+**P:** ¿Que comando genera automaticamente la configuracion de `/etc/mdadm.conf` a partir de los arrays activos?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `mdadm --detail --scan >> /etc/mdadm.conf`. El comando `mdadm --detail --scan` genera las lineas de configuracion `ARRAY` con los UUIDs de todos los arrays RAID activos en el sistema. Al redirigir la salida a `/etc/mdadm.conf`, se asegura que los arrays se reensamblen automaticamente durante el arranque. Despues de modificar este archivo, se debe actualizar el initramfs con `update-initramfs -u` o `dracut -f`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="204.1">
+</div>
+
+<div class="flashcard" data-id="204.1-fc-013">
+<div class="flashcard-front">
+
+**P:** ¿Que nivel de RAID ofrece cero redundancia pero maximo rendimiento de lectura y escritura?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) RAID 0. RAID 0 (striping) distribuye los datos entre todos los discos del array sin ninguna informacion de redundancia o paridad. Esto proporciona el maximo rendimiento tanto en lectura como en escritura, ya que las operaciones se paralelean entre discos. Sin embargo, si cualquier disco del array falla, se pierden TODOS los datos, lo que lo hace inadecuado para datos criticos.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="204.1">
+</div>
+
+<div class="flashcard" data-id="204.1-fc-014">
+<div class="flashcard-front">
+
+**P:** Despues de crear un array RAID en un sistema Debian, ¿que comando se debe ejecutar para actualizar el initramfs e incluir la configuracion RAID?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `update-initramfs -u`. En sistemas Debian/Ubuntu, `update-initramfs -u` regenera la imagen initramfs incluyendo los modulos RAID y la configuracion de `/etc/mdadm.conf`. Esto es esencial para que los arrays se ensamblen correctamente durante el arranque temprano del sistema. En RHEL/CentOS se usa `dracut -f` para el mismo proposito. `mkinitcpio` es especifico de Arch Linux.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="204.1">
+</div>
+
+<div class="flashcard" data-id="204.1-fc-015">
+<div class="flashcard-front">
+
+**P:** ¿Que tipo de particion debe usarse para discos que formaran parte de un array RAID software con mdadm en tablas de particion MBR?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) Tipo `fd` (Linux RAID autodetect). Las particiones destinadas a RAID software deben tener el tipo `fd` (Linux RAID autodetect) en tablas MBR, o `da` en tablas GPT. Este tipo permite que el kernel detecte automaticamente las particiones RAID durante el arranque y las ensamble sin necesidad de configuracion adicional. Aunque mdadm puede funcionar con particiones tipo `83`, el uso de `fd` es la practica recomendada.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="204.1">
+</div>
+
+<div class="flashcard" data-id="204.1-fc-016">
+<div class="flashcard-front">
+
+**P:** Un administrador quiere verificar la integridad de los datos en un array RAID software. ¿Que archivo del sistema se utiliza para iniciar una verificacion (scrub)?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `/sys/block/md0/md/sync_action`. Para iniciar una verificacion de integridad (scrub) en un array RAID, se escribe `check` en el archivo `/sys/block/md0/md/sync_action` mediante `echo check > /sys/block/md0/md/sync_action`. El resultado se puede leer en `/sys/block/md0/md/mismatch_cnt`, que muestra el numero de sectores con discrepancias. Esta operacion se suele programar en un cron semanal.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="204.1">
+</div>
+
+<div class="flashcard" data-id="204.1-fc-017">
+<div class="flashcard-front">
+
+**P:** ¿Que directiva en `/etc/mdadm.conf` especifica la direccion de correo para alertas de fallo de RAID?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) `MAILADDR`. La directiva `MAILADDR` en `/etc/mdadm.conf` define la direccion de correo electronico a la que se envian las alertas cuando se detectan eventos como fallos de disco o degradacion del array. Por ejemplo: `MAILADDR root@localhost` o `MAILADDR admin@ejemplo.com`. El demonio `mdadm --monitor` debe estar activo para que las notificaciones funcionen.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="204.1">
+</div>
+
+<div class="flashcard" data-id="204.1-fc-018">
+<div class="flashcard-front">
+
+**P:** Un administrador observa en `/proc/mdstat` que un array RAID 1 muestra `[2/1] [U_]`. ¿Que significa esto?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) El array requiere 2 discos pero solo 1 esta activo; un disco ha fallado. La notacion `[2/1]` indica que el array fue configurado con 2 discos pero solo 1 esta activo. `[U_]` confirma el estado: `U` indica un disco activo (Up) y `_` indica un disco ausente o fallido. El array esta en estado degradado y funciona con redundancia reducida. Se debe reemplazar el disco fallido lo antes posible para restaurar la redundancia completa.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="204.1">
+</div>
+
+<div class="flashcard" data-id="204.1-fc-019">
+<div class="flashcard-front">
+
+**P:** ¿Que nivel RAID soporta la perdida simultanea de hasta 2 discos?
+
+</div>
+<div class="flashcard-back">
+
+**R:** d) RAID 6. RAID 6 utiliza doble paridad distribuida, lo que le permite tolerar la perdida simultanea de hasta 2 discos sin perdida de datos. Requiere un minimo de 4 discos y la capacidad util es (N-2). RAID 5 solo tolera 1 fallo. RAID 1 puede tolerar N-1 fallos (en un mirror de 2 discos, tolera 1 fallo). RAID 0 no tolera ningun fallo.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="204.1">
+</div>
+
+<div class="flashcard" data-id="204.1-fc-020">
+<div class="flashcard-front">
+
+**P:** ¿Que consideracion es importante al configurar `/boot` en un array RAID para poder arrancar el sistema?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `/boot` debe estar en RAID 1 y GRUB debe instalarse en todos los discos del array. Para arrancar desde RAID software, se recomienda usar RAID 1 para `/boot` porque el gestor de arranque (GRUB) puede leer directamente de cualquier disco del espejo. Ademas, GRUB debe instalarse en el MBR de cada disco del array con `grub-install /dev/sdX` para que el sistema pueda arrancar aunque un disco falle. RAID 5 o RAID 0 no son adecuados para `/boot` en la mayoria de configuraciones.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="204.1">
+</div>
+
+<div class="flashcard" data-id="204.1-fc-021">
+<div class="flashcard-front">
+
+**P:** ¿Que comando se utiliza para ver el estado actual de todos los arrays RAID del sistema leyendo el archivo virtual del kernel?
+
+</div>
+<div class="flashcard-back">
+
+**R:** cat /proc/mdstat. El archivo `/proc/mdstat` muestra en tiempo real el estado de todos los arrays RAID software del sistema, incluyendo el nivel RAID, los discos miembros, el estado de cada disco (`[UU]` para activos, `[U_]` para degradados) y el progreso de operaciones como reconstruccion o verificacion. Es la forma mas rapida de comprobar el estado RAID.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="204.1">
+</div>
+
+<div class="flashcard" data-id="204.1-fc-022">
+<div class="flashcard-front">
+
+**P:** ¿Que comando se utiliza para marcar el disco `/dev/sdb1` como fallido en el array `/dev/md0`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** mdadm --fail /dev/md0 /dev/sdb1. El comando `mdadm --fail` (o `-f`) marca un disco como fallido en un array RAID. Este es el primer paso en el procedimiento de reemplazo de un disco: primero se marca como fallido, luego se retira con `mdadm --remove`, se reemplaza fisicamente, y finalmente se agrega el nuevo disco con `mdadm --add`. La reconstruccion comienza automaticamente.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="204.1">
+</div>
+
+<div class="flashcard" data-id="204.1-fc-023">
+<div class="flashcard-front">
+
+**P:** ¿Que comando se utiliza para ver informacion detallada del array RAID `/dev/md0`, incluyendo estado de los discos y UUID?
+
+</div>
+<div class="flashcard-back">
+
+**R:** mdadm --detail /dev/md0. El comando `mdadm --detail` muestra informacion completa sobre un array RAID, incluyendo el nivel, tamano, UUID, numero de dispositivos, estado de cada disco miembro (active, spare, faulty), progreso de reconstruccion y opciones de configuracion. Es mas detallado que `/proc/mdstat` y es esencial para diagnosticar problemas en arrays RAID.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="204.1">
+</div>
+
+<div class="flashcard" data-id="204.1-fc-024">
+<div class="flashcard-front">
+
+**P:** ¿Que comando detiene el array RAID `/dev/md0` para poder desmontar los discos o realizar mantenimiento?
+
+</div>
+<div class="flashcard-back">
+
+**R:** mdadm --stop /dev/md0. El comando `mdadm --stop` desactiva un array RAID, liberando los discos miembros. El sistema de archivos debe estar desmontado antes de detener el array. Para volver a activarlo, se usa `mdadm --assemble /dev/md0` seguido de los dispositivos miembros, o `mdadm --assemble --scan` para reensamblar todos los arrays basandose en `/etc/mdadm.conf`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="204.1">
+</div>
+
+<div class="flashcard" data-id="204.1-fc-025">
+<div class="flashcard-front">
+
+**P:** ¿Que comando agrega el disco `/dev/sde1` como spare al array RAID `/dev/md0`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** mdadm --add /dev/md0 /dev/sde1. El comando `mdadm --add` agrega un disco a un array existente. Si el array ya tiene todos sus discos activos, el nuevo disco se configura automaticamente como spare (repuesto). Los discos spare permanecen inactivos hasta que un disco activo falla, momento en que se activa automaticamente la reconstruccion del array usando el spare.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="204.1">
+</div>
+
+<div class="flashcard" data-id="204.1-fc-026">
+<div class="flashcard-front">
+
 **P:** Tip de examen: Es importante saber que el software RAID en Linux se gestiona con `mdadm` y que ...
 
 </div>
@@ -214,7 +484,7 @@ subtema: "204.1"
 <div class="flashcard-deck" data-subtema="204.1">
 </div>
 
-<div class="flashcard" data-id="204.1-fc-012">
+<div class="flashcard" data-id="204.1-fc-027">
 <div class="flashcard-front">
 
 **P:** Tip de examen: Memoriza el numero minimo de discos, la capacidad util y la tolerancia a fallos ...
@@ -232,7 +502,7 @@ subtema: "204.1"
 <div class="flashcard-deck" data-subtema="204.1">
 </div>
 
-<div class="flashcard" data-id="204.1-fc-013">
+<div class="flashcard" data-id="204.1-fc-028">
 <div class="flashcard-front">
 
 **P:** Tip de examen: `/proc/mdstat` es la forma rapida de comprobar el estado del RAID. Los caractere...
@@ -250,7 +520,7 @@ subtema: "204.1"
 <div class="flashcard-deck" data-subtema="204.1">
 </div>
 
-<div class="flashcard" data-id="204.1-fc-014">
+<div class="flashcard" data-id="204.1-fc-029">
 <div class="flashcard-front">
 
 **P:** Tip de examen: Despues de crear o modificar un array, siempre hay que actualizar `/etc/mdadm.co...
@@ -268,7 +538,7 @@ subtema: "204.1"
 <div class="flashcard-deck" data-subtema="204.1">
 </div>
 
-<div class="flashcard" data-id="204.1-fc-015">
+<div class="flashcard" data-id="204.1-fc-030">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `--level=N`?
@@ -286,7 +556,7 @@ subtema: "204.1"
 <div class="flashcard-deck" data-subtema="204.1">
 </div>
 
-<div class="flashcard" data-id="204.1-fc-016">
+<div class="flashcard" data-id="204.1-fc-031">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `--raid-devices=N`?
@@ -304,7 +574,7 @@ subtema: "204.1"
 <div class="flashcard-deck" data-subtema="204.1">
 </div>
 
-<div class="flashcard" data-id="204.1-fc-017">
+<div class="flashcard" data-id="204.1-fc-032">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `--spare-devices=N`?
@@ -322,7 +592,7 @@ subtema: "204.1"
 <div class="flashcard-deck" data-subtema="204.1">
 </div>
 
-<div class="flashcard" data-id="204.1-fc-018">
+<div class="flashcard" data-id="204.1-fc-033">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `--chunk=N`?
@@ -340,7 +610,7 @@ subtema: "204.1"
 <div class="flashcard-deck" data-subtema="204.1">
 </div>
 
-<div class="flashcard" data-id="204.1-fc-019">
+<div class="flashcard" data-id="204.1-fc-034">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `--bitmap=internal`?
@@ -358,7 +628,7 @@ subtema: "204.1"
 <div class="flashcard-deck" data-subtema="204.1">
 </div>
 
-<div class="flashcard" data-id="204.1-fc-020">
+<div class="flashcard" data-id="204.1-fc-035">
 <div class="flashcard-front">
 
 **P:** Que es/son Introduccion a RAID?
@@ -376,7 +646,7 @@ subtema: "204.1"
 <div class="flashcard-deck" data-subtema="204.1">
 </div>
 
-<div class="flashcard" data-id="204.1-fc-021">
+<div class="flashcard" data-id="204.1-fc-036">
 <div class="flashcard-front">
 
 **P:** Que es/son Tabla resumen de niveles RAID?
@@ -394,7 +664,7 @@ subtema: "204.1"
 <div class="flashcard-deck" data-subtema="204.1">
 </div>
 
-<div class="flashcard" data-id="204.1-fc-022">
+<div class="flashcard" data-id="204.1-fc-037">
 <div class="flashcard-front">
 
 **P:** Que es/son Archivo de configuracion /etc/mdadm.conf?
@@ -412,7 +682,7 @@ subtema: "204.1"
 <div class="flashcard-deck" data-subtema="204.1">
 </div>
 
-<div class="flashcard" data-id="204.1-fc-023">
+<div class="flashcard" data-id="204.1-fc-038">
 <div class="flashcard-front">
 
 **P:** Que es/son Consideraciones para el arranque?
@@ -430,7 +700,7 @@ subtema: "204.1"
 <div class="flashcard-deck" data-subtema="204.1">
 </div>
 
-<div class="flashcard" data-id="204.1-fc-024">
+<div class="flashcard" data-id="204.1-fc-039">
 <div class="flashcard-front">
 
 **P:** Que es/son Buenas practicas?

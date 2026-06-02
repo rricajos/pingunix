@@ -163,3 +163,228 @@ d) El archivo smb.conf tiene errores de sintaxis
 
 Los errores de preautenticación Kerberos se producen generalmente por contraseña incorrecta o por un desfase de tiempo (clock skew) superior a 5 minutos entre el cliente y el KDC. Se debe verificar la sincronización NTP con `ntpdate -q dc.empresa.com` o `timedatectl`. También puede deberse a una cuenta bloqueada o deshabilitada.
 </details>
+
+### Pregunta 11
+
+¿Qué backend idmap lee los atributos `uidNumber` y `gidNumber` directamente de los objetos de Active Directory según el esquema RFC2307?
+
+a) rid
+b) tdb
+c) ad
+d) autorid
+
+<details><summary>Respuesta</summary>
+
+**c) ad**
+
+El backend `idmap_ad` lee los atributos POSIX (`uidNumber`, `gidNumber`) definidos en AD según el esquema RFC2307. Requiere que cada objeto tenga estos atributos configurados manualmente. La ventaja es que los IDs son consistentes entre todos los servidores porque están centralizados en AD.
+</details>
+
+### Pregunta 12
+
+¿Qué parámetro de smb.conf define la shell predeterminada para los usuarios de dominio que inician sesión a través de winbind?
+
+a) `default shell = /bin/bash`
+b) `winbind shell = /bin/bash`
+c) `template shell = /bin/bash`
+d) `user shell = /bin/bash`
+
+<details><summary>Respuesta</summary>
+
+**c) `template shell = /bin/bash`**
+
+El parámetro `template shell` en smb.conf define la shell predeterminada que winbind asigna a los usuarios del dominio cuando se resuelven a través de NSS. Sin este parámetro, los usuarios del dominio podrían no tener una shell asignada y no podrían iniciar sesión interactivamente.
+</details>
+
+### Pregunta 13
+
+¿Qué comando verifica que la relación de confianza entre un servidor miembro Linux y el dominio AD es funcional?
+
+a) `net ads info`
+b) `wbinfo -t`
+c) `smbclient -L localhost`
+d) `testparm -s`
+
+<details><summary>Respuesta</summary>
+
+**b) `wbinfo -t`**
+
+`wbinfo -t` verifica la relación de confianza (trust) entre el servidor miembro y el controlador de dominio enviando una verificación de secreto de máquina. Si la salida indica éxito, la relación de confianza funciona correctamente. `net ads testjoin` también verifica la membresía, pero `wbinfo -t` comprueba específicamente la confianza RPC.
+</details>
+
+### Pregunta 14
+
+En la configuración de SSSD, ¿qué parámetro permite el inicio de sesión con credenciales en caché cuando el controlador de dominio no está disponible?
+
+a) `offline_login = true`
+b) `cache_credentials = True`
+c) `winbind offline logon = yes`
+d) `enable_cache = yes`
+
+<details><summary>Respuesta</summary>
+
+**b) `cache_credentials = True`**
+
+El parámetro `cache_credentials = True` en la sección de dominio de `/etc/sssd/sssd.conf` permite que SSSD almacene las credenciales del usuario en caché local. Esto permite el inicio de sesión cuando el DC no es alcanzable. `winbind offline logon` es el equivalente para winbind, no para SSSD.
+</details>
+
+### Pregunta 15
+
+¿Qué sección del archivo `/etc/krb5.conf` define la correspondencia entre nombres de dominio DNS y realms Kerberos?
+
+a) `[libdefaults]`
+b) `[realms]`
+c) `[domain_realm]`
+d) `[appdefaults]`
+
+<details><summary>Respuesta</summary>
+
+**c) `[domain_realm]`**
+
+La sección `[domain_realm]` en `/etc/krb5.conf` mapea nombres de dominio DNS a realms Kerberos. Por ejemplo, `.empresa.com = EMPRESA.COM` indica que todos los hosts del dominio DNS `empresa.com` pertenecen al realm Kerberos `EMPRESA.COM`. La entrada con punto inicial cubre los subdominios.
+</details>
+
+### Pregunta 16
+
+¿Qué parámetro de SSSD permite filtrar el acceso al sistema basándose en la pertenencia a un grupo de Active Directory?
+
+a) `valid_users`
+b) `ad_access_filter`
+c) `access_list`
+d) `group_filter`
+
+<details><summary>Respuesta</summary>
+
+**b) `ad_access_filter`**
+
+El parámetro `ad_access_filter` en sssd.conf permite restringir el acceso al sistema basándose en atributos LDAP como `memberOf`. Por ejemplo: `ad_access_filter = memberOf=CN=LinuxUsers,OU=Groups,DC=empresa,DC=com` permite solo a miembros de ese grupo. Requiere `access_provider = ad`.
+</details>
+
+### Pregunta 17
+
+Un administrador configura `idmap config * : range = 10000-19999` e `idmap config EMPRESA : range = 10000-99999`. ¿Cuál es el problema?
+
+a) El rango del dominio EMPRESA es demasiado grande
+b) Los rangos se solapan, lo que puede causar conflictos de IDs
+c) El rango comodín debería ser mayor que el del dominio
+d) No se permite definir rangos diferentes para cada backend
+
+<details><summary>Respuesta</summary>
+
+**b) Los rangos se solapan, lo que puede causar conflictos de IDs**
+
+Los rangos idmap de diferentes backends nunca deben solaparse. En este caso, el rango del comodín (`*`: 10000-19999) se superpone con el rango de EMPRESA (10000-99999). Esto puede causar que un mismo UID/GID sea asignado a diferentes usuarios de diferentes dominios. El rango comodín debería usar un rango no solapado, por ejemplo 3000-7999.
+</details>
+
+### Pregunta 18
+
+¿Qué comando de `realm` permite restringir el acceso al sistema solo a usuarios específicos del dominio después de unirse?
+
+a) `realm restrict usuario1@empresa.com`
+b) `realm permit usuario1@empresa.com`
+c) `realm allow usuario1@empresa.com`
+d) `realm access --grant usuario1@empresa.com`
+
+<details><summary>Respuesta</summary>
+
+**b) `realm permit usuario1@empresa.com`**
+
+`realm permit` configura qué usuarios o grupos del dominio pueden iniciar sesión en el sistema. Se puede especificar usuarios individuales (`realm permit usuario1@empresa.com`) o permitir a todos (`realm permit --all`). Para denegar el acceso a todos se usa `realm deny --all`.
+</details>
+
+### Pregunta 19
+
+¿Cuál es la diferencia fundamental entre el backend idmap `rid` y `autorid`?
+
+a) `rid` es más rápido que `autorid`
+b) `rid` requiere configuración por dominio; `autorid` asigna rangos automáticamente a cada dominio
+c) `autorid` solo funciona con Active Directory; `rid` con cualquier dominio
+d) `rid` usa una base de datos TDB; `autorid` no
+
+<details><summary>Respuesta</summary>
+
+**b) `rid` requiere configuración por dominio; `autorid` asigna rangos automáticamente a cada dominio**
+
+El backend `rid` calcula UIDs/GIDs sumando el RID al inicio del rango configurado para un dominio específico, requiriendo configuración explícita por dominio. `autorid` asigna automáticamente bloques de IDs a cada dominio que descubre, sin necesidad de configuración individual. `autorid` es ideal para entornos multidominio con confianzas.
+</details>
+
+### Pregunta 20
+
+¿Qué opción del archivo `/etc/security/pam_winbind.conf` permite requerir que el usuario pertenezca a un grupo específico para poder iniciar sesión?
+
+a) `require_group`
+b) `require_membership_of`
+c) `allowed_groups`
+d) `login_groups`
+
+<details><summary>Respuesta</summary>
+
+**b) `require_membership_of`**
+
+El parámetro `require_membership_of` en `/etc/security/pam_winbind.conf` restringe el acceso solo a miembros de un SID de grupo específico. Se puede indicar el SID completo o el nombre del grupo. Esto proporciona un control de acceso adicional a nivel de PAM, independiente de la configuración de Samba.
+</details>
+
+### Pregunta 21
+
+Escriba el comando para obtener un ticket Kerberos TGT para el usuario `admin` en el realm `CORP.NET`.
+
+<input type="text" class="fill-blank" data-answer="kinit admin@CORP.NET" data-alt="kinit admin@corp.net" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**kinit admin@CORP.NET**
+
+`kinit` solicita un TGT (Ticket Granting Ticket) al KDC del realm especificado. El formato es `kinit usuario@REALM`. Aunque el realm se define en mayúsculas por convención, Kerberos acepta ambas formas. El ticket se almacena en la caché de credenciales, normalmente en `/tmp/krb5cc_<uid>`.
+</details>
+
+### Pregunta 22
+
+Escriba el comando para verificar que un servidor Linux se ha unido correctamente al dominio AD usando herramientas de Samba.
+
+<input type="text" class="fill-blank" data-answer="net ads testjoin" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**net ads testjoin**
+
+`net ads testjoin` verifica que la cuenta de máquina del servidor existe en Active Directory y que las credenciales de la máquina son válidas. Si la unión es correcta, muestra "Join is OK". Si falla, indica problemas con la cuenta de máquina o las credenciales almacenadas en `secrets.tdb`.
+</details>
+
+### Pregunta 23
+
+Escriba el comando para listar todos los usuarios del dominio usando la herramienta de winbind.
+
+<input type="text" class="fill-blank" data-answer="wbinfo -u" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**wbinfo -u**
+
+`wbinfo -u` consulta a winbind para listar todos los usuarios del dominio. Este comando se comunica directamente con el demonio `winbindd` sin pasar por NSS. Para listar grupos se usa `wbinfo -g`. Para verificar que NSS también funciona, se puede usar `getent passwd`.
+</details>
+
+### Pregunta 24
+
+Escriba el comando para descubrir la información de un dominio AD llamado `empresa.com` usando la herramienta `realm`.
+
+<input type="text" class="fill-blank" data-answer="realm discover empresa.com" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**realm discover empresa.com**
+
+`realm discover` consulta DNS y LDAP para obtener información sobre el dominio especificado: tipo de dominio, paquetes necesarios, estado de la unión y capacidades disponibles. Es el primer paso recomendado antes de unirse a un dominio con `realm join`.
+</details>
+
+### Pregunta 25
+
+Escriba el comando para destruir todos los tickets Kerberos almacenados en la caché del usuario actual.
+
+<input type="text" class="fill-blank" data-answer="kdestroy" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**kdestroy**
+
+`kdestroy` elimina todos los tickets Kerberos de la caché de credenciales del usuario actual. Esto es útil para limpiar tickets expirados, cambiar de identidad o resolver problemas de autenticación. La caché se encuentra normalmente en `/tmp/krb5cc_<uid>`.
+</details>

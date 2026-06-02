@@ -11,7 +11,7 @@ subtema: "201.1"
 
 # Flashcards: 201.1 - Componentes Del Kernel
 
-> 25 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 39 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="201.1">
 </div>
@@ -199,6 +199,276 @@ subtema: "201.1"
 <div class="flashcard" data-id="201.1-fc-011">
 <div class="flashcard-front">
 
+**P:** ¿Que significan las variables VERSION=5, PATCHLEVEL=15 y SUBLEVEL=60 en el Makefile principal del kernel?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) Definen la version del kernel como 5.15.60. Las variables VERSION, PATCHLEVEL y SUBLEVEL en el Makefile principal del kernel se combinan para formar el numero de version completo: VERSION.PATCHLEVEL.SUBLEVEL. Adicionalmente, la variable EXTRAVERSION permite agregar un sufijo personalizado (por ejemplo, "-custom"). Estas variables son leidas por el sistema de compilacion para generar el nombre de version del kernel resultante.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="201.1">
+</div>
+
+<div class="flashcard" data-id="201.1-fc-012">
+<div class="flashcard-front">
+
+**P:** ¿Que tipo de version del kernel esta disenada para ser mantenida durante un periodo extenso de 2 a 6 anos con correcciones de seguridad?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) LTS (Long Term Support). Las versiones LTS del kernel de Linux se mantienen durante periodos extendidos, tipicamente de 2 a 6 anos, recibiendo correcciones de bugs y parches de seguridad. Son las versiones preferidas para entornos de produccion y servidores donde la estabilidad a largo plazo es prioritaria. Las versiones Stable se mantienen solo hasta que se lanza la siguiente version.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="201.1">
+</div>
+
+<div class="flashcard" data-id="201.1-fc-013">
+<div class="flashcard-front">
+
+**P:** Un administrador necesita verificar la integridad de un archivo de codigo fuente del kernel descargado de kernel.org. ¿Que herramienta debe utilizar?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `gpg --verify` con el archivo de firma proporcionado. kernel.org proporciona archivos de firma GPG (.sign) para cada version del kernel. El proceso correcto es descargar el archivo de firma, descomprimir el tarball (.tar.xz a .tar), y ejecutar `gpg --verify linux-x.y.z.tar.sign linux-x.y.z.tar`. Esto verifica que el codigo fuente fue firmado por los desarrolladores oficiales del kernel, garantizando tanto integridad como autenticidad.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="201.1">
+</div>
+
+<div class="flashcard" data-id="201.1-fc-014">
+<div class="flashcard-front">
+
+**P:** ¿Que archivo virtual del sistema permite obtener la configuracion del kernel en ejecucion si la opcion CONFIG_IKCONFIG_PROC fue habilitada durante la compilacion?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `/proc/config.gz`. Si el kernel fue compilado con la opcion `CONFIG_IKCONFIG_PROC=y`, el archivo `/proc/config.gz` contiene la configuracion completa del kernel en ejecucion en formato comprimido con gzip. Se puede leer con `zcat /proc/config.gz`. Esta es una alternativa al archivo `/boot/config-$(uname -r)` y es especialmente util cuando el directorio `/boot` no esta disponible.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="201.1">
+</div>
+
+<div class="flashcard" data-id="201.1-fc-015">
+<div class="flashcard-front">
+
+**P:** ¿Cual es la funcion del archivo `initrd.img` (o `initramfs`) que se encuentra en `/boot/`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) Es una imagen temporal del sistema de archivos que se carga en RAM durante el arranque para proporcionar modulos y herramientas necesarios para montar el sistema raiz real. El initramfs (initial RAM filesystem) contiene modulos del kernel, scripts y herramientas necesarios para el arranque temprano del sistema. Es esencial cuando el controlador del disco o el sistema de archivos raiz estan compilados como modulos, cuando se usa LVM, RAID o cifrado de disco. Una vez montado el sistema raiz real, el initramfs se descarta de la memoria.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="201.1">
+</div>
+
+<div class="flashcard" data-id="201.1-fc-016">
+<div class="flashcard-front">
+
+**P:** ¿Que opcion en el archivo `.config` del kernel indica que una funcionalidad esta completamente deshabilitada?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) `# CONFIG_MODULO is not set`. En el archivo `.config` del kernel, una funcionalidad deshabilitada se indica con una linea comentada en el formato `# CONFIG_OPCION is not set`. Los valores activos son `=y` (compilado dentro del kernel) y `=m` (compilado como modulo cargable). No se usa `=n`, `=0` ni `=disabled` como valores en el archivo de configuracion.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="201.1">
+</div>
+
+<div class="flashcard" data-id="201.1-fc-017">
+<div class="flashcard-front">
+
+**P:** ¿Que diferencia existe entre el archivo `vmlinux` y `vmlinuz`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `vmlinux` es el kernel sin comprimir en formato ELF usado para depuracion; `vmlinuz` es el kernel comprimido listo para arrancar. `vmlinux` es el archivo ejecutable en formato ELF que resulta directamente de la compilacion. Es grande y no comprimido, usado principalmente para depuracion con herramientas como `gdb`. `vmlinuz` es la version comprimida (la "z" indica compresion) que se instala en `/boot/` y es cargada por el bootloader durante el arranque del sistema.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="201.1">
+</div>
+
+<div class="flashcard" data-id="201.1-fc-018">
+<div class="flashcard-front">
+
+**P:** Un administrador necesita aplicar un parche incremental al kernel 5.15.60 para actualizarlo a 5.15.61. ¿Desde que directorio debe ejecutar el comando `patch`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) Desde la raiz del codigo fuente del kernel (`/usr/src/linux/`). Los parches del kernel se aplican desde el directorio raiz del codigo fuente con el comando `patch -p1 < archivo.patch`. La opcion `-p1` elimina el primer componente de la ruta en el archivo de parche (tipicamente `a/` o `b/`). Es importante estar en el directorio correcto para que las rutas relativas del parche coincidan con la estructura de directorios del codigo fuente.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="201.1">
+</div>
+
+<div class="flashcard" data-id="201.1-fc-019">
+<div class="flashcard-front">
+
+**P:** ¿Que formato de imagen del kernel se utiliza tipicamente en sistemas embebidos con el bootloader U-Boot?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) uImage. El formato `uImage` es una imagen del kernel con una cabecera especifica para el bootloader U-Boot, que es comun en sistemas embebidos basados en arquitecturas ARM y otras. `bzImage` es el formato estandar para x86. `zImage` tambien se usa en ARM pero sin la cabecera de U-Boot. `vmlinux` es el kernel sin comprimir usado para depuracion.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="201.1">
+</div>
+
+<div class="flashcard" data-id="201.1-fc-020">
+<div class="flashcard-front">
+
+**P:** ¿Cual de las siguientes afirmaciones sobre el enlace simbolico `/usr/src/linux` es correcta?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) Es una convencion comun que apunta al directorio del codigo fuente del kernel activo, facilitando la compilacion. El enlace simbolico `/usr/src/linux` es una convencion estandar en Linux que apunta al directorio del codigo fuente del kernel que se esta utilizando para compilacion o referencia. No es obligatorio para el funcionamiento del sistema, pero muchos scripts y herramientas de compilacion lo esperan. Se crea manualmente con `ln -sf linux-version linux`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="201.1">
+</div>
+
+<div class="flashcard" data-id="201.1-fc-021">
+<div class="flashcard-front">
+
+**P:** ¿Que comando muestra la version del kernel actualmente en ejecucion?
+
+</div>
+<div class="flashcard-back">
+
+**R:** uname -r. El comando `uname -r` muestra unicamente la version (release) del kernel en ejecucion, por ejemplo `5.15.0-56-generic`. La opcion `-r` significa "kernel release". Para ver toda la informacion del sistema (nombre del kernel, hostname, version, arquitectura, etc.) se usa `uname -a`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="201.1">
+</div>
+
+<div class="flashcard" data-id="201.1-fc-022">
+<div class="flashcard-front">
+
+**P:** ¿Que comando muestra informacion detallada sobre un modulo del kernel, incluyendo su descripcion, dependencias y parametros?
+
+</div>
+<div class="flashcard-back">
+
+**R:** modinfo. El comando `modinfo` seguido del nombre del modulo (por ejemplo, `modinfo ext4`) muestra informacion detallada como la ruta del archivo, licencia, descripcion, autor, dependencias, alias, parametros configurables y la version del kernel para la que fue compilado (vermagic).
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="201.1">
+</div>
+
+<div class="flashcard" data-id="201.1-fc-023">
+<div class="flashcard-front">
+
+**P:** ¿Que comando se utiliza para aplicar un parche al codigo fuente del kernel, eliminando el primer componente de la ruta?
+
+</div>
+<div class="flashcard-back">
+
+**R:** patch -p1. El comando `patch -p1` aplica un archivo de parche al codigo fuente. La opcion `-p1` elimina el primer componente de la ruta en las lineas del parche (tipicamente `a/` o `b/` generados por `diff` o `git diff`). Se ejecuta desde el directorio raiz del codigo fuente. Para revertir un parche se usa `patch -R -p1`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="201.1">
+</div>
+
+<div class="flashcard" data-id="201.1-fc-024">
+<div class="flashcard-front">
+
+**P:** ¿Que comando lista los modulos del kernel actualmente cargados en memoria?
+
+</div>
+<div class="flashcard-back">
+
+**R:** lsmod. El comando `lsmod` muestra los modulos actualmente cargados en el kernel, formateando la informacion del archivo `/proc/modules`. La salida incluye tres columnas: nombre del modulo, tamano en bytes y lista de modulos que dependen de el (Used by). Es la herramienta rapida para verificar si un modulo especifico esta cargado.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="201.1">
+</div>
+
+<div class="flashcard" data-id="201.1-fc-025">
+<div class="flashcard-front">
+
+**P:** ¿Que comando permite obtener la configuracion del kernel en ejecucion desde el archivo comprimido en `/proc/`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** zcat /proc/config.gz. El comando `zcat /proc/config.gz` descomprime y muestra el contenido del archivo de configuracion del kernel en ejecucion. Este archivo solo esta disponible si el kernel fue compilado con la opcion `CONFIG_IKCONFIG_PROC=y`. Es una alternativa util cuando no se tiene acceso al archivo `/boot/config-$(uname -r)`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="201.1">
+</div>
+
+<div class="flashcard" data-id="201.1-fc-026">
+<div class="flashcard-front">
+
 **P:** Tip de examen: `bzImage` es el formato estandar actual. La "b" de "big" se refiere a que puede ...
 
 </div>
@@ -214,7 +484,7 @@ subtema: "201.1"
 <div class="flashcard-deck" data-subtema="201.1">
 </div>
 
-<div class="flashcard" data-id="201.1-fc-012">
+<div class="flashcard" data-id="201.1-fc-027">
 <div class="flashcard-front">
 
 **P:** Tip de examen: `uname -r` muestra la version del kernel en ejecucion. El sufijo como `-generic`...
@@ -232,7 +502,7 @@ subtema: "201.1"
 <div class="flashcard-deck" data-subtema="201.1">
 </div>
 
-<div class="flashcard" data-id="201.1-fc-013">
+<div class="flashcard" data-id="201.1-fc-028">
 <div class="flashcard-front">
 
 **P:** Tip de examen: La documentacion del kernel esta en `/usr/src/linux/Documentation/`. Es la refer...
@@ -250,7 +520,7 @@ subtema: "201.1"
 <div class="flashcard-deck" data-subtema="201.1">
 </div>
 
-<div class="flashcard" data-id="201.1-fc-014">
+<div class="flashcard" data-id="201.1-fc-029">
 <div class="flashcard-front">
 
 **P:** Tip de examen: Los parches se aplican con el comando `patch -p1`. Se aplican desde el directori...
@@ -268,7 +538,7 @@ subtema: "201.1"
 <div class="flashcard-deck" data-subtema="201.1">
 </div>
 
-<div class="flashcard" data-id="201.1-fc-015">
+<div class="flashcard" data-id="201.1-fc-030">
 <div class="flashcard-front">
 
 **P:** Tip de examen: La version del kernel se define en las variables `VERSION`, `PATCHLEVEL`, `SUBLE...
@@ -286,7 +556,7 @@ subtema: "201.1"
 <div class="flashcard-deck" data-subtema="201.1">
 </div>
 
-<div class="flashcard" data-id="201.1-fc-016">
+<div class="flashcard" data-id="201.1-fc-031">
 <div class="flashcard-front">
 
 **P:** Tip de examen: Linux es un kernel monolitico con soporte de modulos cargables. Las funcionalida...
@@ -304,7 +574,7 @@ subtema: "201.1"
 <div class="flashcard-deck" data-subtema="201.1">
 </div>
 
-<div class="flashcard" data-id="201.1-fc-017">
+<div class="flashcard" data-id="201.1-fc-032">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `vmlinux`?
@@ -322,7 +592,7 @@ subtema: "201.1"
 <div class="flashcard-deck" data-subtema="201.1">
 </div>
 
-<div class="flashcard" data-id="201.1-fc-018">
+<div class="flashcard" data-id="201.1-fc-033">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `vmlinuz`?
@@ -340,7 +610,7 @@ subtema: "201.1"
 <div class="flashcard-deck" data-subtema="201.1">
 </div>
 
-<div class="flashcard" data-id="201.1-fc-019">
+<div class="flashcard" data-id="201.1-fc-034">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `bzImage`?
@@ -358,7 +628,7 @@ subtema: "201.1"
 <div class="flashcard-deck" data-subtema="201.1">
 </div>
 
-<div class="flashcard" data-id="201.1-fc-020">
+<div class="flashcard" data-id="201.1-fc-035">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `zImage`?
@@ -376,15 +646,15 @@ subtema: "201.1"
 <div class="flashcard-deck" data-subtema="201.1">
 </div>
 
-<div class="flashcard" data-id="201.1-fc-021">
+<div class="flashcard" data-id="201.1-fc-036">
 <div class="flashcard-front">
 
-**P:** Que hace el comando `uImage`?
+**P:** Que hace el comando `/usr/src/linux/.config`?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Formato para U-Boot
+**R:** Archivo de configuracion para compilacion
 
 </div>
 </div>
@@ -394,25 +664,7 @@ subtema: "201.1"
 <div class="flashcard-deck" data-subtema="201.1">
 </div>
 
-<div class="flashcard" data-id="201.1-fc-022">
-<div class="flashcard-front">
-
-**P:** Que es/son Introduccion?
-
-</div>
-<div class="flashcard-back">
-
-**R:** El kernel de Linux es el nucleo del sistema operativo. Es el componente que gestiona directamente el hardware y proporciona servicios fundamentales al resto del sistema: gestion de procesos, memoria, s
-
-</div>
-</div>
-
----
-
-<div class="flashcard-deck" data-subtema="201.1">
-</div>
-
-<div class="flashcard" data-id="201.1-fc-023">
+<div class="flashcard" data-id="201.1-fc-037">
 <div class="flashcard-front">
 
 **P:** Que es/son Documentacion del kernel?
@@ -430,7 +682,7 @@ subtema: "201.1"
 <div class="flashcard-deck" data-subtema="201.1">
 </div>
 
-<div class="flashcard" data-id="201.1-fc-024">
+<div class="flashcard" data-id="201.1-fc-038">
 <div class="flashcard-front">
 
 **P:** Que es/son Archivo de configuracion del kernel (.config)?
@@ -448,7 +700,7 @@ subtema: "201.1"
 <div class="flashcard-deck" data-subtema="201.1">
 </div>
 
-<div class="flashcard" data-id="201.1-fc-025">
+<div class="flashcard" data-id="201.1-fc-039">
 <div class="flashcard-front">
 
 **P:** Que es/son Makefile del kernel?

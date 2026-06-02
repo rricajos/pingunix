@@ -11,7 +11,7 @@ subtema: "103.7"
 
 # Flashcards: 103.7 - Expresiones Regulares
 
-> 18 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 33 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="103.7">
 </div>
@@ -163,6 +163,276 @@ subtema: "103.7"
 <div class="flashcard" data-id="103.7-fc-009">
 <div class="flashcard-front">
 
+**P:** Cual es el significado de la expresion regular `^$` cuando se usa con `grep`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) Coincide con lineas vacias (sin ningun contenido). La expresion `^$` combina dos anclas: `^` (inicio de linea) seguido inmediatamente de `$` (fin de linea). Esto significa que no hay ningun caracter entre el inicio y el fin de la linea, es decir, la linea esta vacia. Es un patron muy utilizado para filtrar lineas en blanco, por ejemplo `grep -v "^$" archivo.txt` muestra todas las lineas que NO estan vacias. Tambien se usa en `sed '/^$/d' archivo.txt` para eliminar lineas vacias.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.7">
+</div>
+
+<div class="flashcard" data-id="103.7-fc-010">
+<div class="flashcard-front">
+
+**P:** Cual es la diferencia entre `grep "a*"` y `grep -E "a+"` aplicados al mismo archivo?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `a*` busca cero o mas "a" (coincide con todo), `a+` busca una o mas "a". El cuantificador `*` significa "cero o mas repeticiones" del caracter anterior. Como "cero repeticiones" coincide con la cadena vacia, `a*` coincide con practicamente cualquier linea (toda linea contiene "cero o mas a"). El cuantificador `+` (ERE) significa "una o mas repeticiones", lo que requiere al menos una "a" para coincidir. Por eso `grep -E "a+"` es mucho mas util para buscar lineas que realmente contienen la letra "a". En BRE, el equivalente de `+` seria `\+`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.7">
+</div>
+
+<div class="flashcard" data-id="103.7-fc-011">
+<div class="flashcard-front">
+
+**P:** Que comando `grep` busca lineas que contienen la palabra "error" o "warning" (sin distinguir mayusculas)?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `grep -Ei "error|warning" log.txt`. La opcion `-E` activa expresiones regulares extendidas (ERE) donde el caracter `|` funciona como alternancia (OR) sin necesidad de escaparlo. La opcion `-i` hace la busqueda case insensitive (ignora mayusculas/minusculas). La opcion `a` no funciona porque en BRE (grep sin `-E`) el caracter `|` es literal y no actua como alternancia (se necesitaria `\|`). La opcion `c` usa `-v` que invierte la busqueda (mostraria lineas que NO contienen el patron). La opcion `d` usa `-F` (fixed string) que trata todo el patron como texto literal, incluyendo el `|`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.7">
+</div>
+
+<div class="flashcard" data-id="103.7-fc-012">
+<div class="flashcard-front">
+
+**P:** Que clase de caracteres POSIX representa cualquier digito del 0 al 9?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `[[:digit:]]`. `[[:digit:]]` es la clase de caracteres POSIX equivalente a `[0-9]` y coincide con cualquier digito. `[[:alpha:]]` coincide con letras (equivalente a `[a-zA-Z]`). `[[:alnum:]]` coincide con letras y digitos (equivalente a `[a-zA-Z0-9]`). `[[:punct:]]` coincide con signos de puntuacion. Las clases POSIX requieren dobles corchetes: los externos son de la sintaxis de clase de caracteres y los internos de la clase POSIX. Por ejemplo: `grep "[[:digit:]]" archivo.txt`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.7">
+</div>
+
+<div class="flashcard" data-id="103.7-fc-013">
+<div class="flashcard-front">
+
+**P:** Cual de los siguientes comandos `sed` reemplaza todas las ocurrencias de "http://" por "https://" en un archivo?
+
+</div>
+<div class="flashcard-back">
+
+**R:** d) Tanto A como B son correctas, pero A solo reemplaza la primera ocurrencia por linea. La opcion `a` usa la sintaxis estandar `s/patron/reemplazo/` pero sin el flag `g`, por lo que solo reemplaza la primera ocurrencia en cada linea. Las barras en "http://" se escapan con `\/`. La opcion `b` usa `#` como delimitador alternativo en lugar de `/`, lo que evita la necesidad de escapar las barras y es mucho mas legible. Ademas incluye el flag `g` para reemplazo global. La opcion `c` solo reemplaza "http" por "https", lo que podria causar problemas si ya existe "https" en el texto (resultaria en "httpss").
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.7">
+</div>
+
+<div class="flashcard" data-id="103.7-fc-014">
+<div class="flashcard-front">
+
+**P:** Que codigo de retorno devuelve `grep` cuando NO encuentra coincidencias?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) 1. `grep` devuelve codigo 0 cuando encuentra al menos una coincidencia, codigo 1 cuando no encuentra ninguna coincidencia, y codigo 2 cuando ocurre un error (por ejemplo, archivo no encontrado o error de sintaxis en la expresion regular). Esto es util en scripts para verificar si un patron existe: `grep -q "patron" archivo && echo "encontrado" || echo "no encontrado"`. La opcion `-q` (quiet) suprime la salida y solo devuelve el codigo de retorno.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.7">
+</div>
+
+<div class="flashcard" data-id="103.7-fc-015">
+<div class="flashcard-front">
+
+**P:** Cual es la diferencia entre `fgrep` y `grep -F`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) Son equivalentes; ambos tratan el patron como cadena fija sin interpretar metacaracteres. `fgrep` y `grep -F` son funcionalmente identicos. Ambos tratan el patron de busqueda como una cadena fija (fixed string), sin interpretar metacaracteres de expresiones regulares como `.`, `*`, `^`, `$`, etc. Esto es util cuando se busca texto que contiene caracteres especiales de regex, como direcciones IP o URLs. `fgrep` se considera obsoleto (deprecated) y se recomienda usar `grep -F` en su lugar. De forma similar, `egrep` es equivalente a `grep -E`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.7">
+</div>
+
+<div class="flashcard" data-id="103.7-fc-016">
+<div class="flashcard-front">
+
+**P:** Dado el comando `grep -E "^[0-9]{3}-[0-9]{4}$" datos.txt`, que tipo de lineas encontrara?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) Lineas formadas exactamente por un patron de 3 digitos, un guion y 4 digitos. El patron se descompone asi: `^` = inicio de linea, `[0-9]{3}` = exactamente 3 digitos, `-` = un guion literal, `[0-9]{4}` = exactamente 4 digitos, `$` = fin de linea. Al usar `^` y `$` juntos, se requiere que toda la linea coincida exactamente con el patron (por ejemplo "123-4567"). Sin las anclas `^` y `$`, el patron coincidiria con lineas que contienen ese formato en cualquier posicion.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.7">
+</div>
+
+<div class="flashcard" data-id="103.7-fc-017">
+<div class="flashcard-front">
+
+**P:** Cual de los siguientes comandos muestra las 3 lineas que siguen despues de cada coincidencia de "ERROR" en el archivo `log.txt`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) `grep -A 3 "ERROR" log.txt`. La opcion `-A N` (After) muestra N lineas despues de cada coincidencia. La opcion `-B N` (Before) muestra N lineas antes de cada coincidencia. La opcion `-C N` (Context) muestra N lineas antes Y despues. La opcion `-n` muestra numeros de linea, no tiene relacion con el contexto. Por lo tanto, para ver solo las 3 lineas posteriores a cada "ERROR", se usa `-A 3`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.7">
+</div>
+
+<div class="flashcard" data-id="103.7-fc-018">
+<div class="flashcard-front">
+
+**P:** En BRE (expresiones regulares basicas), como se expresa "una o mas repeticiones" de la letra "a"?
+
+</div>
+<div class="flashcard-back">
+
+**R:** d) `a\+`. En BRE, los caracteres `+`, `?`, `{`, `}`, `(`, `)` y `|` son literales por defecto y necesitan ser escapados con `\` para funcionar como metacaracteres. Por lo tanto, "una o mas repeticiones de a" se escribe como `a\+` en BRE. En ERE (grep -E o egrep), el mismo patron se escribe simplemente como `a+`. La opcion `a` seria correcta en ERE pero no en BRE. La opcion `b` (`a*`) significa "cero o mas repeticiones", no "una o mas".
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.7">
+</div>
+
+<div class="flashcard" data-id="103.7-fc-019">
+<div class="flashcard-front">
+
+**P:** Escribe el comando grep para buscar todas las lineas que empiezan con el caracter `#` en el archivo `/etc/fstab`. <input type="text" class="fill-blank" data-answer="grep '^#' /etc/fstab" data-alt="grep \"^#\" /etc/fstab" placeholder="$ escribe aqui...">
+
+</div>
+<div class="flashcard-back">
+
+**R:** grep '^#' /etc/fstab. El patron `^#` usa el ancla `^` para indicar inicio de linea seguido del caracter literal `#`. Esto coincide con todas las lineas que son comentarios en el archivo `/etc/fstab`. Las comillas simples protegen el patron de la interpretacion del shell. Para ver las lineas que NO son comentarios se usaria `grep -v '^#' /etc/fstab`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.7">
+</div>
+
+<div class="flashcard" data-id="103.7-fc-020">
+<div class="flashcard-front">
+
+**P:** Escribe el comando sed que elimina todas las lineas en blanco del archivo `config.txt` (sin modificar el archivo original, solo mostrar el resultado). <input type="text" class="fill-blank" data-answer="sed '/^$/d' config.txt" data-alt="" placeholder="$ escribe aqui...">
+
+</div>
+<div class="flashcard-back">
+
+**R:** sed '/^$/d' config.txt. En `sed`, la sintaxis `/patron/d` elimina las lineas que coinciden con el patron. `^$` es una expresion regular que coincide con lineas vacias (inicio de linea seguido inmediatamente por fin de linea). Sin la opcion `-i`, `sed` muestra el resultado en pantalla sin modificar el archivo original. Para modificar el archivo directamente se usaria `sed -i '/^$/d' config.txt`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.7">
+</div>
+
+<div class="flashcard" data-id="103.7-fc-021">
+<div class="flashcard-front">
+
+**P:** Escribe el comando grep que cuenta cuantas lineas contienen la palabra "root" en el archivo `/etc/passwd`. <input type="text" class="fill-blank" data-answer="grep -c 'root' /etc/passwd" data-alt="grep -c \"root\" /etc/passwd,grep -c root /etc/passwd" placeholder="$ escribe aqui...">
+
+</div>
+<div class="flashcard-back">
+
+**R:** grep -c 'root' /etc/passwd. La opcion `-c` de `grep` cuenta el numero de lineas que coinciden con el patron, sin mostrar las lineas en si. Solo muestra un numero como resultado. Es diferente de `grep "root" /etc/passwd | wc -l`, aunque ambos producen el mismo resultado. La opcion `-c` es mas eficiente porque no necesita pasar la salida a otro comando.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.7">
+</div>
+
+<div class="flashcard" data-id="103.7-fc-022">
+<div class="flashcard-front">
+
+**P:** Escribe el comando grep que busca la palabra "error" ignorando mayusculas y minusculas de forma recursiva en el directorio `/var/log`. <input type="text" class="fill-blank" data-answer="grep -ri 'error' /var/log" data-alt="grep -ri \"error\" /var/log,grep -ir 'error' /var/log,grep -ir error /var/log,grep -ri error /var/log" placeholder="$ escribe aqui...">
+
+</div>
+<div class="flashcard-back">
+
+**R:** grep -ri 'error' /var/log. La opcion `-r` (o `-R`) activa la busqueda recursiva en todos los archivos dentro del directorio y sus subdirectorios. La opcion `-i` hace la busqueda case insensitive, coincidiendo con "error", "Error", "ERROR", "eRRoR", etc. Estas opciones se pueden combinar como `-ri` o `-ir`. Este comando es muy util para buscar errores en los logs del sistema.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.7">
+</div>
+
+<div class="flashcard" data-id="103.7-fc-023">
+<div class="flashcard-front">
+
+**P:** Escribe el comando grep con expresiones regulares extendidas que busca lineas que contienen exactamente 3 digitos seguidos en el archivo `datos.txt`. <input type="text" class="fill-blank" data-answer="grep -E '[0-9]{3}' datos.txt" data-alt="grep -E \"[0-9]{3}\" datos.txt" placeholder="$ escribe aqui...">
+
+</div>
+<div class="flashcard-back">
+
+**R:** grep -E '[0-9]{3}' datos.txt. La opcion `-E` activa las expresiones regulares extendidas (ERE), donde `{3}` funciona directamente sin necesidad de escapar con `\`. El patron `[0-9]{3}` busca exactamente 3 digitos consecutivos. En BRE (sin `-E`), el mismo patron se escribiria como `[0-9]\{3\}`. Nota: este patron encontrara lineas que contengan 3 o mas digitos seguidos. Para exactamente 3 se usaria `\b[0-9]{3}\b` con limites de palabra.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.7">
+</div>
+
+<div class="flashcard" data-id="103.7-fc-024">
+<div class="flashcard-front">
+
 **P:** Tip de examen: `egrep` y `fgrep` se consideran comandos obsoletos (deprecated). Se recomienda u...
 
 </div>
@@ -178,7 +448,7 @@ subtema: "103.7"
 <div class="flashcard-deck" data-subtema="103.7">
 </div>
 
-<div class="flashcard" data-id="103.7-fc-010">
+<div class="flashcard" data-id="103.7-fc-025">
 <div class="flashcard-front">
 
 **P:** Tip de examen: `\b` y `\w` funcionan en GNU grep. `\d` puede no funcionar en todas las versione...
@@ -196,7 +466,7 @@ subtema: "103.7"
 <div class="flashcard-deck" data-subtema="103.7">
 </div>
 
-<div class="flashcard" data-id="103.7-fc-011">
+<div class="flashcard" data-id="103.7-fc-026">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `.`?
@@ -214,7 +484,7 @@ subtema: "103.7"
 <div class="flashcard-deck" data-subtema="103.7">
 </div>
 
-<div class="flashcard" data-id="103.7-fc-012">
+<div class="flashcard" data-id="103.7-fc-027">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `*`?
@@ -232,43 +502,7 @@ subtema: "103.7"
 <div class="flashcard-deck" data-subtema="103.7">
 </div>
 
-<div class="flashcard" data-id="103.7-fc-013">
-<div class="flashcard-front">
-
-**P:** Que hace el comando `^`?
-
-</div>
-<div class="flashcard-back">
-
-**R:** Inicio de linea
-
-</div>
-</div>
-
----
-
-<div class="flashcard-deck" data-subtema="103.7">
-</div>
-
-<div class="flashcard" data-id="103.7-fc-014">
-<div class="flashcard-front">
-
-**P:** Que hace el comando `$`?
-
-</div>
-<div class="flashcard-back">
-
-**R:** Fin de linea
-
-</div>
-</div>
-
----
-
-<div class="flashcard-deck" data-subtema="103.7">
-</div>
-
-<div class="flashcard" data-id="103.7-fc-015">
+<div class="flashcard" data-id="103.7-fc-028">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `[]`?
@@ -286,7 +520,43 @@ subtema: "103.7"
 <div class="flashcard-deck" data-subtema="103.7">
 </div>
 
-<div class="flashcard" data-id="103.7-fc-016">
+<div class="flashcard" data-id="103.7-fc-029">
+<div class="flashcard-front">
+
+**P:** Que hace el comando `[^]`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** Clase negada (cualquiera excepto los listados)
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.7">
+</div>
+
+<div class="flashcard" data-id="103.7-fc-030">
+<div class="flashcard-front">
+
+**P:** Que hace el comando `-i`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** Ignorar mayusculas/minusculas (case insensitive)
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.7">
+</div>
+
+<div class="flashcard" data-id="103.7-fc-031">
 <div class="flashcard-front">
 
 **P:** Que es/son 1. Que son las expresiones regulares?
@@ -304,7 +574,7 @@ subtema: "103.7"
 <div class="flashcard-deck" data-subtema="103.7">
 </div>
 
-<div class="flashcard" data-id="103.7-fc-017">
+<div class="flashcard" data-id="103.7-fc-032">
 <div class="flashcard-front">
 
 **P:** Que es/son 7. Clases de caracteres POSIX?
@@ -322,7 +592,7 @@ subtema: "103.7"
 <div class="flashcard-deck" data-subtema="103.7">
 </div>
 
-<div class="flashcard" data-id="103.7-fc-018">
+<div class="flashcard" data-id="103.7-fc-033">
 <div class="flashcard-front">
 
 **P:** Que es/son 8. Secuencias de escape comunes?

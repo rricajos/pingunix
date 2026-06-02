@@ -201,3 +201,273 @@ d) Se evalua `/etc/hosts.allow` primero; si hay coincidencia se permite; si no, 
 El orden de evaluacion de TCP Wrappers es: 1) Se consulta `/etc/hosts.allow`: si hay coincidencia, se permite la conexion y se detiene la evaluacion. 2) Se consulta `/etc/hosts.deny`: si hay coincidencia, se deniega la conexion. 3) Si no hay coincidencia en ninguno de los dos archivos, la conexion se permite por defecto. Por eso la estrategia recomendada es poner `ALL: ALL` en hosts.deny y solo permitir lo necesario en hosts.allow.
 
 </details>
+
+---
+
+### Pregunta 11
+
+En TCP Wrappers, que regla en `/etc/hosts.allow` permite el acceso SSH desde toda la red 192.168.1.0/24 excepto la IP 192.168.1.50?
+
+a) `sshd: 192.168.1.0/24 NOT 192.168.1.50`
+b) `sshd: 192.168.1.0/24 EXCEPT 192.168.1.50`
+c) `sshd: 192.168.1.0/24 DENY 192.168.1.50`
+d) `sshd: 192.168.1.0/24 EXCLUDE 192.168.1.50`
+
+<details><summary>Respuesta</summary>
+
+**b) `sshd: 192.168.1.0/24 EXCEPT 192.168.1.50`**
+
+El comodin `EXCEPT` en TCP Wrappers permite crear excepciones dentro de una regla. La regla `sshd: 192.168.1.0/24 EXCEPT 192.168.1.50` permite el acceso SSH desde toda la red 192.168.1.0/24 excepto la IP 192.168.1.50. Otros comodines disponibles: `ALL` (todos), `LOCAL` (hosts locales sin punto en el nombre), `KNOWN` (hosts resolubles), `UNKNOWN` (hosts no resolubles), `PARANOID` (DNS directo e inverso no coinciden).
+
+</details>
+
+---
+
+### Pregunta 12
+
+Que comando convierte las contrasenas del sistema al formato shadow (moviendo los hashes de `/etc/passwd` a `/etc/shadow`)?
+
+a) `shadowconv`
+b) `pwconv`
+c) `shadow-enable`
+d) `passwd --shadow`
+
+<details><summary>Respuesta</summary>
+
+**b) `pwconv`**
+
+El comando `pwconv` convierte el sistema a shadow passwords, moviendo los hashes de contrasenas de `/etc/passwd` a `/etc/shadow`. El comando inverso es `pwunconv` que revierte el proceso. Para las contrasenas de grupo, `grpconv` crea `/etc/gshadow` y `grpunconv` lo revierte. En la mayoria de distribuciones modernas, shadow passwords ya estan habilitadas por defecto. El campo de contrasena en `/etc/passwd` muestra una `x` indicando que el hash esta en `/etc/shadow`.
+
+</details>
+
+---
+
+### Pregunta 13
+
+Que indica un campo de contrasena vacio (sin contenido) en `/etc/shadow` para un usuario?
+
+a) La cuenta esta bloqueada
+b) La cuenta no tiene contrasena (login sin contrasena permitido)
+c) La contrasena esta cifrada con un algoritmo desconocido
+d) La cuenta ha expirado
+
+<details><summary>Respuesta</summary>
+
+**b) La cuenta no tiene contrasena (login sin contrasena permitido)**
+
+Un campo de contrasena vacio en `/etc/shadow` significa que el usuario puede iniciar sesion sin introducir contrasena, lo cual es un riesgo de seguridad grave. El valor `!` o `!!` indica cuenta bloqueada. El valor `*` indica login deshabilitado (tipico de cuentas del sistema). Un hash que comienza con `$6$` indica SHA-512, `$5$` SHA-256 y `$1$` MD5 (inseguro).
+
+</details>
+
+---
+
+### Pregunta 14
+
+Que configuracion de `/etc/xinetd.d/` controla desde que direcciones se puede acceder a un servicio?
+
+a) `allow_from`
+b) `only_from`
+c) `accept_from`
+d) `source_allow`
+
+<details><summary>Respuesta</summary>
+
+**b) `only_from`**
+
+La directiva `only_from` en los archivos de configuracion de xinetd (`/etc/xinetd.d/`) especifica desde que direcciones IP o redes se permite acceder al servicio. Por ejemplo, `only_from = 192.168.1.0/24` permite el acceso solo desde esa red. La directiva complementaria `no_access` especifica direcciones denegadas. `access_times` controla el horario de acceso. xinetd ofrece estas ventajas de control de acceso granular sobre inetd.
+
+</details>
+
+---
+
+### Pregunta 15
+
+Que sucede si `/etc/securetty` existe pero esta vacio?
+
+a) Root puede hacer login desde cualquier TTY
+b) Root no puede hacer login desde ninguna TTY directamente
+c) Se genera un error y el sistema no arranca
+d) Solo afecta a las conexiones SSH
+
+<details><summary>Respuesta</summary>
+
+**b) Root no puede hacer login desde ninguna TTY directamente**
+
+Si `/etc/securetty` existe pero esta vacio, root no puede hacer login directo desde ninguna terminal TTY, ya que no hay terminales listadas como seguras. Este archivo solo controla el login directo de root en consola; no afecta al acceso via SSH (controlado por `PermitRootLogin` en `/etc/ssh/sshd_config`) ni a `su` o `sudo`. Para permitir el login de root solo en tty1, se anade la linea `tty1` al archivo.
+
+</details>
+
+---
+
+### Pregunta 16
+
+En inetd, como se deshabilita un servicio configurado en `/etc/inetd.conf`?
+
+a) Cambiando `disable = yes` en la linea del servicio
+b) Comentando la linea del servicio con `#`
+c) Eliminando el archivo del servicio de `/etc/inetd.d/`
+d) Ejecutando `inetctl disable servicio`
+
+<details><summary>Respuesta</summary>
+
+**b) Comentando la linea del servicio con `#`**
+
+En inetd, para deshabilitar un servicio se comenta su linea en `/etc/inetd.conf` anadiendo `#` al inicio. Despues se debe reiniciar inetd para que los cambios surtan efecto. Esto contrasta con xinetd, donde cada servicio tiene su propio archivo en `/etc/xinetd.d/` y se deshabilita cambiando `disable = no` a `disable = yes`. xinetd es el reemplazo mas moderno y flexible de inetd, con mejor control de acceso y logging.
+
+</details>
+
+---
+
+### Pregunta 17
+
+Que comando bloquea completamente un servicio impidiendo que pueda iniciarse de cualquier forma, incluso manualmente?
+
+a) `systemctl disable servicio`
+b) `systemctl stop servicio`
+c) `systemctl mask servicio`
+d) `systemctl kill servicio`
+
+<details><summary>Respuesta</summary>
+
+**c) `systemctl mask servicio`**
+
+`systemctl mask servicio` crea un enlace simbolico del archivo de unidad del servicio hacia `/dev/null`, lo que impide que el servicio se inicie de cualquier forma: ni manualmente con `systemctl start`, ni automaticamente al arrancar, ni como dependencia de otros servicios. `systemctl disable` solo evita el inicio automatico pero permite el inicio manual. Para revertir el enmascaramiento se usa `systemctl unmask servicio`.
+
+</details>
+
+---
+
+### Pregunta 18
+
+Cuales son los permisos correctos del archivo `/etc/shadow`?
+
+a) 644 (legible por todos)
+b) 755 (ejecutable por todos)
+c) 640 o 000 (solo legible por root)
+d) 600 (lectura y escritura solo para el propietario)
+
+<details><summary>Respuesta</summary>
+
+**c) 640 o 000 (solo legible por root)**
+
+El archivo `/etc/shadow` contiene los hashes de las contrasenas y debe tener permisos 640 (legible por root y el grupo shadow) o 000 (solo root). Esto contrasta con `/etc/passwd` que tiene permisos 644 (legible por todos) ya que no contiene contrasenas (muestra `x` en su lugar). La seguridad de shadow passwords depende de que `/etc/shadow` sea inaccesible para usuarios normales.
+
+</details>
+
+---
+
+### Pregunta 19
+
+Que comodin en TCP Wrappers representa a hosts cuyo DNS directo e inverso no coinciden?
+
+a) `UNKNOWN`
+b) `KNOWN`
+c) `PARANOID`
+d) `LOCAL`
+
+<details><summary>Respuesta</summary>
+
+**c) `PARANOID`**
+
+El comodin `PARANOID` en TCP Wrappers identifica hosts cuya resolucion DNS directa (nombre a IP) e inversa (IP a nombre) no coinciden, lo que puede indicar un intento de suplantacion de identidad. `UNKNOWN` identifica hosts que no se pueden resolver. `KNOWN` identifica hosts resolubles. `LOCAL` identifica hosts sin punto en el nombre (hosts locales). Se pueden usar en reglas como `ALL: PARANOID` en hosts.deny para denegar conexiones sospechosas.
+
+</details>
+
+---
+
+### Pregunta 20
+
+Que ventaja tiene xinetd sobre inetd clasico?
+
+a) xinetd es mas rapido porque no usa archivos de configuracion
+b) xinetd permite control de acceso por servicio, limites de conexion y control horario
+c) xinetd solo funciona con servicios TCP, no UDP
+d) xinetd no requiere reiniciar el demonio al cambiar la configuracion
+
+<details><summary>Respuesta</summary>
+
+**b) xinetd permite control de acceso por servicio, limites de conexion y control horario**
+
+xinetd (Extended Internet daemon) ofrece varias ventajas sobre inetd: control de acceso por servicio (directivas `only_from`, `no_access`), limites de conexiones simultaneas, control horario (`access_times`), mejor registro de logs, y un archivo de configuracion separado por servicio en `/etc/xinetd.d/`. inetd usa un unico archivo `/etc/inetd.conf` y carece de estas funcionalidades de control granular.
+
+</details>
+
+---
+
+### Pregunta 21
+
+Que comando lista todos los servicios activos en un sistema con systemd?
+
+<input type="text" class="fill-blank" data-answer="systemctl list-units --type=service --state=running" data-alt="systemctl list-units --type=service" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**systemctl list-units --type=service --state=running**
+
+El comando `systemctl list-units --type=service --state=running` lista todos los servicios que estan actualmente en ejecucion en el sistema. Esto es fundamental para la seguridad, ya que solo deben estar activos los servicios estrictamente necesarios. Cada servicio en ejecucion representa una potencial superficie de ataque. Para detener y deshabilitar un servicio innecesario: `systemctl stop servicio && systemctl disable servicio`.
+
+</details>
+
+---
+
+### Pregunta 22
+
+Que comando convierte las contrasenas del formato shadow de vuelta a `/etc/passwd`?
+
+<input type="text" class="fill-blank" data-answer="pwunconv" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**pwunconv**
+
+El comando `pwunconv` revierte shadow passwords, moviendo los hashes de contrasenas de vuelta a `/etc/passwd` y eliminando `/etc/shadow`. Esto no es recomendable por seguridad, ya que `/etc/passwd` es legible por todos los usuarios. El comando complementario `pwconv` activa shadow passwords. Para grupos existen los equivalentes `grpconv` y `grpunconv` que gestionan `/etc/gshadow`.
+
+</details>
+
+---
+
+### Pregunta 23
+
+Que comando de systemd impide que un servicio llamado `cups` se inicie de cualquier forma?
+
+<input type="text" class="fill-blank" data-answer="systemctl mask cups" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**systemctl mask cups**
+
+El comando `systemctl mask cups` enmascara el servicio cups (sistema de impresion) creando un enlace simbolico hacia `/dev/null`. Esto impide que el servicio se inicie manualmente, automaticamente o como dependencia. Es la forma mas restrictiva de deshabilitar un servicio. Para revertir: `systemctl unmask cups`. Para solo evitar el inicio automatico sin bloquear el manual: `systemctl disable cups`.
+
+</details>
+
+---
+
+### Pregunta 24
+
+Que linea se debe anadir en `/etc/hosts.deny` para implementar una politica restrictiva que deniegue todo el acceso por defecto?
+
+<input type="text" class="fill-blank" data-answer="ALL: ALL" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**ALL: ALL**
+
+La regla `ALL: ALL` en `/etc/hosts.deny` deniega el acceso a todos los servicios desde todos los hosts. Esta es la base de una politica restrictiva (deny by default) donde luego se permiten solo las conexiones necesarias en `/etc/hosts.allow`. El primer `ALL` se refiere a todos los servicios protegidos por TCP Wrappers y el segundo `ALL` a todos los hosts de origen. Las excepciones se definen en `/etc/hosts.allow`.
+
+</details>
+
+---
+
+### Pregunta 25
+
+Que archivo se puede crear para bloquear temporalmente el login de todos los usuarios excepto root durante un mantenimiento?
+
+<input type="text" class="fill-blank" data-answer="/etc/nologin" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**/etc/nologin**
+
+Crear el archivo `/etc/nologin` bloquea el login de todos los usuarios normales del sistema; solo root puede iniciar sesion. El contenido del archivo se muestra como mensaje a los usuarios que intenten conectarse. Es verificado por el modulo PAM `pam_nologin`. Para restaurar el acceso tras el mantenimiento, simplemente se elimina el archivo con `rm /etc/nologin`. No confundir con `/usr/sbin/nologin`, que es un shell asignado a cuentas de servicio individuales.
+
+</details>

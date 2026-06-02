@@ -164,3 +164,228 @@ d) `replication_network`
 
 `cluster_network` define la red dedicada al trafico interno de replicacion, recovery y heartbeat entre OSDs. `public_network` es la red para trafico de clientes. Separar estas redes mejora el rendimiento.
 </details>
+
+### Pregunta 11
+
+¿Que comando de Ceph permite crear una imagen RBD de 10 GB llamada "disco1" en el pool "mi_pool"?
+
+a) `ceph rbd create disco1 --size 10G --pool mi_pool`
+b) `rbd create disco1 --size 10G --pool mi_pool`
+c) `rados create disco1 --size 10G mi_pool`
+d) `ceph osd create rbd disco1 10G mi_pool`
+
+<details><summary>Respuesta</summary>
+
+**b) `rbd create disco1 --size 10G --pool mi_pool`**
+
+El comando `rbd create` crea una nueva imagen de bloque en un pool de Ceph. Se especifica el nombre de la imagen, su tamaño con `--size` y el pool destino con `--pool`. Despues se puede mapear con `rbd map`.
+</details>
+
+### Pregunta 12
+
+¿Que formula se usa para calcular el numero recomendado de Placement Groups (PGs) para un pool?
+
+a) (OSDs * 50) / replicas
+b) (OSDs * 100) / replicas, redondeado a potencia de 2
+c) OSDs * replicas * 10
+d) (OSDs / replicas) * 256
+
+<details><summary>Respuesta</summary>
+
+**b) (OSDs * 100) / replicas, redondeado a potencia de 2**
+
+La formula recomendada es (numero_de_OSDs * 100) / numero_de_replicas, redondeado a la potencia de 2 mas cercana. Por ejemplo, con 10 OSDs y 3 replicas: (10 * 100) / 3 ≈ 333, redondeado a 256 PGs.
+</details>
+
+### Pregunta 13
+
+¿Que estado de un PG indica que esta funcionando pero no tiene todas las replicas disponibles?
+
+a) `active+clean`
+b) `active+degraded`
+c) `peering`
+d) `stale`
+
+<details><summary>Respuesta</summary>
+
+**b) `active+degraded`**
+
+El estado `active+degraded` significa que el PG esta sirviendo peticiones (active) pero no tiene el numero completo de replicas (degraded). Esto ocurre cuando un OSD falla y Ceph aun no ha terminado de replicar los datos en otro OSD.
+</details>
+
+### Pregunta 14
+
+¿Que protocolo de autenticacion usa Ceph por defecto para asegurar la comunicacion entre componentes?
+
+a) Kerberos
+b) TLS/SSL
+c) cephx
+d) LDAP
+
+<details><summary>Respuesta</summary>
+
+**c) cephx**
+
+Cephx es el protocolo de autenticacion nativo de Ceph, similar conceptualmente a Kerberos. Se configura en `ceph.conf` con las directivas `auth_cluster_required`, `auth_service_required` y `auth_client_required`.
+</details>
+
+### Pregunta 15
+
+¿Que comando bootstrap inicia un nuevo cluster Ceph con cephadm especificando la IP del primer monitor?
+
+a) `cephadm init --mon-ip 192.168.1.10`
+b) `cephadm bootstrap --mon-ip 192.168.1.10`
+c) `ceph-deploy new 192.168.1.10`
+d) `cephadm create-cluster --ip 192.168.1.10`
+
+<details><summary>Respuesta</summary>
+
+**b) `cephadm bootstrap --mon-ip 192.168.1.10`**
+
+`cephadm bootstrap` inicializa un nuevo cluster Ceph en el primer nodo. Crea el primer monitor, el primer manager y configura los contenedores necesarios. La opcion `--mon-ip` especifica la IP del primer monitor.
+</details>
+
+### Pregunta 16
+
+¿Que comando elimina un pool en Ceph, requiriendo doble confirmacion del nombre?
+
+a) `ceph osd pool remove mi_pool`
+b) `ceph osd pool delete mi_pool mi_pool --yes-i-really-really-mean-it`
+c) `ceph osd pool destroy mi_pool --force`
+d) `rados pool delete mi_pool --confirm`
+
+<details><summary>Respuesta</summary>
+
+**b) `ceph osd pool delete mi_pool mi_pool --yes-i-really-really-mean-it`**
+
+Ceph requiere escribir el nombre del pool dos veces y la confirmacion `--yes-i-really-really-mean-it` para evitar eliminaciones accidentales. Esta medida de seguridad protege contra la perdida inadvertida de datos.
+</details>
+
+### Pregunta 17
+
+¿Que comando de Ceph añade un nuevo host al cluster mediante el orquestador?
+
+a) `ceph host add nodo2 192.168.1.11`
+b) `ceph orch host add nodo2 192.168.1.11`
+c) `cephadm add-host nodo2 192.168.1.11`
+d) `ceph node add nodo2 --ip 192.168.1.11`
+
+<details><summary>Respuesta</summary>
+
+**b) `ceph orch host add nodo2 192.168.1.11`**
+
+`ceph orch host add` utiliza el orquestador de Ceph para añadir un nuevo host al cluster. El orquestador (cephadm) se encarga de desplegar los daemons necesarios en el nuevo nodo via SSH.
+</details>
+
+### Pregunta 18
+
+¿Que dos pools son necesarios para crear un sistema de archivos CephFS?
+
+a) Un pool de datos y un pool de objetos
+b) Un pool de datos y un pool de metadatos
+c) Un pool primario y un pool secundario
+d) Un pool de bloques y un pool de cache
+
+<details><summary>Respuesta</summary>
+
+**b) Un pool de datos y un pool de metadatos**
+
+CephFS requiere dos pools: uno para almacenar los datos de los archivos y otro para los metadatos (estructura de directorios, permisos, etc.). Se crean con `ceph osd pool create` y se asocian con `ceph fs new`.
+</details>
+
+### Pregunta 19
+
+¿Que comando mapea una imagen RBD como dispositivo de bloque local?
+
+a) `rbd attach mi_pool/mi_disco`
+b) `rbd map mi_pool/mi_disco`
+c) `rbd mount mi_pool/mi_disco`
+d) `rbd connect mi_pool/mi_disco`
+
+<details><summary>Respuesta</summary>
+
+**b) `rbd map mi_pool/mi_disco`**
+
+`rbd map` mapea una imagen RBD como un dispositivo de bloque local (por ejemplo `/dev/rbd0`). Una vez mapeado, se puede crear un sistema de archivos y montar el dispositivo como cualquier disco normal.
+</details>
+
+### Pregunta 20
+
+¿Que comando permite crear un snapshot de una imagen RBD llamada "mi_disco" en el pool "mi_pool" con el nombre "snap1"?
+
+a) `rbd snapshot create mi_pool/mi_disco@snap1`
+b) `rbd snap create mi_pool/mi_disco@snap1`
+c) `ceph rbd snap mi_pool/mi_disco --name snap1`
+d) `rados snap create mi_pool/mi_disco snap1`
+
+<details><summary>Respuesta</summary>
+
+**b) `rbd snap create mi_pool/mi_disco@snap1`**
+
+`rbd snap create` crea un snapshot de una imagen RBD. La sintaxis usa `@` para separar el nombre de la imagen del nombre del snapshot. Los snapshots son copy-on-write y ocupan espacio solo por los bloques que cambian.
+</details>
+
+### Pregunta 21
+
+Escribe el comando para ver el estado general del cluster Ceph en su forma corta.
+
+<input type="text" class="fill-blank" data-answer="ceph -s" data-alt="ceph status" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**ceph -s**
+
+`ceph -s` (o `ceph status`) muestra un resumen del estado del cluster incluyendo la salud, el estado de los monitores, OSDs, pools, PGs y el uso de almacenamiento. Es el primer comando para diagnosticar problemas.
+</details>
+
+### Pregunta 22
+
+Escribe el comando para crear un pool replicado llamado "mi_pool" con 128 placement groups en Ceph.
+
+<input type="text" class="fill-blank" data-answer="ceph osd pool create mi_pool 128 128 replicated" data-alt="ceph osd pool create mi_pool 128" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**ceph osd pool create mi_pool 128 128 replicated**
+
+`ceph osd pool create` crea un nuevo pool especificando el nombre, el numero de PGs, el numero de PGs para placement y el tipo (replicated o erasure). El tipo `replicated` es el predeterminado.
+</details>
+
+### Pregunta 23
+
+Escribe el comando para marcar el OSD numero 2 como fuera de servicio en Ceph.
+
+<input type="text" class="fill-blank" data-answer="ceph osd out osd.2" data-alt="ceph osd out 2" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**ceph osd out osd.2**
+
+`ceph osd out` marca un OSD como fuera del cluster, lo que provoca que CRUSH redistribuya los datos de ese OSD a otros. Se usa antes de retirar un disco del cluster. Para reintegrarlo se usa `ceph osd in osd.2`.
+</details>
+
+### Pregunta 24
+
+Escribe el comando para crear un sistema de archivos CephFS llamado "mi_cephfs" usando el pool de metadatos "cephfs_metadata" y el pool de datos "cephfs_data".
+
+<input type="text" class="fill-blank" data-answer="ceph fs new mi_cephfs cephfs_metadata cephfs_data" data-alt="ceph fs new mi_cephfs cephfs_metadata cephfs_data" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**ceph fs new mi_cephfs cephfs_metadata cephfs_data**
+
+`ceph fs new` crea un sistema de archivos CephFS asociando un pool de metadatos y un pool de datos. El pool de metadatos se especifica primero, seguido del pool de datos. Requiere al menos un MDS activo.
+</details>
+
+### Pregunta 25
+
+Escribe el comando para crear un usuario RGW con uid "miusuario" y nombre visible "Mi Usuario" en Ceph.
+
+<input type="text" class="fill-blank" data-answer="radosgw-admin user create --uid=miusuario --display-name=\"Mi Usuario\"" data-alt="radosgw-admin user create --uid miusuario --display-name \"Mi Usuario\"" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**radosgw-admin user create --uid=miusuario --display-name="Mi Usuario"**
+
+`radosgw-admin user create` crea un usuario para el RADOS Gateway. El comando genera automaticamente las claves de acceso (access key y secret key) necesarias para autenticarse con las APIs S3 o Swift.
+</details>

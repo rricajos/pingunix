@@ -166,3 +166,228 @@ d) No hay diferencia, son herramientas intercambiables
 
 Terraform es principalmente para provisionar infraestructura (crear y gestionar recursos cloud como VMs, redes, balanceadores). Ansible es principalmente para configurar sistemas (instalar paquetes, copiar archivos, gestionar servicios). Son complementarias: Terraform crea la infraestructura y Ansible la configura.
 </details>
+
+### Pregunta 11
+
+¿Qué comando de Terraform importa un recurso de infraestructura existente al archivo de estado?
+
+a) `terraform add`
+b) `terraform import`
+c) `terraform state add`
+d) `terraform include`
+
+<details><summary>Respuesta</summary>
+
+**b) `terraform import`**
+
+`terraform import aws_instance.web i-1234567890abcdef0` importa un recurso existente en la infraestructura al estado de Terraform. Es necesario definir primero el bloque `resource` en la configuración HCL. Terraform entonces asocia el recurso real con la configuración declarada.
+</details>
+
+### Pregunta 12
+
+¿Qué componente de Ansible se ejecuta cuando es notificado por un cambio en una tarea?
+
+a) Role
+b) Task
+c) Handler
+d) Callback
+
+<details><summary>Respuesta</summary>
+
+**c) Handler**
+
+Un handler es una tarea especial que solo se ejecuta cuando es notificada por otra tarea mediante la directiva `notify`. Se ejecuta una sola vez al final del play, aunque sea notificado múltiples veces. Es comúnmente usado para reiniciar servicios tras cambios de configuración.
+</details>
+
+### Pregunta 13
+
+¿Qué comando de Terraform elimina un recurso del archivo de estado sin destruirlo en la infraestructura real?
+
+a) `terraform destroy`
+b) `terraform state rm`
+c) `terraform remove`
+d) `terraform detach`
+
+<details><summary>Respuesta</summary>
+
+**b) `terraform state rm`**
+
+`terraform state rm aws_instance.web` elimina un recurso del archivo de estado sin afectar al recurso real en la infraestructura. Después de esto, Terraform ya no gestiona ese recurso. Es útil cuando se quiere dejar de gestionar un recurso con Terraform sin destruirlo.
+</details>
+
+### Pregunta 14
+
+¿Qué lenguaje utiliza Terraform para definir la infraestructura?
+
+a) YAML
+b) JSON exclusivamente
+c) HCL (HashiCorp Configuration Language)
+d) Python
+
+<details><summary>Respuesta</summary>
+
+**c) HCL (HashiCorp Configuration Language)**
+
+Terraform utiliza HCL (HashiCorp Configuration Language) como lenguaje declarativo para definir infraestructura. HCL es legible, soporta variables, módulos y funciones. Aunque Terraform también acepta JSON como formato alternativo, HCL es el formato recomendado y más utilizado.
+</details>
+
+### Pregunta 15
+
+¿Qué concepto de Terraform permite reutilizar conjuntos de recursos como bloques de construcción?
+
+a) Provider
+b) Module
+c) Data Source
+d) Workspace
+
+<details><summary>Respuesta</summary>
+
+**b) Module**
+
+Los módulos de Terraform son contenedores reutilizables de recursos que pueden compartirse y versionarse. Pueden ser módulos locales (subdirectorios) o remotos (Terraform Registry, Git). Se invocan con el bloque `module { source = "..." }` y aceptan variables de entrada.
+</details>
+
+### Pregunta 16
+
+¿Qué directiva de un playbook de Ansible permite ejecutar tareas con privilegios de root?
+
+a) `sudo: yes`
+b) `become: yes`
+c) `root: true`
+d) `privilege: escalated`
+
+<details><summary>Respuesta</summary>
+
+**b) `become: yes`**
+
+`become: yes` en un playbook de Ansible habilita la escalación de privilegios (por defecto usando sudo). Reemplazó a la antigua directiva `sudo: yes`. Se puede personalizar con `become_method` (sudo, su, doas) y `become_user` (usuario al que escalar).
+</details>
+
+### Pregunta 17
+
+¿Qué herramienta de IaC de AWS permite definir infraestructura con templates declarativos nativos?
+
+a) Terraform
+b) Pulumi
+c) CloudFormation
+d) Ansible
+
+<details><summary>Respuesta</summary>
+
+**c) CloudFormation**
+
+AWS CloudFormation es el servicio nativo de IaC de Amazon Web Services. Permite definir infraestructura AWS en templates declarativos (YAML o JSON). Los recursos se agrupan en "stacks" que se crean, actualizan y eliminan como una unidad.
+</details>
+
+### Pregunta 18
+
+¿Qué ventaja tiene Pulumi sobre Terraform en cuanto a la definición de infraestructura?
+
+a) Es más rápido en la ejecución
+b) Permite definir infraestructura usando lenguajes de programación reales como Python, TypeScript o Go
+c) Soporta más proveedores cloud
+d) No requiere archivo de estado
+
+<details><summary>Respuesta</summary>
+
+**b) Permite definir infraestructura usando lenguajes de programación reales como Python, TypeScript o Go**
+
+Pulumi permite usar lenguajes de programación completos (Python, TypeScript, Go, C#, Java) en lugar de un DSL específico como HCL. Esto permite usar lógica condicional, bucles, funciones y todo el ecosistema del lenguaje elegido para definir la infraestructura.
+</details>
+
+### Pregunta 19
+
+¿Qué comando de Ansible ejecuta un módulo ad-hoc en todos los hosts del inventario?
+
+a) `ansible-playbook all -m ping`
+b) `ansible all -m ping`
+c) `ansible --module ping all`
+d) `ansible-run all ping`
+
+<details><summary>Respuesta</summary>
+
+**b) `ansible all -m ping`**
+
+`ansible all -m ping` ejecuta el módulo `ping` en todos los hosts del inventario de forma ad-hoc (sin playbook). `all` se refiere a todos los hosts, `-m` especifica el módulo. Los comandos ad-hoc son útiles para tareas rápidas sin necesidad de crear un playbook completo.
+</details>
+
+### Pregunta 20
+
+¿Qué comando de Terraform formatea los archivos de configuración HCL para que sigan el estilo canónico?
+
+a) `terraform lint`
+b) `terraform fmt`
+c) `terraform style`
+d) `terraform format`
+
+<details><summary>Respuesta</summary>
+
+**b) `terraform fmt`**
+
+`terraform fmt` reformatea los archivos HCL para que sigan el estilo canónico de HashiCorp (indentación consistente, alineación de `=`, etc.). Es similar a `gofmt` para Go. Se recomienda ejecutarlo antes de commits para mantener un estilo consistente en el equipo.
+</details>
+
+### Pregunta 21
+
+Escribe el comando de Terraform para destruir toda la infraestructura gestionada.
+
+<input type="text" class="fill-blank" data-answer="terraform destroy" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**terraform destroy**
+
+`terraform destroy` planifica y ejecuta la destrucción de todos los recursos gestionados en el archivo de estado. Solicita confirmación antes de proceder. Se puede añadir `-auto-approve` para omitir la confirmación interactiva. También se puede destruir un recurso específico con `-target`.
+</details>
+
+### Pregunta 22
+
+Escribe el comando de Terraform para listar todos los recursos gestionados en el archivo de estado.
+
+<input type="text" class="fill-blank" data-answer="terraform state list" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**terraform state list**
+
+`terraform state list` muestra todos los recursos que Terraform está gestionando actualmente, listando sus direcciones (como `aws_instance.web`, `aws_vpc.main`). Es útil para verificar qué recursos están bajo control de Terraform y para operaciones de mantenimiento del estado.
+</details>
+
+### Pregunta 23
+
+Escribe el comando de Ansible para ejecutar el playbook `site.yml` usando el archivo de inventario `inventario.ini`.
+
+<input type="text" class="fill-blank" data-answer="ansible-playbook -i inventario.ini site.yml" data-alt="ansible-playbook site.yml -i inventario.ini" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**ansible-playbook -i inventario.ini site.yml**
+
+`ansible-playbook` ejecuta un playbook de Ansible. `-i` especifica el archivo de inventario con los hosts a gestionar. Si no se especifica `-i`, Ansible usa el inventario por defecto definido en `/etc/ansible/hosts` o en el archivo de configuración `ansible.cfg`.
+</details>
+
+### Pregunta 24
+
+Escribe el comando de OpenStack CLI para crear un servidor llamado `mi-servidor` con flavor `m1.small` e imagen `ubuntu-22.04`.
+
+<input type="text" class="fill-blank" data-answer="openstack server create --flavor m1.small --image ubuntu-22.04 mi-servidor" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**openstack server create --flavor m1.small --image ubuntu-22.04 mi-servidor**
+
+`openstack server create` crea una nueva instancia (servidor virtual) en OpenStack. `--flavor` define el tipo de instancia (CPU, RAM, disco), `--image` la imagen del SO a usar. Se pueden añadir opciones como `--network`, `--key-name` y `--security-group`.
+</details>
+
+### Pregunta 25
+
+Escribe el comando de Terraform para validar que la configuración HCL es sintácticamente correcta.
+
+<input type="text" class="fill-blank" data-answer="terraform validate" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**terraform validate**
+
+`terraform validate` verifica que la configuración es sintácticamente válida y coherente internamente (referencias correctas, tipos de datos válidos, etc.). Requiere que `terraform init` se haya ejecutado previamente. No accede a la API del proveedor ni al estado remoto.
+</details>

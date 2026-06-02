@@ -201,3 +201,273 @@ d) Ejecutando `systemctl status wayland`
 La forma mas directa de verificar el tipo de sesion es con `echo $XDG_SESSION_TYPE`, que devuelve `wayland` o `x11`. Otra forma es comprobar si la variable `$WAYLAND_DISPLAY` tiene valor (por ejemplo, `wayland-0`), lo que indica que se usa Wayland. Wayland es un protocolo de display moderno que busca reemplazar a X11, con un compositor integrado y mayor seguridad (aislamiento entre clientes). XWayland permite ejecutar aplicaciones X11 antiguas dentro de sesiones Wayland.
 
 </details>
+
+---
+
+### Pregunta 11
+
+Que comando desactiva completamente la verificacion de acceso al servidor X, permitiendo conexiones desde cualquier host?
+
+a) `xauth +`
+b) `xhost -`
+c) `xhost +`
+d) `xauth disable`
+
+<details><summary>Respuesta</summary>
+
+**c) `xhost +`**
+
+El comando `xhost +` desactiva toda verificacion de acceso al servidor X, permitiendo que cualquier host en la red pueda conectarse y mostrar ventanas en la pantalla local. Esto es extremadamente inseguro y no se recomienda en entornos de produccion, ya que un atacante podria espiar pulsaciones de teclado o capturar el contenido de la pantalla. `xhost -` (con signo menos) reactiva las restricciones de acceso. `xhost +host` permite acceso solo desde un host especifico. El metodo seguro de autenticacion es `xauth`, que usa cookies MIT-MAGIC-COOKIE almacenadas en `~/.Xauthority`.
+
+</details>
+
+---
+
+### Pregunta 12
+
+Que archivo almacena las cookies de autenticacion MIT-MAGIC-COOKIE para el servidor X?
+
+a) `/etc/X11/xorg.conf`
+b) `~/.Xauthority`
+c) `/var/log/Xorg.0.log`
+d) `~/.xsession`
+
+<details><summary>Respuesta</summary>
+
+**b) `~/.Xauthority`**
+
+El archivo `~/.Xauthority` es un archivo binario que almacena las cookies de autenticacion MIT-MAGIC-COOKIE para el servidor X. Cada sesion grafica genera una cookie unica que los clientes X deben presentar para conectarse al servidor. Se gestiona con el comando `xauth`: `xauth list` muestra las cookies actuales, `xauth add` agrega una cookie, y `xauth extract`/`xauth merge` permiten transferir cookies entre hosts. La variable de entorno `$XAUTHORITY` indica la ubicacion de este archivo. Es el metodo seguro de control de acceso al servidor X, superior a `xhost`.
+
+</details>
+
+---
+
+### Pregunta 13
+
+En la jerarquia de configuracion de Xorg, cual tiene la maxima prioridad?
+
+a) `/usr/share/X11/xorg.conf.d/*.conf`
+b) `/etc/X11/xorg.conf.d/*.conf`
+c) `/etc/X11/xorg.conf`
+d) Los valores autodetectados por Xorg
+
+<details><summary>Respuesta</summary>
+
+**c) `/etc/X11/xorg.conf`**
+
+La jerarquia de configuracion de Xorg en orden de prioridad es: (1) `/etc/X11/xorg.conf` tiene maxima prioridad y es la configuracion manual del administrador. (2) `/etc/X11/xorg.conf.d/*.conf` contiene configuraciones parciales del administrador. (3) `/usr/share/X11/xorg.conf.d/*.conf` contiene configuraciones proporcionadas por la distribucion y paquetes del sistema, con menor prioridad. Los valores autodetectados se usan cuando no hay configuracion explicita. En sistemas modernos, Xorg funciona sin `xorg.conf` gracias a la autodeteccion, pero si el archivo existe, sus valores prevalecen.
+
+</details>
+
+---
+
+### Pregunta 14
+
+Que significan los componentes del valor `DISPLAY=192.168.1.10:0.0`?
+
+a) Host 192.168.1.10, puerto 0, sesion 0
+b) Host 192.168.1.10, display numero 0, pantalla numero 0
+c) IP del cliente 192.168.1.10, display del servidor 0, resolucion 0
+d) Servidor 192.168.1.10, proceso X numero 0, ventana 0
+
+<details><summary>Respuesta</summary>
+
+**b) Host 192.168.1.10, display numero 0, pantalla numero 0**
+
+El formato de la variable DISPLAY es `[host]:display[.screen]`. En `192.168.1.10:0.0`: `192.168.1.10` es la direccion IP del servidor X (la maquina donde se encuentra la pantalla fisica), `0` es el numero de display (generalmente 0 para el display principal), y `.0` es el numero de pantalla (screen, tambien generalmente 0). Cuando el host esta vacio (`:0`), se refiere al servidor local. Esta variable es esencial para que los clientes X sepan donde enviar su salida grafica, especialmente en entornos de red o con SSH X forwarding.
+
+</details>
+
+---
+
+### Pregunta 15
+
+Que configuracion del servidor SSH es necesaria para habilitar X forwarding?
+
+a) `AllowTcpForwarding yes` en `/etc/ssh/sshd_config`
+b) `X11Forwarding yes` en `/etc/ssh/sshd_config`
+c) `ForwardX11 yes` en `/etc/ssh/sshd_config`
+d) `PermitX11 yes` en `/etc/ssh/ssh_config`
+
+<details><summary>Respuesta</summary>
+
+**b) `X11Forwarding yes` en `/etc/ssh/sshd_config`**
+
+Para habilitar X forwarding en el lado del servidor SSH, se debe configurar `X11Forwarding yes` en `/etc/ssh/sshd_config`. La directiva `X11DisplayOffset 10` define el numero de display inicial para las sesiones X reenviadas. En el lado del cliente, se puede configurar `ForwardX11 yes` en `/etc/ssh/ssh_config` o `~/.ssh/config`, o usar la opcion `-X` (restringido) o `-Y` (confiable) al conectar. Cuando se usa X forwarding, SSH configura automaticamente la variable DISPLAY y las cookies de xauth.
+
+</details>
+
+---
+
+### Pregunta 16
+
+Que herramienta muestra informacion detallada del servidor X, como resoluciones disponibles, profundidad de color y extensiones soportadas?
+
+a) `xwininfo`
+b) `xdpyinfo`
+c) `xrandr`
+d) `xhost`
+
+<details><summary>Respuesta</summary>
+
+**b) `xdpyinfo`**
+
+`xdpyinfo` (X Display Information) muestra informacion detallada sobre el servidor X en ejecucion: nombre del display, numero de pantallas, resoluciones disponibles, profundidad de color, extensiones soportadas, informacion del vendedor y mas. `xwininfo` muestra informacion sobre una ventana especifica (posicion, tamano, ID). `xrandr` es una herramienta para configurar la resolucion y la disposicion de monitores. `xhost` gestiona el control de acceso al servidor X. `xdpyinfo` es una herramienta de diagnostico util para verificar las capacidades del servidor X.
+
+</details>
+
+---
+
+### Pregunta 17
+
+Que es XWayland y cual es su proposito?
+
+a) Es una version mejorada de Xorg con soporte para Wayland nativo
+b) Es una capa de compatibilidad que permite ejecutar aplicaciones X11 dentro de una sesion Wayland
+c) Es un protocolo de red para transmitir sesiones Wayland remotamente
+d) Es un display manager exclusivo para sesiones Wayland
+
+<details><summary>Respuesta</summary>
+
+**b) Es una capa de compatibilidad que permite ejecutar aplicaciones X11 dentro de una sesion Wayland**
+
+XWayland es una implementacion del servidor X11 que se ejecuta como un cliente Wayland. Su proposito es proporcionar compatibilidad hacia atras, permitiendo que las aplicaciones X11 existentes funcionen dentro de sesiones Wayland sin necesidad de ser reescritas. Cuando una aplicacion X11 necesita ejecutarse en un escritorio Wayland, XWayland actua como intermediario, traduciendo las llamadas del protocolo X11 al protocolo Wayland. Esto permite una transicion gradual de X11 a Wayland sin perder compatibilidad con software antiguo.
+
+</details>
+
+---
+
+### Pregunta 18
+
+Que Display Manager es ligero, independiente de cualquier entorno de escritorio y soporta multiples interfaces (greeters)?
+
+a) GDM
+b) SDDM
+c) LightDM
+d) XDM
+
+<details><summary>Respuesta</summary>
+
+**c) LightDM**
+
+LightDM es un Display Manager ligero e independiente, no vinculado a ningun entorno de escritorio especifico. Su caracteristica distintiva es el soporte para multiples **greeters** (interfaces de inicio de sesion), lo que permite cambiar la apariencia de la pantalla de login sin cambiar el DM. Greeters populares incluyen lightdm-gtk-greeter, lightdm-webkit2-greeter y slick-greeter. GDM esta asociado a GNOME. SDDM esta asociado a KDE Plasma y esta basado en QML. XDM es el DM original de X11, muy basico y sin funcionalidades modernas.
+
+</details>
+
+---
+
+### Pregunta 19
+
+Cual de las siguientes es una ventaja de Wayland sobre X11 en terminos de seguridad?
+
+a) Wayland cifra toda la comunicacion por defecto con TLS
+b) Wayland proporciona aislamiento entre clientes, impidiendo que una aplicacion espie a otra
+c) Wayland requiere autenticacion biometrica para cada aplicacion
+d) Wayland bloquea automaticamente las conexiones de red
+
+<details><summary>Respuesta</summary>
+
+**b) Wayland proporciona aislamiento entre clientes, impidiendo que una aplicacion espie a otra**
+
+Una mejora fundamental de Wayland sobre X11 es el aislamiento entre clientes. En X11, cualquier cliente puede capturar eventos de teclado de otras ventanas o leer el contenido de la pantalla de otras aplicaciones (por ejemplo, un keylogger podria capturar contrasenas escritas en otra ventana). En Wayland, cada cliente solo tiene acceso a su propia ventana y no puede interactuar con las ventanas de otros clientes sin la mediacion del compositor. Esto mejora significativamente la seguridad del escritorio. Sin embargo, Wayland no tiene soporte nativo para red transparente, a diferencia de X11.
+
+</details>
+
+---
+
+### Pregunta 20
+
+Que seccion del archivo `xorg.conf` define la configuracion de la tarjeta grafica (GPU)?
+
+a) `Monitor`
+b) `Screen`
+c) `Device`
+d) `ServerLayout`
+
+<details><summary>Respuesta</summary>
+
+**c) `Device`**
+
+La seccion `Device` en `xorg.conf` configura la tarjeta grafica (GPU), incluyendo el identificador, el driver (por ejemplo, `intel`, `nvidia`, `amdgpu`), el vendor y el BusID PCI. La seccion `Monitor` define las caracteristicas del monitor (frecuencias, modelo). La seccion `Screen` vincula un Monitor con un Device y define la profundidad de color y resoluciones. La seccion `ServerLayout` es la configuracion global que agrupa pantallas (Screen) y dispositivos de entrada (InputDevice). Cada seccion se delimita con `Section "nombre"` y `EndSection`.
+
+</details>
+
+---
+
+### Pregunta 21
+
+Escribe el comando SSH para conectarse al servidor `192.168.1.50` como usuario `admin` habilitando X forwarding con restricciones de seguridad.
+
+<input type="text" class="fill-blank" data-answer="ssh -X admin@192.168.1.50" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**ssh -X admin@192.168.1.50**
+
+La opcion `-X` de SSH habilita el reenvio de X11 (X forwarding) con restricciones de seguridad proporcionadas por la extension X11 SECURITY. Esto permite ejecutar aplicaciones graficas en el servidor remoto y ver las ventanas en la pantalla local. La variable DISPLAY se configura automaticamente (generalmente `localhost:10.0`) y SSH gestiona las cookies de xauth. Si alguna aplicacion no funciona con `-X`, se puede usar `-Y` (trusted, sin restricciones). El servidor SSH debe tener `X11Forwarding yes` en `/etc/ssh/sshd_config`.
+
+</details>
+
+---
+
+### Pregunta 22
+
+Escribe el comando para buscar errores en el archivo de log de Xorg.
+
+<input type="text" class="fill-blank" data-answer="grep '(EE)' /var/log/Xorg.0.log" data-alt="grep \"(EE)\" /var/log/Xorg.0.log" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**grep '(EE)' /var/log/Xorg.0.log**
+
+El archivo `/var/log/Xorg.0.log` es el log principal del servidor X para el display `:0`. Los marcadores del log indican el tipo de mensaje: `(EE)` para errores, `(WW)` para advertencias, `(II)` para informacion, `(**)` para valores de configuracion y `(==)` para valores por defecto. Filtrar con `grep '(EE)'` permite identificar rapidamente los problemas que impiden el funcionamiento correcto del servidor X. Este es el primer recurso de diagnostico cuando X11 no arranca o presenta problemas graficos.
+
+</details>
+
+---
+
+### Pregunta 23
+
+Escribe el comando para ver las cookies de autenticacion X almacenadas actualmente.
+
+<input type="text" class="fill-blank" data-answer="xauth list" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**xauth list**
+
+El comando `xauth list` muestra todas las cookies de autenticacion MIT-MAGIC-COOKIE almacenadas en el archivo `~/.Xauthority`. La salida muestra el display, el protocolo de autenticacion (normalmente MIT-MAGIC-COOKIE-1) y el valor hexadecimal de la cookie. Estas cookies son necesarias para que los clientes X se autentiquen con el servidor. Otros subcomandos utiles: `xauth add` agrega una cookie, `xauth remove` elimina una cookie, y `xauth extract`/`xauth merge` permiten transferir cookies entre hosts.
+
+</details>
+
+---
+
+### Pregunta 24
+
+Escribe el comando para verificar que tipo de sesion grafica se esta usando (Wayland o X11).
+
+<input type="text" class="fill-blank" data-answer="echo $XDG_SESSION_TYPE" data-alt="printenv XDG_SESSION_TYPE" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**echo $XDG_SESSION_TYPE**
+
+La variable de entorno `$XDG_SESSION_TYPE` contiene el tipo de sesion grafica actual: `wayland` si se usa Wayland o `x11` si se usa X11. Es la forma mas directa y fiable de identificar el protocolo de display en uso. Otra forma complementaria es verificar si `$WAYLAND_DISPLAY` tiene un valor (por ejemplo, `wayland-0`), lo que indica que se usa Wayland. Tambien se puede comprobar `$DISPLAY` para ver la configuracion del display X11 (como `:0` o `localhost:10.0`).
+
+</details>
+
+---
+
+### Pregunta 25
+
+Escribe el comando para generar un archivo `xorg.conf` automaticamente basado en el hardware detectado.
+
+<input type="text" class="fill-blank" data-answer="Xorg -configure" data-alt="X -configure" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**Xorg -configure**
+
+El comando `Xorg -configure` (o `X -configure`) analiza el hardware del sistema y genera un archivo de configuracion `xorg.conf` basado en lo detectado. El archivo generado se guarda como `/root/xorg.conf.new` y puede copiarse a `/etc/X11/xorg.conf`. Es importante que el servidor X NO este en ejecucion cuando se ejecuta este comando. En sistemas modernos, Xorg suele funcionar sin este archivo gracias a la autodeteccion, y se prefieren archivos parciales en `/etc/X11/xorg.conf.d/` para ajustes especificos.
+
+</details>

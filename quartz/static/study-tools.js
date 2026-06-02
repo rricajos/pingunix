@@ -99,6 +99,21 @@
     return arr
   }
 
+  /** Normalize user text input for fill-blank answer comparison. */
+  function normalizeFill(str) {
+    return (str || "").trim().toLowerCase().replace(/\s+/g, " ")
+  }
+
+  /** Check if user answer matches any accepted answer for a fill-blank question. */
+  function checkFillBlank(userAnswer, fillBlank) {
+    var user = normalizeFill(userAnswer)
+    if (!user) return false
+    var accepted = [fillBlank.answer].concat(fillBlank.alt || [])
+    return accepted.some(function (a) {
+      return normalizeFill(a) === user
+    })
+  }
+
   /** Detect which certification the current page belongs to for Anki download. */
   function detectAnkiCert() {
     var slug = (document.body.getAttribute("data-slug") || window.location.pathname).toLowerCase()
@@ -149,6 +164,7 @@
         options: [],
         correctLetter: "",
         explanation: "",
+        fillBlank: null, // { answer, alt[], hint }
       }
 
       // Collect sibling elements until we hit the next h3 or h2, or end
@@ -180,31 +196,41 @@
           }
           q.explanation = explanationParts.join("")
         } else if (!detailsFound) {
-          // Try to parse options from this element
-          var text = sibling.innerHTML || ""
-          // Check if this paragraph contains options (a) ... b) ... c) ... d) ...)
-          if (/[a-dA-D]\)\s/.test(text)) {
-            // Split on <br> or newline patterns to find each option
-            var optionLines = text.split(/<br\s*\/?>|\n/).map(function (s) {
-              return s.trim()
-            })
-            optionLines.forEach(function (line) {
-              var m = line.match(/^([a-dA-D])\)\s*(.+)/)
-              if (m) {
-                q.options.push({
-                  letter: m[1].toLowerCase(),
-                  text: m[2].trim(),
-                })
-              }
-            })
+          // Check for fill-blank input first
+          var fbEl = sibling.querySelector ? sibling.querySelector("input.fill-blank, .fill-blank") : null
+          if (fbEl) {
+            q.fillBlank = {
+              answer: (fbEl.getAttribute("data-answer") || "").trim(),
+              alt: (fbEl.getAttribute("data-alt") || "").split(",").map(function (s) { return s.trim() }).filter(Boolean),
+              hint: fbEl.getAttribute("placeholder") || "$ escribe el comando...",
+            }
           } else {
-            q.textParts.push(sibling.innerHTML)
+            // Try to parse options from this element
+            var text = sibling.innerHTML || ""
+            // Check if this paragraph contains options (a) ... b) ... c) ... d) ...)
+            if (/[a-dA-D]\)\s/.test(text)) {
+              // Split on <br> or newline patterns to find each option
+              var optionLines = text.split(/<br\s*\/?>|\n/).map(function (s) {
+                return s.trim()
+              })
+              optionLines.forEach(function (line) {
+                var m = line.match(/^([a-dA-D])\)\s*(.+)/)
+                if (m) {
+                  q.options.push({
+                    letter: m[1].toLowerCase(),
+                    text: m[2].trim(),
+                  })
+                }
+              })
+            } else {
+              q.textParts.push(sibling.innerHTML)
+            }
           }
         }
         sibling = sibling.nextElementSibling
       }
 
-      if (q.options.length > 0 && q.correctLetter) {
+      if ((q.options.length > 0 && q.correctLetter) || (q.fillBlank && q.fillBlank.answer)) {
         questions.push(q)
       }
     })
@@ -283,8 +309,12 @@
         "Pregunta " + (currentIdx + 1) + " de " + questions.length + " (" + answeredCount + " respondidas)"
       score = 0
       for (var i = 0; i < questions.length; i++) {
-        if (checked[i] && answers[i] === questions[i].correctLetter) {
-          score++
+        if (!checked[i]) continue
+        var qi = questions[i]
+        if (qi.fillBlank) {
+          if (checkFillBlank(answers[i], qi.fillBlank)) score++
+        } else {
+          if (answers[i] === qi.correctLetter) score++
         }
       }
       var checkedCount = checked.filter(Boolean).length
@@ -307,50 +337,85 @@
         card.appendChild(textDiv)
       }
 
-      var optionsDiv = el("div", "st-quiz-options")
-      card.appendChild(optionsDiv)
+      if (q.fillBlank) {
+        // ── Fill-blank question ──
+        var fbWrapper = el("div", "st-fill-blank-wrapper")
+        card.appendChild(fbWrapper)
 
-      q.options.forEach(function (opt) {
-        var optBtn = el("label", "st-quiz-option")
-        var radio = document.createElement("input")
-        radio.type = "radio"
-        radio.name = "st-quiz-q" + currentIdx
-        radio.value = opt.letter
-        if (answers[currentIdx] === opt.letter) {
-          radio.checked = true
+        var fbLabel = el("label", "st-fill-blank-label", "Escribe el comando o valor:")
+        fbWrapper.appendChild(fbLabel)
+
+        var fbInput = document.createElement("input")
+        fbInput.type = "text"
+        fbInput.className = "st-fill-blank-input"
+        fbInput.placeholder = q.fillBlank.hint || "$ escribe aquí..."
+        fbInput.autocomplete = "off"
+        fbInput.autocorrect = "off"
+        fbInput.autocapitalize = "none"
+        fbInput.spellcheck = false
+        if (answers[currentIdx] !== null) {
+          fbInput.value = answers[currentIdx]
         }
-        // If already checked in practica mode, disable
         if (checked[currentIdx]) {
-          radio.disabled = true
+          fbInput.disabled = true
+          var isOk = checkFillBlank(answers[currentIdx], q.fillBlank)
+          fbInput.classList.add(isOk ? "st-fill-correct" : "st-fill-incorrect")
         }
-
-        var span = el("span", null, opt.letter + ") " + opt.text)
-        optBtn.appendChild(radio)
-        optBtn.appendChild(span)
-
-        // Feedback classes
-        if (checked[currentIdx]) {
-          if (opt.letter === q.correctLetter) {
-            optBtn.classList.add("st-correct")
-          } else if (opt.letter === answers[currentIdx] && opt.letter !== q.correctLetter) {
-            optBtn.classList.add("st-incorrect")
-          }
-        }
-
-        radio.addEventListener("change", function () {
+        fbInput.addEventListener("input", function () {
           if (!checked[currentIdx]) {
-            answers[currentIdx] = opt.letter
+            answers[currentIdx] = fbInput.value
           }
         })
+        fbInput.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" && !checked[currentIdx]) {
+            btnCheck.click()
+          }
+        })
+        fbWrapper.appendChild(fbInput)
+      } else {
+        // ── MCQ question ──
+        var optionsDiv = el("div", "st-quiz-options")
+        card.appendChild(optionsDiv)
 
-        optionsDiv.appendChild(optBtn)
-      })
+        q.options.forEach(function (opt) {
+          var optBtn = el("label", "st-quiz-option")
+          var radio = document.createElement("input")
+          radio.type = "radio"
+          radio.name = "st-quiz-q" + currentIdx
+          radio.value = opt.letter
+          if (answers[currentIdx] === opt.letter) {
+            radio.checked = true
+          }
+          if (checked[currentIdx]) {
+            radio.disabled = true
+          }
 
-      // Show explanation if already checked in practica mode
+          var span = el("span", null, opt.letter + ") " + opt.text)
+          optBtn.appendChild(radio)
+          optBtn.appendChild(span)
+
+          if (checked[currentIdx]) {
+            if (opt.letter === q.correctLetter) {
+              optBtn.classList.add("st-correct")
+            } else if (opt.letter === answers[currentIdx] && opt.letter !== q.correctLetter) {
+              optBtn.classList.add("st-incorrect")
+            }
+          }
+
+          radio.addEventListener("change", function () {
+            if (!checked[currentIdx]) {
+              answers[currentIdx] = opt.letter
+            }
+          })
+
+          optionsDiv.appendChild(optBtn)
+        })
+      }
+
+      // Show explanation if already checked
       if (checked[currentIdx] && mode === "practica") {
         showExplanation(card, q)
       }
-      // In examen mode, show feedback after all checked
       if (checked[currentIdx] && mode === "examen") {
         showExplanation(card, q)
       }
@@ -361,13 +426,23 @@
 
     function showExplanation(card, q) {
       var feedbackDiv = el("div", "st-quiz-feedback")
-      if (answers[currentIdx] === q.correctLetter) {
+      var isCorrect = q.fillBlank
+        ? checkFillBlank(answers[currentIdx], q.fillBlank)
+        : answers[currentIdx] === q.correctLetter
+
+      if (isCorrect) {
         feedbackDiv.classList.add("st-feedback-correct")
         feedbackDiv.innerHTML = "<strong>¡Correcto!</strong>"
       } else {
         feedbackDiv.classList.add("st-feedback-incorrect")
-        feedbackDiv.innerHTML =
-          "<strong>Incorrecto.</strong> La respuesta correcta es <strong>" + q.correctLetter + ")</strong>"
+        if (q.fillBlank) {
+          var accepted = [q.fillBlank.answer].concat(q.fillBlank.alt || [])
+          feedbackDiv.innerHTML =
+            "<strong>Incorrecto.</strong> Respuesta esperada: <code>" + accepted.join("</code> o <code>") + "</code>"
+        } else {
+          feedbackDiv.innerHTML =
+            "<strong>Incorrecto.</strong> La respuesta correcta es <strong>" + q.correctLetter + ")</strong>"
+        }
       }
       card.appendChild(feedbackDiv)
 
@@ -392,14 +467,23 @@
     }
 
     btnCheck.addEventListener("click", function () {
-      if (answers[currentIdx] === null) {
-        // Highlight that user must select
+      var q = questions[currentIdx]
+      // Validate that user has given an answer
+      if (q.fillBlank) {
+        if (!answers[currentIdx] || answers[currentIdx].trim() === "") {
+          var inp = questionArea.querySelector(".st-fill-blank-input")
+          if (inp) {
+            inp.classList.add("st-shake")
+            inp.focus()
+            setTimeout(function () { inp.classList.remove("st-shake") }, 500)
+          }
+          return
+        }
+      } else if (answers[currentIdx] === null) {
         var opts = questionArea.querySelectorAll(".st-quiz-option")
         opts.forEach(function (o) {
           o.classList.add("st-shake")
-          setTimeout(function () {
-            o.classList.remove("st-shake")
-          }, 500)
+          setTimeout(function () { o.classList.remove("st-shake") }, 500)
         })
         return
       }

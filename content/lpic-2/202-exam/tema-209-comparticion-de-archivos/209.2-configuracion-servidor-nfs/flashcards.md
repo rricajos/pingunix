@@ -11,7 +11,7 @@ subtema: "209.2"
 
 # Flashcards: 209.2 - Configuracion Servidor Nfs
 
-> 26 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 41 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="209.2">
 </div>
@@ -199,6 +199,276 @@ subtema: "209.2"
 <div class="flashcard" data-id="209.2-fc-011">
 <div class="flashcard-front">
 
+**P:** ¿Qué opción de exportación NFS mapea TODOS los usuarios remotos al usuario anónimo, independientemente de su UID?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) all_squash. La opción `all_squash` mapea todos los usuarios remotos (no solo root) al usuario anónimo definido por `anonuid` y `anongid`. Es útil para comparticiones públicas donde se desea que todos los accesos se realicen con un único usuario, independientemente de la identidad del cliente.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="209.2">
+</div>
+
+<div class="flashcard" data-id="209.2-fc-012">
+<div class="flashcard-front">
+
+**P:** ¿Qué demonio de NFSv4 se encarga de mapear UIDs/GIDs numéricos a nombres de usuario y grupo?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) rpc.idmapd. El demonio `rpc.idmapd` es específico de NFSv4 y se encarga de traducir entre UIDs/GIDs numéricos y nombres de usuario/grupo. Esto es necesario porque NFSv4 transmite nombres en lugar de identificadores numéricos, a diferencia de NFSv3.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="209.2">
+</div>
+
+<div class="flashcard" data-id="209.2-fc-013">
+<div class="flashcard-front">
+
+**P:** ¿Qué opción de montaje NFS en el cliente indica que el sistema de archivos requiere conectividad de red y debe esperar a que la red esté disponible antes de montarse?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) _netdev. La opción `_netdev` en `/etc/fstab` indica al sistema que el recurso depende de la red y que no debe intentar montarlo hasta que la conectividad de red esté disponible. Es esencial para montajes NFS permanentes en `/etc/fstab` para evitar problemas durante el arranque del sistema.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="209.2">
+</div>
+
+<div class="flashcard" data-id="209.2-fc-014">
+<div class="flashcard-front">
+
+**P:** ¿Qué ocurre cuando se utiliza la opción de montaje `soft` en un cliente NFS y el servidor no responde?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) El cliente devuelve un error de E/S después del número configurado de reintentos. Con la opción `soft`, el cliente NFS reporta un error de E/S a la aplicación tras agotar los reintentos configurados con `retrans`. La opción `hard` (predeterminada) reintenta indefinidamente. El uso de `soft` puede causar corrupción de datos si las aplicaciones no manejan correctamente los errores de E/S.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="209.2">
+</div>
+
+<div class="flashcard" data-id="209.2-fc-015">
+<div class="flashcard-front">
+
+**P:** Un administrador ejecuta `exportfs -u 192.168.1.10:/srv/datos`. ¿Qué efecto tiene este comando?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) Des-exporta el directorio /srv/datos para el cliente 192.168.1.10. La opción `-u` de `exportfs` des-exporta (elimina de la tabla de exportaciones activas) un directorio específico para un cliente determinado. Para des-exportar todas las exportaciones, se usa `exportfs -ua`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="209.2">
+</div>
+
+<div class="flashcard" data-id="209.2-fc-016">
+<div class="flashcard-front">
+
+**P:** ¿Qué protocolo de transporte utiliza exclusivamente NFSv4?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) TCP. NFSv4 utiliza exclusivamente TCP como protocolo de transporte, a diferencia de NFSv3 que puede utilizar tanto UDP como TCP. Esta simplificación en NFSv4 facilita la configuración de firewalls y mejora la fiabilidad de las comunicaciones.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="209.2">
+</div>
+
+<div class="flashcard" data-id="209.2-fc-017">
+<div class="flashcard-front">
+
+**P:** ¿Qué opción de la entrada en `/etc/exports` permite que los clientes NFSv4 atraviesen automáticamente los puntos de montaje dentro del pseudo-filesystem?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) crossmnt. La opción `crossmnt` en `/etc/exports` permite que los clientes NFSv4 naveguen automáticamente a través de los puntos de montaje dentro del pseudo-filesystem. Se usa junto con `fsid=0` en la raíz del pseudo-filesystem para que los clientes puedan acceder a todos los subdirectorios exportados de forma transparente.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="209.2">
+</div>
+
+<div class="flashcard" data-id="209.2-fc-018">
+<div class="flashcard-front">
+
+**P:** ¿Qué comando permite listar los servicios RPC registrados en un servidor, incluyendo NFS y sus servicios auxiliares?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) rpcinfo -p. El comando `rpcinfo -p` lista todos los servicios RPC registrados en el sistema, mostrando el número de programa, versión, protocolo y puerto. Es útil para verificar que NFS y sus servicios auxiliares (mountd, statd, lockd) están registrados correctamente.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="209.2">
+</div>
+
+<div class="flashcard" data-id="209.2-fc-019">
+<div class="flashcard-front">
+
+**P:** ¿Cuál es la opción de exportación predeterminada en NFS respecto a los permisos de acceso cuando no se especifica `rw` ni `ro`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) ro (solo lectura). Cuando no se especifica explícitamente `rw` ni `ro` en las opciones de exportación de `/etc/exports`, la opción predeterminada es `ro` (solo lectura). Esto proporciona una capa de seguridad adicional, ya que el administrador debe conceder explícitamente permisos de escritura.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="209.2">
+</div>
+
+<div class="flashcard" data-id="209.2-fc-020">
+<div class="flashcard-front">
+
+**P:** ¿Qué opción de montaje NFS especifica la versión del protocolo NFS a utilizar?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) vers=N. La opción `vers=N` permite especificar la versión del protocolo NFS que el cliente debe utilizar para el montaje. Por ejemplo, `vers=4` fuerza el uso de NFSv4 y `vers=3` fuerza NFSv3. Esto es útil cuando se necesita garantizar compatibilidad o forzar una versión específica.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="209.2">
+</div>
+
+<div class="flashcard" data-id="209.2-fc-021">
+<div class="flashcard-front">
+
+**P:** ¿Qué comando se utiliza para mostrar los directorios exportados por el servidor NFS local?
+
+</div>
+<div class="flashcard-back">
+
+**R:** showmount -e localhost. El comando `showmount -e` seguido del nombre del servidor muestra la lista de directorios exportados y los clientes autorizados. Usando `localhost` o sin argumento de host se consulta el servidor local.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="209.2">
+</div>
+
+<div class="flashcard" data-id="209.2-fc-022">
+<div class="flashcard-front">
+
+**P:** ¿Qué comando se utiliza para re-exportar todos los directorios de /etc/exports y aplicar los cambios sin reiniciar NFS?
+
+</div>
+<div class="flashcard-back">
+
+**R:** exportfs -ra. El comando `exportfs -ra` re-exporta todos los directorios definidos en `/etc/exports`, sincronizando la tabla de exportaciones activas con el contenido actual del archivo. La opción `-r` indica re-exportar y `-a` indica todos los directorios.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="209.2">
+</div>
+
+<div class="flashcard" data-id="209.2-fc-023">
+<div class="flashcard-front">
+
+**P:** ¿Qué comando se utiliza para mostrar los directorios exportados actualmente con sus opciones detalladas?
+
+</div>
+<div class="flashcard-back">
+
+**R:** exportfs -v. El comando `exportfs -v` muestra todos los directorios que están actualmente exportados junto con las opciones detalladas de cada exportación, incluyendo las opciones implícitas predeterminadas.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="209.2">
+</div>
+
+<div class="flashcard" data-id="209.2-fc-024">
+<div class="flashcard-front">
+
+**P:** ¿Qué comando permite montar un recurso NFS versión 4 del servidor `srv1` en la ruta local `/mnt/datos`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** mount -t nfs4 srv1:/ /mnt/datos. Para montar un recurso NFSv4 se utiliza `mount -t nfs4` seguido del servidor y el punto de montaje. Alternativamente, se puede usar `mount -t nfs -o vers=4`. En NFSv4, las rutas son relativas al pseudo-filesystem.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="209.2">
+</div>
+
+<div class="flashcard" data-id="209.2-fc-025">
+<div class="flashcard-front">
+
+**P:** ¿Qué comando muestra los clientes que tienen montajes NFS activos en el servidor `fileserver`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** showmount -a fileserver. El comando `showmount -a` muestra todos los clientes que tienen montajes activos en el servidor especificado, junto con los directorios que tienen montados. La opción `-d` mostraría solo los directorios montados sin los clientes.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="209.2">
+</div>
+
+<div class="flashcard" data-id="209.2-fc-026">
+<div class="flashcard-front">
+
 **P:** Tip de examen: NFSv4 utiliza exclusivamente el puerto TCP 2049 y no necesita rpcbind. NFSv3 req...
 
 </div>
@@ -214,7 +484,7 @@ subtema: "209.2"
 <div class="flashcard-deck" data-subtema="209.2">
 </div>
 
-<div class="flashcard" data-id="209.2-fc-012">
+<div class="flashcard" data-id="209.2-fc-027">
 <div class="flashcard-front">
 
 **P:** Tip de examen: Es muy importante no dejar espacio entre el cliente y el paréntesis de opciones....
@@ -232,7 +502,7 @@ subtema: "209.2"
 <div class="flashcard-deck" data-subtema="209.2">
 </div>
 
-<div class="flashcard" data-id="209.2-fc-013">
+<div class="flashcard" data-id="209.2-fc-028">
 <div class="flashcard-front">
 
 **P:** Tip de examen: `no_root_squash` es un riesgo de seguridad significativo porque permite que root...
@@ -250,7 +520,7 @@ subtema: "209.2"
 <div class="flashcard-deck" data-subtema="209.2">
 </div>
 
-<div class="flashcard" data-id="209.2-fc-014">
+<div class="flashcard" data-id="209.2-fc-029">
 <div class="flashcard-front">
 
 **P:** Tip de examen: Después de modificar `/etc/exports`, se debe ejecutar `exportfs -ra` para aplica...
@@ -268,7 +538,7 @@ subtema: "209.2"
 <div class="flashcard-deck" data-subtema="209.2">
 </div>
 
-<div class="flashcard" data-id="209.2-fc-015">
+<div class="flashcard" data-id="209.2-fc-030">
 <div class="flashcard-front">
 
 **P:** Tip de examen: En NFSv4, la opción `fsid=0` marca la raíz del pseudo-filesystem. Los clientes v...
@@ -286,7 +556,7 @@ subtema: "209.2"
 <div class="flashcard-deck" data-subtema="209.2">
 </div>
 
-<div class="flashcard" data-id="209.2-fc-016">
+<div class="flashcard" data-id="209.2-fc-031">
 <div class="flashcard-front">
 
 **P:** Tip de examen: La opción `hard` es la predeterminada y la más segura para datos críticos, ya qu...
@@ -304,7 +574,7 @@ subtema: "209.2"
 <div class="flashcard-deck" data-subtema="209.2">
 </div>
 
-<div class="flashcard" data-id="209.2-fc-017">
+<div class="flashcard" data-id="209.2-fc-032">
 <div class="flashcard-front">
 
 **P:** Tip de examen: Una de las grandes ventajas de NFSv4 sobre NFSv3 es la simplificación del firewa...
@@ -322,43 +592,7 @@ subtema: "209.2"
 <div class="flashcard-deck" data-subtema="209.2">
 </div>
 
-<div class="flashcard" data-id="209.2-fc-018">
-<div class="flashcard-front">
-
-**P:** Que hace el comando `rw`?
-
-</div>
-<div class="flashcard-back">
-
-**R:** Lectura y escritura
-
-</div>
-</div>
-
----
-
-<div class="flashcard-deck" data-subtema="209.2">
-</div>
-
-<div class="flashcard" data-id="209.2-fc-019">
-<div class="flashcard-front">
-
-**P:** Que hace el comando `ro`?
-
-</div>
-<div class="flashcard-back">
-
-**R:** Solo lectura (predeterminado)
-
-</div>
-</div>
-
----
-
-<div class="flashcard-deck" data-subtema="209.2">
-</div>
-
-<div class="flashcard" data-id="209.2-fc-020">
+<div class="flashcard" data-id="209.2-fc-033">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `sync`?
@@ -376,7 +610,7 @@ subtema: "209.2"
 <div class="flashcard-deck" data-subtema="209.2">
 </div>
 
-<div class="flashcard" data-id="209.2-fc-021">
+<div class="flashcard" data-id="209.2-fc-034">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `async`?
@@ -394,7 +628,7 @@ subtema: "209.2"
 <div class="flashcard-deck" data-subtema="209.2">
 </div>
 
-<div class="flashcard" data-id="209.2-fc-022">
+<div class="flashcard" data-id="209.2-fc-035">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `no_subtree_check`?
@@ -412,7 +646,43 @@ subtema: "209.2"
 <div class="flashcard-deck" data-subtema="209.2">
 </div>
 
-<div class="flashcard" data-id="209.2-fc-023">
+<div class="flashcard" data-id="209.2-fc-036">
+<div class="flashcard-front">
+
+**P:** Que hace el comando `subtree_check`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** Habilita la verificación de subárbol
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="209.2">
+</div>
+
+<div class="flashcard" data-id="209.2-fc-037">
+<div class="flashcard-front">
+
+**P:** Que hace el comando `root_squash`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** Mapea root remoto a anonuid/anongid (predeterminado)
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="209.2">
+</div>
+
+<div class="flashcard" data-id="209.2-fc-038">
 <div class="flashcard-front">
 
 **P:** Que es/son Introducción?
@@ -430,7 +700,7 @@ subtema: "209.2"
 <div class="flashcard-deck" data-subtema="209.2">
 </div>
 
-<div class="flashcard" data-id="209.2-fc-024">
+<div class="flashcard" data-id="209.2-fc-039">
 <div class="flashcard-front">
 
 **P:** Que es/son Diferencias entre NFSv3 y NFSv4?
@@ -448,7 +718,7 @@ subtema: "209.2"
 <div class="flashcard-deck" data-subtema="209.2">
 </div>
 
-<div class="flashcard" data-id="209.2-fc-025">
+<div class="flashcard" data-id="209.2-fc-040">
 <div class="flashcard-front">
 
 **P:** Que es/son Configuración del servidor: /etc/exports?
@@ -466,7 +736,7 @@ subtema: "209.2"
 <div class="flashcard-deck" data-subtema="209.2">
 </div>
 
-<div class="flashcard" data-id="209.2-fc-026">
+<div class="flashcard" data-id="209.2-fc-041">
 <div class="flashcard-front">
 
 **P:** Que es/son NFSv4 - Pseudo Filesystem?

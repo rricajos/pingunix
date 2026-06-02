@@ -219,3 +219,273 @@ d) `rw` (lectura y escritura)
 En directorios, el permiso `x` (ejecucion) permite acceder al directorio con `cd` y acceder a los archivos contenidos dentro. Sin `x`, no se puede entrar al directorio ni acceder a nada en su interior, aunque se tenga `r`. El permiso `r` en un directorio permite listar su contenido (con `ls`), pero sin `x` no se puede acceder a los archivos listados. El permiso `w` permite crear, eliminar y renombrar archivos dentro del directorio. Para acceder a un archivo, se necesita permiso `x` en TODOS los directorios de la ruta completa. Esta distincion de permisos en directorios es un tema frecuente en el examen LPIC-1.
 
 </details>
+
+---
+
+### Pregunta 11
+
+Un archivo tiene permisos `644`. Que permisos en formato simbolico le corresponden?
+
+a) `rwxr--r--`
+b) `rw-r--r--`
+c) `rw-rw-r--`
+d) `rw-------`
+
+<details><summary>Respuesta</summary>
+
+**b) `rw-r--r--`**
+
+Para convertir de octal a simbolico se descompone cada digito: `6` = `rw-` (4+2), `4` = `r--` (4), `4` = `r--` (4). El propietario puede leer y escribir, el grupo solo puede leer, y otros solo pueden leer. Este es el permiso tipico por defecto para archivos regulares creados con umask `022`. La opcion `a` seria `754`, la opcion `c` seria `664` y la opcion `d` seria `600`.
+
+</details>
+
+---
+
+### Pregunta 12
+
+Cual es el efecto de ejecutar `chmod o= archivo.txt`?
+
+a) Asigna todos los permisos a otros
+b) Elimina todos los permisos de otros (---)
+c) Establece los permisos de otros igual que los del propietario
+d) No tiene efecto, es una sintaxis invalida
+
+<details><summary>Respuesta</summary>
+
+**b) Elimina todos los permisos de otros (---)**
+
+El operador `=` en `chmod` establece exactamente los permisos especificados. Cuando se usa `o=` sin ningun permiso despues del signo igual, se establecen exactamente cero permisos para otros. Es equivalente a `chmod o-rwx archivo.txt`. Esta es una forma comun de restringir el acceso de otros usuarios a un archivo. Por ejemplo, si el archivo tenia `644`, despues de `chmod o= archivo.txt` tendria `640`.
+
+</details>
+
+---
+
+### Pregunta 13
+
+Si la umask es `077`, que permisos tendran los directorios recien creados?
+
+a) `777` (rwxrwxrwx)
+b) `700` (rwx------)
+c) `000` (---------)
+d) `644` (rw-r--r--)
+
+<details><summary>Respuesta</summary>
+
+**b) `700` (rwx------)**
+
+Los directorios tienen permisos base `777`. Con umask `077`, el calculo es: `777 - 077 = 700` (rwx------). Esto significa que solo el propietario tendra acceso completo al directorio; el grupo y otros no tendran ningun permiso. Los archivos con esta umask tendrian `600` (666 - 077 = 600, rw-------). La umask `077` es una configuracion muy restrictiva usada para maximizar la seguridad.
+
+</details>
+
+---
+
+### Pregunta 14
+
+Un usuario normal intenta cambiar el propietario de un archivo con `chown root archivo.txt`. Que ocurre?
+
+a) El propietario cambia a root correctamente
+b) El comando falla porque solo root puede cambiar el propietario de archivos
+c) El propietario cambia pero se pierden los permisos especiales
+d) El archivo se borra automaticamente por seguridad
+
+<details><summary>Respuesta</summary>
+
+**b) El comando falla porque solo root puede cambiar el propietario de archivos**
+
+En Linux, solo root puede cambiar el propietario de un archivo con `chown`. Un usuario normal puede cambiar el grupo de sus propios archivos, pero solo a grupos a los que pertenece, usando `chgrp` o `chown :grupo`. Esta restriccion de seguridad evita que un usuario pueda "regalar" archivos a otros usuarios, lo que podria usarse para eludir cuotas de disco o crear confusiones de propiedad.
+
+</details>
+
+---
+
+### Pregunta 15
+
+Un directorio tiene permisos `drwxr-x---` y pertenece al grupo `developers`. Un usuario que pertenece al grupo `developers` intenta crear un archivo dentro. Que ocurre?
+
+a) Puede crear el archivo porque tiene permiso de ejecucion en el grupo
+b) No puede crear el archivo porque el grupo no tiene permiso de escritura
+c) Puede crear el archivo porque tiene permiso de lectura
+d) Solo root puede crear archivos en ese directorio
+
+<details><summary>Respuesta</summary>
+
+**b) No puede crear el archivo porque el grupo no tiene permiso de escritura**
+
+Los permisos del grupo son `r-x` (lectura y ejecucion). Para crear archivos dentro de un directorio se necesita permiso de **escritura** (`w`). El permiso `x` permite entrar al directorio con `cd` y el permiso `r` permite listar su contenido con `ls`, pero sin `w` no se pueden crear, eliminar ni renombrar archivos dentro. Solo el propietario (que tiene `rwx`) puede crear archivos en este directorio.
+
+</details>
+
+---
+
+### Pregunta 16
+
+Que valor octal representa los permisos `rwxrwxrwt` (incluyendo el sticky bit)?
+
+a) `777`
+b) `1777`
+c) `7777`
+d) `2777`
+
+<details><summary>Respuesta</summary>
+
+**b) `1777`**
+
+El sticky bit tiene valor `1` en el cuarto digito (digito especial). Los permisos `rwxrwxrwx` corresponden a `777`. La `t` en la posicion de ejecucion de otros indica que el sticky bit esta activo Y el permiso de ejecucion esta presente. El valor total es `1777`. Este es el permiso clasico del directorio `/tmp`, donde todos pueden escribir pero nadie puede borrar archivos de otros usuarios. Si fuera `T` (mayuscula) indicaria sticky bit sin permiso de ejecucion para otros.
+
+</details>
+
+---
+
+### Pregunta 17
+
+Que comando muestra la umask actual en formato simbolico?
+
+a) `umask`
+b) `umask -S`
+c) `umask -v`
+d) `umask --symbolic`
+
+<details><summary>Respuesta</summary>
+
+**b) `umask -S`**
+
+`umask -S` muestra la umask actual en formato simbolico, por ejemplo `u=rwx,g=rx,o=rx` (que corresponde a umask `022`). Sin opciones, `umask` muestra el valor en formato numerico octal (por ejemplo, `0022`). El formato simbolico muestra los permisos que SI se asignan, mientras que el formato numerico muestra los permisos que se QUITAN. Las opciones `-v` y `--symbolic` no son opciones validas de umask.
+
+</details>
+
+---
+
+### Pregunta 18
+
+Un archivo ejecutable tiene permisos `-rwxr-Sr-x`. Que indica la `S` mayuscula en la posicion del grupo?
+
+a) El SGID esta activo y el grupo tiene permiso de ejecucion
+b) El SGID esta activo pero el grupo NO tiene permiso de ejecucion
+c) El sticky bit esta activo en el grupo
+d) El SUID esta activo en la posicion del grupo
+
+<details><summary>Respuesta</summary>
+
+**b) El SGID esta activo pero el grupo NO tiene permiso de ejecucion**
+
+La `S` mayuscula en la posicion de ejecucion del grupo indica que el bit SGID (Set Group ID) esta activado pero el permiso de ejecucion para el grupo NO esta presente. Cuando el SGID esta activo Y el permiso de ejecucion esta presente, se muestra como `s` minuscula. La misma logica aplica a SUID en la posicion del propietario (`s`/`S`) y al sticky bit en la posicion de otros (`t`/`T`). Un SGID con `S` (sin ejecucion) generalmente no tiene efecto practico en archivos ejecutables.
+
+</details>
+
+---
+
+### Pregunta 19
+
+Donde se configura la umask de forma permanente para TODOS los usuarios del sistema?
+
+a) `~/.bashrc`
+b) `~/.profile`
+c) `/etc/profile`
+d) `/etc/passwd`
+
+<details><summary>Respuesta</summary>
+
+**c) `/etc/profile`**
+
+`/etc/profile` es un archivo de configuracion global que se ejecuta al iniciar sesion para todos los usuarios del sistema. Agregar `umask 027` en este archivo afectara a todos los usuarios. Los archivos `~/.bashrc` y `~/.profile` son configuraciones personales de cada usuario individual. `/etc/passwd` contiene informacion de cuentas de usuario, no configuracion de umask. Otros lugares para configurar umask global incluyen `/etc/bash.bashrc` y `/etc/login.defs` (variable `UMASK`).
+
+</details>
+
+---
+
+### Pregunta 20
+
+Si un directorio tiene SGID activado y pertenece al grupo `webteam`, que grupo tendra un archivo creado dentro por un usuario cuyo grupo primario es `sandra`?
+
+a) `sandra`
+b) `webteam`
+c) `root`
+d) Depende de la umask del usuario
+
+<details><summary>Respuesta</summary>
+
+**b) `webteam`**
+
+Cuando el SGID (Set Group ID) esta activado en un directorio, los archivos y subdirectorios creados dentro heredan automaticamente el grupo del directorio padre, en lugar del grupo primario del usuario que los crea. En este caso, aunque el usuario tiene grupo primario `sandra`, el archivo creado pertenecera al grupo `webteam`. Esta es la funcion principal del SGID en directorios y es fundamental para el trabajo colaborativo en equipo. La umask afecta los permisos, no la asignacion de grupo.
+
+</details>
+
+---
+
+### Pregunta 21
+
+Escribe el comando para dar permisos `rwxr-xr-x` (755) al archivo `script.sh` usando notacion octal.
+
+<input type="text" class="fill-blank" data-answer="chmod 755 script.sh" data-alt="chmod 755 ./script.sh" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**chmod 755 script.sh**
+
+El modo numerico `755` establece: propietario `rwx` (7=4+2+1), grupo `r-x` (5=4+1), otros `r-x` (5=4+1). Estos son los permisos tipicos para scripts ejecutables y directorios. El propietario tiene control total, mientras que el grupo y otros pueden leer y ejecutar pero no modificar.
+
+</details>
+
+---
+
+### Pregunta 22
+
+Escribe el comando para cambiar el propietario a `sandra` y el grupo a `developers` del archivo `proyecto.txt`.
+
+<input type="text" class="fill-blank" data-answer="chown sandra:developers proyecto.txt" data-alt="chown sandra.developers proyecto.txt" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**chown sandra:developers proyecto.txt**
+
+El comando `chown` con la sintaxis `usuario:grupo` permite cambiar tanto el propietario como el grupo en un solo comando. Tambien se puede usar un punto en lugar de los dos puntos: `chown sandra.developers proyecto.txt`. Para cambiar solo el grupo se usa `chown :developers proyecto.txt` o el comando `chgrp developers proyecto.txt`.
+
+</details>
+
+---
+
+### Pregunta 23
+
+Escribe el comando para establecer el SGID y los permisos `rwxrwx---` (770) en el directorio `/proyecto`.
+
+<input type="text" class="fill-blank" data-answer="chmod 2770 /proyecto" data-alt="chmod g+s,u=rwx,g=rwx,o= /proyecto" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**chmod 2770 /proyecto**
+
+El valor `2770` combina el SGID (2 en el cuarto digito) con los permisos `rwxrwx---` (770). El SGID en un directorio hace que los archivos creados dentro hereden automaticamente el grupo del directorio. Esto es esencial para directorios de trabajo colaborativo donde todos los miembros del grupo necesitan acceso a los archivos creados por cualquier miembro.
+
+</details>
+
+---
+
+### Pregunta 24
+
+Escribe el comando para establecer la umask a `027` en la sesion actual.
+
+<input type="text" class="fill-blank" data-answer="umask 027" data-alt="umask 0027" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**umask 027**
+
+El comando `umask 027` establece la mascara de creacion de archivos para la sesion actual. Con esta umask, los archivos nuevos tendran permisos `640` (666-027) y los directorios `750` (777-027). El propietario tendra permisos completos, el grupo tendra lectura (y ejecucion en directorios), y otros no tendran ningun acceso. El cero inicial es opcional (tanto `027` como `0027` son validos).
+
+</details>
+
+---
+
+### Pregunta 25
+
+Escribe el comando para anadir el permiso de ejecucion para todos los usuarios (propietario, grupo y otros) al archivo `programa.sh`.
+
+<input type="text" class="fill-blank" data-answer="chmod a+x programa.sh" data-alt="chmod +x programa.sh,chmod ugo+x programa.sh" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**chmod a+x programa.sh**
+
+El operador `a` significa "all" (todos: propietario, grupo y otros). El operador `+` anade el permiso especificado. `x` es el permiso de ejecucion. Tambien es valido usar `chmod +x programa.sh` (sin especificar `a`, se aplica a todos por defecto) o `chmod ugo+x programa.sh`. Este es un comando muy comun para hacer ejecutable un script recien creado.
+
+</details>

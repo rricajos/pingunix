@@ -11,7 +11,7 @@ subtema: "200.2"
 
 # Flashcards: 200.2 - Prediccion De Necesidades
 
-> 17 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 31 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="200.2">
 </div>
@@ -199,6 +199,276 @@ subtema: "200.2"
 <div class="flashcard" data-id="200.2-fc-011">
 <div class="flashcard-front">
 
+**P:** Un servidor web tiene un directorio de logs que crece 2 GB por semana. El disco de logs tiene 100 GB disponibles. Si la politica de retencion exige mantener los logs durante 1 ano, ¿que capacidad minima de disco se necesitaria?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) 104 GB. Un ano tiene 52 semanas. Con un crecimiento de 2 GB/semana, se necesitan 52 x 2 = 104 GB para un ano completo de logs. Los 100 GB disponibles actuales no serian suficientes. En la practica, habria que considerar un margen de seguridad adicional (80% de uso recomendado), lo que elevaria la necesidad real a unos 130 GB.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="200.2">
+</div>
+
+<div class="flashcard" data-id="200.2-fc-012">
+<div class="flashcard-front">
+
+**P:** ¿Que formato de base de datos utiliza `collectd` por defecto para almacenar las metricas del sistema y cual es su caracteristica principal?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) RRD (Round Robin Database), tamano fijo que rota datos antiguos automaticamente. Los archivos RRD tienen la ventaja de mantener un tamano fijo independientemente del tiempo de recopilacion. Los datos mas recientes se almacenan con mayor granularidad, mientras que los mas antiguos se consolidan (promedian) automaticamente. Esto los hace ideales para datos de series temporales a largo plazo sin preocuparse por el crecimiento del almacenamiento.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="200.2">
+</div>
+
+<div class="flashcard" data-id="200.2-fc-013">
+<div class="flashcard-front">
+
+**P:** Un administrador necesita presentar a la direccion una proyeccion de crecimiento del uso de CPU para los proximos 6 meses. ¿Cual es la fuente de datos mas adecuada?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) Datos historicos recopilados por `sar` o `collectd` durante los ultimos meses. Para realizar predicciones fiables se necesitan datos historicos que cubran un periodo significativo. `sar` y `collectd` almacenan datos historicos que permiten identificar tendencias de crecimiento. Una sola ejecucion de `top` o `vmstat` solo muestra el estado actual, no tendencias. `/proc/cpuinfo` muestra la configuracion del hardware, no el uso.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="200.2">
+</div>
+
+<div class="flashcard" data-id="200.2-fc-014">
+<div class="flashcard-front">
+
+**P:** ¿Que tipo de patron de crecimiento describe mejor la situacion donde una empresa despliega una nueva aplicacion de CRM y el uso de memoria del servidor aumenta abruptamente de 4 GB a 10 GB?
+
+</div>
+<div class="flashcard-back">
+
+**R:** d) Crecimiento escalonado. El crecimiento escalonado se caracteriza por aumentos bruscos asociados a eventos concretos, como el despliegue de una nueva aplicacion. El uso de recursos salta de un nivel a otro sin una transicion gradual. Este tipo de crecimiento es predecible si se conocen los planes de despliegue, pero impredecible si no hay comunicacion entre equipos.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="200.2">
+</div>
+
+<div class="flashcard" data-id="200.2-fc-015">
+<div class="flashcard-front">
+
+**P:** Al planificar capacidad, ¿a que porcentaje de uso de disco se recomienda tipicamente comenzar a planificar la ampliacion?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) 70-80%. La practica recomendada es comenzar a planificar ampliaciones cuando el uso alcanza el 70-80% de la capacidad. Esto proporciona un margen de seguridad para el crecimiento durante el tiempo que tarda en ejecutarse la ampliacion (compras, instalacion, migracion). Esperar hasta el 95% o mas implica riesgo de quedarse sin espacio antes de poder actuar.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="200.2">
+</div>
+
+<div class="flashcard" data-id="200.2-fc-016">
+<div class="flashcard-front">
+
+**P:** ¿Que herramienta permite generar graficos de tendencia directamente a partir de archivos RRD?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `rrdtool graph`. `rrdtool` es la herramienta de linea de comandos que permite generar graficos PNG a partir de datos almacenados en archivos RRD. El subcomando `graph` permite definir el periodo, colores, leyendas y fuentes de datos para crear visualizaciones de tendencias. Herramientas como Cacti y MRTG usan `rrdtool` internamente para generar sus graficos.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="200.2">
+</div>
+
+<div class="flashcard" data-id="200.2-fc-017">
+<div class="flashcard-front">
+
+**P:** Un servidor de archivos tiene actualmente 2 TB de almacenamiento con 1.5 TB usados. El crecimiento mensual es de 50 GB. Un proyecto nuevo anadira 200 usuarios que generaran 500 MB cada uno al mes. ¿En cuantos meses aproximadamente se alcanzara el 80% de capacidad adicional disponible si se amplia a 4 TB?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) 15 meses. Capacidad total nueva: 4 TB. Umbral del 80%: 3.2 TB. Espacio hasta el umbral: 3.2 TB - 1.5 TB = 1.7 TB = 1700 GB. Crecimiento mensual total: 50 GB (actual) + 200 x 0.5 GB (nuevos usuarios) = 50 + 100 = 150 GB/mes. Meses hasta el umbral: 1700 / 150 = 11.3 meses. Con margen de planificacion, aproximadamente 15 meses considerando variaciones en el crecimiento y factor de seguridad.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="200.2">
+</div>
+
+<div class="flashcard" data-id="200.2-fc-018">
+<div class="flashcard-front">
+
+**P:** ¿Cual de las siguientes NO es una estrategia valida a corto plazo para abordar un problema de falta de espacio en disco?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) Implementar una SAN (Storage Area Network). Implementar una SAN es una solucion a largo plazo que requiere planificacion, presupuesto, hardware y configuracion. Las estrategias a corto plazo son aquellas que pueden ejecutarse rapidamente: limpiar archivos temporales, comprimir datos, ajustar rotacion de logs, mover datos a otros discos disponibles. La planificacion de capacidad debe distinguir entre acciones inmediatas y proyectos a largo plazo.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="200.2">
+</div>
+
+<div class="flashcard" data-id="200.2-fc-019">
+<div class="flashcard-front">
+
+**P:** ¿Que metrica de `sar` seria la mas relevante para predecir si un servidor necesitara mas RAM en el futuro?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `sar -r` (estadisticas de memoria) observando la tendencia de `%memused` y `kbswpused`. Para predecir necesidades de RAM, se deben analizar las tendencias historicas de uso de memoria con `sar -r`. Los indicadores clave son `%memused` (porcentaje de memoria utilizada) y `kbswpused` (swap utilizado). Un aumento progresivo en el uso de memoria y la aparicion de uso de swap son senales claras de que se necesitara mas RAM.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="200.2">
+</div>
+
+<div class="flashcard" data-id="200.2-fc-020">
+<div class="flashcard-front">
+
+**P:** ¿Que ventaja tiene el escalado horizontal sobre el escalado vertical para un servidor web con trafico creciente?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) Ofrece mayor escalabilidad a largo plazo y redundancia, ya que se pueden agregar mas servidores sin limite teorico. El escalado horizontal (agregar mas maquinas) ofrece escalabilidad practicamente ilimitada y ademas proporciona redundancia: si un servidor falla, los demas pueden seguir atendiendo peticiones. El escalado vertical tiene limites fisicos (maximo de RAM, CPUs). Sin embargo, el escalado horizontal es mas complejo de implementar y puede requerir cambios en la aplicacion y un balanceador de carga.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="200.2">
+</div>
+
+<div class="flashcard" data-id="200.2-fc-021">
+<div class="flashcard-front">
+
+**P:** ¿Que comando permite exportar los datos recopilados por `sar` a formato CSV para analisis en una hoja de calculo?
+
+</div>
+<div class="flashcard-back">
+
+**R:** sadf -d. El comando `sadf` (System Activity Data Formatter) con la opcion `-d` genera salida en formato CSV (separado por punto y coma). Por ejemplo, `sadf -d /var/log/sysstat/sa15 -- -u` exportaria los datos de CPU del dia 15 en formato CSV. `sadf` es la herramienta puente entre los datos binarios de sar y formatos analizables por otras herramientas.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="200.2">
+</div>
+
+<div class="flashcard" data-id="200.2-fc-022">
+<div class="flashcard-front">
+
+**P:** ¿Que comando muestra el espacio en disco utilizado y disponible de todos los sistemas de archivos montados en formato legible?
+
+</div>
+<div class="flashcard-back">
+
+**R:** df -h. El comando `df -h` (disk free, human-readable) muestra el espacio total, usado, disponible y porcentaje de uso de cada sistema de archivos montado, en unidades legibles (KB, MB, GB, TB). Es un punto de datos esencial para la planificacion de capacidad de almacenamiento cuando se registra periodicamente.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="200.2">
+</div>
+
+<div class="flashcard" data-id="200.2-fc-023">
+<div class="flashcard-front">
+
+**P:** ¿Que comando genera un grafico PNG de tendencia de uso de CPU a partir de un archivo RRD con datos de los ultimos 30 dias?
+
+</div>
+<div class="flashcard-back">
+
+**R:** rrdtool graph. El comando `rrdtool graph` permite generar graficos de tendencia en formato PNG a partir de datos almacenados en archivos RRD. Por ejemplo: `rrdtool graph tendencia.png --start -30d DEF:cpu=archivo.rrd:value:AVERAGE LINE1:cpu#FF0000`. Las opciones `--start` y `--end` definen el periodo temporal del grafico.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="200.2">
+</div>
+
+<div class="flashcard" data-id="200.2-fc-024">
+<div class="flashcard-front">
+
+**P:** ¿Que comando permite ver cuanto espacio en disco ocupa un directorio especifico, como `/var/log`, en formato resumido y legible?
+
+</div>
+<div class="flashcard-back">
+
+**R:** du -sh /var/log. El comando `du -sh /var/log` muestra el tamano total del directorio `/var/log` en formato legible (`-h` human-readable) y resumido (`-s` summary, sin mostrar cada subdirectorio individualmente). Es util para monitorizar el crecimiento de directorios especificos a lo largo del tiempo como parte de la planificacion de capacidad.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="200.2">
+</div>
+
+<div class="flashcard" data-id="200.2-fc-025">
+<div class="flashcard-front">
+
+**P:** ¿Que comando muestra los datos historicos de uso de disco recopilados por `sar` del dia 10 del mes?
+
+</div>
+<div class="flashcard-back">
+
+**R:** sar -d -f /var/log/sysstat/sa10. La opcion `-d` de `sar` muestra estadisticas de disco, y `-f` especifica el archivo de datos historicos. Los archivos se almacenan en `/var/log/sysstat/` (Debian/Ubuntu) o `/var/log/sa/` (Red Hat/CentOS) con nombres como `sa10` donde el numero corresponde al dia del mes.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="200.2">
+</div>
+
+<div class="flashcard" data-id="200.2-fc-026">
+<div class="flashcard-front">
+
 **P:** Tip de examen: La recopilacion de datos historicos con herramientas como `sar` y `collectd` es ...
 
 </div>
@@ -214,7 +484,7 @@ subtema: "200.2"
 <div class="flashcard-deck" data-subtema="200.2">
 </div>
 
-<div class="flashcard" data-id="200.2-fc-012">
+<div class="flashcard" data-id="200.2-fc-027">
 <div class="flashcard-front">
 
 **P:** Tip de examen: Se espera que puedas realizar calculos basicos de prediccion de crecimiento de d...
@@ -232,7 +502,7 @@ subtema: "200.2"
 <div class="flashcard-deck" data-subtema="200.2">
 </div>
 
-<div class="flashcard" data-id="200.2-fc-013">
+<div class="flashcard" data-id="200.2-fc-028">
 <div class="flashcard-front">
 
 **P:** Tip de examen: `sadf` es el comando para convertir datos de sar a formatos legibles por otras h...
@@ -250,7 +520,7 @@ subtema: "200.2"
 <div class="flashcard-deck" data-subtema="200.2">
 </div>
 
-<div class="flashcard" data-id="200.2-fc-014">
+<div class="flashcard" data-id="200.2-fc-029">
 <div class="flashcard-front">
 
 **P:** Tip de examen: Debes entender que la prediccion no es solo sobre hardware. Optimizar software, ...
@@ -268,25 +538,7 @@ subtema: "200.2"
 <div class="flashcard-deck" data-subtema="200.2">
 </div>
 
-<div class="flashcard" data-id="200.2-fc-015">
-<div class="flashcard-front">
-
-**P:** Que es/son Introduccion?
-
-</div>
-<div class="flashcard-back">
-
-**R:** La prediccion de necesidades de recursos es la extension logica de la monitorizacion del uso actual. Mientras que el subtema 200.1 se centra en medir lo que esta ocurriendo ahora, este subtema se enfoc
-
-</div>
-</div>
-
----
-
-<div class="flashcard-deck" data-subtema="200.2">
-</div>
-
-<div class="flashcard" data-id="200.2-fc-016">
+<div class="flashcard" data-id="200.2-fc-030">
 <div class="flashcard-front">
 
 **P:** Que es/son Estrategias de actuacion?
@@ -304,7 +556,7 @@ subtema: "200.2"
 <div class="flashcard-deck" data-subtema="200.2">
 </div>
 
-<div class="flashcard" data-id="200.2-fc-017">
+<div class="flashcard" data-id="200.2-fc-031">
 <div class="flashcard-front">
 
 **P:** Que es/son Documentacion y comunicacion?

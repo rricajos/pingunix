@@ -164,3 +164,228 @@ d) Configurar modo activo/activo
 
 Con 2 nodos, ningún nodo tiene mayoría si el otro falla o si se pierde la comunicación. Un quorum disk o quorum device actúa como "tercer voto" para desempatar. Alternativamente se puede configurar `two_node: 1` en Corosync junto con `wait_for_all`.
 </details>
+
+### Pregunta 11
+
+¿Qué componente de Pacemaker calcula el estado deseado del cluster y decide qué acciones realizar?
+
+a) CIB (Cluster Information Base)
+b) PE (Policy Engine)
+c) LRMd (Local Resource Manager daemon)
+d) STONITHd
+
+<details><summary>Respuesta</summary>
+
+**b) PE (Policy Engine)**
+
+El Policy Engine (PE) evalúa el estado actual del cluster (almacenado en la CIB) y calcula la transición necesaria para alcanzar el estado deseado. Genera un grafo de acciones que el CRMd coordina y el LRMd ejecuta localmente.
+</details>
+
+### Pregunta 12
+
+¿Cuál es la principal diferencia entre un modelo de cluster activo/pasivo y activo/activo?
+
+a) El activo/pasivo requiere más nodos
+b) En el activo/activo ambos nodos procesan peticiones simultáneamente
+c) El activo/pasivo es más complejo de configurar
+d) El activo/activo no necesita almacenamiento compartido
+
+<details><summary>Respuesta</summary>
+
+**b) En el activo/activo ambos nodos procesan peticiones simultáneamente**
+
+En el modelo activo/activo, todos los nodos procesan peticiones, aprovechando mejor los recursos. El activo/pasivo mantiene un nodo en espera. El activo/activo es más complejo y requiere sistemas de archivos cluster o almacenamiento compartido para escrituras concurrentes.
+</details>
+
+### Pregunta 13
+
+¿Qué protocolo utiliza Corosync para garantizar el orden de mensajes entre los nodos del cluster?
+
+a) VRRP
+b) Totem (Single Ring Ordering)
+c) Raft
+d) Paxos
+
+<details><summary>Respuesta</summary>
+
+**b) Totem (Single Ring Ordering)**
+
+Corosync utiliza el protocolo Totem con Single Ring Ordering para garantizar que los mensajes se entregan a todos los nodos en el mismo orden. Esto es fundamental para mantener la coherencia del estado del cluster.
+</details>
+
+### Pregunta 14
+
+Un sistema tiene un MTBF de 500 horas y un MTTR de 0.5 horas. ¿Cuál es su disponibilidad aproximada?
+
+a) 99%
+b) 99.5%
+c) 99.9%
+d) 99.99%
+
+<details><summary>Respuesta</summary>
+
+**c) 99.9%**
+
+Disponibilidad = MTBF / (MTBF + MTTR) = 500 / (500 + 0.5) = 500 / 500.5 ≈ 0.999 = 99.9%. Un MTBF alto combinado con un MTTR bajo resulta en alta disponibilidad.
+</details>
+
+### Pregunta 15
+
+¿Cuánto tiempo de inactividad máximo al año permite una disponibilidad de 99.999% (cinco nueves)?
+
+a) 52.6 minutos
+b) 8.76 horas
+c) 5.26 minutos
+d) 31.5 segundos
+
+<details><summary>Respuesta</summary>
+
+**c) 5.26 minutos**
+
+Cinco nueves (99.999%) permite solo 5.26 minutos de inactividad al año. Este nivel de disponibilidad se considera el estándar más exigente y requiere redundancia completa, failover automático y tiempos de recuperación extremadamente rápidos.
+</details>
+
+### Pregunta 16
+
+¿Qué valor de `no-quorum-policy` mantiene los recursos activos pero impide iniciar nuevos cuando se pierde el quorum?
+
+a) `stop`
+b) `freeze`
+c) `ignore`
+d) `suicide`
+
+<details><summary>Respuesta</summary>
+
+**b) `freeze`**
+
+La política `freeze` mantiene los recursos que ya están activos pero no permite iniciar nuevos ni mover los existentes. `stop` detiene todo, `ignore` ignora la pérdida de quorum, y `suicide` apaga los nodos que no tienen quorum.
+</details>
+
+### Pregunta 17
+
+¿En qué directorio se encuentran los agentes de recursos OCF en un sistema Linux?
+
+a) `/etc/ocf/agents/`
+b) `/usr/lib/ocf/resource.d/`
+c) `/var/lib/pacemaker/ocf/`
+d) `/opt/ocf/resources/`
+
+<details><summary>Respuesta</summary>
+
+**b) `/usr/lib/ocf/resource.d/`**
+
+Los agentes OCF se ubican en `/usr/lib/ocf/resource.d/` organizados por proveedor. Por ejemplo, `/usr/lib/ocf/resource.d/heartbeat/IPaddr2` es el agente de IP virtual del proveedor heartbeat.
+</details>
+
+### Pregunta 18
+
+¿Qué tipo de fencing opera a nivel de recurso bloqueando el acceso del nodo al almacenamiento en lugar de apagar el nodo completo?
+
+a) STONITH
+b) SAN zoning / fencing de recurso
+c) Watchdog timer
+d) Network partition
+
+<details><summary>Respuesta</summary>
+
+**b) SAN zoning / fencing de recurso**
+
+El fencing a nivel de recurso bloquea el acceso del nodo a recursos específicos (por ejemplo, mediante SAN zoning o reservas SCSI). A diferencia de STONITH que apaga todo el nodo, el fencing de recurso es más granular pero menos determinista.
+</details>
+
+### Pregunta 19
+
+En un cluster de 7 nodos, ¿cuántos fallos simultáneos puede tolerar sin perder el quorum?
+
+a) 2
+b) 3
+c) 4
+d) 5
+
+<details><summary>Respuesta</summary>
+
+**b) 3**
+
+Con 7 nodos, el quorum requiere (7+1)/2 = 4 nodos. Por lo tanto, el cluster puede tolerar la pérdida de 3 nodos (7 - 4 = 3) sin perder el quorum.
+</details>
+
+### Pregunta 20
+
+¿Qué componente de Pacemaker ejecuta las operaciones de start, stop y monitor de los recursos en el nodo local?
+
+a) CRMd (Cluster Resource Manager daemon)
+b) PE (Policy Engine)
+c) LRMd (Local Resource Manager daemon)
+d) CIB (Cluster Information Base)
+
+<details><summary>Respuesta</summary>
+
+**c) LRMd (Local Resource Manager daemon)**
+
+El LRMd es el daemon que ejecuta las operaciones de los resource agents en el nodo local. Recibe instrucciones del CRMd y las ejecuta llamando a los agentes de recursos apropiados (start, stop, monitor, etc.).
+</details>
+
+### Pregunta 21
+
+¿Qué comando lista los agentes de recursos OCF disponibles del proveedor heartbeat en un cluster Pacemaker?
+
+<input type="text" class="fill-blank" data-answer="pcs resource agents ocf:heartbeat" data-alt="pcs resource agents ocf" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**pcs resource agents ocf:heartbeat**
+
+El comando `pcs resource agents ocf:heartbeat` muestra todos los agentes OCF disponibles del proveedor heartbeat. Sin especificar proveedor, `pcs resource agents` muestra agentes de todas las clases.
+</details>
+
+### Pregunta 22
+
+¿Qué comando muestra la descripción y los parámetros del agente de recurso `ocf:heartbeat:IPaddr2`?
+
+<input type="text" class="fill-blank" data-answer="pcs resource describe ocf:heartbeat:IPaddr2" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**pcs resource describe ocf:heartbeat:IPaddr2**
+
+El comando `pcs resource describe` muestra la documentación completa de un agente de recurso, incluyendo sus parámetros obligatorios y opcionales, valores predeterminados y las operaciones soportadas.
+</details>
+
+### Pregunta 23
+
+¿Cuál es la fórmula correcta para calcular la disponibilidad de un sistema a partir del MTBF y el MTTR?
+
+<input type="text" class="fill-blank" data-answer="MTBF / (MTBF + MTTR)" data-alt="MTBF/(MTBF+MTTR)" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**MTBF / (MTBF + MTTR)**
+
+La disponibilidad se calcula dividiendo el tiempo medio entre fallos (MTBF) entre la suma del MTBF y el tiempo medio de reparación (MTTR). El resultado se multiplica por 100 para obtener el porcentaje.
+</details>
+
+### Pregunta 24
+
+¿Qué comando muestra el estado completo de un cluster Pacemaker incluyendo nodos, recursos y restricciones?
+
+<input type="text" class="fill-blank" data-answer="pcs status" data-alt="crm status,crm_mon" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**pcs status**
+
+El comando `pcs status` muestra un resumen completo del cluster: estado de los nodos, recursos activos, restricciones y errores. Equivale a `crm status` en la shell crm o a `crm_mon` para monitorización continua.
+</details>
+
+### Pregunta 25
+
+¿Qué comando configura la propiedad de STONITH como habilitada en un cluster Pacemaker?
+
+<input type="text" class="fill-blank" data-answer="pcs property set stonith-enabled=true" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**pcs property set stonith-enabled=true**
+
+El comando `pcs property set stonith-enabled=true` activa STONITH en el cluster. STONITH es obligatorio en entornos de producción para garantizar la integridad de los datos. Sin STONITH habilitado, Pacemaker no puede evitar la corrupción por split-brain.
+</details>

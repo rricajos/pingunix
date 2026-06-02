@@ -197,3 +197,273 @@ d) Configurar DHCP relay y habilitar multicast
 
 Para que los clientes VPN accedan a Internet a través del servidor, se necesitan dos cosas: 1) Habilitar IP forwarding (`net.ipv4.ip_forward = 1` en `/etc/sysctl.conf`) para que el kernel reenvíe paquetes entre interfaces, y 2) configurar NAT con `iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE` para traducir las direcciones de la red VPN.
 </details>
+
+---
+
+### Pregunta 11
+
+¿Qué directiva de OpenVPN envía rutas de redes internas a los clientes para que sepan cómo alcanzarlas a través del túnel?
+
+a) `route-push 192.168.1.0 255.255.255.0`
+b) `push "route 192.168.1.0 255.255.255.0"`
+c) `client-route 192.168.1.0/24`
+d) `add-route 192.168.1.0 255.255.255.0`
+
+<details>
+<summary>Respuesta</summary>
+
+**b) `push "route 192.168.1.0 255.255.255.0"`**
+
+La directiva `push "route ..."` en la configuración del servidor envía rutas estáticas a los clientes VPN cuando se conectan. Esto permite que los clientes sepan que deben enrutar el tráfico hacia esas redes a través del túnel VPN.
+</details>
+
+---
+
+### Pregunta 12
+
+¿Qué directiva en la configuración del servidor OpenVPN define la subred que se asigna a los clientes VPN?
+
+a) `network 10.8.0.0 255.255.255.0`
+b) `vpn-subnet 10.8.0.0/24`
+c) `server 10.8.0.0 255.255.255.0`
+d) `ifconfig 10.8.0.0 255.255.255.0`
+
+<details>
+<summary>Respuesta</summary>
+
+**c) `server 10.8.0.0 255.255.255.0`**
+
+La directiva `server` es un atajo que configura automáticamente la subred VPN, el pool de IPs para clientes, las rutas necesarias y el modo de servidor. En este ejemplo, el servidor recibe la IP 10.8.0.1 y los clientes se asignan direcciones del rango 10.8.0.0/24.
+</details>
+
+---
+
+### Pregunta 13
+
+¿Qué diferencia hay entre `tls-auth` y `tls-crypt` en OpenVPN?
+
+a) `tls-auth` cifra todo el tráfico, `tls-crypt` solo firma
+b) `tls-auth` firma los paquetes de control con HMAC, `tls-crypt` además los cifra
+c) `tls-crypt` es más antiguo y menos seguro que `tls-auth`
+d) No hay diferencia funcional, son alias
+
+<details>
+<summary>Respuesta</summary>
+
+**b) `tls-auth` firma los paquetes de control con HMAC, `tls-crypt` además los cifra**
+
+`tls-auth` añade una firma HMAC a los paquetes del handshake TLS para verificar su autenticidad. `tls-crypt` va un paso más allá cifrando también los paquetes de control, lo que oculta la negociación TLS y dificulta la identificación del tráfico OpenVPN.
+</details>
+
+---
+
+### Pregunta 14
+
+¿Qué directiva de OpenVPN reduce los privilegios del proceso después de la inicialización, ejecutándose como un usuario no privilegiado?
+
+a) `run-as nobody`
+b) `user nobody`
+c) `setuid nobody`
+d) `privilege nobody`
+
+<details>
+<summary>Respuesta</summary>
+
+**b) `user nobody`**
+
+La directiva `user nobody` (junto con `group nogroup`) reduce los privilegios del proceso OpenVPN después de completar la inicialización. Esto limita el daño potencial si el proceso es comprometido, ya que opera con los mínimos privilegios necesarios.
+</details>
+
+---
+
+### Pregunta 15
+
+¿Qué archivo registra las asignaciones de direcciones IP persistentes de los clientes OpenVPN?
+
+a) /var/log/openvpn/clients.log
+b) /var/log/openvpn/ipp.txt
+c) /etc/openvpn/ip-pool.conf
+d) /var/log/openvpn/openvpn-status.log
+
+<details>
+<summary>Respuesta</summary>
+
+**b) /var/log/openvpn/ipp.txt**
+
+El archivo `ipp.txt` (configurado con la directiva `ifconfig-pool-persist`) almacena las asociaciones entre clientes (por nombre de certificado) y sus direcciones IP asignadas, permitiendo que un cliente reciba la misma IP en reconexiones sucesivas.
+</details>
+
+---
+
+### Pregunta 16
+
+¿Qué comando de easy-rsa revoca el certificado de un cliente llamado "cliente1"?
+
+a) `./easyrsa delete cliente1`
+b) `./easyrsa revoke cliente1`
+c) `./easyrsa invalidate cliente1`
+d) `./easyrsa remove-cert cliente1`
+
+<details>
+<summary>Respuesta</summary>
+
+**b) `./easyrsa revoke cliente1`**
+
+El comando `./easyrsa revoke cliente1` marca el certificado del cliente como revocado. Después se debe ejecutar `./easyrsa gen-crl` para generar la lista de revocación actualizada (`crl.pem`), y el servidor debe estar configurado con `crl-verify` para verificarla.
+</details>
+
+---
+
+### Pregunta 17
+
+¿Qué directiva de OpenVPN mantiene las claves en memoria y el túnel activo durante un reinicio del servicio con señal SIGUSR1?
+
+a) `keep-alive`
+b) `persist-key` y `persist-tun`
+c) `maintain-state`
+d) `save-keys`
+
+<details>
+<summary>Respuesta</summary>
+
+**b) `persist-key` y `persist-tun`**
+
+Las directivas `persist-key` y `persist-tun` son importantes cuando se ejecuta con privilegios reducidos (`user nobody`). `persist-key` evita releer las claves privadas (que requieren privilegios), y `persist-tun` evita cerrar y reabrir la interfaz tun/tap durante reinicios suaves.
+</details>
+
+---
+
+### Pregunta 18
+
+¿Qué protocolo de transporte y puerto utiliza OpenVPN por defecto?
+
+a) TCP puerto 443
+b) UDP puerto 1194
+c) TCP puerto 1194
+d) UDP puerto 1195
+
+<details>
+<summary>Respuesta</summary>
+
+**b) UDP puerto 1194**
+
+OpenVPN utiliza por defecto el protocolo UDP en el puerto 1194. UDP es preferido porque ofrece mejor rendimiento al evitar el problema de "TCP sobre TCP". Sin embargo, se puede configurar con TCP (generalmente en puerto 443) para atravesar firewalls restrictivos.
+</details>
+
+---
+
+### Pregunta 19
+
+¿Qué directiva del servidor OpenVPN establece los intervalos de keepalive para detectar clientes desconectados?
+
+a) `ping 10 120`
+b) `keepalive 10 120`
+c) `heartbeat 10 120`
+d) `alive-check 10 120`
+
+<details>
+<summary>Respuesta</summary>
+
+**b) `keepalive 10 120`**
+
+La directiva `keepalive 10 120` envía pings cada 10 segundos y considera la conexión caída si no recibe respuesta en 120 segundos. Es un atajo que configura automáticamente los parámetros `ping` y `ping-restart` tanto en el servidor como en los clientes.
+</details>
+
+---
+
+### Pregunta 20
+
+¿Qué directiva en la configuración del cliente OpenVPN verifica que el certificado del servidor tiene el atributo Extended Key Usage correcto?
+
+a) `verify-server`
+b) `remote-cert-tls server`
+c) `tls-verify server`
+d) `ns-cert-type server`
+
+<details>
+<summary>Respuesta</summary>
+
+**b) `remote-cert-tls server`**
+
+La directiva `remote-cert-tls server` verifica que el certificado presentado por el servidor tiene el atributo EKU (Extended Key Usage) de tipo servidor. Esto previene un ataque donde un cliente comprometido podría hacerse pasar por servidor usando su propio certificado de cliente.
+</details>
+
+---
+
+### Pregunta 21
+
+¿Qué comando genera la clave estática utilizada para tls-auth en OpenVPN?
+
+<input type="text" class="fill-blank" data-answer="openvpn --genkey secret /etc/openvpn/ta.key" data-alt="openvpn --genkey secret ta.key,openvpn --genkey secret" placeholder="$ escribe aqui...">
+
+<details>
+<summary>Respuesta</summary>
+
+**openvpn --genkey secret /etc/openvpn/ta.key**
+
+El comando `openvpn --genkey secret` genera una clave estática de 2048 bits que se comparte entre servidor y clientes. Esta clave se usa con `tls-auth` o `tls-crypt` para añadir una capa adicional de seguridad al handshake TLS.
+</details>
+
+---
+
+### Pregunta 22
+
+¿Qué comando de easy-rsa inicializa la infraestructura de clave pública (PKI)?
+
+<input type="text" class="fill-blank" data-answer="./easyrsa init-pki" data-alt="easyrsa init-pki" placeholder="$ escribe aqui...">
+
+<details>
+<summary>Respuesta</summary>
+
+**./easyrsa init-pki**
+
+El comando `./easyrsa init-pki` crea la estructura de directorios necesaria para la PKI de OpenVPN, incluyendo los directorios para claves privadas, solicitudes y certificados emitidos. Es el primer paso antes de crear la autoridad certificadora con `build-ca`.
+</details>
+
+---
+
+### Pregunta 23
+
+¿Qué comando de easy-rsa genera los parámetros Diffie-Hellman necesarios para el servidor?
+
+<input type="text" class="fill-blank" data-answer="./easyrsa gen-dh" data-alt="easyrsa gen-dh" placeholder="$ escribe aqui...">
+
+<details>
+<summary>Respuesta</summary>
+
+**./easyrsa gen-dh**
+
+El comando `./easyrsa gen-dh` genera los parámetros Diffie-Hellman (`dh.pem`) necesarios para el intercambio seguro de claves en el handshake TLS del servidor. Este proceso puede tardar varios minutos y solo se necesita ejecutar en el servidor, no en los clientes.
+</details>
+
+---
+
+### Pregunta 24
+
+¿Qué comando de easy-rsa genera la lista de revocación de certificados (CRL) después de revocar un certificado?
+
+<input type="text" class="fill-blank" data-answer="./easyrsa gen-crl" data-alt="easyrsa gen-crl" placeholder="$ escribe aqui...">
+
+<details>
+<summary>Respuesta</summary>
+
+**./easyrsa gen-crl**
+
+El comando `./easyrsa gen-crl` genera el archivo `crl.pem` que contiene la lista de certificados revocados. El servidor OpenVPN debe estar configurado con `crl-verify /ruta/crl.pem` para rechazar conexiones de clientes con certificados revocados.
+</details>
+
+---
+
+### Pregunta 25
+
+¿Qué comando de easy-rsa crea la autoridad certificadora (CA) para la PKI de OpenVPN?
+
+<input type="text" class="fill-blank" data-answer="./easyrsa build-ca" data-alt="easyrsa build-ca" placeholder="$ escribe aqui...">
+
+<details>
+<summary>Respuesta</summary>
+
+**./easyrsa build-ca**
+
+El comando `./easyrsa build-ca` genera el certificado raíz (`ca.crt`) y la clave privada de la CA (`ca.key`). El certificado de la CA es necesario tanto en el servidor como en los clientes para verificar la autenticidad de los certificados presentados durante la conexión.
+</details>

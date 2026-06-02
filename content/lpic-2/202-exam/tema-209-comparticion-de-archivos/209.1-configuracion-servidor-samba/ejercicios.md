@@ -189,3 +189,273 @@ En `/etc/fstab`, los recursos CIFS se especifican con la notación de barra incl
 </details>
 
 ---
+
+### Pregunta 11
+
+¿Qué variable de sustitución en smb.conf se reemplaza por el nombre de usuario de la sesión actual?
+
+a) `%m`
+b) `%S`
+c) `%U`
+d) `%L`
+
+<details><summary>Respuesta</summary>
+
+**c) `%U`**
+
+La variable `%U` se reemplaza por el nombre de usuario de la sesión Samba actual. Es útil en configuraciones dinámicas como `log file = /var/log/samba/log.%U` para crear logs separados por usuario. Otras variables comunes son `%m` (nombre NetBIOS del cliente), `%S` (nombre del recurso compartido) y `%H` (directorio home del usuario).
+
+</details>
+
+---
+
+### Pregunta 12
+
+¿Qué directiva en smb.conf especifica qué usuarios o grupos tienen permiso de escritura en un recurso compartido que está configurado como `read only = yes`?
+
+a) `valid users`
+b) `write list`
+c) `admin users`
+d) `force user`
+
+<details><summary>Respuesta</summary>
+
+**b) `write list`**
+
+La directiva `write list` permite definir usuarios o grupos (con el prefijo `@`) que tendrán permiso de escritura incluso cuando el recurso está configurado como `read only = yes`. Por ejemplo, `write list = @editores, admin` permite escritura a los miembros del grupo editores y al usuario admin, mientras el resto solo puede leer.
+
+</details>
+
+---
+
+### Pregunta 13
+
+¿Qué demonio de Samba se encarga de la integración con Active Directory para el mapeo de usuarios y grupos de Windows?
+
+a) smbd
+b) nmbd
+c) winbindd
+d) sambd
+
+<details><summary>Respuesta</summary>
+
+**c) winbindd**
+
+El demonio `winbindd` se encarga de la integración con Active Directory, permitiendo mapear usuarios y grupos de Windows a UIDs y GIDs de Linux. Utiliza el módulo NSS (Name Service Switch) y PAM para que los usuarios de AD puedan autenticarse en el sistema Linux. Se configura junto con `security = ads` y el parámetro `idmap config` en smb.conf.
+
+</details>
+
+---
+
+### Pregunta 14
+
+¿En qué puertos TCP escucha el demonio `smbd` para gestionar las conexiones de compartición de archivos?
+
+a) UDP 137 y 138
+b) TCP 139 y 445
+c) TCP 80 y 443
+d) TCP 389 y 636
+
+<details><summary>Respuesta</summary>
+
+**b) TCP 139 y 445**
+
+El demonio `smbd` escucha en los puertos TCP 139 (NetBIOS Session Service, para compatibilidad con clientes antiguos) y TCP 445 (SMB directo sobre TCP, utilizado por clientes modernos). El demonio `nmbd` escucha en los puertos UDP 137 (NetBIOS Name Service) y UDP 138 (NetBIOS Datagram Service) para servicios de nombres y navegación.
+
+</details>
+
+---
+
+### Pregunta 15
+
+¿Qué directiva de smb.conf permite restringir el acceso a un recurso compartido solo a determinadas direcciones IP o redes?
+
+a) `allow hosts`
+b) `hosts allow`
+c) `ip restrict`
+d) `access from`
+
+<details><summary>Respuesta</summary>
+
+**b) `hosts allow`**
+
+La directiva `hosts allow` (también aceptada como `allow hosts`) especifica las direcciones IP, redes o nombres de host que tienen permiso para acceder al recurso compartido. Por ejemplo, `hosts allow = 192.168.1.0/24 10.0.0.5`. Su contraparte es `hosts deny` para denegar acceso. Si se usan ambas, `hosts allow` se evalúa primero.
+
+</details>
+
+---
+
+### Pregunta 16
+
+¿Qué herramienta de Samba permite administrar la base de datos de usuarios con más opciones que `smbpasswd`, incluyendo la gestión de diferentes backends?
+
+a) smbclient
+b) pdbedit
+c) testparm
+d) net
+
+<details><summary>Respuesta</summary>
+
+**b) pdbedit**
+
+El comando `pdbedit` es una herramienta avanzada para gestionar la base de datos de usuarios de Samba. Permite listar usuarios (`pdbedit -L`), añadir usuarios (`pdbedit -a`), eliminar usuarios (`pdbedit -x`), mostrar información detallada (`pdbedit -v`) y exportar/importar la base de datos entre diferentes backends como tdbsam y ldapsam.
+
+</details>
+
+---
+
+### Pregunta 17
+
+¿Qué directiva de smb.conf fuerza que todas las operaciones de archivos en un recurso compartido se realicen como un grupo específico del sistema?
+
+a) `default group`
+b) `group`
+c) `force group`
+d) `set group`
+
+<details><summary>Respuesta</summary>
+
+**c) `force group`**
+
+La directiva `force group` hace que todas las operaciones de archivos y directorios en el recurso compartido se realicen bajo la identidad del grupo especificado, independientemente del grupo real del usuario que se conecta. Por ejemplo, `force group = proyecto` asegura que todos los archivos creados pertenezcan al grupo "proyecto". Su equivalente para usuarios es `force user`.
+
+</details>
+
+---
+
+### Pregunta 18
+
+¿Qué comando de Samba permite resolver un nombre NetBIOS a su dirección IP?
+
+a) smbclient
+b) nmblookup
+c) smbstatus
+d) net lookup
+
+<details><summary>Respuesta</summary>
+
+**b) nmblookup**
+
+El comando `nmblookup` consulta nombres NetBIOS en la red y devuelve la dirección IP asociada. Por ejemplo, `nmblookup SERVIDOR` resuelve el nombre NetBIOS a su IP. Con la opción `-M` busca el maestro de navegación del grupo de trabajo, y con `'*'` lista todos los hosts que responden en la red. Es útil para diagnosticar problemas de resolución de nombres en redes Windows.
+
+</details>
+
+---
+
+### Pregunta 19
+
+¿Qué valor debe tener la directiva `security` en smb.conf para unir el servidor Samba a un dominio Active Directory?
+
+a) `security = domain`
+b) `security = ad`
+c) `security = ads`
+d) `security = kerberos`
+
+<details><summary>Respuesta</summary>
+
+**c) `security = ads`**
+
+El valor `security = ads` configura Samba para autenticar usuarios contra un dominio Active Directory usando Kerberos. Requiere además la directiva `realm = DOMINIO.COM` con el nombre del dominio AD en mayúsculas. Después de configurar smb.conf, el servidor se une al dominio con `net ads join -U administrador`. El modo `domain` es para dominios NT4 obsoletos.
+
+</details>
+
+---
+
+### Pregunta 20
+
+¿Qué directiva de smb.conf permite que un recurso compartido acepte conexiones sin autenticación (acceso anónimo)?
+
+a) `public = yes`
+b) `guest ok = yes`
+c) `anonymous = yes`
+d) `no auth = yes`
+
+<details><summary>Respuesta</summary>
+
+**b) `guest ok = yes`**
+
+La directiva `guest ok = yes` (sinónimo de `public = yes`) permite que los usuarios accedan al recurso compartido sin necesidad de autenticarse. Las conexiones de invitado se mapean al usuario definido en `guest account` (por defecto `nobody`). Debe combinarse con `map to guest = Bad User` en la sección `[global]` para que las credenciales incorrectas se traten como acceso de invitado.
+
+</details>
+
+---
+
+### Pregunta 21
+
+¿Qué comando añade un usuario existente en el sistema Unix a la base de datos de usuarios de Samba?
+
+<input type="text" class="fill-blank" data-answer="smbpasswd -a" data-alt="smbpasswd -a usuario,pdbedit -a" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**smbpasswd -a**
+
+El comando `smbpasswd -a usuario` añade un usuario a la base de datos de Samba. Es requisito previo que el usuario ya exista como usuario Unix en el sistema. La opción `-a` indica que se está añadiendo un nuevo usuario y solicitará establecer una contraseña de Samba. También se puede usar `pdbedit -a usuario` como alternativa.
+
+</details>
+
+---
+
+### Pregunta 22
+
+¿Qué comando lista todos los usuarios registrados en la base de datos de Samba?
+
+<input type="text" class="fill-blank" data-answer="pdbedit -L" data-alt="pdbedit -L -v" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**pdbedit -L**
+
+El comando `pdbedit -L` lista todos los usuarios registrados en la base de datos de Samba, mostrando el nombre de usuario, el UID y el nombre completo. Con la opción `-v` se muestra información detallada de cada usuario, incluyendo el SID, las flags de la cuenta, las fechas de último cambio de contraseña y la política de contraseñas.
+
+</details>
+
+---
+
+### Pregunta 23
+
+¿Qué comando permite listar los recursos compartidos disponibles en un servidor Samba remoto?
+
+<input type="text" class="fill-blank" data-answer="smbclient -L" data-alt="smbclient -L //servidor,smbclient -L //servidor -U usuario" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**smbclient -L**
+
+El comando `smbclient -L //servidor` lista los recursos compartidos disponibles en un servidor Samba o Windows remoto. La opción `-L` indica el modo de listado. Se puede especificar un usuario con `-U usuario` para autenticarse. El resultado muestra los nombres de los recursos compartidos, su tipo (Disk, Printer, IPC) y una descripción.
+
+</details>
+
+---
+
+### Pregunta 24
+
+¿Qué comando verifica que un servidor Samba se ha unido correctamente a un dominio Active Directory?
+
+<input type="text" class="fill-blank" data-answer="net ads testjoin" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**net ads testjoin**
+
+El comando `net ads testjoin` verifica que el servidor Samba está correctamente unido al dominio Active Directory probando la autenticación con la cuenta de máquina del servidor. Si es exitoso, muestra "Join is OK". Si falla, indica el error específico. Es útil para diagnosticar problemas de pertenencia al dominio después de ejecutar `net ads join`.
+
+</details>
+
+---
+
+### Pregunta 25
+
+¿Qué comando deshabilita un usuario en la base de datos de Samba sin eliminarlo?
+
+<input type="text" class="fill-blank" data-answer="smbpasswd -d" data-alt="smbpasswd -d usuario" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**smbpasswd -d**
+
+El comando `smbpasswd -d usuario` deshabilita un usuario en la base de datos de Samba marcando la cuenta como inactiva. El usuario no podrá autenticarse hasta que sea rehabilitado con `smbpasswd -e usuario`. A diferencia de `smbpasswd -x` que elimina completamente al usuario, `-d` permite reactivar la cuenta posteriormente sin necesidad de recrearla.
+
+</details>
+
+---

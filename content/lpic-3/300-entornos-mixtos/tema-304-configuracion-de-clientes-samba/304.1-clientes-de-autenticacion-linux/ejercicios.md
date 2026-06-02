@@ -167,3 +167,228 @@ d) `allowed_groups = LinuxUsers`
 
 Con `access_provider = ad`, SSSD utiliza las políticas de acceso de AD. Se puede combinar con `ad_access_filter = memberOf=CN=LinuxUsers,OU=Groups,DC=empresa,DC=local` para restringir el acceso solo a miembros de un grupo AD específico.
 </details>
+
+### Pregunta 11
+
+¿Qué flag de control PAM indica que el módulo debe tener éxito para que la autenticación continúe, pero si falla, se siguen evaluando los demás módulos antes de denegar?
+
+a) `required`
+b) `sufficient`
+c) `optional`
+d) `requisite`
+
+<details><summary>Respuesta</summary>
+
+**a) `required`**
+
+El flag `required` indica que el módulo debe tener éxito para que el resultado global sea exitoso, pero la evaluación continúa con los demás módulos de la pila. `requisite` deniega inmediatamente si falla. `sufficient` acepta inmediatamente si tiene éxito. `optional` no afecta al resultado global salvo que sea el único módulo.
+</details>
+
+### Pregunta 12
+
+¿Qué parámetro de sssd.conf controla si los nombres de usuario se muestran en formato `usuario@dominio` o simplemente como `usuario`?
+
+a) `full_name_format`
+b) `use_fully_qualified_names`
+c) `username_format`
+d) `domain_prefix`
+
+<details><summary>Respuesta</summary>
+
+**b) `use_fully_qualified_names`**
+
+Cuando `use_fully_qualified_names = false`, los usuarios se muestran y pueden iniciar sesión como `usuario` sin el sufijo de dominio. Con `true`, deben usar `usuario@dominio`. En entornos con un único dominio, se recomienda `false` para simplificar. Con múltiples dominios, `true` evita ambigüedades.
+</details>
+
+### Pregunta 13
+
+¿Cuál es la diferencia entre `pam_sss.so` con `use_first_pass` y con `try_first_pass`?
+
+a) No hay diferencia práctica
+b) `use_first_pass` falla si no hay contraseña previa; `try_first_pass` solicita una nueva si no hay
+c) `try_first_pass` es más seguro que `use_first_pass`
+d) `use_first_pass` solo funciona con Kerberos
+
+<details><summary>Respuesta</summary>
+
+**b) `use_first_pass` falla si no hay contraseña previa; `try_first_pass` solicita una nueva si no hay**
+
+`use_first_pass` utiliza la contraseña proporcionada a un módulo anterior y falla si no se proporcionó ninguna. `try_first_pass` intenta usar la contraseña anterior, pero si no existe o falla, solicita una nueva al usuario. `try_first_pass` es más flexible en pilas PAM donde el primer módulo puede no solicitar contraseña.
+</details>
+
+### Pregunta 14
+
+¿Qué parámetro de sssd.conf define cuántos días son válidas las credenciales en caché para inicio de sesión offline?
+
+a) `cache_timeout`
+b) `offline_credentials_expiration`
+c) `credential_lifetime`
+d) `cache_credentials_timeout`
+
+<details><summary>Respuesta</summary>
+
+**b) `offline_credentials_expiration`**
+
+El parámetro `offline_credentials_expiration` en la sección `[pam]` de sssd.conf define el número de días que las credenciales en caché permanecen válidas para autenticación offline. Por ejemplo, `offline_credentials_expiration = 7` permite el login offline durante 7 días. Requiere `cache_credentials = true` en la sección del dominio.
+</details>
+
+### Pregunta 15
+
+¿Qué ventaja tiene SSSD sobre Winbind para la integración con FreeIPA?
+
+a) SSSD es más rápido
+b) SSSD tiene soporte nativo para FreeIPA como backend; Winbind no lo soporta
+c) FreeIPA requiere Winbind para funcionar
+d) No hay diferencia, ambos soportan FreeIPA por igual
+
+<details><summary>Respuesta</summary>
+
+**b) SSSD tiene soporte nativo para FreeIPA como backend; Winbind no lo soporta**
+
+SSSD soporta múltiples backends de identidad: AD, LDAP, Kerberos y FreeIPA (con `id_provider = ipa`). Winbind, al ser parte de Samba, está diseñado específicamente para interactuar con Active Directory y no tiene soporte nativo para FreeIPA. SSSD es la opción recomendada en entornos FreeIPA.
+</details>
+
+### Pregunta 16
+
+¿Qué parámetro de `krb5.conf` permite que los tickets Kerberos se puedan delegar a otros servicios?
+
+a) `renewable = true`
+b) `forwardable = true`
+c) `proxiable = true`
+d) `delegatable = true`
+
+<details><summary>Respuesta</summary>
+
+**b) `forwardable = true`**
+
+El parámetro `forwardable = true` en la sección `[libdefaults]` de `/etc/krb5.conf` permite que los tickets TGT se puedan delegar a otros servicios. Esto es necesario para escenarios como SSO (Single Sign-On) donde un servicio necesita actuar en nombre del usuario para acceder a otros recursos.
+</details>
+
+### Pregunta 17
+
+En la configuración PAM, ¿cuál es el propósito del tipo de módulo `account`?
+
+a) Verificar la contraseña del usuario
+b) Verificar si la cuenta está autorizada para acceder (no expirada, restricciones de horario, etc.)
+c) Cambiar la contraseña del usuario
+d) Ejecutar acciones al inicio de sesión
+
+<details><summary>Respuesta</summary>
+
+**b) Verificar si la cuenta está autorizada para acceder (no expirada, restricciones de horario, etc.)**
+
+El tipo `account` en PAM verifica la autorización de la cuenta: si la cuenta está expirada, bloqueada, si hay restricciones de horario o si el usuario tiene permitido el acceso al servicio. No verifica la contraseña (eso es `auth`) ni cambia credenciales (`password`). Es la segunda etapa después de `auth`.
+</details>
+
+### Pregunta 18
+
+¿Cuál es la configuración correcta en `/etc/sudoers` para permitir que el grupo AD `linuxadmins` ejecute cualquier comando con sudo?
+
+a) `linuxadmins ALL=(ALL) ALL`
+b) `%linuxadmins ALL=(ALL) ALL`
+c) `@linuxadmins ALL=(ALL) ALL`
+d) `+linuxadmins ALL=(ALL) ALL`
+
+<details><summary>Respuesta</summary>
+
+**b) `%linuxadmins ALL=(ALL) ALL`**
+
+En la configuración de sudoers, los grupos se prefijan con `%`. La sintaxis `%linuxadmins ALL=(ALL) ALL` permite a todos los miembros del grupo `linuxadmins` ejecutar cualquier comando como cualquier usuario en cualquier host. Si SSSD usa `use_fully_qualified_names = true`, se debe usar `%linuxadmins@dominio`.
+</details>
+
+### Pregunta 19
+
+¿Qué parámetro de Winbind en smb.conf permite la autenticación con credenciales en caché cuando el controlador de dominio no está disponible?
+
+a) `winbind cache time = 300`
+b) `winbind offline logon = yes`
+c) `winbind credential cache = yes`
+d) `winbind local cache = yes`
+
+<details><summary>Respuesta</summary>
+
+**b) `winbind offline logon = yes`**
+
+`winbind offline logon = yes` permite que los usuarios inicien sesión utilizando credenciales almacenadas en caché local cuando el controlador de dominio no es alcanzable. Esto es especialmente útil para laptops y sistemas que pueden estar desconectados temporalmente de la red corporativa.
+</details>
+
+### Pregunta 20
+
+¿Qué parámetro de sssd.conf se usa para especificar múltiples controladores de dominio AD como servidores de autenticación?
+
+a) `ad_server`
+b) `ldap_uri`
+c) `krb5_server`
+d) `auth_servers`
+
+<details><summary>Respuesta</summary>
+
+**a) `ad_server`**
+
+El parámetro `ad_server` en sssd.conf acepta una lista de controladores de dominio separados por comas: `ad_server = dc1.empresa.local, dc2.empresa.local`. SSSD intentará conectar con el primero y, si falla, con los siguientes. También se puede usar `_srv_` para autodescubrimiento vía DNS SRV records.
+</details>
+
+### Pregunta 21
+
+Escriba el comando para invalidar toda la caché de SSSD (usuarios, grupos y todos los servicios).
+
+<input type="text" class="fill-blank" data-answer="sss_cache -E" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**sss_cache -E**
+
+`sss_cache -E` invalida todas las entradas de la caché de SSSD, forzando que la próxima consulta obtenga datos frescos del servidor. Para invalidar solo un usuario específico se usa `sss_cache -u usuario`. Después de ejecutar este comando, es recomendable reiniciar SSSD con `systemctl restart sssd`.
+</details>
+
+### Pregunta 22
+
+Escriba el comando para verificar que un usuario del dominio se resuelve correctamente a través de NSS.
+
+<input type="text" class="fill-blank" data-answer="getent passwd usuario" data-alt="id usuario" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**getent passwd usuario**
+
+`getent passwd usuario` consulta NSS para resolver la información del usuario, incluyendo UID, GID, directorio home y shell. Si devuelve información, la integración NSS (ya sea vía winbind o sss) funciona correctamente. También se puede usar `id usuario` para ver UID, GID y grupos.
+</details>
+
+### Pregunta 23
+
+Escriba el comando `realm` para listar todos los dominios a los que está unido el sistema.
+
+<input type="text" class="fill-blank" data-answer="realm list" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**realm list**
+
+`realm list` muestra todos los dominios a los que el sistema está actualmente unido, incluyendo información como el tipo de dominio, el nombre del realm, los métodos de autenticación configurados y los permisos de acceso (qué usuarios pueden iniciar sesión).
+</details>
+
+### Pregunta 24
+
+Escriba el comando para verificar que el demonio winbind está respondiendo correctamente.
+
+<input type="text" class="fill-blank" data-answer="wbinfo -p" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**wbinfo -p**
+
+`wbinfo -p` envía un ping al demonio `winbindd` para verificar que está funcionando y respondiendo. Si el comando tiene éxito, muestra "Ping to winbindd succeeded". Si falla, hay que verificar que el servicio está en ejecución con `systemctl status winbind`.
+</details>
+
+### Pregunta 25
+
+Escriba el comando para abandonar el dominio `empresa.local` usando la herramienta `realm`.
+
+<input type="text" class="fill-blank" data-answer="realm leave empresa.local" data-alt="realm leave" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**realm leave empresa.local**
+
+`realm leave` elimina la máquina del dominio, desactiva la configuración de SSSD y limpia los archivos de configuración que se crearon durante la unión. Si solo hay un dominio configurado, se puede omitir el nombre del dominio. Este comando es el inverso de `realm join`.
+</details>

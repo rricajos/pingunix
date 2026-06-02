@@ -12,8 +12,8 @@ Plataforma interactiva de estudio en **español** para las certificaciones Linux
 |---------|-------|
 | Paginas de contenido | **821** |
 | Subtemas completos | **143** |
-| Flashcards (SM-2) | **2.282** |
-| Preguntas de practica MCQ | **1.414** |
+| Flashcards (SM-2) | **5.050** |
+| Preguntas de practica | **3.559** (2.844 MCQ + 715 fill-blank) |
 | Preguntas de simulacro | **480** (8 examenes × 60) |
 | Mazos Anki descargables | **4** (LPIC-1/2/3 + Hacking) |
 | Certificaciones cubiertas | LPIC-1, LPIC-2, LPIC-3 (300/303/305/306) |
@@ -23,7 +23,7 @@ Plataforma interactiva de estudio en **español** para las certificaciones Linux
 ## Funcionalidades
 
 ### Herramientas de estudio interactivas
-- **Quiz runner** — modo practica y modo examen con cronometro, puntuacion y feedback por pregunta
+- **Quiz runner** — modo practica y modo examen con cronometro, puntuacion y feedback por pregunta (MCQ + fill-blank)
 - **Simulacro de examen** — 60 preguntas por examen, correccion automatica con desglose por subtema
 - **Flashcards con repeticion espaciada** — algoritmo SM-2 identico al de Anki (intervalo, easeFactor, repasos)
 - **Dashboard de progreso** — estadisticas de estudio, tarjetas vencidas hoy, historico de sesiones

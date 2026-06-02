@@ -166,3 +166,228 @@ d) Ambos almacenan datos de la misma manera
 
 Winsync sincroniza (copia) datos de usuario de AD a FreeIPA, creando duplicación. Con trust, los datos permanecen en su sistema original: los usuarios AD se quedan en AD y los usuarios IPA se quedan en IPA. SSSD consulta el dominio correspondiente cuando necesita resolver una identidad.
 </details>
+
+### Pregunta 11
+
+¿Qué parámetro de `ipa-adtrust-install` configura agentes de trust en las réplicas FreeIPA?
+
+a) `--replicate-agents`
+b) `--add-agents`
+c) `--setup-agents`
+d) `--trust-agents`
+
+<details><summary>Respuesta</summary>
+
+**b) `--add-agents`**
+
+El parámetro `--add-agents` configura los agentes de trust en las réplicas FreeIPA, permitiendo que las réplicas también puedan atender solicitudes de autenticación de usuarios del dominio AD de confianza, mejorando la alta disponibilidad.
+</details>
+
+### Pregunta 12
+
+¿Qué tipo de trust es transitivo y cubre todos los dominios de un bosque Active Directory?
+
+a) External trust
+b) Forest trust
+c) Realm trust
+d) Domain trust
+
+<details><summary>Respuesta</summary>
+
+**b) Forest trust**
+
+Un forest trust es transitivo y establece confianza con todo el bosque de Active Directory, incluyendo todos sus dominios y subdominios. Un external trust, en cambio, solo cubre un dominio específico y no es transitivo.
+</details>
+
+### Pregunta 13
+
+¿Qué comando de FreeIPA configura una zona de reenvío DNS para resolver el dominio de Active Directory?
+
+a) `ipa dnszone-add empresa.local --type=forward`
+b) `ipa dnsforwardzone-add empresa.local --forwarder=192.168.1.1 --forward-policy=only`
+c) `ipa dns-forward empresa.local 192.168.1.1`
+d) `ipa dnsrecord-add empresa.local --forwarder=192.168.1.1`
+
+<details><summary>Respuesta</summary>
+
+**b) `ipa dnsforwardzone-add empresa.local --forwarder=192.168.1.1 --forward-policy=only`**
+
+`ipa dnsforwardzone-add` crea una zona de reenvío DNS en FreeIPA que redirige las consultas del dominio AD al servidor DNS de Active Directory. `--forward-policy=only` indica que solo se use el forwarder especificado para esa zona.
+</details>
+
+### Pregunta 14
+
+¿Qué tipo de rango de IDs utiliza los atributos POSIX (`uidNumber`/`gidNumber`) definidos directamente en Active Directory?
+
+a) `ipa-ad-trust`
+b) `ipa-ad-trust-posix`
+c) `ipa-ad-winsync`
+d) `ipa-ad-posix-map`
+
+<details><summary>Respuesta</summary>
+
+**b) `ipa-ad-trust-posix`**
+
+El tipo de rango `ipa-ad-trust-posix` usa los atributos POSIX (`uidNumber`, `gidNumber`) que ya están configurados en los objetos de usuario en Active Directory. Requiere que los administradores de AD hayan extendido el schema con Unix attributes. El tipo `ipa-ad-trust` genera UIDs algorítmicamente.
+</details>
+
+### Pregunta 15
+
+¿Qué método usa SSSD para descubrir los dominios de Active Directory de confianza?
+
+a) Lectura de archivos de configuración locales
+b) Descubrimiento automático de subdominios mediante el proveedor IPA
+c) Consulta manual del administrador
+d) Sincronización con el registro de Windows
+
+<details><summary>Respuesta</summary>
+
+**b) Descubrimiento automático de subdominios mediante el proveedor IPA**
+
+SSSD utiliza el `subdomains_provider = ipa` para descubrir automáticamente los dominios AD de confianza. No es necesario configurar explícitamente los subdominios en `sssd.conf`; SSSD los detecta consultando la información de trust almacenada en FreeIPA.
+</details>
+
+### Pregunta 16
+
+¿Qué comando permite verificar la comunicación Kerberos cross-realm obteniendo un ticket de servicio para el trust?
+
+a) `klist -trust EMPRESA.LOCAL`
+b) `kvno krbtgt/EMPRESA.LOCAL@EMPRESA.IPA`
+c) `kinit -trust EMPRESA.LOCAL`
+d) `kerberos-test EMPRESA.LOCAL EMPRESA.IPA`
+
+<details><summary>Respuesta</summary>
+
+**b) `kvno krbtgt/EMPRESA.LOCAL@EMPRESA.IPA`**
+
+`kvno` obtiene un ticket de servicio para el principal especificado, lo que permite verificar que la comunicación Kerberos cross-realm funciona correctamente. `krbtgt/EMPRESA.LOCAL@EMPRESA.IPA` es el principal de trust entre ambos realms.
+</details>
+
+### Pregunta 17
+
+¿Por qué los grupos externos de FreeIPA no pueden usarse directamente en reglas HBAC o sudo?
+
+a) Porque los grupos externos no existen en LDAP
+b) Porque los grupos externos no tienen GID POSIX necesario para las reglas del sistema
+c) Porque HBAC y sudo solo funcionan con usuarios locales
+d) Porque los grupos externos se eliminan automáticamente tras 24 horas
+
+<details><summary>Respuesta</summary>
+
+**b) Porque los grupos externos no tienen GID POSIX necesario para las reglas del sistema**
+
+Los grupos externos solo contienen SIDs de Active Directory y no tienen atributos POSIX. Las reglas HBAC y sudo requieren grupos POSIX con GID numérico. Por eso se sigue el patrón: grupo externo (SIDs AD) -> grupo POSIX IPA -> reglas HBAC/sudo.
+</details>
+
+### Pregunta 18
+
+¿Qué alternativa existe a usar credenciales de administrador de AD al crear un trust con `ipa trust-add`?
+
+a) Usar un certificado SSL del servidor AD
+b) Usar un secreto compartido con `--trust-secret`
+c) Usar la clave pública del KDC de AD
+d) No se necesitan credenciales si ambos servidores están en la misma red
+
+<details><summary>Respuesta</summary>
+
+**b) Usar un secreto compartido con `--trust-secret`**
+
+La opción `--trust-secret` permite establecer el trust mediante un secreto compartido previamente configurado en ambos lados (AD y FreeIPA), en lugar de proporcionar credenciales de administrador de Active Directory con `--admin`.
+</details>
+
+### Pregunta 19
+
+¿Qué comando lista todas las relaciones de confianza configuradas en FreeIPA?
+
+a) `ipa trust-list`
+b) `ipa trust-find`
+c) `ipa trust-show --all`
+d) `ipa adtrust-list`
+
+<details><summary>Respuesta</summary>
+
+**b) `ipa trust-find`**
+
+`ipa trust-find` lista todas las relaciones de confianza (trusts) configuradas en el servidor FreeIPA. Para ver los detalles completos de un trust específico, se usa `ipa trust-show empresa.local --all`.
+</details>
+
+### Pregunta 20
+
+¿Qué paquete adicional se debe instalar en el servidor FreeIPA para soportar relaciones de confianza con AD?
+
+a) `freeipa-ad-connector`
+b) `freeipa-server-trust-ad`
+c) `samba-winbind`
+d) `freeipa-trust-module`
+
+<details><summary>Respuesta</summary>
+
+**b) `freeipa-server-trust-ad`**
+
+El paquete `freeipa-server-trust-ad` instala los componentes necesarios (incluyendo Samba y las librerías de trust) para que FreeIPA pueda establecer relaciones de confianza con dominios Active Directory. Se instala con `dnf install freeipa-server-trust-ad`.
+</details>
+
+### Pregunta 21
+
+Escribe el comando para crear una relación de confianza entre FreeIPA y el dominio AD `empresa.local` usando credenciales del administrador de AD.
+
+<input type="text" class="fill-blank" data-answer="ipa trust-add empresa.local --type=ad --admin=Administrador --password" data-alt="ipa trust-add empresa.local --type=ad --admin Administrador --password" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**ipa trust-add empresa.local --type=ad --admin=Administrador --password**
+
+`ipa trust-add` crea la relación de confianza. `--type=ad` especifica que es un trust con Active Directory, `--admin` indica la cuenta de administrador del dominio AD y `--password` solicita la contraseña de forma interactiva.
+</details>
+
+### Pregunta 22
+
+Escribe el comando para preparar un servidor FreeIPA existente para relaciones de confianza con AD, con nombre NetBIOS `IPAEMPRESA` y generando SIDs para entidades existentes.
+
+<input type="text" class="fill-blank" data-answer="ipa-adtrust-install --netbios-name=IPAEMPRESA --add-sids" data-alt="ipa-adtrust-install --netbios-name IPAEMPRESA --add-sids" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**ipa-adtrust-install --netbios-name=IPAEMPRESA --add-sids**
+
+`ipa-adtrust-install` configura los componentes de trust en FreeIPA. `--netbios-name` define el nombre NetBIOS del dominio IPA y `--add-sids` genera Security Identifiers para los usuarios y grupos que fueron creados antes de habilitar el trust.
+</details>
+
+### Pregunta 23
+
+Escribe el comando para verificar que un usuario de Active Directory se resuelve correctamente desde un sistema inscrito en FreeIPA.
+
+<input type="text" class="fill-blank" data-answer="id usuario@empresa.local" data-alt="getent passwd usuario@empresa.local" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**id usuario@empresa.local**
+
+El comando `id` muestra la información de identidad (UID, GID y grupos) de un usuario. Con trust configurado, `id usuario@empresa.local` consulta a SSSD que resuelve la identidad del usuario AD a través de FreeIPA. También se puede usar `getent passwd usuario@empresa.local`.
+</details>
+
+### Pregunta 24
+
+Escribe el comando para crear un grupo externo en FreeIPA llamado `ad-admins` que pueda contener miembros de Active Directory.
+
+<input type="text" class="fill-blank" data-answer="ipa group-add ad-admins --external" data-alt="ipa group-add ad-admins --external --desc='Grupo externo AD'" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**ipa group-add ad-admins --external**
+
+La opción `--external` crea un grupo que puede contener SIDs de Active Directory como miembros. Luego se añade el grupo AD con `ipa group-add-member ad-admins --external "DOMINIO\Grupo"` y se vincula a un grupo POSIX para usarlo en reglas HBAC/sudo.
+</details>
+
+### Pregunta 25
+
+Escribe el comando para ver los rangos de IDs configurados en FreeIPA para el mapeo de SIDs de AD.
+
+<input type="text" class="fill-blank" data-answer="ipa idrange-find" data-alt="ipa idrange-find" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**ipa idrange-find**
+
+`ipa idrange-find` muestra todos los rangos de IDs configurados, incluyendo los rangos locales de FreeIPA y los rangos de trust con AD. Estos rangos definen cómo se mapean los SIDs de Active Directory a UIDs/GIDs POSIX en el sistema Linux.
+</details>

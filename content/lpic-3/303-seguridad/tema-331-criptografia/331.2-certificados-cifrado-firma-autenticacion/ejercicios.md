@@ -166,3 +166,243 @@ d) `openssl sign -smime -in msg.txt -certificate cert.pem`
 
 El subcomando `smime` de OpenSSL con la opción `-sign` firma un mensaje. Se necesita el certificado (`-signer`) y la clave privada (`-inkey`). La opción `a)` con `cms` también es válida técnicamente pero `smime` es la respuesta más directa para el examen.
 </details>
+
+### Pregunta 11
+
+¿Qué nivel de confianza del propietario en GPG se reserva exclusivamente para las claves propias del usuario?
+
+a) full
+b) marginal
+c) ultimate
+d) absolute
+
+<details><summary>Respuesta</summary>
+
+**c) Correcta**
+
+El nivel `ultimate` indica confianza absoluta y solo debe asignarse a las claves del propio usuario. Asignar `ultimate` a claves ajenas compromete la integridad del modelo Web of Trust, ya que todas las claves firmadas por esa clave se considerarían automáticamente válidas.
+
+</details>
+
+### Pregunta 12
+
+¿Qué opción de `gpg2` permite generar una clave de forma rápida con valores por defecto especificando algoritmo y tamaño?
+
+a) `gpg2 --gen-key --fast rsa4096`
+b) `gpg2 --quick-generate-key "Nombre <email>" rsa4096`
+c) `gpg2 --auto-generate-key rsa4096 "Nombre <email>"`
+d) `gpg2 --generate-key --default rsa4096`
+
+<details><summary>Respuesta</summary>
+
+**b) Correcta**
+
+`--quick-generate-key` permite generar un par de claves sin el diálogo interactivo completo, aceptando el nombre/email y opcionalmente el algoritmo como argumentos directos. Para la generación interactiva completa se usa `--full-generate-key`.
+
+</details>
+
+### Pregunta 13
+
+¿Qué protocolo utilizan los servidores de claves GPG cuando se especifica el esquema `hkps://`?
+
+a) HTTP sobre el puerto 11371
+b) HTTPS cifrado con TLS
+c) SSH tunelizado
+d) FTP seguro sobre el puerto 990
+
+<details><summary>Respuesta</summary>
+
+**b) Correcta**
+
+`hkps://` (HKP Secure) utiliza HTTPS para la comunicación con servidores de claves, proporcionando cifrado TLS. El protocolo `hkp://` estándar utiliza HTTP sin cifrar en el puerto 11371.
+
+</details>
+
+### Pregunta 14
+
+Un administrador necesita verificar que un archivo no ha sido modificado desde que fue firmado. ¿Qué propiedad criptográfica garantiza esto?
+
+a) Confidencialidad
+b) Disponibilidad
+c) Integridad
+d) No repudio exclusivamente
+
+<details><summary>Respuesta</summary>
+
+**c) Correcta**
+
+La integridad es la propiedad que garantiza que los datos no han sido alterados. Las firmas digitales verifican la integridad calculando un hash del contenido y cifrándolo con la clave privada del firmante. Cualquier modificación posterior invalidará la firma al no coincidir el hash.
+
+</details>
+
+### Pregunta 15
+
+¿Qué directiva en `~/.gnupg/gpg-agent.conf` establece el tiempo máximo absoluto (en segundos) que una passphrase permanece en caché?
+
+a) `cache-ttl-max 7200`
+b) `max-cache-ttl 7200`
+c) `passphrase-timeout 7200`
+d) `absolute-cache-ttl 7200`
+
+<details><summary>Respuesta</summary>
+
+**b) Correcta**
+
+`max-cache-ttl` define el tiempo máximo absoluto en segundos que una passphrase se mantiene en caché, independientemente de cuántas veces se use. `default-cache-ttl` define el tiempo de caché desde el último uso. Ambas se configuran en `gpg-agent.conf`.
+
+</details>
+
+### Pregunta 16
+
+¿Qué formato de certificado utiliza S/MIME a diferencia de GPG/OpenPGP?
+
+a) PEM
+b) DER
+c) X.509
+d) PKCS#7
+
+<details><summary>Respuesta</summary>
+
+**c) Correcta**
+
+S/MIME utiliza certificados X.509 emitidos por Autoridades de Certificación (CA) dentro de una infraestructura PKI jerárquica. GPG/OpenPGP utiliza su propio formato de certificado basado en el estándar OpenPGP (RFC 4880), con un modelo de confianza descentralizado (Web of Trust).
+
+</details>
+
+### Pregunta 17
+
+¿Cuál es el propósito del archivo `~/.gnupg/trustdb.gpg`?
+
+a) Almacenar las claves privadas del usuario
+b) Almacenar la base de datos de confianza con los niveles asignados a cada clave
+c) Guardar la configuración de los servidores de claves
+d) Contener los certificados X.509 importados
+
+<details><summary>Respuesta</summary>
+
+**b) Correcta**
+
+El archivo `trustdb.gpg` contiene la base de datos de confianza (trust database) de GPG, donde se registran los niveles de confianza del propietario (owner trust) asignados a cada clave. Esta información es utilizada por el modelo Web of Trust para calcular la validez de las claves.
+
+</details>
+
+### Pregunta 18
+
+¿Qué algoritmo de cifrado asimétrico basado en curvas elípticas es considerado moderno y seguro para firmas digitales en GPG?
+
+a) RSA-4096
+b) DSA
+c) Ed25519
+d) 3DES
+
+<details><summary>Respuesta</summary>
+
+**c) Correcta**
+
+Ed25519 es un esquema de firma digital basado en la curva Edwards Curve25519. Es moderno, eficiente y ofrece alta seguridad con claves más pequeñas que RSA. DSA está obsoleto, 3DES es un cifrado simétrico y RSA-4096, aunque seguro, no está basado en curvas elípticas.
+
+</details>
+
+### Pregunta 19
+
+En cifrado híbrido, ¿cuál es el orden correcto de las operaciones al cifrar un mensaje?
+
+a) Se cifra el mensaje con la clave pública del destinatario, luego se genera una clave simétrica
+b) Se genera una clave simétrica de sesión, se cifra el mensaje con ella, y luego se cifra la clave simétrica con la clave pública del destinatario
+c) Se cifra todo el mensaje directamente con la clave pública del destinatario
+d) Se cifra el mensaje con la clave privada del remitente
+
+<details><summary>Respuesta</summary>
+
+**b) Correcta**
+
+El cifrado híbrido combina la eficiencia del cifrado simétrico con la seguridad de distribución del cifrado asimétrico. Se genera una clave simétrica aleatoria de sesión, se cifra el contenido con ella (rápido para datos grandes), y finalmente se cifra solo la clave simétrica con la clave pública del destinatario.
+
+</details>
+
+### Pregunta 20
+
+¿Qué diferencia principal existe entre `gpg2 --sign archivo.txt` y `gpg2 --detach-sign archivo.txt`?
+
+a) `--sign` solo firma, `--detach-sign` firma y cifra
+b) `--sign` genera un archivo que contiene el documento y la firma juntos, `--detach-sign` genera solo la firma en un archivo separado
+c) `--sign` usa cifrado simétrico, `--detach-sign` usa asimétrico
+d) No hay diferencia funcional, solo cambia la extensión del archivo
+
+<details><summary>Respuesta</summary>
+
+**b) Correcta**
+
+`--sign` crea un archivo binario (.gpg) que contiene tanto el documento original como la firma integrada. `--detach-sign` genera únicamente el archivo de firma (.sig) por separado, dejando el archivo original intacto. La firma separada es ideal para distribución de software donde se quiere mantener el archivo original sin modificar.
+
+</details>
+
+### Pregunta 21
+
+Escribe el comando para importar una clave pública GPG desde un archivo llamado `clave-publica.asc`.
+
+<input type="text" class="fill-blank" data-answer="gpg2 --import clave-publica.asc" data-alt="gpg --import clave-publica.asc" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**gpg2 --import clave-publica.asc**
+
+El comando `--import` permite añadir claves (públicas o privadas) al anillo de claves local desde un archivo. El formato puede ser binario o ASCII armored (.asc).
+
+</details>
+
+### Pregunta 22
+
+Escribe el comando para cifrar el archivo `datos.txt` de forma simétrica con el algoritmo AES-256 usando GPG.
+
+<input type="text" class="fill-blank" data-answer="gpg2 --symmetric --cipher-algo AES256 datos.txt" data-alt="gpg --symmetric --cipher-algo AES256 datos.txt,gpg2 -c --cipher-algo AES256 datos.txt" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**gpg2 --symmetric --cipher-algo AES256 datos.txt**
+
+`--symmetric` (o `-c`) indica cifrado simétrico con passphrase. `--cipher-algo AES256` especifica el algoritmo. Se generará el archivo `datos.txt.gpg` y se solicitará una passphrase para proteger el cifrado.
+
+</details>
+
+### Pregunta 23
+
+Escribe el comando para verificar la firma separada `documento.txt.sig` contra el archivo original `documento.txt`.
+
+<input type="text" class="fill-blank" data-answer="gpg2 --verify documento.txt.sig documento.txt" data-alt="gpg --verify documento.txt.sig documento.txt" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**gpg2 --verify documento.txt.sig documento.txt**
+
+El comando `--verify` comprueba la validez de una firma. Para firmas separadas (detached), se deben especificar ambos archivos: primero el archivo de firma y luego el archivo original. GPG verificará que la firma corresponde al contenido y que fue creada con una clave válida.
+
+</details>
+
+### Pregunta 24
+
+Escribe el comando para generar un HMAC SHA-256 de un archivo llamado `mensaje.txt` usando OpenSSL con la clave secreta "mi-secreto".
+
+<input type="text" class="fill-blank" data-answer="openssl dgst -sha256 -hmac &quot;mi-secreto&quot; mensaje.txt" data-alt="openssl dgst -sha256 -hmac 'mi-secreto' mensaje.txt" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**openssl dgst -sha256 -hmac "mi-secreto" mensaje.txt**
+
+El subcomando `dgst` de OpenSSL calcula resúmenes (hashes). La opción `-hmac` genera un código de autenticación de mensajes basado en hash (HMAC) combinando SHA-256 con la clave secreta proporcionada, verificando tanto integridad como autenticidad.
+
+</details>
+
+### Pregunta 25
+
+Escribe el comando para recargar la configuración del agente GPG sin reiniciar el servicio.
+
+<input type="text" class="fill-blank" data-answer="gpg-connect-agent reloadagent /bye" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**gpg-connect-agent reloadagent /bye**
+
+`gpg-connect-agent` permite comunicarse con el agente GPG en ejecución. El comando `reloadagent` recarga la configuración desde `~/.gnupg/gpg-agent.conf` sin necesidad de reiniciar el demonio. `/bye` cierra la conexión con el agente.
+
+</details>

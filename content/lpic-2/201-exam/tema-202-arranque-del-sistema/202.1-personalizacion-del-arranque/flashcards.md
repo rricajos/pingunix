@@ -11,7 +11,7 @@ subtema: "202.1"
 
 # Flashcards: 202.1 - Personalizacion Del Arranque
 
-> 23 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 38 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="202.1">
 </div>
@@ -199,6 +199,276 @@ subtema: "202.1"
 <div class="flashcard" data-id="202.1-fc-011">
 <div class="flashcard-front">
 
+**P:** Un administrador quiere desactivar el script `30_os-prober` de GRUB para que no detecte otros sistemas operativos al regenerar `grub.cfg`. ¿Cual es la forma correcta de hacerlo?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) Retirar el permiso de ejecucion con `chmod -x /etc/grub.d/30_os-prober`. Los scripts en `/etc/grub.d/` solo se ejecutan si tienen permisos de ejecucion. Retirar el permiso con `chmod -x` es la forma correcta de desactivar un script sin eliminarlo, permitiendo reactivarlo facilmente. Tambien se puede agregar `GRUB_DISABLE_OS_PROBER=true` en `/etc/default/grub`. Editar `grub.cfg` directamente nunca es correcto ya que se regenera automaticamente.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="202.1">
+</div>
+
+<div class="flashcard" data-id="202.1-fc-012">
+<div class="flashcard-front">
+
+**P:** ¿Que parametro del kernel se pasa desde GRUB para limitar la memoria RAM disponible para el sistema a 512 MB?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `mem=512M`. El parametro `mem=512M` del kernel limita la cantidad de memoria RAM que el sistema utilizara a 512 MB, independientemente de cuanta memoria fisica este instalada. Es util para pruebas de rendimiento con memoria limitada o para diagnosticar problemas relacionados con la memoria. Se agrega a la linea `linux` en GRUB temporal o permanentemente en `GRUB_CMDLINE_LINUX`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="202.1">
+</div>
+
+<div class="flashcard" data-id="202.1-fc-013">
+<div class="flashcard-front">
+
+**P:** ¿Que comando de systemd permite cambiar al modo multiusuario sin interfaz grafica de forma inmediata?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `systemctl isolate multi-user.target`. El subcomando `isolate` de `systemctl` cambia al target especificado de forma inmediata, deteniendo todas las unidades que no son dependencias del target objetivo. Es equivalente a cambiar de runlevel en SysV init. `start` solo iniciaria el target sin detener otros servicios, `switch` no existe, y `enable` solo configura el inicio automatico sin cambiar el estado actual.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="202.1">
+</div>
+
+<div class="flashcard" data-id="202.1-fc-014">
+<div class="flashcard-front">
+
+**P:** En un sistema con SysV init, ¿que significa un enlace simbolico llamado `S85apache2` en el directorio `/etc/rc3.d/`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) El script apache2 se iniciara con prioridad 85 al entrar en el runlevel 3. En SysV init, los enlaces simbolicos en los directorios `rcN.d` siguen la convencion `S##nombre` para scripts de inicio (Start) y `K##nombre` para scripts de parada (Kill). El numero `85` indica el orden de ejecucion (mayor numero = se inicia mas tarde). Asi, `S85apache2` significa que apache2 se inicia en el runlevel 3 con prioridad 85.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="202.1">
+</div>
+
+<div class="flashcard" data-id="202.1-fc-015">
+<div class="flashcard-front">
+
+**P:** ¿Que valor debe tener `GRUB_TIMEOUT_STYLE` en `/etc/default/grub` para que el menu de GRUB se muestre con una cuenta regresiva sin ocultar el menu?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) `countdown`. El valor `countdown` muestra una cuenta regresiva en la pantalla pero sin mostrar el menu completo; al presionar cualquier tecla se muestra el menu. El valor `menu` muestra el menu completo durante el tiempo de espera. El valor `hidden` oculta completamente el menu y la cuenta regresiva. El valor `visible` no es una opcion valida de GRUB_TIMEOUT_STYLE.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="202.1">
+</div>
+
+<div class="flashcard" data-id="202.1-fc-016">
+<div class="flashcard-front">
+
+**P:** Un administrador necesita arrancar el sistema en modo rescate pasando un parametro al kernel desde GRUB. ¿Que parametro debe agregar a la linea `linux`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) `systemd.unit=rescue.target`. En sistemas con systemd, el parametro `systemd.unit=rescue.target` indica al proceso init que arranque directamente en el target de rescate. Este modo monta los sistemas de archivos y carga servicios basicos, pero no inicia la red ni servicios multiusuario. Las opciones `single`, `1` o `S` tambien funcionan por compatibilidad, pero `systemd.unit=rescue.target` es la forma especifica de systemd.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="202.1">
+</div>
+
+<div class="flashcard" data-id="202.1-fc-017">
+<div class="flashcard-front">
+
+**P:** ¿Que archivo virtual contiene los parametros exactos con los que se arranco el kernel actualmente en ejecucion?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `/proc/cmdline`. El archivo virtual `/proc/cmdline` contiene la linea completa de parametros que se pasaron al kernel durante el arranque. Incluye parametros como `root=`, `ro`, `quiet`, `splash`, `systemd.unit=` y cualquier otro que se haya especificado en la configuracion de GRUB o editado manualmente durante el arranque. Es la fuente definitiva para verificar la configuracion de arranque activa.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="202.1">
+</div>
+
+<div class="flashcard" data-id="202.1-fc-018">
+<div class="flashcard-front">
+
+**P:** ¿Que opcion de `Storage` en `/etc/systemd/journald.conf` descarta completamente todos los mensajes del journal sin almacenarlos?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) `none`. La opcion `Storage=none` en `journald.conf` descarta todos los mensajes del journal sin almacenarlos ni en disco ni en memoria. Las otras opciones validas son: `volatile` (solo en memoria en `/run/log/journal/`), `persistent` (en disco en `/var/log/journal/`) y `auto` (en disco si el directorio existe, en memoria si no). `disabled` no es una opcion valida.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="202.1">
+</div>
+
+<div class="flashcard" data-id="202.1-fc-019">
+<div class="flashcard-front">
+
+**P:** Un administrador quiere agregar una entrada personalizada al menu de GRUB. ¿En que archivo debe definirla?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) `/etc/grub.d/40_custom`. El archivo `/etc/grub.d/40_custom` esta disenado especificamente para que los administradores agreguen entradas personalizadas al menu de GRUB. Las entradas se definen usando bloques `menuentry`. Despues de editar este archivo, se debe ejecutar `grub-mkconfig -o /boot/grub/grub.cfg` para regenerar la configuracion. Nunca se debe editar `grub.cfg` directamente.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="202.1">
+</div>
+
+<div class="flashcard" data-id="202.1-fc-020">
+<div class="flashcard-front">
+
+**P:** ¿Que parametro del kernel permite desactivar la configuracion automatica del modo grafico, util cuando hay problemas con los drivers de video?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `nomodeset`. El parametro `nomodeset` impide que el kernel configure el modo grafico (KMS - Kernel Mode Setting) durante el arranque, forzando al sistema a usar un modo de video basico. Es extremadamente util cuando hay problemas con los drivers de video que impiden el arranque normal o causan una pantalla negra. Se puede agregar temporalmente editando la entrada de GRUB o permanentemente en `GRUB_CMDLINE_LINUX`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="202.1">
+</div>
+
+<div class="flashcard" data-id="202.1-fc-021">
+<div class="flashcard-front">
+
+**P:** ¿Que comando establece `multi-user.target` como el objetivo de arranque por defecto en systemd?
+
+</div>
+<div class="flashcard-back">
+
+**R:** systemctl set-default multi-user.target. El comando `systemctl set-default multi-user.target` configura el target de arranque por defecto del sistema. Esto crea un enlace simbolico desde `/etc/systemd/system/default.target` al target especificado. A partir del siguiente reinicio, el sistema arrancara en modo multiusuario sin interfaz grafica. Para verificar el target actual se usa `systemctl get-default`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="202.1">
+</div>
+
+<div class="flashcard" data-id="202.1-fc-022">
+<div class="flashcard-front">
+
+**P:** ¿Que comando regenera el archivo `grub.cfg` a partir de la configuracion de `/etc/default/grub` y los scripts de `/etc/grub.d/`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** grub-mkconfig -o /boot/grub/grub.cfg. El comando `grub-mkconfig` genera la configuracion de GRUB ejecutando los scripts de `/etc/grub.d/` en orden numerico y utilizando las variables de `/etc/default/grub`. La opcion `-o` especifica el archivo de salida. En Debian/Ubuntu existe el wrapper `update-grub` que es equivalente. En RHEL/CentOS se usa `grub2-mkconfig -o /boot/grub2/grub.cfg`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="202.1">
+</div>
+
+<div class="flashcard" data-id="202.1-fc-023">
+<div class="flashcard-front">
+
+**P:** ¿Que comando muestra los mensajes del arranque anterior del sistema filtrados por prioridad de error?
+
+</div>
+<div class="flashcard-back">
+
+**R:** journalctl -b -1 -p err. El comando `journalctl -b -1 -p err` muestra los mensajes del arranque anterior (`-b -1`) filtrados por prioridad de error o superior (`-p err`). La opcion `-b 0` seria el arranque actual y `-b -1` el anterior. Para que funcione, el journal debe tener almacenamiento persistente configurado (directorio `/var/log/journal/` existente o `Storage=persistent`).
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="202.1">
+</div>
+
+<div class="flashcard" data-id="202.1-fc-024">
+<div class="flashcard-front">
+
+**P:** ¿Que comando instala los archivos de GRUB en el MBR del disco `/dev/sda`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** grub-install /dev/sda. El comando `grub-install /dev/sda` instala los archivos del cargador de arranque GRUB en el sector de arranque maestro (MBR) del disco `/dev/sda`. Esto incluye el codigo de arranque en los primeros 446 bytes del MBR y los archivos adicionales en `/boot/grub/`. Despues de instalar GRUB, se debe regenerar `grub.cfg` con `grub-mkconfig`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="202.1">
+</div>
+
+<div class="flashcard" data-id="202.1-fc-025">
+<div class="flashcard-front">
+
+**P:** ¿Que comando muestra el target de arranque por defecto configurado actualmente en systemd?
+
+</div>
+<div class="flashcard-back">
+
+**R:** systemctl get-default. El comando `systemctl get-default` muestra el target de arranque por defecto del sistema, que es el enlace simbolico `/etc/systemd/system/default.target`. Los valores tipicos son `graphical.target` (con interfaz grafica) o `multi-user.target` (sin interfaz grafica). Para cambiar el target por defecto se usa `systemctl set-default`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="202.1">
+</div>
+
+<div class="flashcard" data-id="202.1-fc-026">
+<div class="flashcard-front">
+
 **P:** Tip de examen: Recuerda que `grub.cfg` se genera automaticamente. Cualquier modificacion direct...
 
 </div>
@@ -214,7 +484,7 @@ subtema: "202.1"
 <div class="flashcard-deck" data-subtema="202.1">
 </div>
 
-<div class="flashcard" data-id="202.1-fc-012">
+<div class="flashcard" data-id="202.1-fc-027">
 <div class="flashcard-front">
 
 **P:** Tip de examen: Los scripts deben tener permisos de ejecucion para ser procesados por `grub-mkco...
@@ -232,7 +502,7 @@ subtema: "202.1"
 <div class="flashcard-deck" data-subtema="202.1">
 </div>
 
-<div class="flashcard" data-id="202.1-fc-013">
+<div class="flashcard" data-id="202.1-fc-028">
 <div class="flashcard-front">
 
 **P:** Tip de examen: `rescue.target` monta los sistemas de archivos y tiene servicios basicos activos...
@@ -250,7 +520,7 @@ subtema: "202.1"
 <div class="flashcard-deck" data-subtema="202.1">
 </div>
 
-<div class="flashcard" data-id="202.1-fc-014">
+<div class="flashcard" data-id="202.1-fc-029">
 <div class="flashcard-front">
 
 **P:** Tip de examen: Para que `journalctl --list-boots` funcione, el journal debe ser persistente. Es...
@@ -268,7 +538,7 @@ subtema: "202.1"
 <div class="flashcard-deck" data-subtema="202.1">
 </div>
 
-<div class="flashcard" data-id="202.1-fc-015">
+<div class="flashcard" data-id="202.1-fc-030">
 <div class="flashcard-front">
 
 **P:** Tip de examen: Los cambios realizados editando la entrada de GRUB en tiempo de arranque son **t...
@@ -286,7 +556,7 @@ subtema: "202.1"
 <div class="flashcard-deck" data-subtema="202.1">
 </div>
 
-<div class="flashcard" data-id="202.1-fc-016">
+<div class="flashcard" data-id="202.1-fc-031">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `GRUB_DEFAULT`?
@@ -304,25 +574,7 @@ subtema: "202.1"
 <div class="flashcard-deck" data-subtema="202.1">
 </div>
 
-<div class="flashcard" data-id="202.1-fc-017">
-<div class="flashcard-front">
-
-**P:** Que hace el comando `GRUB_TIMEOUT`?
-
-</div>
-<div class="flashcard-back">
-
-**R:** Tiempo de espera en segundos
-
-</div>
-</div>
-
----
-
-<div class="flashcard-deck" data-subtema="202.1">
-</div>
-
-<div class="flashcard" data-id="202.1-fc-018">
+<div class="flashcard" data-id="202.1-fc-032">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `GRUB_CMDLINE_LINUX`?
@@ -340,15 +592,15 @@ subtema: "202.1"
 <div class="flashcard-deck" data-subtema="202.1">
 </div>
 
-<div class="flashcard" data-id="202.1-fc-019">
+<div class="flashcard" data-id="202.1-fc-033">
 <div class="flashcard-front">
 
-**P:** Que es/son Introduccion?
+**P:** Que hace el comando `GRUB_DISABLE_RECOVERY`?
 
 </div>
 <div class="flashcard-back">
 
-**R:** La personalizacion del proceso de arranque es una habilidad fundamental para cualquier administrador de sistemas Linux. Este subtema cubre la configuracion de GRUB 2 como cargador de arranque principal
+**R:** Ocultar entradas de recuperacion
 
 </div>
 </div>
@@ -358,7 +610,25 @@ subtema: "202.1"
 <div class="flashcard-deck" data-subtema="202.1">
 </div>
 
-<div class="flashcard" data-id="202.1-fc-020">
+<div class="flashcard" data-id="202.1-fc-034">
+<div class="flashcard-front">
+
+**P:** Que hace el comando `00_header`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** Configuracion general (timeout, defecto, etc.)
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="202.1">
+</div>
+
+<div class="flashcard" data-id="202.1-fc-035">
 <div class="flashcard-front">
 
 **P:** Que es/son Niveles de ejecucion SysV init?
@@ -376,7 +646,7 @@ subtema: "202.1"
 <div class="flashcard-deck" data-subtema="202.1">
 </div>
 
-<div class="flashcard" data-id="202.1-fc-021">
+<div class="flashcard" data-id="202.1-fc-036">
 <div class="flashcard-front">
 
 **P:** Que es/son Parametros del kernel en el arranque?
@@ -394,7 +664,7 @@ subtema: "202.1"
 <div class="flashcard-deck" data-subtema="202.1">
 </div>
 
-<div class="flashcard" data-id="202.1-fc-022">
+<div class="flashcard" data-id="202.1-fc-037">
 <div class="flashcard-front">
 
 **P:** Que es/son Persistencia del journal de systemd?
@@ -412,7 +682,7 @@ subtema: "202.1"
 <div class="flashcard-deck" data-subtema="202.1">
 </div>
 
-<div class="flashcard" data-id="202.1-fc-023">
+<div class="flashcard" data-id="202.1-fc-038">
 <div class="flashcard-front">
 
 **P:** Que es/son Resumen de archivos clave?

@@ -197,3 +197,273 @@ d) Establece el tiempo de desconexión a 1080 segundos
 
 La opción `-D` crea un proxy SOCKS5 en el puerto local especificado. Todo el tráfico dirigido a este proxy se cifra y se envía a través de la conexión SSH, donde el servidor lo reenvía al destino final. Es útil para navegar de forma segura a través de un servidor remoto.
 </details>
+
+---
+
+### Pregunta 11
+
+¿Qué directiva de sshd_config establece un mensaje de advertencia que se muestra al usuario antes de la autenticación?
+
+a) WarningMessage /etc/ssh/banner.txt
+b) Banner /etc/ssh/banner.txt
+c) PreLoginBanner /etc/ssh/banner.txt
+d) Motd /etc/ssh/banner.txt
+
+<details>
+<summary>Respuesta</summary>
+
+**b) Banner /etc/ssh/banner.txt**
+
+La directiva `Banner` especifica un archivo de texto cuyo contenido se envía al cliente SSH antes del proceso de autenticación. Se usa comúnmente para mostrar avisos legales o políticas de uso. No debe confundirse con `/etc/motd`, que se muestra después de un login exitoso.
+</details>
+
+---
+
+### Pregunta 12
+
+¿Qué algoritmo de clave SSH es considerado el más recomendado actualmente por su seguridad y rendimiento?
+
+a) RSA
+b) DSA
+c) ECDSA
+d) Ed25519
+
+<details>
+<summary>Respuesta</summary>
+
+**d) Ed25519**
+
+Ed25519 es el algoritmo de clave SSH recomendado actualmente por su alta seguridad, rendimiento superior y claves compactas. Está basado en criptografía de curva elíptica (Curve25519). DSA está considerado obsoleto y ya no es soportado en versiones recientes de OpenSSH.
+</details>
+
+---
+
+### Pregunta 13
+
+¿Qué directiva de sshd_config limita el número de intentos de autenticación fallidos antes de desconectar al cliente?
+
+a) MaxLoginAttempts 3
+b) MaxAuthTries 3
+c) AuthRetryLimit 3
+d) LoginAttempts 3
+
+<details>
+<summary>Respuesta</summary>
+
+**b) MaxAuthTries 3**
+
+La directiva `MaxAuthTries` establece el número máximo de intentos de autenticación permitidos por conexión. Si se excede este límite, la conexión se cierra. Un valor bajo (como 3) ayuda a mitigar ataques de fuerza bruta.
+</details>
+
+---
+
+### Pregunta 14
+
+¿Qué opción del archivo `authorized_keys` restringe la conexión a una clave pública solo desde direcciones IP específicas?
+
+a) `allow="192.168.1.0/24"`
+b) `from="192.168.1.0/24"`
+c) `source="192.168.1.0/24"`
+d) `ip="192.168.1.0/24"`
+
+<details>
+<summary>Respuesta</summary>
+
+**b) `from="192.168.1.0/24"`**
+
+La opción `from="patrón"` en `authorized_keys` restringe el uso de una clave pública a conexiones provenientes de las direcciones IP o nombres de host especificados. Se pueden incluir múltiples patrones separados por comas y se admiten comodines.
+</details>
+
+---
+
+### Pregunta 15
+
+¿Qué directiva de sshd_config configura el intervalo de envío de paquetes keepalive al cliente para detectar conexiones caídas?
+
+a) KeepAliveInterval 300
+b) ClientAliveInterval 300
+c) HeartbeatInterval 300
+d) PingInterval 300
+
+<details>
+<summary>Respuesta</summary>
+
+**b) ClientAliveInterval 300**
+
+La directiva `ClientAliveInterval` especifica el intervalo en segundos entre mensajes de verificación enviados al cliente. Si el servidor no recibe respuesta tras `ClientAliveCountMax` intentos, cierra la conexión. Con valores de 300 y 3, la conexión se cierra tras 900 segundos sin respuesta.
+</details>
+
+---
+
+### Pregunta 16
+
+¿Qué directiva en un bloque `Match` de sshd_config fuerza que un usuario solo pueda utilizar SFTP?
+
+a) AllowSFTPOnly yes
+b) Shell /bin/sftp
+c) ForceCommand internal-sftp
+d) SFTPOnly yes
+
+<details>
+<summary>Respuesta</summary>
+
+**c) ForceCommand internal-sftp**
+
+La directiva `ForceCommand internal-sftp` obliga a que la sesión del usuario utilice únicamente el subsistema SFTP interno de sshd. Combinada con `ChrootDirectory`, confina al usuario a un directorio específico sin acceso a shell. Es el método estándar para crear cuentas de solo SFTP.
+</details>
+
+---
+
+### Pregunta 17
+
+¿Qué comando muestra las claves actualmente cargadas en el agente SSH?
+
+a) ssh-agent -l
+b) ssh-add -l
+c) ssh-keygen -l
+d) ssh-list
+
+<details>
+<summary>Respuesta</summary>
+
+**b) ssh-add -l**
+
+El comando `ssh-add -l` lista las huellas digitales de todas las claves privadas que están cargadas en el agente SSH (`ssh-agent`). La opción `-L` (mayúscula) muestra las claves públicas completas en lugar de solo las huellas digitales.
+</details>
+
+---
+
+### Pregunta 18
+
+¿Qué opción de `scp` se utiliza para especificar un puerto SSH diferente al estándar?
+
+a) `-p 2222`
+b) `-P 2222`
+c) `--port 2222`
+d) `-o Port=2222`
+
+<details>
+<summary>Respuesta</summary>
+
+**b) `-P 2222`**
+
+En `scp`, la opción `-P` (mayúscula) especifica el puerto SSH remoto. Nota que en el comando `ssh`, el puerto se especifica con `-p` (minúscula). Esta diferencia es importante para el examen. La opción `-p` (minúscula) en scp preserva las marcas de tiempo y permisos.
+</details>
+
+---
+
+### Pregunta 19
+
+¿Qué directiva de ssh_config del cliente mantiene la conexión maestra activa durante un periodo de tiempo tras cerrar la última sesión?
+
+a) ControlTimeout 600
+b) ControlPersist 600
+c) SessionTimeout 600
+d) MasterPersist 600
+
+<details>
+<summary>Respuesta</summary>
+
+**b) ControlPersist 600**
+
+La directiva `ControlPersist` mantiene la conexión maestra SSH en segundo plano durante el número de segundos especificado después de que la última sesión se cierre. Junto con `ControlMaster auto` y `ControlPath`, permite la reutilización eficiente de conexiones.
+</details>
+
+---
+
+### Pregunta 20
+
+¿Qué comando SSH crea un túnel remoto que expone el puerto 80 local como puerto 8080 en el servidor remoto?
+
+a) `ssh -L 8080:localhost:80 usuario@servidor`
+b) `ssh -R 8080:localhost:80 usuario@servidor`
+c) `ssh -D 8080 usuario@servidor`
+d) `ssh -T 8080:80 usuario@servidor`
+
+<details>
+<summary>Respuesta</summary>
+
+**b) `ssh -R 8080:localhost:80 usuario@servidor`**
+
+La opción `-R` (Remote) crea un túnel remoto: el puerto 8080 del servidor SSH se redirige hacia localhost:80 del cliente. Esto permite que las conexiones al puerto 8080 del servidor remoto lleguen al servicio web local del cliente. `-L` haría lo contrario (túnel local).
+</details>
+
+---
+
+### Pregunta 21
+
+¿Qué comando copia la clave pública SSH al servidor remoto para habilitar autenticación sin contraseña?
+
+<input type="text" class="fill-blank" data-answer="ssh-copy-id usuario@servidor" data-alt="ssh-copy-id" placeholder="$ escribe aqui...">
+
+<details>
+<summary>Respuesta</summary>
+
+**ssh-copy-id usuario@servidor**
+
+El comando `ssh-copy-id` copia la clave pública del usuario local al archivo `~/.ssh/authorized_keys` del servidor remoto, configurando automáticamente los permisos correctos. Se puede especificar una clave concreta con `-i ~/.ssh/id_ed25519.pub`.
+</details>
+
+---
+
+### Pregunta 22
+
+¿Qué comando genera un par de claves SSH de tipo Ed25519?
+
+<input type="text" class="fill-blank" data-answer="ssh-keygen -t ed25519" data-alt="ssh-keygen -t ed25519 -C usuario@ejemplo.com" placeholder="$ escribe aqui...">
+
+<details>
+<summary>Respuesta</summary>
+
+**ssh-keygen -t ed25519**
+
+El comando `ssh-keygen -t ed25519` genera un par de claves SSH utilizando el algoritmo Ed25519. La clave privada se guarda en `~/.ssh/id_ed25519` y la clave pública en `~/.ssh/id_ed25519.pub`. Se puede añadir un comentario con `-C`.
+</details>
+
+---
+
+### Pregunta 23
+
+¿Qué comando elimina la entrada de un host específico del archivo known_hosts?
+
+<input type="text" class="fill-blank" data-answer="ssh-keygen -R servidor.ejemplo.com" data-alt="ssh-keygen -R" placeholder="$ escribe aqui...">
+
+<details>
+<summary>Respuesta</summary>
+
+**ssh-keygen -R servidor.ejemplo.com**
+
+El comando `ssh-keygen -R hostname` elimina todas las claves asociadas a ese hostname del archivo `~/.ssh/known_hosts`. Es necesario ejecutarlo cuando un servidor ha sido reinstalado y su huella digital ha cambiado, causando un error de verificación.
+</details>
+
+---
+
+### Pregunta 24
+
+¿Qué comando añade una clave privada al agente SSH para no tener que escribir la passphrase repetidamente?
+
+<input type="text" class="fill-blank" data-answer="ssh-add" data-alt="ssh-add ~/.ssh/id_ed25519" placeholder="$ escribe aqui...">
+
+<details>
+<summary>Respuesta</summary>
+
+**ssh-add**
+
+El comando `ssh-add` (opcionalmente seguido de la ruta de la clave) carga una clave privada en el agente SSH (`ssh-agent`). Una vez cargada, la passphrase no se solicita de nuevo hasta que la clave se elimine del agente o este se cierre. Con `-t segundos` se limita el tiempo de vida.
+</details>
+
+---
+
+### Pregunta 25
+
+¿Qué comando elimina todas las claves cargadas en el agente SSH?
+
+<input type="text" class="fill-blank" data-answer="ssh-add -D" data-alt="" placeholder="$ escribe aqui...">
+
+<details>
+<summary>Respuesta</summary>
+
+**ssh-add -D**
+
+El comando `ssh-add -D` elimina todas las identidades (claves privadas) del agente SSH. Es útil por seguridad cuando se termina de trabajar o si se desea recargar un conjunto diferente de claves. La opción `-d` (minúscula) elimina una clave específica.
+</details>

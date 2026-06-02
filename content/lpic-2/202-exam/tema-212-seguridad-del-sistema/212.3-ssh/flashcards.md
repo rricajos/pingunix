@@ -11,7 +11,7 @@ subtema: "212.3"
 
 # Flashcards: 212.3 - Ssh
 
-> 25 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 36 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="212.3">
 </div>
@@ -199,6 +199,276 @@ subtema: "212.3"
 <div class="flashcard" data-id="212.3-fc-011">
 <div class="flashcard-front">
 
+**P:** ¿Qué directiva de sshd_config establece un mensaje de advertencia que se muestra al usuario antes de la autenticación?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) Banner /etc/ssh/banner.txt. La directiva `Banner` especifica un archivo de texto cuyo contenido se envía al cliente SSH antes del proceso de autenticación. Se usa comúnmente para mostrar avisos legales o políticas de uso. No debe confundirse con `/etc/motd`, que se muestra después de un login exitoso.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="212.3">
+</div>
+
+<div class="flashcard" data-id="212.3-fc-012">
+<div class="flashcard-front">
+
+**P:** ¿Qué algoritmo de clave SSH es considerado el más recomendado actualmente por su seguridad y rendimiento?
+
+</div>
+<div class="flashcard-back">
+
+**R:** d) Ed25519. Ed25519 es el algoritmo de clave SSH recomendado actualmente por su alta seguridad, rendimiento superior y claves compactas. Está basado en criptografía de curva elíptica (Curve25519). DSA está considerado obsoleto y ya no es soportado en versiones recientes de OpenSSH.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="212.3">
+</div>
+
+<div class="flashcard" data-id="212.3-fc-013">
+<div class="flashcard-front">
+
+**P:** ¿Qué directiva de sshd_config limita el número de intentos de autenticación fallidos antes de desconectar al cliente?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) MaxAuthTries 3. La directiva `MaxAuthTries` establece el número máximo de intentos de autenticación permitidos por conexión. Si se excede este límite, la conexión se cierra. Un valor bajo (como 3) ayuda a mitigar ataques de fuerza bruta.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="212.3">
+</div>
+
+<div class="flashcard" data-id="212.3-fc-014">
+<div class="flashcard-front">
+
+**P:** ¿Qué opción del archivo `authorized_keys` restringe la conexión a una clave pública solo desde direcciones IP específicas?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `from="192.168.1.0/24"`. La opción `from="patrón"` en `authorized_keys` restringe el uso de una clave pública a conexiones provenientes de las direcciones IP o nombres de host especificados. Se pueden incluir múltiples patrones separados por comas y se admiten comodines.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="212.3">
+</div>
+
+<div class="flashcard" data-id="212.3-fc-015">
+<div class="flashcard-front">
+
+**P:** ¿Qué directiva de sshd_config configura el intervalo de envío de paquetes keepalive al cliente para detectar conexiones caídas?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) ClientAliveInterval 300. La directiva `ClientAliveInterval` especifica el intervalo en segundos entre mensajes de verificación enviados al cliente. Si el servidor no recibe respuesta tras `ClientAliveCountMax` intentos, cierra la conexión. Con valores de 300 y 3, la conexión se cierra tras 900 segundos sin respuesta.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="212.3">
+</div>
+
+<div class="flashcard" data-id="212.3-fc-016">
+<div class="flashcard-front">
+
+**P:** ¿Qué directiva en un bloque `Match` de sshd_config fuerza que un usuario solo pueda utilizar SFTP?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) ForceCommand internal-sftp. La directiva `ForceCommand internal-sftp` obliga a que la sesión del usuario utilice únicamente el subsistema SFTP interno de sshd. Combinada con `ChrootDirectory`, confina al usuario a un directorio específico sin acceso a shell. Es el método estándar para crear cuentas de solo SFTP.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="212.3">
+</div>
+
+<div class="flashcard" data-id="212.3-fc-017">
+<div class="flashcard-front">
+
+**P:** ¿Qué comando muestra las claves actualmente cargadas en el agente SSH?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) ssh-add -l. El comando `ssh-add -l` lista las huellas digitales de todas las claves privadas que están cargadas en el agente SSH (`ssh-agent`). La opción `-L` (mayúscula) muestra las claves públicas completas en lugar de solo las huellas digitales.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="212.3">
+</div>
+
+<div class="flashcard" data-id="212.3-fc-018">
+<div class="flashcard-front">
+
+**P:** ¿Qué opción de `scp` se utiliza para especificar un puerto SSH diferente al estándar?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `-P 2222`. En `scp`, la opción `-P` (mayúscula) especifica el puerto SSH remoto. Nota que en el comando `ssh`, el puerto se especifica con `-p` (minúscula). Esta diferencia es importante para el examen. La opción `-p` (minúscula) en scp preserva las marcas de tiempo y permisos.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="212.3">
+</div>
+
+<div class="flashcard" data-id="212.3-fc-019">
+<div class="flashcard-front">
+
+**P:** ¿Qué directiva de ssh_config del cliente mantiene la conexión maestra activa durante un periodo de tiempo tras cerrar la última sesión?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) ControlPersist 600. La directiva `ControlPersist` mantiene la conexión maestra SSH en segundo plano durante el número de segundos especificado después de que la última sesión se cierre. Junto con `ControlMaster auto` y `ControlPath`, permite la reutilización eficiente de conexiones.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="212.3">
+</div>
+
+<div class="flashcard" data-id="212.3-fc-020">
+<div class="flashcard-front">
+
+**P:** ¿Qué comando SSH crea un túnel remoto que expone el puerto 80 local como puerto 8080 en el servidor remoto?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `ssh -R 8080:localhost:80 usuario@servidor`. La opción `-R` (Remote) crea un túnel remoto: el puerto 8080 del servidor SSH se redirige hacia localhost:80 del cliente. Esto permite que las conexiones al puerto 8080 del servidor remoto lleguen al servicio web local del cliente. `-L` haría lo contrario (túnel local).
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="212.3">
+</div>
+
+<div class="flashcard" data-id="212.3-fc-021">
+<div class="flashcard-front">
+
+**P:** ¿Qué comando copia la clave pública SSH al servidor remoto para habilitar autenticación sin contraseña?
+
+</div>
+<div class="flashcard-back">
+
+**R:** ssh-copy-id usuario@servidor. El comando `ssh-copy-id` copia la clave pública del usuario local al archivo `~/.ssh/authorized_keys` del servidor remoto, configurando automáticamente los permisos correctos. Se puede especificar una clave concreta con `-i ~/.ssh/id_ed25519.pub`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="212.3">
+</div>
+
+<div class="flashcard" data-id="212.3-fc-022">
+<div class="flashcard-front">
+
+**P:** ¿Qué comando genera un par de claves SSH de tipo Ed25519?
+
+</div>
+<div class="flashcard-back">
+
+**R:** ssh-keygen -t ed25519. El comando `ssh-keygen -t ed25519` genera un par de claves SSH utilizando el algoritmo Ed25519. La clave privada se guarda en `~/.ssh/id_ed25519` y la clave pública en `~/.ssh/id_ed25519.pub`. Se puede añadir un comentario con `-C`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="212.3">
+</div>
+
+<div class="flashcard" data-id="212.3-fc-023">
+<div class="flashcard-front">
+
+**P:** ¿Qué comando elimina la entrada de un host específico del archivo known_hosts?
+
+</div>
+<div class="flashcard-back">
+
+**R:** ssh-keygen -R servidor.ejemplo.com. El comando `ssh-keygen -R hostname` elimina todas las claves asociadas a ese hostname del archivo `~/.ssh/known_hosts`. Es necesario ejecutarlo cuando un servidor ha sido reinstalado y su huella digital ha cambiado, causando un error de verificación.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="212.3">
+</div>
+
+<div class="flashcard" data-id="212.3-fc-024">
+<div class="flashcard-front">
+
+**P:** ¿Qué comando añade una clave privada al agente SSH para no tener que escribir la passphrase repetidamente?
+
+</div>
+<div class="flashcard-back">
+
+**R:** ssh-add. El comando `ssh-add` (opcionalmente seguido de la ruta de la clave) carga una clave privada en el agente SSH (`ssh-agent`). Una vez cargada, la passphrase no se solicita de nuevo hasta que la clave se elimine del agente o este se cierre. Con `-t segundos` se limita el tiempo de vida.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="212.3">
+</div>
+
+<div class="flashcard" data-id="212.3-fc-025">
+<div class="flashcard-front">
+
+**P:** ¿Qué comando elimina todas las claves cargadas en el agente SSH?
+
+</div>
+<div class="flashcard-back">
+
+**R:** ssh-add -D. El comando `ssh-add -D` elimina todas las identidades (claves privadas) del agente SSH. Es útil por seguridad cuando se termina de trabajar o si se desea recargar un conjunto diferente de claves. La opción `-d` (minúscula) elimina una clave específica.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="212.3">
+</div>
+
+<div class="flashcard" data-id="212.3-fc-026">
+<div class="flashcard-front">
+
 **P:** Tip de examen: `PermitRootLogin prohibit-password` permite el acceso root solo con clave públic...
 
 </div>
@@ -214,7 +484,7 @@ subtema: "212.3"
 <div class="flashcard-deck" data-subtema="212.3">
 </div>
 
-<div class="flashcard" data-id="212.3-fc-012">
+<div class="flashcard" data-id="212.3-fc-027">
 <div class="flashcard-front">
 
 **P:** Tip de examen: Si se define `AllowUsers` o `AllowGroups`, solo los usuarios/grupos listados ten...
@@ -232,7 +502,7 @@ subtema: "212.3"
 <div class="flashcard-deck" data-subtema="212.3">
 </div>
 
-<div class="flashcard" data-id="212.3-fc-013">
+<div class="flashcard" data-id="212.3-fc-028">
 <div class="flashcard-front">
 
 **P:** Tip de examen: `ForceCommand internal-sftp` combinado con `ChrootDirectory` es la forma estánda...
@@ -250,7 +520,7 @@ subtema: "212.3"
 <div class="flashcard-deck" data-subtema="212.3">
 </div>
 
-<div class="flashcard" data-id="212.3-fc-014">
+<div class="flashcard" data-id="212.3-fc-029">
 <div class="flashcard-front">
 
 **P:** Tip de examen: La multiplexación con ControlMaster acelera las conexiones SSH posteriores al mi...
@@ -268,7 +538,7 @@ subtema: "212.3"
 <div class="flashcard-deck" data-subtema="212.3">
 </div>
 
-<div class="flashcard" data-id="212.3-fc-015">
+<div class="flashcard" data-id="212.3-fc-030">
 <div class="flashcard-front">
 
 **P:** Tip de examen: Si la huella digital del servidor cambia (por reinstalación o ataque), SSH muest...
@@ -286,7 +556,7 @@ subtema: "212.3"
 <div class="flashcard-deck" data-subtema="212.3">
 </div>
 
-<div class="flashcard" data-id="212.3-fc-016">
+<div class="flashcard" data-id="212.3-fc-031">
 <div class="flashcard-front">
 
 **P:** Tip de examen: `-L` redirige un puerto local hacia un destino remoto. `-R` redirige un puerto r...
@@ -304,79 +574,7 @@ subtema: "212.3"
 <div class="flashcard-deck" data-subtema="212.3">
 </div>
 
-<div class="flashcard" data-id="212.3-fc-017">
-<div class="flashcard-front">
-
-**P:** Que hace el comando `~/.ssh/`?
-
-</div>
-<div class="flashcard-back">
-
-**R:** 700
-
-</div>
-</div>
-
----
-
-<div class="flashcard-deck" data-subtema="212.3">
-</div>
-
-<div class="flashcard" data-id="212.3-fc-018">
-<div class="flashcard-front">
-
-**P:** Que hace el comando `~/.ssh/authorized_keys`?
-
-</div>
-<div class="flashcard-back">
-
-**R:** 600
-
-</div>
-</div>
-
----
-
-<div class="flashcard-deck" data-subtema="212.3">
-</div>
-
-<div class="flashcard" data-id="212.3-fc-019">
-<div class="flashcard-front">
-
-**P:** Que hace el comando `~/.ssh/config`?
-
-</div>
-<div class="flashcard-back">
-
-**R:** 600
-
-</div>
-</div>
-
----
-
-<div class="flashcard-deck" data-subtema="212.3">
-</div>
-
-<div class="flashcard" data-id="212.3-fc-020">
-<div class="flashcard-front">
-
-**P:** Que hace el comando `~/.ssh/known_hosts`?
-
-</div>
-<div class="flashcard-back">
-
-**R:** 644
-
-</div>
-</div>
-
----
-
-<div class="flashcard-deck" data-subtema="212.3">
-</div>
-
-<div class="flashcard" data-id="212.3-fc-021">
+<div class="flashcard" data-id="212.3-fc-032">
 <div class="flashcard-front">
 
 **P:** Que es/son Introducción a SSH?
@@ -394,7 +592,7 @@ subtema: "212.3"
 <div class="flashcard-deck" data-subtema="212.3">
 </div>
 
-<div class="flashcard" data-id="212.3-fc-022">
+<div class="flashcard" data-id="212.3-fc-033">
 <div class="flashcard-front">
 
 **P:** Que es/son Configuración del servidor: sshd_config?
@@ -412,7 +610,7 @@ subtema: "212.3"
 <div class="flashcard-deck" data-subtema="212.3">
 </div>
 
-<div class="flashcard" data-id="212.3-fc-023">
+<div class="flashcard" data-id="212.3-fc-034">
 <div class="flashcard-front">
 
 **P:** Que es/son Configuración del cliente: ssh_config?
@@ -430,7 +628,7 @@ subtema: "212.3"
 <div class="flashcard-deck" data-subtema="212.3">
 </div>
 
-<div class="flashcard" data-id="212.3-fc-024">
+<div class="flashcard" data-id="212.3-fc-035">
 <div class="flashcard-front">
 
 **P:** Que es/son Archivo known_hosts?
@@ -448,7 +646,7 @@ subtema: "212.3"
 <div class="flashcard-deck" data-subtema="212.3">
 </div>
 
-<div class="flashcard" data-id="212.3-fc-025">
+<div class="flashcard" data-id="212.3-fc-036">
 <div class="flashcard-front">
 
 **P:** Que es/son Permisos requeridos para archivos SSH?

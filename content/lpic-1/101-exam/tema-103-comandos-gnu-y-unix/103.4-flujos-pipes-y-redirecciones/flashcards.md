@@ -11,7 +11,7 @@ subtema: "103.4"
 
 # Flashcards: 103.4 - Flujos Pipes Y Redirecciones
 
-> 26 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 41 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="103.4">
 </div>
@@ -163,6 +163,276 @@ subtema: "103.4"
 <div class="flashcard" data-id="103.4-fc-009">
 <div class="flashcard-front">
 
+**P:** Cual es la diferencia entre `>` y `>>` al redirigir la salida estandar a un archivo?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `>` sobreescribe el archivo, `>>` anade al final sin sobreescribir. El operador `>` redirige la salida estandar a un archivo, sobreescribiendo cualquier contenido previo. El operador `>>` (append) tambien redirige la salida estandar pero anade el contenido al final del archivo existente sin sobreescribirlo. Si el archivo no existe, ambos lo crean. Para proteger contra sobreescrituras accidentales se puede activar `set -o noclobber`, lo que impide que `>` sobreescriba archivos existentes (se puede forzar con `>|`).
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.4">
+</div>
+
+<div class="flashcard" data-id="103.4-fc-010">
+<div class="flashcard-front">
+
+**P:** Que hace el comando `comando 2>&1 > archivo.txt`? Es correcto para capturar stdout y stderr en el archivo?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) No, solo stdout va al archivo; stderr sigue yendo a la pantalla. El orden de las redirecciones importa. En `comando 2>&1 > archivo.txt`, primero `2>&1` redirige stderr a donde stdout apunta en ese momento (la pantalla), y luego `> archivo.txt` redirige stdout al archivo. El resultado es que stderr sigue yendo a la pantalla. La forma correcta es `comando > archivo.txt 2>&1`, donde primero stdout se redirige al archivo y luego stderr sigue a stdout (al archivo). Alternativamente, `comando &> archivo.txt` captura ambos flujos.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.4">
+</div>
+
+<div class="flashcard" data-id="103.4-fc-011">
+<div class="flashcard-front">
+
+**P:** Que comando permite escribir en un archivo protegido usando `sudo` con la ayuda de `tee`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `echo "linea" | sudo tee /etc/archivo_protegido`. La opcion A no funciona porque la redireccion `>` la realiza el shell del usuario actual (sin privilegios), no el proceso sudo. El comando `tee` recibe los datos por stdin y los escribe en el archivo; al ejecutarlo con `sudo`, `tee` se ejecuta como root y puede escribir en archivos protegidos. Para anadir al archivo en lugar de sobreescribir, se usa `sudo tee -a`. La opcion C tiene una sintaxis invalida y la opcion D tambien es incorrecta.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.4">
+</div>
+
+<div class="flashcard" data-id="103.4-fc-012">
+<div class="flashcard-front">
+
+**P:** Que operador en bash envia tanto stdout como stderr a traves de un pipe al siguiente comando?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `|&`. El operador `|&` (disponible en bash 4+) envia tanto stdout como stderr al siguiente comando a traves del pipe. El pipe normal `|` solo pasa stdout; stderr sigue yendo a la pantalla. `|&` es equivalente a `2>&1 |`. Por ejemplo: `ls /etc /no_existe |& wc -l` contaria tanto las lineas de la salida normal como los mensajes de error. El operador `||` es el OR logico que ejecuta el segundo comando solo si el primero falla.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.4">
+</div>
+
+<div class="flashcard" data-id="103.4-fc-013">
+<div class="flashcard-front">
+
+**P:** Que hace un here string (`<<<`) en bash?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) Pasa una sola cadena como entrada estandar a un comando. Un here string `<<<` pasa una cadena directamente como entrada estandar a un comando. Por ejemplo: `wc -w <<< "uno dos tres"` cuenta 3 palabras, y `tr 'a-z' 'A-Z' <<< "hola"` convierte a mayusculas. Es mas eficiente que `echo "hola" | tr 'a-z' 'A-Z'` porque no crea un subproceso para `echo`. Las variables se expanden dentro del here string: `cat <<< "Mi home es $HOME"`. El here document (`<< EOF`) es para bloques multilínea.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.4">
+</div>
+
+<div class="flashcard" data-id="103.4-fc-014">
+<div class="flashcard-front">
+
+**P:** Que comando `xargs` es la forma mas segura de eliminar archivos cuyos nombres pueden contener espacios, encontrados con `find`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `find . -name "*.tmp" -print0 | xargs -0 rm`. La combinacion `-print0` en `find` y `-0` en `xargs` usa el caracter null (`\0`) como delimitador en lugar de saltos de linea o espacios. Esto garantiza que los nombres de archivo con espacios, comillas u otros caracteres especiales se manejen correctamente. La opcion A fallaria con nombres que contienen espacios porque `xargs` los interpretaria como archivos separados. La opcion D tiene sintaxis incompleta (falta `{} \;`). Esta es una practica esencial de seguridad al procesar archivos con `find` y `xargs`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.4">
+</div>
+
+<div class="flashcard" data-id="103.4-fc-015">
+<div class="flashcard-front">
+
+**P:** Que hace la sustitucion de procesos `<(comando)` en bash?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) Presenta la salida del comando como un archivo temporal que puede ser leido. La sustitucion de procesos `<(comando)` ejecuta el comando y presenta su salida como si fuera un archivo temporal. Es especialmente util con `diff` para comparar la salida de dos comandos: `diff <(ls /dir1) <(ls /dir2)`. Esto evita crear archivos temporales manualmente. Tambien existe `>(comando)` que crea un archivo temporal de escritura. La sustitucion de procesos es especifica de bash y no funciona en `sh`. Es util con `while read` para evitar problemas de subshell creados por pipes.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.4">
+</div>
+
+<div class="flashcard" data-id="103.4-fc-016">
+<div class="flashcard-front">
+
+**P:** Si la opcion `noclobber` esta activada en el shell, que operador permite forzar la sobreescritura de un archivo existente con redireccion?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) `>|`. Cuando `noclobber` esta activado (`set -o noclobber`), el operador `>` no permite sobreescribir archivos existentes y da un error. El operador `>|` fuerza la sobreescritura a pesar de la proteccion noclobber. `>>` anade al archivo sin sobreescribir. `>!` no es un operador valido en bash para este proposito (aunque si en otros shells como csh/tcsh). `>&` se usa para redirigir descriptores de archivo, no para forzar sobreescritura.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.4">
+</div>
+
+<div class="flashcard" data-id="103.4-fc-017">
+<div class="flashcard-front">
+
+**P:** Que opcion de `tee` permite anadir contenido al final de un archivo en lugar de sobreescribirlo?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `tee -a`. `tee -a` (append) anade la salida al final del archivo especificado en lugar de sobreescribirlo. Sin `-a`, `tee` sobreescribe el contenido del archivo. Por ejemplo: `echo "nueva linea" | tee -a log.txt` anade "nueva linea" al final de `log.txt` y tambien la muestra en la pantalla. `tee` puede escribir en multiples archivos simultaneamente: `comando | tee archivo1.txt archivo2.txt`. Las opciones `-f`, `-p` y `--no-clobber` no son opciones estandar de `tee`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.4">
+</div>
+
+<div class="flashcard" data-id="103.4-fc-018">
+<div class="flashcard-front">
+
+**P:** En el contexto de las redirecciones, que es `/dev/null`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) Un archivo especial que descarta todo lo que se escribe en el y produce EOF al leerlo. `/dev/null` es un archivo especial del sistema conocido como "el agujero negro" de Linux. Acepta cualquier cantidad de datos escritos en el y los descarta silenciosamente. Al leer de el, produce inmediatamente un fin de archivo (EOF). Se usa para descartar salida no deseada: `comando > /dev/null` (descarta stdout), `comando 2> /dev/null` (descarta stderr), `comando &> /dev/null` (descarta todo). Tambien se usa para vaciar archivos: `cat /dev/null > archivo.txt`. `/dev/urandom` es el que genera datos aleatorios.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.4">
+</div>
+
+<div class="flashcard" data-id="103.4-fc-019">
+<div class="flashcard-front">
+
+**P:** Que comando redirige la salida estandar de un proceso a un archivo y al mismo tiempo los errores a otro archivo diferente?
+
+</div>
+<div class="flashcard-back">
+
+**R:** comando > salida.txt 2> errores.txt. Esta sintaxis separa los dos flujos de salida: `>` (equivalente a `1>`) redirige stdout al archivo `salida.txt`, y `2>` redirige stderr al archivo `errores.txt`. Cada flujo va a un archivo diferente, permitiendo procesar los resultados y los errores por separado. Por ejemplo: `find / -name "*.conf" > resultados.txt 2> errores.txt` guarda los archivos encontrados en un archivo y los errores de permisos en otro.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.4">
+</div>
+
+<div class="flashcard" data-id="103.4-fc-020">
+<div class="flashcard-front">
+
+**P:** Que comando crea una named pipe (FIFO) llamada `mi_pipe`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** mkfifo mi_pipe. `mkfifo` crea un archivo especial de tipo pipe con nombre (FIFO - First In, First Out) en el sistema de archivos. Este archivo aparece con el tipo `p` en `ls -l` (por ejemplo, `prw-r--r--`). La named pipe permite comunicacion entre procesos independientes: un proceso escribe (`echo "datos" > mi_pipe`) y otro lee (`cat < mi_pipe`). La operacion es bloqueante hasta que ambos extremos estan conectados. Se elimina con `rm mi_pipe`. La opcion `-m` permite establecer permisos: `mkfifo -m 644 mi_pipe`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.4">
+</div>
+
+<div class="flashcard" data-id="103.4-fc-021">
+<div class="flashcard-front">
+
+**P:** Que comando usarias para descartar solo los mensajes de error de un comando, mostrando la salida normal en pantalla?
+
+</div>
+<div class="flashcard-back">
+
+**R:** comando 2> /dev/null. `2> /dev/null` redirige solo el descriptor de archivo 2 (stderr) a `/dev/null`, descartando los mensajes de error. La salida estandar (stdout, descriptor 1) sigue yendo a la pantalla. Esto es muy util con comandos como `find` que generan muchos errores de permisos: `find / -name "*.conf" 2> /dev/null`. Para descartar solo stdout: `comando > /dev/null`. Para descartar ambos: `comando &> /dev/null` o `comando > /dev/null 2>&1`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.4">
+</div>
+
+<div class="flashcard" data-id="103.4-fc-022">
+<div class="flashcard-front">
+
+**P:** Que comando usarias para pasar la cadena "Hola Mundo" como entrada estandar al comando `wc -w` usando un here string?
+
+</div>
+<div class="flashcard-back">
+
+**R:** wc -w <<< "Hola Mundo". El operador `<<<` (here string) pasa la cadena entre comillas directamente como entrada estandar al comando. En este caso, `wc -w` contaria 2 palabras. Es equivalente a `echo "Hola Mundo" | wc -w` pero mas eficiente porque no crea un subproceso para `echo`. Las variables se expanden dentro del here string: `wc -w <<< "$VARIABLE"`. Los here strings son una funcionalidad especifica de bash.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.4">
+</div>
+
+<div class="flashcard" data-id="103.4-fc-023">
+<div class="flashcard-front">
+
+**P:** Que comando usarias para vaciar completamente el contenido de un archivo sin eliminarlo?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > archivo.txt. La forma mas corta de vaciar un archivo en bash es `> archivo.txt`, que redirige "nada" al archivo, sobreescribiendolo con contenido vacio. Alternativas equivalentes son: `cat /dev/null > archivo.txt`, `truncate -s 0 archivo.txt`, o `echo -n > archivo.txt`. Esto es util para limpiar archivos de log sin eliminarlos, ya que el archivo mantiene su inodo y los procesos que lo tienen abierto pueden seguir escribiendo en el.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.4">
+</div>
+
+<div class="flashcard" data-id="103.4-fc-024">
+<div class="flashcard-front">
+
 **P:** Tip de examen: `/dev/null` es la forma estandar de descartar salida no deseada. Es un "sumidero...
 
 </div>
@@ -178,7 +448,7 @@ subtema: "103.4"
 <div class="flashcard-deck" data-subtema="103.4">
 </div>
 
-<div class="flashcard" data-id="103.4-fc-010">
+<div class="flashcard" data-id="103.4-fc-025">
 <div class="flashcard-front">
 
 **P:** Tip de examen: `xargs` es necesario cuando el comando destino espera **argumentos** (no stdin)....
@@ -196,7 +466,7 @@ subtema: "103.4"
 <div class="flashcard-deck" data-subtema="103.4">
 </div>
 
-<div class="flashcard" data-id="103.4-fc-011">
+<div class="flashcard" data-id="103.4-fc-026">
 <div class="flashcard-front">
 
 **P:** Tip de examen: La sustitucion de procesos es especifica de bash (no funciona en `sh`). Es parti...
@@ -214,25 +484,7 @@ subtema: "103.4"
 <div class="flashcard-deck" data-subtema="103.4">
 </div>
 
-<div class="flashcard" data-id="103.4-fc-012">
-<div class="flashcard-front">
-
-**P:** Que hace el comando `El pipe`?
-
-</div>
-<div class="flashcard-back">
-
-**R:** ` conecta la **salida estandar** de un comando con la **entrada estandar** del siguiente comando. Es uno de los conceptos mas poderosos de Unix.  ```bash ls -l /etc
-
-</div>
-</div>
-
----
-
-<div class="flashcard-deck" data-subtema="103.4">
-</div>
-
-<div class="flashcard" data-id="103.4-fc-013">
+<div class="flashcard" data-id="103.4-fc-027">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `tee >(wc -l)`?
@@ -250,7 +502,7 @@ subtema: "103.4"
 <div class="flashcard-deck" data-subtema="103.4">
 </div>
 
-<div class="flashcard" data-id="103.4-fc-014">
+<div class="flashcard" data-id="103.4-fc-028">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `>`?
@@ -268,7 +520,7 @@ subtema: "103.4"
 <div class="flashcard-deck" data-subtema="103.4">
 </div>
 
-<div class="flashcard" data-id="103.4-fc-015">
+<div class="flashcard" data-id="103.4-fc-029">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `>>`?
@@ -286,15 +538,15 @@ subtema: "103.4"
 <div class="flashcard-deck" data-subtema="103.4">
 </div>
 
-<div class="flashcard" data-id="103.4-fc-016">
+<div class="flashcard" data-id="103.4-fc-030">
 <div class="flashcard-front">
 
-**P:** Que hace el comando `<`?
+**P:** Que hace el comando `2>`?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Redirige archivo a stdin
+**R:** Redirige stderr a archivo (sobreescribe)
 
 </div>
 </div>
@@ -304,7 +556,25 @@ subtema: "103.4"
 <div class="flashcard-deck" data-subtema="103.4">
 </div>
 
-<div class="flashcard" data-id="103.4-fc-017">
+<div class="flashcard" data-id="103.4-fc-031">
+<div class="flashcard-front">
+
+**P:** Que hace el comando `2>>`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** Redirige stderr a archivo (anade)
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.4">
+</div>
+
+<div class="flashcard" data-id="103.4-fc-032">
 <div class="flashcard-front">
 
 **P:** Que es/son 1. Descriptores de archivo?
@@ -322,7 +592,7 @@ subtema: "103.4"
 <div class="flashcard-deck" data-subtema="103.4">
 </div>
 
-<div class="flashcard" data-id="103.4-fc-018">
+<div class="flashcard" data-id="103.4-fc-033">
 <div class="flashcard-front">
 
 **P:** Que es/son 6. /dev/null: el agujero negro?
@@ -340,7 +610,7 @@ subtema: "103.4"
 <div class="flashcard-deck" data-subtema="103.4">
 </div>
 
-<div class="flashcard" data-id="103.4-fc-019">
+<div class="flashcard" data-id="103.4-fc-034">
 <div class="flashcard-front">
 
 **P:** Que es/son 7. Pipes (tuberias): `|`?
@@ -358,7 +628,7 @@ subtema: "103.4"
 <div class="flashcard-deck" data-subtema="103.4">
 </div>
 
-<div class="flashcard" data-id="103.4-fc-020">
+<div class="flashcard" data-id="103.4-fc-035">
 <div class="flashcard-front">
 
 **P:** Que es/son 8. tee: dividir la salida?
@@ -376,7 +646,7 @@ subtema: "103.4"
 <div class="flashcard-deck" data-subtema="103.4">
 </div>
 
-<div class="flashcard" data-id="103.4-fc-021">
+<div class="flashcard" data-id="103.4-fc-036">
 <div class="flashcard-front">
 
 **P:** Que es/son 9. xargs: construir comandos desde stdin?
@@ -394,7 +664,7 @@ subtema: "103.4"
 <div class="flashcard-deck" data-subtema="103.4">
 </div>
 
-<div class="flashcard" data-id="103.4-fc-022">
+<div class="flashcard" data-id="103.4-fc-037">
 <div class="flashcard-front">
 
 **P:** Que es/son 10. Here documents: `<< EOF`?
@@ -412,7 +682,7 @@ subtema: "103.4"
 <div class="flashcard-deck" data-subtema="103.4">
 </div>
 
-<div class="flashcard" data-id="103.4-fc-023">
+<div class="flashcard" data-id="103.4-fc-038">
 <div class="flashcard-front">
 
 **P:** Que es/son 11. Here strings: `<<<`?
@@ -430,7 +700,7 @@ subtema: "103.4"
 <div class="flashcard-deck" data-subtema="103.4">
 </div>
 
-<div class="flashcard" data-id="103.4-fc-024">
+<div class="flashcard" data-id="103.4-fc-039">
 <div class="flashcard-front">
 
 **P:** Que es/son 12. Sustitucion de procesos: `<()` y `>()`?
@@ -448,7 +718,7 @@ subtema: "103.4"
 <div class="flashcard-deck" data-subtema="103.4">
 </div>
 
-<div class="flashcard" data-id="103.4-fc-025">
+<div class="flashcard" data-id="103.4-fc-040">
 <div class="flashcard-front">
 
 **P:** Que es/son 13. Named pipes (FIFOs): mkfifo?
@@ -466,7 +736,7 @@ subtema: "103.4"
 <div class="flashcard-deck" data-subtema="103.4">
 </div>
 
-<div class="flashcard" data-id="103.4-fc-026">
+<div class="flashcard" data-id="103.4-fc-041">
 <div class="flashcard-front">
 
 **P:** Que es/son 14. Resumen de redirecciones?

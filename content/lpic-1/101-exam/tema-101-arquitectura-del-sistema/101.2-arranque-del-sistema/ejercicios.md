@@ -266,3 +266,243 @@ El comando `journalctl -b -1` muestra los logs del arranque anterior al actual:
 
 La opcion (a) es incorrecta porque `dmesg` no tiene la opcion `-b -1`. La opcion (c) podria funcionar si el archivo rotado existe, pero no es el metodo estandar. La opcion (d) no es un comando valido.
 </details>
+
+### Pregunta 11
+
+Cual es la funcion principal del POST (Power-On Self-Test) durante la secuencia de arranque?
+
+a) Cargar el kernel de Linux en memoria
+b) Verificar la integridad del hardware basico como CPU, RAM y controladores de disco
+c) Montar el sistema de archivos raiz
+d) Iniciar el gestor de arranque GRUB2
+
+<details><summary>Respuesta</summary>
+
+**b) Verificar la integridad del hardware basico como CPU, RAM y controladores de disco**
+
+El POST es una serie de pruebas de diagnostico que ejecuta el firmware (BIOS o UEFI) inmediatamente al encender el equipo. Verifica que la CPU, la memoria RAM, los controladores de disco y otros componentes esenciales funcionan correctamente. Si el POST falla, el sistema emite pitidos o muestra codigos de error y se detiene antes de intentar cargar el sistema operativo.
+
+</details>
+
+### Pregunta 12
+
+En un sistema con BIOS, cual es el tamano total del MBR (Master Boot Record) y que contiene?
+
+a) 1024 bytes: codigo de arranque y tabla GPT
+b) 512 bytes: codigo de arranque (446 bytes), tabla de particiones (64 bytes) y firma (2 bytes)
+c) 256 bytes: solo el codigo del bootloader
+d) 4096 bytes: codigo de arranque, tabla de particiones y copia de seguridad
+
+<details><summary>Respuesta</summary>
+
+**b) 512 bytes: codigo de arranque (446 bytes), tabla de particiones (64 bytes) y firma (2 bytes)**
+
+El MBR ocupa los primeros 512 bytes del disco y se divide en tres partes: el codigo de arranque (bootstrap code) de 446 bytes que contiene la primera etapa del bootloader, la tabla de particiones de 64 bytes que permite un maximo de 4 particiones primarias (4 entradas de 16 bytes), y la firma de arranque de 2 bytes (0x55AA) que indica al firmware que el disco es arrancable.
+
+</details>
+
+### Pregunta 13
+
+Que parametro del kernel se usa para arrancar directamente en un shell bash, sin pasar por init o systemd?
+
+a) single
+b) init=/bin/bash
+c) systemd.unit=emergency.target
+d) rescue
+
+<details><summary>Respuesta</summary>
+
+**b) init=/bin/bash**
+
+El parametro `init=/bin/bash` indica al kernel que ejecute `/bin/bash` como proceso PID 1 en lugar del proceso init normal (systemd o SysVinit). Esto proporciona un shell de root directo sin ningun servicio del sistema, util para tareas de rescate avanzadas como cambiar la contrasena de root. `single` y `rescue` arrancan en modo monousuario con servicios minimos, y `emergency.target` inicia un shell con el sistema de archivos raiz montado como solo lectura.
+
+</details>
+
+### Pregunta 14
+
+Cual es la diferencia tecnica principal entre initrd e initramfs?
+
+a) initrd usa formato cpio y initramfs usa imagen de disco
+b) initramfs es un archivo cpio comprimido que se extrae en tmpfs, mientras que initrd es una imagen de disco que se monta como dispositivo de bloque
+c) initrd es mas moderno que initramfs
+d) No hay diferencia tecnica, solo cambia el nombre segun la distribucion
+
+<details><summary>Respuesta</summary>
+
+**b) initramfs es un archivo cpio comprimido que se extrae en tmpfs, mientras que initrd es una imagen de disco que se monta como dispositivo de bloque**
+
+initrd (Initial RAM Disk) es una imagen de disco comprimida que requiere un controlador de sistema de archivos para montarse como dispositivo de bloque. initramfs (Initial RAM Filesystem) es un archivo cpio comprimido que se extrae directamente en ramfs/tmpfs, siendo mas eficiente y la tecnologia estandar desde el kernel 2.6. Aunque tecnicamente son diferentes, los archivos en `/boot/` suelen llamarse `initrd.img-*` por convencion historica.
+
+</details>
+
+### Pregunta 15
+
+Que herramienta se utiliza en distribuciones Red Hat/CentOS/Fedora modernas para generar la imagen initramfs?
+
+a) mkinitramfs
+b) update-initramfs
+c) dracut
+d) mkinitrd
+
+<details><summary>Respuesta</summary>
+
+**c) dracut**
+
+`dracut` es la herramienta moderna para generar imagenes initramfs en distribuciones basadas en Red Hat (CentOS, Fedora, RHEL). `mkinitrd` es la herramienta antigua de Red Hat que ha sido reemplazada por dracut. `mkinitramfs` y `update-initramfs` son herramientas especificas de Debian/Ubuntu. El comando `dracut --force` regenera la imagen del kernel actual.
+
+</details>
+
+### Pregunta 16
+
+Que caracteristica tiene el kernel ring buffer (buffer de anillo del kernel)?
+
+a) Almacena los mensajes del kernel de forma permanente en disco
+b) Tiene tamano ilimitado y nunca pierde mensajes
+c) Es un buffer circular de tamano fijo donde los mensajes antiguos se sobrescriben con los nuevos
+d) Solo registra mensajes de error, no informacion general
+
+<details><summary>Respuesta</summary>
+
+**c) Es un buffer circular de tamano fijo donde los mensajes antiguos se sobrescriben con los nuevos**
+
+El kernel ring buffer es un area de memoria de tamano fijo donde el kernel almacena sus mensajes de registro. Al ser circular, cuando se llena, los mensajes mas antiguos se sobrescriben con los nuevos. Por este motivo, los mensajes de arranque se van perdiendo con el tiempo. El contenido se pierde al reiniciar y se puede consultar con el comando `dmesg`. Su tamano se puede configurar con el parametro del kernel `log_buf_len`.
+
+</details>
+
+### Pregunta 17
+
+En que archivo de configuracion se establece la persistencia de los logs de journalctl?
+
+a) /etc/systemd/system.conf
+b) /etc/systemd/journald.conf
+c) /var/log/journal.conf
+d) /etc/journal/persistent.conf
+
+<details><summary>Respuesta</summary>
+
+**b) /etc/systemd/journald.conf**
+
+Para hacer persistentes los logs de journalctl se configura `Storage=persistent` en `/etc/systemd/journald.conf`. Tambien se debe crear el directorio `/var/log/journal/` si no existe. Por defecto, en muchas distribuciones los logs de journalctl no son persistentes y se pierden al reiniciar. Despues de modificar la configuracion, se reinicia el servicio con `systemctl restart systemd-journald`.
+
+</details>
+
+### Pregunta 18
+
+Que comando de dmesg permite filtrar y mostrar solo los mensajes del kernel con nivel de error?
+
+a) dmesg -e
+b) dmesg --level=err
+c) dmesg --errors
+d) dmesg -f err
+
+<details><summary>Respuesta</summary>
+
+**b) dmesg --level=err**
+
+La opcion `--level` de `dmesg` permite filtrar mensajes por nivel de gravedad. `dmesg --level=err` muestra solo los mensajes de error. Se pueden combinar niveles, por ejemplo `dmesg --level=err,warn` para ver errores y advertencias. Otras opciones utiles son `-T` para marcas de tiempo legibles, `-H` para formato humano con colores, y `-w` para seguir nuevos mensajes en tiempo real.
+
+</details>
+
+### Pregunta 19
+
+Cual de los siguientes NO es un sistema de inicio (init system) que haya sido utilizado en distribuciones Linux?
+
+a) SysVinit
+b) Upstart
+c) systemd
+d) bootctl
+
+<details><summary>Respuesta</summary>
+
+**d) bootctl**
+
+`bootctl` no es un sistema de inicio sino una herramienta para gestionar el bootloader systemd-boot. Los tres sistemas de inicio principales en la historia de Linux son: SysVinit (clasico, basado en runlevels, inicio secuencial), Upstart (desarrollado por Canonical para Ubuntu, basado en eventos) y systemd (moderno, inicio en paralelo, usado por la mayoria de distribuciones actuales). Upstart fue sustituido por systemd en Ubuntu 15.04.
+
+</details>
+
+### Pregunta 20
+
+Que opcion del comando journalctl muestra solo los mensajes del kernel, de forma equivalente a dmesg?
+
+a) journalctl --kernel
+b) journalctl -b
+c) journalctl -k
+d) journalctl --dmesg-only
+
+<details><summary>Respuesta</summary>
+
+**c) journalctl -k**
+
+La opcion `-k` (o `--dmesg`) de `journalctl` filtra para mostrar unicamente los mensajes del kernel, haciendo que sea funcionalmente equivalente a `dmesg`. Se puede combinar con `-b` para ver solo los mensajes del kernel del arranque actual: `journalctl -k -b`. La opcion `-b` sola muestra todos los logs del arranque actual (kernel y servicios).
+
+</details>
+
+### Pregunta 21
+
+Que comando se utiliza en Debian/Ubuntu para regenerar el archivo de configuracion de GRUB2?
+
+<input type="text" class="fill-blank" data-answer="update-grub" data-alt="grub-mkconfig -o /boot/grub/grub.cfg" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**update-grub**
+
+`update-grub` es un wrapper disponible en Debian/Ubuntu que equivale a ejecutar `grub-mkconfig -o /boot/grub/grub.cfg`. Regenera el archivo `grub.cfg` a partir de la configuracion en `/etc/default/grub` y los scripts en `/etc/grub.d/`. Se debe ejecutar cada vez que se modifica la configuracion de GRUB.
+
+</details>
+
+### Pregunta 22
+
+Que comando muestra los mensajes almacenados en el kernel ring buffer?
+
+<input type="text" class="fill-blank" data-answer="dmesg" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**dmesg**
+
+`dmesg` muestra los mensajes del kernel ring buffer, que incluyen mensajes de arranque, deteccion de hardware, carga de modulos y errores del kernel. Se puede usar con `-T` para marcas de tiempo legibles, `--level=err` para filtrar por nivel, y `-w` para seguir mensajes en tiempo real.
+
+</details>
+
+### Pregunta 23
+
+Que comando de journalctl se usa para ver los logs del arranque actual del sistema?
+
+<input type="text" class="fill-blank" data-answer="journalctl -b" data-alt="journalctl -b 0" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**journalctl -b**
+
+`journalctl -b` muestra los logs del arranque actual. Se puede especificar arranques anteriores con `-b -1` (anterior), `-b -2` (dos arranques atras), etc. Para listar todos los arranques registrados se usa `journalctl --list-boots`. Requiere que los logs sean persistentes para ver arranques anteriores.
+
+</details>
+
+### Pregunta 24
+
+Que comando se usa en Debian/Ubuntu para actualizar la imagen initramfs del kernel actual?
+
+<input type="text" class="fill-blank" data-answer="update-initramfs -u" data-alt="mkinitramfs -o /boot/initrd.img-$(uname -r)" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**update-initramfs -u**
+
+`update-initramfs -u` actualiza la imagen initramfs existente para el kernel en ejecucion. La opcion `-u` significa update. Para crear una nueva imagen se usa `-c` con `-k version`. En Red Hat/CentOS/Fedora moderno se usa `dracut` en su lugar.
+
+</details>
+
+### Pregunta 25
+
+Que comando permite instalar GRUB2 en el MBR del disco /dev/sda?
+
+<input type="text" class="fill-blank" data-answer="grub-install /dev/sda" data-alt="grub2-install /dev/sda" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**grub-install /dev/sda**
+
+`grub-install /dev/sda` instala el cargador de arranque GRUB2 en el MBR del disco especificado. En distribuciones Red Hat/CentOS se usa `grub2-install`. Para sistemas UEFI se requieren parametros adicionales: `grub-install --target=x86_64-efi --efi-directory=/boot/efi`.
+
+</details>

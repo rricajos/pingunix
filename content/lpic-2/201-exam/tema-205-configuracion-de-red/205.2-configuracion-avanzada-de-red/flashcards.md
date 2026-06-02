@@ -11,7 +11,7 @@ subtema: "205.2"
 
 # Flashcards: 205.2 - Configuracion Avanzada De Red
 
-> 24 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 38 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="205.2">
 </div>
@@ -199,6 +199,276 @@ subtema: "205.2"
 <div class="flashcard" data-id="205.2-fc-011">
 <div class="flashcard-front">
 
+**P:** Que parametro de sysctl controla si un sistema Linux puede actuar como router reenviando paquetes IPv4?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `net.ipv4.ip_forward`. El parametro `net.ipv4.ip_forward` controla si el kernel de Linux reenvia paquetes entre interfaces de red. Un valor de `1` habilita el reenvio y un valor de `0` lo deshabilita. Para hacerlo permanente se configura en `/etc/sysctl.conf` o en un archivo en `/etc/sysctl.d/`. Se aplica con `sysctl -p`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="205.2">
+</div>
+
+<div class="flashcard" data-id="205.2-fc-012">
+<div class="flashcard-front">
+
+**P:** Que modulo del kernel se necesita cargar para soportar interfaces VLAN con etiquetado 802.1Q?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `8021q`. El modulo del kernel `8021q` proporciona soporte para VLANs con etiquetado IEEE 802.1Q. Se carga con `modprobe 8021q`. En la mayoria de distribuciones modernas, el modulo se carga automaticamente al crear una interfaz VLAN. Sin este modulo, no es posible crear subinterfaces VLAN.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="205.2">
+</div>
+
+<div class="flashcard" data-id="205.2-fc-013">
+<div class="flashcard-front">
+
+**P:** Cual es la tabla de enrutamiento principal que se muestra por defecto al ejecutar `ip route show`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `main` (254). La tabla `main` (numero 254) es la tabla de enrutamiento principal de Linux y es la que se muestra por defecto con `ip route show`. Todas las rutas anadidas con `ip route add` sin especificar tabla se agregan a `main`. La tabla `local` (255) contiene rutas locales y de broadcast gestionadas por el kernel, y la tabla `default` (253) esta normalmente vacia.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="205.2">
+</div>
+
+<div class="flashcard" data-id="205.2-fc-014">
+<div class="flashcard-front">
+
+**P:** Un administrador desea que el trafico proveniente de la interfaz eth1 utilice una tabla de enrutamiento personalizada llamada "dmz". Que comando debe usar?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `ip rule add iif eth1 table dmz`. El comando `ip rule add iif eth1 table dmz` crea una regla de politica de enrutamiento que indica al kernel que todo trafico que ingrese por la interfaz eth1 debe ser enrutado consultando la tabla "dmz" en lugar de la tabla "main". La tabla "dmz" debe estar definida previamente en `/etc/iproute2/rt_tables`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="205.2">
+</div>
+
+<div class="flashcard" data-id="205.2-fc-015">
+<div class="flashcard-front">
+
+**P:** Que tipo de tunel se utiliza para encapsular trafico IPv6 dentro de paquetes IPv4?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) SIT. SIT (Simple Internet Transition) es un mecanismo de tunel disenado especificamente para encapsular paquetes IPv6 dentro de paquetes IPv4, tambien conocido como 6in4. Se crea con `ip tunnel add mode sit`. GRE es un tunel generico IP sobre IP, IPIP encapsula IPv4 sobre IPv4, y VXLAN es una tecnologia de superposicion de capa 2 sobre capa 3.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="205.2">
+</div>
+
+<div class="flashcard" data-id="205.2-fc-016">
+<div class="flashcard-front">
+
+**P:** En tc (traffic control), que componente clasifica los paquetes y los asigna a una clase especifica?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) filter. Los filtros (filters) en tc son reglas que examinan los paquetes y los clasifican asignandolos a una clase especifica. Se basan en criterios como direccion IP, puerto, protocolo o marcas del firewall. Las qdisc son disciplinas de colas que gestionan como se envian los paquetes, y las clases son subdivisiones jerarquicas de una qdisc.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="205.2">
+</div>
+
+<div class="flashcard" data-id="205.2-fc-017">
+<div class="flashcard-front">
+
+**P:** Que parametro del kernel previene ataques de IP spoofing verificando que los paquetes llegan por la interfaz correcta?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `/proc/sys/net/ipv4/conf/all/rp_filter`. El parametro `rp_filter` (Reverse Path Filtering) verifica que la direccion IP de origen de cada paquete recibido sea alcanzable a traves de la interfaz por la que llego. Si la verificacion falla, el paquete se descarta, previniendo ataques de IP spoofing. Un valor de `1` activa la verificacion estricta y `2` la verificacion flexible.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="205.2">
+</div>
+
+<div class="flashcard" data-id="205.2-fc-018">
+<div class="flashcard-front">
+
+**P:** Que archivo se consulta para ver la informacion detallada de todas las VLANs configuradas en el sistema?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `/proc/net/vlan/config`. El archivo `/proc/net/vlan/config` lista todas las interfaces VLAN configuradas en el sistema, mostrando el nombre de la interfaz VLAN, el ID de VLAN y la interfaz fisica padre. Para informacion detallada de una VLAN especifica se consulta `/proc/net/vlan/nombre_interfaz` (por ejemplo, `/proc/net/vlan/eth0.100`).
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="205.2">
+</div>
+
+<div class="flashcard" data-id="205.2-fc-019">
+<div class="flashcard-front">
+
+**P:** Que herramienta legacy se utilizaba para crear y administrar bridges antes de los comandos ip de iproute2?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `brctl`. El comando `brctl` (del paquete `bridge-utils`) era la herramienta legacy para gestionar bridges de red en Linux. Permite crear bridges (`brctl addbr`), agregar interfaces (`brctl addif`), activar STP (`brctl stp`) y ver el estado (`brctl show`). En sistemas modernos se recomienda usar `ip link add type bridge` e `ip link set master`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="205.2">
+</div>
+
+<div class="flashcard" data-id="205.2-fc-020">
+<div class="flashcard-front">
+
+**P:** Que direccion IPv6 se asigna automaticamente a cada interfaz de red y se utiliza para comunicacion local en el segmento de red?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) Link-local (fe80::/10). Las direcciones link-local con prefijo fe80::/10 se asignan automaticamente a cada interfaz de red IPv6 activa mediante autoconfig. Son validas unicamente en el segmento de red local y no son enrutables. Son esenciales para el funcionamiento del Neighbor Discovery Protocol (NDP) y para la comunicacion inicial antes de obtener una direccion global.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="205.2">
+</div>
+
+<div class="flashcard" data-id="205.2-fc-021">
+<div class="flashcard-front">
+
+**P:** Escribe el comando para habilitar temporalmente el reenvio de paquetes IPv4 usando sysctl. <input type="text" class="fill-blank" data-answer="sysctl -w net.ipv4.ip_forward=1" data-alt="" placeholder="$ escribe aqui...">
+
+</div>
+<div class="flashcard-back">
+
+**R:** sysctl -w net.ipv4.ip_forward=1. El comando `sysctl -w net.ipv4.ip_forward=1` habilita inmediatamente el reenvio de paquetes IPv4 en el kernel. Este cambio es temporal y se pierde al reiniciar. Para hacerlo permanente se debe agregar `net.ipv4.ip_forward = 1` en `/etc/sysctl.conf` y ejecutar `sysctl -p`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="205.2">
+</div>
+
+<div class="flashcard" data-id="205.2-fc-022">
+<div class="flashcard-front">
+
+**P:** Escribe el comando para crear una interfaz VLAN con ID 50 sobre la interfaz eth0. <input type="text" class="fill-blank" data-answer="ip link add link eth0 name eth0.50 type vlan id 50" data-alt="" placeholder="$ escribe aqui...">
+
+</div>
+<div class="flashcard-back">
+
+**R:** ip link add link eth0 name eth0.50 type vlan id 50. El comando `ip link add` con `type vlan` crea una subinterfaz VLAN. Se especifica la interfaz padre con `link`, el nombre con `name` (por convencion `interfaz.vlan_id`), y el ID de VLAN con `id`. Despues de crearla, hay que asignarle una IP y activarla con `ip link set eth0.50 up`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="205.2">
+</div>
+
+<div class="flashcard" data-id="205.2-fc-023">
+<div class="flashcard-front">
+
+**P:** Escribe el comando para crear un bridge de red llamado br0 usando la herramienta ip de iproute2. <input type="text" class="fill-blank" data-answer="ip link add name br0 type bridge" data-alt="ip link add br0 type bridge" placeholder="$ escribe aqui...">
+
+</div>
+<div class="flashcard-back">
+
+**R:** ip link add name br0 type bridge. El comando `ip link add name br0 type bridge` crea una interfaz de bridge virtual llamada br0. Despues de crearla, se agregan interfaces fisicas con `ip link set ethX master br0` y se activa con `ip link set br0 up`. El bridge funciona como un switch virtual de capa 2.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="205.2">
+</div>
+
+<div class="flashcard" data-id="205.2-fc-024">
+<div class="flashcard-front">
+
+**P:** Escribe el comando para ver las reglas de politica de enrutamiento configuradas en el sistema. <input type="text" class="fill-blank" data-answer="ip rule show" data-alt="ip rule list,ip rule" placeholder="$ escribe aqui...">
+
+</div>
+<div class="flashcard-back">
+
+**R:** ip rule show. El comando `ip rule show` muestra todas las reglas de politica de enrutamiento (policy routing rules) configuradas. Cada regla tiene una prioridad y determina que tabla de enrutamiento se consulta segun criterios como IP de origen, interfaz de entrada o marca del paquete. Las reglas por defecto son: lookup local (0), lookup main (32766) y lookup default (32767).
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="205.2">
+</div>
+
+<div class="flashcard" data-id="205.2-fc-025">
+<div class="flashcard-front">
+
+**P:** Escribe el comando para eliminar toda la configuracion de traffic control (tc) de la interfaz eth0. <input type="text" class="fill-blank" data-answer="tc qdisc del dev eth0 root" data-alt="tc qdisc delete dev eth0 root" placeholder="$ escribe aqui...">
+
+</div>
+<div class="flashcard-back">
+
+**R:** tc qdisc del dev eth0 root. El comando `tc qdisc del dev eth0 root` elimina la qdisc raiz y toda la configuracion asociada (clases y filtros) de la interfaz eth0, restaurando la qdisc por defecto del sistema. Es util para limpiar configuraciones de traffic shaping antes de aplicar nuevas reglas.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="205.2">
+</div>
+
+<div class="flashcard" data-id="205.2-fc-026">
+<div class="flashcard-front">
+
 **P:** Tip de examen: El policy routing permite tener multiples gateways y elegir la ruta segun el ori...
 
 </div>
@@ -214,7 +484,7 @@ subtema: "205.2"
 <div class="flashcard-deck" data-subtema="205.2">
 </div>
 
-<div class="flashcard" data-id="205.2-fc-012">
+<div class="flashcard" data-id="205.2-fc-027">
 <div class="flashcard-front">
 
 **P:** Tip de examen: `/proc/sys/net/ipv4/ip_forward` es un archivo clave. Debe estar a `1` para que e...
@@ -232,7 +502,7 @@ subtema: "205.2"
 <div class="flashcard-deck" data-subtema="205.2">
 </div>
 
-<div class="flashcard" data-id="205.2-fc-013">
+<div class="flashcard" data-id="205.2-fc-028">
 <div class="flashcard-front">
 
 **P:** Tip de examen: Las interfaces VLAN se nombran tipicamente como `interfaz.vlan_id` (ej: `eth0.10...
@@ -250,7 +520,7 @@ subtema: "205.2"
 <div class="flashcard-deck" data-subtema="205.2">
 </div>
 
-<div class="flashcard" data-id="205.2-fc-014">
+<div class="flashcard" data-id="205.2-fc-029">
 <div class="flashcard-front">
 
 **P:** Tip de examen: Conoce los modos de tunel principales: `gre`, `sit`, `ipip`. Los tuneles se crea...
@@ -268,7 +538,7 @@ subtema: "205.2"
 <div class="flashcard-deck" data-subtema="205.2">
 </div>
 
-<div class="flashcard" data-id="205.2-fc-015">
+<div class="flashcard" data-id="205.2-fc-030">
 <div class="flashcard-front">
 
 **P:** Tip de examen: Comprende los conceptos basicos de `tc`: qdisc, class y filter. Conoce al menos ...
@@ -286,7 +556,7 @@ subtema: "205.2"
 <div class="flashcard-deck" data-subtema="205.2">
 </div>
 
-<div class="flashcard" data-id="205.2-fc-016">
+<div class="flashcard" data-id="205.2-fc-031">
 <div class="flashcard-front">
 
 **P:** Tip de examen: Conoce los tipos de direcciones IPv6, especialmente link-local (fe80::) que siem...
@@ -304,61 +574,7 @@ subtema: "205.2"
 <div class="flashcard-deck" data-subtema="205.2">
 </div>
 
-<div class="flashcard" data-id="205.2-fc-017">
-<div class="flashcard-front">
-
-**P:** Que hace el comando `local`?
-
-</div>
-<div class="flashcard-back">
-
-**R:** 255
-
-</div>
-</div>
-
----
-
-<div class="flashcard-deck" data-subtema="205.2">
-</div>
-
-<div class="flashcard" data-id="205.2-fc-018">
-<div class="flashcard-front">
-
-**P:** Que hace el comando `main`?
-
-</div>
-<div class="flashcard-back">
-
-**R:** 254
-
-</div>
-</div>
-
----
-
-<div class="flashcard-deck" data-subtema="205.2">
-</div>
-
-<div class="flashcard" data-id="205.2-fc-019">
-<div class="flashcard-front">
-
-**P:** Que hace el comando `default`?
-
-</div>
-<div class="flashcard-back">
-
-**R:** 253
-
-</div>
-</div>
-
----
-
-<div class="flashcard-deck" data-subtema="205.2">
-</div>
-
-<div class="flashcard" data-id="205.2-fc-020">
+<div class="flashcard" data-id="205.2-fc-032">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `ip link add type vxlan`?
@@ -376,15 +592,15 @@ subtema: "205.2"
 <div class="flashcard-deck" data-subtema="205.2">
 </div>
 
-<div class="flashcard" data-id="205.2-fc-021">
+<div class="flashcard" data-id="205.2-fc-033">
 <div class="flashcard-front">
 
-**P:** Que hace el comando `pfifo_fast`?
+**P:** Que hace el comando `fe80::/10`?
 
 </div>
 <div class="flashcard-back">
 
-**R:** FIFO rapido con prioridades
+**R:** Comunicacion en el enlace local (autoconfigurada)
 
 </div>
 </div>
@@ -394,7 +610,43 @@ subtema: "205.2"
 <div class="flashcard-deck" data-subtema="205.2">
 </div>
 
-<div class="flashcard" data-id="205.2-fc-022">
+<div class="flashcard" data-id="205.2-fc-034">
+<div class="flashcard-front">
+
+**P:** Que hace el comando `2000::/3`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** Direcciones publicas enrutables
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="205.2">
+</div>
+
+<div class="flashcard" data-id="205.2-fc-035">
+<div class="flashcard-front">
+
+**P:** Que hace el comando `fc00::/7`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** Equivalente a direcciones privadas
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="205.2">
+</div>
+
+<div class="flashcard" data-id="205.2-fc-036">
 <div class="flashcard-front">
 
 **P:** Que es/son VLANs (Virtual LANs)?
@@ -412,7 +664,7 @@ subtema: "205.2"
 <div class="flashcard-deck" data-subtema="205.2">
 </div>
 
-<div class="flashcard" data-id="205.2-fc-023">
+<div class="flashcard" data-id="205.2-fc-037">
 <div class="flashcard-front">
 
 **P:** Que es/son Bridges (puentes de red)?
@@ -430,7 +682,7 @@ subtema: "205.2"
 <div class="flashcard-deck" data-subtema="205.2">
 </div>
 
-<div class="flashcard" data-id="205.2-fc-024">
+<div class="flashcard" data-id="205.2-fc-038">
 <div class="flashcard-front">
 
 **P:** Que es/son Traffic shaping con tc?

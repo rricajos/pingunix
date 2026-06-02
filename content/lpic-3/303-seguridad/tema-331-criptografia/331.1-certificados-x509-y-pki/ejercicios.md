@@ -165,3 +165,228 @@ d) Omite la verificación de DNS del nombre común
 
 La opción `-nodes` (no DES) indica que la clave privada generada no será cifrada con passphrase. Esto es útil para servicios que arrancan automáticamente, pero reduce la seguridad de la clave.
 </details>
+
+### Pregunta 11
+
+¿Qué comando de OpenSSL se utiliza para revocar un certificado previamente emitido por una CA?
+
+a) `openssl x509 -revoke certificado.pem`
+b) `openssl ca -revoke certificado.pem -config openssl.cnf`
+c) `openssl crl -revoke certificado.pem`
+d) `openssl verify -revoke certificado.pem`
+
+<details><summary>Respuesta</summary>
+
+**b)** `openssl ca -revoke certificado.pem -config openssl.cnf`
+
+El subcomando `openssl ca -revoke` marca un certificado como revocado en la base de datos de la CA (`index.txt`). Después de revocar, es necesario regenerar la CRL con `openssl ca -gencrl` para que los clientes puedan verificar la revocación.
+</details>
+
+### Pregunta 12
+
+¿Qué extensión X.509 v3 permite especificar nombres alternativos como dominios adicionales o direcciones IP?
+
+a) Basic Constraints
+b) Key Usage
+c) Subject Alternative Name (SAN)
+d) CRL Distribution Points
+
+<details><summary>Respuesta</summary>
+
+**c)** Subject Alternative Name (SAN)
+
+La extensión Subject Alternative Name (SAN) permite incluir nombres adicionales en el certificado, como múltiples nombres DNS (`DNS.1 = www.ejemplo.com`, `DNS.2 = ejemplo.com`) o direcciones IP (`IP.1 = 192.168.1.10`). Es imprescindible en certificados modernos, ya que muchos navegadores ignoran el campo CN.
+</details>
+
+### Pregunta 13
+
+¿Qué archivo dentro de la estructura PKI almacena el siguiente número de serie que la CA asignará al próximo certificado emitido?
+
+a) `index.txt`
+b) `crlnumber`
+c) `serial`
+d) `ca-cert.pem`
+
+<details><summary>Respuesta</summary>
+
+**c)** `serial`
+
+El archivo `serial` contiene el siguiente número de serie hexadecimal que la CA asignará al próximo certificado que emita. Se incrementa automáticamente con cada emisión. `index.txt` es la base de datos de certificados y `crlnumber` es el contador de la CRL.
+</details>
+
+### Pregunta 14
+
+¿Qué diferencia principal existe entre una CA raíz y una CA intermedia?
+
+a) La CA raíz emite certificados más rápido
+b) La CA raíz es autofirmada y se almacena offline; la CA intermedia es firmada por la raíz y se usa para operaciones diarias
+c) La CA intermedia tiene mayor nivel de confianza
+d) La CA raíz solo se usa en redes internas
+
+<details><summary>Respuesta</summary>
+
+**b)** La CA raíz es autofirmada y se almacena offline; la CA intermedia es firmada por la raíz y se usa para operaciones diarias
+
+La CA raíz se autofirma y se guarda offline por seguridad para minimizar el riesgo de compromiso. La CA intermedia (subordinada) está firmada por la raíz y es la que emite certificados en operaciones cotidianas. Si la intermedia se compromete, se revoca sin afectar a la raíz.
+</details>
+
+### Pregunta 15
+
+¿Qué comando verifica un certificado contra una cadena que incluye una CA intermedia?
+
+a) `openssl verify -CAfile ca-raiz.pem -chain ca-intermedia.pem cert.pem`
+b) `openssl verify -CAfile ca-raiz.pem -untrusted ca-intermedia.pem cert.pem`
+c) `openssl verify -CAfile ca-intermedia.pem cert.pem`
+d) `openssl x509 -verify -CAfile ca-raiz.pem -intermediate ca-intermedia.pem cert.pem`
+
+<details><summary>Respuesta</summary>
+
+**b)** `openssl verify -CAfile ca-raiz.pem -untrusted ca-intermedia.pem cert.pem`
+
+La opción `-untrusted` indica los certificados intermedios que se necesitan para construir la cadena pero que no son CAs de confianza raíz. `-CAfile` especifica la CA raíz de confianza. OpenSSL construye la cadena completa: certificado -> CA intermedia -> CA raíz.
+</details>
+
+### Pregunta 16
+
+¿Qué comando se utiliza en sistemas Debian/Ubuntu para actualizar el almacén de CAs de confianza después de añadir un certificado CA personalizado?
+
+a) `update-ca-trust`
+b) `update-ca-certificates`
+c) `ca-certificates --update`
+d) `ssl-update-certs`
+
+<details><summary>Respuesta</summary>
+
+**b)** `update-ca-certificates`
+
+En sistemas Debian/Ubuntu, los certificados CA personalizados se colocan en `/usr/local/share/ca-certificates/` y se ejecuta `update-ca-certificates` para incorporarlos al almacén del sistema. En RHEL/CentOS se usa `update-ca-trust` con certificados en `/etc/pki/ca-trust/source/anchors/`.
+</details>
+
+### Pregunta 17
+
+¿Qué formato de certificado puede contener tanto el certificado como la clave privada en un solo archivo?
+
+a) PEM
+b) DER
+c) PKCS#7
+d) PKCS#12
+
+<details><summary>Respuesta</summary>
+
+**d)** PKCS#12
+
+PKCS#12 (extensiones `.p12` o `.pfx`) es un formato contenedor que puede almacenar el certificado, la clave privada y opcionalmente los certificados de la cadena en un solo archivo protegido por contraseña. PEM y DER solo almacenan un elemento por archivo, y PKCS#7 no incluye claves privadas.
+</details>
+
+### Pregunta 18
+
+¿Qué campo del certificado X.509 identifica al emisor que firmó el certificado?
+
+a) Subject
+b) Issuer
+c) Serial Number
+d) Signature Algorithm
+
+<details><summary>Respuesta</summary>
+
+**b)** Issuer
+
+El campo `Issuer` contiene el Distinguished Name (DN) de la autoridad de certificación que emitió y firmó el certificado. El campo `Subject` identifica al titular del certificado. En certificados autofirmados, `Issuer` y `Subject` son idénticos.
+</details>
+
+### Pregunta 19
+
+¿Qué opción de `openssl req` genera un certificado autofirmado directamente en lugar de solo un CSR?
+
+a) `-self-sign`
+b) `-x509`
+c) `-auto`
+d) `-ca`
+
+<details><summary>Respuesta</summary>
+
+**b)** `-x509`
+
+La opción `-x509` en `openssl req` indica que en lugar de generar una solicitud de firma (CSR), se genere directamente un certificado autofirmado. Se combina típicamente con `-new`, `-key`, `-days` y `-out` para crear un certificado completo.
+</details>
+
+### Pregunta 20
+
+¿Qué valor de la extensión `keyUsage` indica que un certificado puede usarse para firmar otros certificados?
+
+a) `digitalSignature`
+b) `keyEncipherment`
+c) `keyCertSign`
+d) `dataEncipherment`
+
+<details><summary>Respuesta</summary>
+
+**c)** `keyCertSign`
+
+El valor `keyCertSign` en la extensión `keyUsage` indica que la clave pública del certificado puede utilizarse para verificar firmas en otros certificados. Este valor es esencial en certificados de CA y normalmente se combina con `cRLSign` y `basicConstraints = CA:TRUE`.
+</details>
+
+### Pregunta 21
+
+Escribe el comando de OpenSSL para generar una solicitud de firma de certificado (CSR) a partir de una clave privada existente en `clave.key`, guardando el resultado en `solicitud.csr`.
+
+<input type="text" class="fill-blank" data-answer="openssl req -new -key clave.key -out solicitud.csr" data-alt="openssl req -new -key clave.key -out solicitud.csr" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**openssl req -new -key clave.key -out solicitud.csr**
+
+`openssl req -new` genera una nueva solicitud de firma de certificado. `-key` especifica la clave privada existente que se usará y `-out` el archivo de salida del CSR. El comando solicitará interactivamente los campos del DN (Country, Organization, CN, etc.).
+</details>
+
+### Pregunta 22
+
+Escribe el comando de OpenSSL para ver los detalles de un certificado en formato PEM sin mostrar el certificado codificado.
+
+<input type="text" class="fill-blank" data-answer="openssl x509 -in certificado.pem -text -noout" data-alt="openssl x509 -text -noout -in certificado.pem" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**openssl x509 -in certificado.pem -text -noout**
+
+`openssl x509 -text` muestra los detalles legibles del certificado (Subject, Issuer, validez, extensiones, etc.). La opción `-noout` suprime la impresion del certificado codificado en Base64, mostrando solo la informacion en texto legible.
+</details>
+
+### Pregunta 23
+
+Escribe el comando de OpenSSL para convertir un certificado del formato DER al formato PEM.
+
+<input type="text" class="fill-blank" data-answer="openssl x509 -in cert.der -inform DER -outform PEM -out cert.pem" data-alt="openssl x509 -inform DER -in cert.der -outform PEM -out cert.pem" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**openssl x509 -in cert.der -inform DER -outform PEM -out cert.pem**
+
+La opcion `-inform DER` indica que el archivo de entrada esta en formato binario DER y `-outform PEM` que el archivo de salida debe estar en formato PEM (Base64 con cabeceras). Este tipo de conversion es frecuente al trabajar con certificados de diferentes plataformas.
+</details>
+
+### Pregunta 24
+
+Escribe el comando de OpenSSL para conectarse al servidor `www.ejemplo.com` en el puerto 443 y mostrar toda la cadena de certificados.
+
+<input type="text" class="fill-blank" data-answer="openssl s_client -connect www.ejemplo.com:443 -showcerts" data-alt="openssl s_client -showcerts -connect www.ejemplo.com:443" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**openssl s_client -connect www.ejemplo.com:443 -showcerts**
+
+`openssl s_client` establece una conexion TLS con el servidor especificado. `-connect` indica el host y puerto, y `-showcerts` muestra todos los certificados de la cadena enviados durante el handshake TLS, incluyendo los certificados intermedios.
+</details>
+
+### Pregunta 25
+
+Escribe el comando de OpenSSL para generar una CRL actualizada a partir de la configuracion de la CA.
+
+<input type="text" class="fill-blank" data-answer="openssl ca -gencrl -out ca.crl -config openssl.cnf" data-alt="openssl ca -gencrl -config openssl.cnf -out ca.crl" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**openssl ca -gencrl -out ca.crl -config openssl.cnf**
+
+`openssl ca -gencrl` genera una Lista de Revocacion de Certificados (CRL) actualizada que contiene todos los certificados revocados registrados en `index.txt`. La CRL debe regenerarse despues de cada revocacion y distribuirse a los sistemas que la necesiten para verificar certificados.
+</details>

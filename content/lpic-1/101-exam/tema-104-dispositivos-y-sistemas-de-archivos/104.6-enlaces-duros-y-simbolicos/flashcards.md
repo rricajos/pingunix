@@ -11,7 +11,7 @@ subtema: "104.6"
 
 # Flashcards: 104.6 - Enlaces Duros Y Simbolicos
 
-> 14 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 28 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="104.6">
 </div>
@@ -199,12 +199,12 @@ subtema: "104.6"
 <div class="flashcard" data-id="104.6-fc-011">
 <div class="flashcard-front">
 
-**P:** Que hace el comando `ln`?
+**P:** Que informacion almacena un inodo de un archivo en Linux?
 
 </div>
 <div class="flashcard-back">
 
-**R:** `ln -s`
+**R:** c) Permisos, propietario, tamano, timestamps y punteros a bloques de datos, pero NO el nombre del archivo. El inodo almacena toda la metainformacion del archivo: tipo de archivo, permisos, propietario (UID) y grupo (GID), tamano, timestamps (atime, mtime, ctime), conteo de enlaces duros y punteros a los bloques de datos en disco. Sin embargo, el nombre del archivo NO se almacena en el inodo, sino en la entrada del directorio que asocia un nombre con un numero de inodo. Esta es la razon por la cual un mismo inodo puede tener multiples nombres (enlaces duros). Se puede ver el inodo con `ls -i` y la informacion completa con `stat`.
 
 </div>
 </div>
@@ -215,6 +215,258 @@ subtema: "104.6"
 </div>
 
 <div class="flashcard" data-id="104.6-fc-012">
+<div class="flashcard-front">
+
+**P:** Un administrador ejecuta `ln -s /var/log /home/sandra/logs`. Que ocurre si posteriormente se elimina el directorio `/var/log`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) El enlace `/home/sandra/logs` sigue existiendo pero esta roto (dangling link). Los enlaces simbolicos contienen la ruta al archivo o directorio destino. Si el destino se elimina, el enlace simbolico sigue existiendo como archivo (con su propio inodo), pero al intentar acceder a el se obtiene un error "No such file or directory". Este tipo de enlace se denomina "roto" o "dangling". El sistema no impide la eliminacion del destino ni elimina automaticamente los enlaces que apuntan a el. Se pueden encontrar enlaces rotos con `find /ruta -xtype l`. Esta es una diferencia fundamental con los enlaces duros, que mantienen los datos mientras quede al menos una referencia.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.6">
+</div>
+
+<div class="flashcard" data-id="104.6-fc-013">
+<div class="flashcard-front">
+
+**P:** Cual de los siguientes comandos crea correctamente un enlace simbolico al directorio `/etc/nginx`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `ln -s /etc/nginx /home/sandra/nginx_config`. Para crear un enlace a un directorio es obligatorio usar un enlace simbolico (`ln -s`), ya que los enlaces duros a directorios no estan permitidos para usuarios normales (solo el sistema crea los enlaces duros `.` y `..` de forma automatica). La opcion `a` intenta crear un enlace duro a un directorio, lo cual fallaria con el error "hard link not allowed for directory". Las opciones `c` y `d` no son opciones validas del comando `ln` para este proposito. Los enlaces simbolicos a directorios son muy comunes en la administracion de sistemas Linux.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.6">
+</div>
+
+<div class="flashcard" data-id="104.6-fc-014">
+<div class="flashcard-front">
+
+**P:** Se ejecutan los siguientes comandos: ```bash echo "contenido" > archivo.txt ln archivo.txt enlace1.txt ln archivo.txt enlace2.txt chmod 644 enlace1.txt ``` Que permisos tendra `archivo.txt` despues de ejecutar el ultimo comando?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) 644, porque todos los enlaces duros comparten el mismo inodo y por tanto los mismos permisos. Los enlaces duros comparten el mismo inodo, lo que significa que comparten toda la metainformacion: permisos, propietario, grupo, timestamps, etc. Cambiar los permisos a traves de cualquier nombre que apunte al mismo inodo afecta a todos los nombres por igual, ya que en realidad se esta modificando la informacion almacenada en el unico inodo compartido. No existen "permisos independientes" entre enlaces duros al mismo archivo. Esto contrasta con los enlaces simbolicos, cuyos permisos propios (generalmente `lrwxrwxrwx`) son irrelevantes; se aplican los permisos del archivo destino.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.6">
+</div>
+
+<div class="flashcard" data-id="104.6-fc-015">
+<div class="flashcard-front">
+
+**P:** Que comando permite buscar todos los archivos en el sistema que tienen mas de un enlace duro?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `find / -type f -links +1`. El comando `find / -type f -links +1` busca archivos regulares (`-type f`) que tengan mas de un enlace duro (`-links +1`), es decir, archivos cuyo conteo de enlaces sea mayor que 1 (lo que indica que hay al menos dos nombres apuntando al mismo inodo). La opcion `a` (`-type l`) busca enlaces simbolicos, no archivos con multiples enlaces duros. La opcion `c` (`-links 1`) busca archivos con exactamente 1 enlace (un solo nombre). La opcion `d` (`-xtype l`) busca enlaces simbolicos rotos. El conteo de enlaces se puede ver con `ls -l` en el segundo campo.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.6">
+</div>
+
+<div class="flashcard" data-id="104.6-fc-016">
+<div class="flashcard-front">
+
+**P:** Cual de las siguientes afirmaciones sobre el tamano de un enlace simbolico es correcta?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) El tamano del enlace simbolico es la longitud de la ruta que almacena como destino. Un enlace simbolico es un archivo especial que contiene la ruta (path) al archivo o directorio destino. Su tamano en bytes corresponde exactamente a la longitud de esa cadena de texto. Por ejemplo, si el enlace apunta a `/home/sandra/documento.txt` (30 caracteres), su tamano sera 30 bytes. Esto se puede verificar con `ls -l`, donde se muestra el tamano del enlace. El enlace simbolico tiene su propio inodo, diferente al del archivo destino, y ocupa un espacio minimo en disco que depende de la longitud de la ruta almacenada.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.6">
+</div>
+
+<div class="flashcard" data-id="104.6-fc-017">
+<div class="flashcard-front">
+
+**P:** Que opciones de `readlink` se pueden usar para resolver la ruta absoluta de un enlace simbolico, y cual es la diferencia entre ellas?
+
+</div>
+<div class="flashcard-back">
+
+**R:** a) `-f` resuelve la ruta aunque el destino no exista; `-e` requiere que el destino exista. Ambas opciones resuelven toda la cadena de enlaces simbolicos y devuelven la ruta absoluta canonicalizada. La diferencia clave es: `readlink -f` resuelve la ruta incluso si el ultimo componente de la ruta no existe (no genera error). `readlink -e` requiere que todos los componentes de la ruta, incluyendo el destino final, existan; si no existen, no produce salida y devuelve un codigo de error. Existe tambien `readlink -m` que no requiere que ningun componente exista. Sin opciones, `readlink` solo muestra el destino inmediato (un nivel) del enlace.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.6">
+</div>
+
+<div class="flashcard" data-id="104.6-fc-018">
+<div class="flashcard-front">
+
+**P:** Se tiene la siguiente estructura: ```bash enlace_a -> enlace_b -> enlace_c -> archivo_real.txt ``` Que muestra `readlink enlace_a` (sin opciones)?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `enlace_b`. `readlink` sin opciones muestra unicamente el destino inmediato (un solo nivel) del enlace simbolico. En este caso, `enlace_a` apunta directamente a `enlace_b`, por lo que eso es lo que se muestra. No resuelve la cadena completa de enlaces. Para resolver toda la cadena y obtener la ruta absoluta del archivo final (`archivo_real.txt`), se necesita usar `readlink -f enlace_a`, que seguira todos los enlaces hasta llegar al destino real. Esta distincion entre el destino inmediato y la resolucion completa es importante para el examen LPIC-1.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.6">
+</div>
+
+<div class="flashcard" data-id="104.6-fc-019">
+<div class="flashcard-front">
+
+**P:** Que diferencia hay entre `stat enlace.txt` y `stat -L enlace.txt` cuando `enlace.txt` es un enlace simbolico?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `stat enlace.txt` muestra informacion del enlace simbolico en si; `stat -L enlace.txt` muestra informacion del archivo destino. Por defecto, `stat` muestra la informacion del propio enlace simbolico: su inodo, tamano (longitud de la ruta almacenada), permisos del enlace, etc. La opcion `-L` (dereference) indica a `stat` que siga el enlace y muestre la informacion del archivo destino al que apunta. Esto es util para verificar la informacion real del archivo apuntado (tamano real, permisos efectivos, etc.). Esta diferencia de comportamiento se aplica a muchos comandos en Linux, donde la opcion `-L` o `--dereference` indica seguir los enlaces simbolicos.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.6">
+</div>
+
+<div class="flashcard" data-id="104.6-fc-020">
+<div class="flashcard-front">
+
+**P:** Cual de las siguientes afirmaciones sobre los directorios `.` y `..` es correcta?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) Son enlaces duros mantenidos por el sistema; `.` apunta al propio directorio y `..` al directorio padre. Las entradas `.` y `..` son enlaces duros que el sistema de archivos crea y mantiene automaticamente en cada directorio. `.` es un enlace duro al propio directorio (apunta al mismo inodo), y `..` es un enlace duro al directorio padre. Por esta razon, un directorio vacio siempre tiene un conteo de enlaces de 2 (la entrada del padre que apunta a el y su propia entrada `.`). Cada subdirectorio creado dentro incrementa el conteo en 1, debido a la entrada `..` del subdirectorio. Estos son los unicos enlaces duros a directorios que el sistema permite.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.6">
+</div>
+
+<div class="flashcard" data-id="104.6-fc-021">
+<div class="flashcard-front">
+
+**P:** Escribe el comando para crear un enlace simbolico llamado `/tmp/enlace_config` que apunte al archivo `/etc/nginx/nginx.conf`. <input type="text" class="fill-blank" data-answer="ln -s /etc/nginx/nginx.conf /tmp/enlace_config" data-alt="" placeholder="$ escribe aqui...">
+
+</div>
+<div class="flashcard-back">
+
+**R:** ln -s /etc/nginx/nginx.conf /tmp/enlace_config. El comando `ln -s` crea un enlace simbolico. La sintaxis es `ln -s objetivo nombre_del_enlace`. El primer argumento es el archivo destino (`/etc/nginx/nginx.conf`) y el segundo es el nombre del enlace a crear (`/tmp/enlace_config`). Se usa una ruta absoluta para el destino, lo que asegura que el enlace funcione independientemente de donde se encuentre. Sin la opcion `-s`, se crearia un enlace duro, lo cual podria fallar si `/etc` y `/tmp` estan en sistemas de archivos diferentes.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.6">
+</div>
+
+<div class="flashcard" data-id="104.6-fc-022">
+<div class="flashcard-front">
+
+**P:** Escribe el comando para ver el numero de inodo de un archivo llamado `documento.txt`. <input type="text" class="fill-blank" data-answer="ls -i documento.txt" data-alt="stat documento.txt" placeholder="$ escribe aqui...">
+
+</div>
+<div class="flashcard-back">
+
+**R:** ls -i documento.txt. El comando `ls -i` muestra el numero de inodo de cada archivo junto con su nombre. La salida seria algo como `1234567 documento.txt`. Alternativamente, `stat documento.txt` muestra informacion completa del inodo, incluyendo el numero de inodo, tamano, permisos, propietario, timestamps y conteo de enlaces. El numero de inodo es fundamental para entender los enlaces duros, ya que dos archivos con el mismo numero de inodo son en realidad el mismo archivo (enlaces duros entre si).
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.6">
+</div>
+
+<div class="flashcard" data-id="104.6-fc-023">
+<div class="flashcard-front">
+
+**P:** Escribe el comando `find` para buscar todos los enlaces simbolicos rotos en el directorio `/etc`. <input type="text" class="fill-blank" data-answer="find /etc -xtype l" data-alt="" placeholder="$ escribe aqui...">
+
+</div>
+<div class="flashcard-back">
+
+**R:** find /etc -xtype l. La opcion `-xtype l` de `find` busca enlaces simbolicos cuyo destino no existe (enlaces rotos o "dangling"). Funciona de la siguiente manera: `-xtype` evalua el tipo del archivo despues de seguir el enlace simbolico. Si el destino no existe, el archivo se clasifica como enlace simbolico (`l`), indicando que esta roto. No debe confundirse con `-type l`, que encuentra todos los enlaces simbolicos (tanto validos como rotos). Los enlaces simbolicos rotos son un problema comun de mantenimiento del sistema.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.6">
+</div>
+
+<div class="flashcard" data-id="104.6-fc-024">
+<div class="flashcard-front">
+
+**P:** Escribe el comando para ver el destino final (ruta absoluta completa) de un enlace simbolico llamado `mi_enlace`. <input type="text" class="fill-blank" data-answer="readlink -f mi_enlace" data-alt="readlink -e mi_enlace" placeholder="$ escribe aqui...">
+
+</div>
+<div class="flashcard-back">
+
+**R:** readlink -f mi_enlace. El comando `readlink -f` resuelve toda la cadena de enlaces simbolicos recursivamente y devuelve la ruta absoluta canonicalizada del archivo final. Si `mi_enlace` apunta a otro enlace que a su vez apunta a otro, `readlink -f` resuelve toda la cadena hasta llegar al archivo real. Sin la opcion `-f`, `readlink` solo muestra el destino inmediato (un nivel). La opcion `-e` es similar pero requiere que el destino final exista, mientras que `-f` funciona aunque el ultimo componente no exista.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.6">
+</div>
+
+<div class="flashcard" data-id="104.6-fc-025">
+<div class="flashcard-front">
+
+**P:** Escribe el comando para crear un enlace duro llamado `backup.txt` que apunte al mismo inodo que el archivo `original.txt`. <input type="text" class="fill-blank" data-answer="ln original.txt backup.txt" data-alt="" placeholder="$ escribe aqui...">
+
+</div>
+<div class="flashcard-back">
+
+**R:** ln original.txt backup.txt. El comando `ln` sin opciones crea un enlace duro. La sintaxis es `ln archivo_existente nuevo_nombre`. Esto crea una nueva entrada de directorio (`backup.txt`) que apunta al mismo inodo que `original.txt`. Ambos nombres son completamente equivalentes: no hay un "original" y una "copia". El conteo de enlaces del inodo se incrementa a 2. Se puede verificar con `ls -li` que ambos archivos comparten el mismo numero de inodo. Borrar uno de los nombres no afecta al otro, ya que los datos persisten mientras el conteo de enlaces sea mayor que 0.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.6">
+</div>
+
+<div class="flashcard" data-id="104.6-fc-026">
 <div class="flashcard-front">
 
 **P:** Que es/son 1. Conceptos fundamentales: Inodos?
@@ -232,7 +484,7 @@ subtema: "104.6"
 <div class="flashcard-deck" data-subtema="104.6">
 </div>
 
-<div class="flashcard" data-id="104.6-fc-013">
+<div class="flashcard" data-id="104.6-fc-027">
 <div class="flashcard-front">
 
 **P:** Que es/son 4. Tabla comparativa: enlaces duros vs simbolicos?
@@ -250,7 +502,7 @@ subtema: "104.6"
 <div class="flashcard-deck" data-subtema="104.6">
 </div>
 
-<div class="flashcard" data-id="104.6-fc-014">
+<div class="flashcard" data-id="104.6-fc-028">
 <div class="flashcard-front">
 
 **P:** Que es/son 7. Puntos clave para el examen?

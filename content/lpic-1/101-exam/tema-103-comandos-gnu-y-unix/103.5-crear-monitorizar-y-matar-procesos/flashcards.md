@@ -11,7 +11,7 @@ subtema: "103.5"
 
 # Flashcards: 103.5 - Crear Monitorizar Y Matar Procesos
 
-> 19 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 34 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="103.5">
 </div>
@@ -163,6 +163,276 @@ subtema: "103.5"
 <div class="flashcard" data-id="103.5-fc-009">
 <div class="flashcard-front">
 
+**P:** Que senal envia `kill` por defecto cuando se ejecuta sin especificar un numero de senal?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) SIGTERM (15). `kill PID` sin especificar senal envia SIGTERM (senal 15) por defecto. SIGTERM solicita al proceso que termine de forma limpia, dando la oportunidad de liberar recursos, cerrar archivos y realizar tareas de limpieza. El proceso puede capturar, bloquear o ignorar SIGTERM. Si el proceso no responde a SIGTERM, se puede usar `kill -9 PID` (SIGKILL) que no puede ser capturada ni ignorada. SIGHUP (1) se usa para recargar configuracion y SIGINT (2) es la senal de Ctrl+C.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.5">
+</div>
+
+<div class="flashcard" data-id="103.5-fc-010">
+<div class="flashcard-front">
+
+**P:** Que significan las dos senales que NO pueden ser capturadas, bloqueadas ni ignoradas por un proceso?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) SIGKILL (9) y SIGSTOP (19). SIGKILL (9) y SIGSTOP (19) son las unicas senales que no pueden ser capturadas, bloqueadas ni ignoradas por el proceso. SIGKILL termina el proceso inmediatamente sin posibilidad de limpieza. SIGSTOP detiene (pausa) el proceso sin terminarlo. A diferencia de SIGSTOP, SIGTSTP (20, enviada con Ctrl+Z) si puede ser capturada por el proceso. SIGTERM (15) y SIGINT (2) tambien pueden ser capturadas, lo que permite al proceso manejar el cierre limpio.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.5">
+</div>
+
+<div class="flashcard" data-id="103.5-fc-011">
+<div class="flashcard-front">
+
+**P:** Que comando muestra los procesos del sistema en formato de arbol, mostrando la relacion padre-hijo?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) `pstree`. `pstree` muestra los procesos del sistema en formato de arbol jerarquico, visualizando claramente la relacion padre-hijo entre procesos. La opcion `-p` muestra los PIDs junto a los nombres. `pstree -a` muestra los argumentos de linea de comandos. Tambien se puede obtener un arbol con `ps -ef --forest`, pero `pstree` es el comando dedicado para esta funcion. `top` y `htop` muestran procesos en tiempo real pero en formato de lista, no de arbol (aunque `htop` tiene modo arbol con F5).
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.5">
+</div>
+
+<div class="flashcard" data-id="103.5-fc-012">
+<div class="flashcard-front">
+
+**P:** Que hace el codigo de estado (STAT) `Z` en la salida de `ps aux`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) El proceso es un zombie: ha terminado pero su padre no ha recogido su codigo de salida. Un proceso zombie (estado `Z`) es aquel que ha finalizado su ejecucion pero su proceso padre aun no ha leido su codigo de salida con `wait()`. El proceso zombie no consume CPU ni memoria significativa, pero su entrada permanece en la tabla de procesos. Los zombies se eliminan cuando el padre recoge su estado o cuando el padre termina (el zombie es adoptado por init/systemd que lo limpia). Un exceso de zombies indica un error de programacion en el proceso padre. `R` = running, `S` = sleeping, `T` = stopped.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.5">
+</div>
+
+<div class="flashcard" data-id="103.5-fc-013">
+<div class="flashcard-front">
+
+**P:** Que comando ejecuta un proceso cada 5 segundos mostrando la salida actualizada en la terminal?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `watch -n 5 comando`. `watch` ejecuta un comando repetidamente a intervalos regulares, mostrando la salida actualizada en la terminal. La opcion `-n 5` establece el intervalo en 5 segundos (por defecto son 2 segundos). La opcion `-d` resalta las diferencias entre ejecuciones consecutivas. La opcion `-t` oculta la cabecera. Para comandos con pipes se deben usar comillas: `watch "ps aux | grep apache"`. `watch` es util para monitorizar cambios en tiempo real en la salida de cualquier comando.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.5">
+</div>
+
+<div class="flashcard" data-id="103.5-fc-014">
+<div class="flashcard-front">
+
+**P:** Que diferencia hay entre `screen` y `tmux` en cuanto al prefijo de teclas para los atajos?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) screen usa `Ctrl+a` y tmux usa `Ctrl+b`. En `screen`, todos los atajos de teclado se activan con el prefijo `Ctrl+a` seguido de una tecla (por ejemplo, `Ctrl+a d` para desconectar). En `tmux`, el prefijo es `Ctrl+b` (por ejemplo, `Ctrl+b d` para desconectar). Ambos son multiplexores de terminal que permiten crear sesiones persistentes que sobreviven a desconexiones de terminal o SSH. El atajo para desconectar es `d` en ambos casos, solo cambia el prefijo.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.5">
+</div>
+
+<div class="flashcard" data-id="103.5-fc-015">
+<div class="flashcard-front">
+
+**P:** Que informacion se encuentra en el directorio virtual `/proc/PID/fd/`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) Los descriptores de archivo abiertos por el proceso como enlaces simbolicos. `/proc/PID/fd/` contiene enlaces simbolicos a todos los descriptores de archivo abiertos por el proceso. Los descriptores 0, 1 y 2 corresponden a stdin, stdout y stderr respectivamente. Los descriptores numerados del 3 en adelante son archivos adicionales, sockets, pipes, etc. Por ejemplo, `ls -la /proc/1234/fd/` muestra todos los archivos que el proceso 1234 tiene abiertos. Esta informacion es util para depurar que archivos esta usando un proceso.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.5">
+</div>
+
+<div class="flashcard" data-id="103.5-fc-016">
+<div class="flashcard-front">
+
+**P:** Que comando muestra el uso de memoria del sistema en formato legible con megabytes y gigabytes?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) `free -h`. `free -h` (human-readable) muestra el uso de memoria del sistema en un formato legible automatico que usa las unidades mas apropiadas (KB, MB, GB). `-b` muestra en bytes, `-k` en kilobytes (por defecto), `-m` en megabytes y `-g` en gigabytes. La opcion `-t` muestra una linea de total sumando RAM y swap. La columna mas importante es `available`, que indica cuanta memoria esta realmente disponible para nuevos procesos (incluye la cache que puede ser liberada).
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.5">
+</div>
+
+<div class="flashcard" data-id="103.5-fc-017">
+<div class="flashcard-front">
+
+**P:** Que hace el comando `pgrep -l apache`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) Muestra los PIDs y nombres de los procesos que contienen "apache" en su nombre. `pgrep` busca procesos por nombre u otros atributos y devuelve sus PIDs. La opcion `-l` anade el nombre del proceso junto al PID. `pgrep -a` muestra la linea de comandos completa. Otras opciones utiles: `-u usuario` filtra por usuario, `-c` cuenta los procesos, `-x` requiere coincidencia exacta del nombre, y `-f` busca en toda la linea de comandos. A diferencia de `pidof`, `pgrep` permite coincidencia parcial (patrones).
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.5">
+</div>
+
+<div class="flashcard" data-id="103.5-fc-018">
+<div class="flashcard-front">
+
+**P:** Que tecla dentro de `top` permite cambiar la prioridad (renice) de un proceso?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `r`. Dentro de la interfaz interactiva de `top`, la tecla `r` permite cambiar la prioridad (renice) de un proceso. Al presionarla, `top` pide el PID del proceso y luego el nuevo valor de nice. La tecla `k` se usa para enviar una senal (kill) a un proceso. `P` ordena por uso de CPU. `M` ordena por uso de memoria. `N` ordena por PID. `d` o `s` cambian el intervalo de actualizacion. `q` sale de top.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.5">
+</div>
+
+<div class="flashcard" data-id="103.5-fc-019">
+<div class="flashcard-front">
+
+**P:** Que comando usarias para enviar la senal SIGHUP al proceso con PID 1234 para que recargue su configuracion?
+
+</div>
+<div class="flashcard-back">
+
+**R:** kill -1 1234. `kill -1 PID` envia la senal SIGHUP (senal numero 1) al proceso. Equivalentes son `kill -HUP 1234` y `kill -SIGHUP 1234`. Muchos daemons (como Apache, Nginx, sshd) interpretan SIGHUP como una solicitud para recargar su archivo de configuracion sin detener el servicio. Originalmente, SIGHUP significaba "hangup" (colgar) y se enviaba cuando se cerraba una terminal. `nohup` protege a los procesos contra esta senal.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.5">
+</div>
+
+<div class="flashcard" data-id="103.5-fc-020">
+<div class="flashcard-front">
+
+**P:** Que comando usarias para ver la lista de todos los trabajos (jobs) del shell actual incluyendo sus PIDs?
+
+</div>
+<div class="flashcard-back">
+
+**R:** jobs -l. `jobs -l` lista todos los trabajos del shell actual mostrando tambien sus PIDs. Sin `-l`, solo muestra el numero de trabajo, estado y comando. Otras opciones utiles: `-p` muestra solo los PIDs, `-r` muestra solo trabajos en ejecucion (running) y `-s` muestra solo trabajos detenidos (stopped). Los trabajos se identifican con `%N` donde N es el numero de trabajo. El simbolo `+` marca el trabajo actual y `-` el anterior.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.5">
+</div>
+
+<div class="flashcard" data-id="103.5-fc-021">
+<div class="flashcard-front">
+
+**P:** Que comando usarias para reconectar a una sesion de `screen` llamada "backup"?
+
+</div>
+<div class="flashcard-back">
+
+**R:** screen -r backup. `screen -r backup` reconecta (reattach) a una sesion de screen previamente creada con `screen -S backup`. Si la sesion sigue conectada en otro lugar, se puede usar `screen -d -r backup` para desconectarla primero y reconectar aqui. `screen -ls` lista todas las sesiones activas. En tmux, el equivalente seria `tmux attach -t backup`. Las sesiones de screen y tmux persisten incluso si se cierra la terminal o se desconecta la sesion SSH.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.5">
+</div>
+
+<div class="flashcard" data-id="103.5-fc-022">
+<div class="flashcard-front">
+
+**P:** Que comando usarias para matar todos los procesos del usuario "sandra"?
+
+</div>
+<div class="flashcard-back">
+
+**R:** pkill -u sandra. `pkill -u sandra` envia SIGTERM a todos los procesos del usuario sandra. Tambien se puede usar `killall -u sandra` para el mismo efecto. Para forzar la terminacion se puede anadir `-9`: `pkill -9 -u sandra`. Otra opcion es `kill -9 $(pgrep -u sandra)` que obtiene los PIDs con `pgrep` y los pasa a `kill`. Estos comandos son utiles para administradores que necesitan finalizar todas las sesiones de un usuario.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.5">
+</div>
+
+<div class="flashcard" data-id="103.5-fc-023">
+<div class="flashcard-front">
+
+**P:** Que comando usarias para ejecutar un proceso en segundo plano que sobreviva al cierre de la sesion SSH, guardando la salida en `backup.log`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** nohup ./backup.sh > backup.log 2>&1 &. `nohup` hace que el proceso ignore la senal SIGHUP que se envia al cerrar la terminal o la sesion SSH. `> backup.log 2>&1` redirige tanto stdout como stderr al archivo `backup.log`. El `&` al final ejecuta el proceso en segundo plano. Sin la redireccion explicita, `nohup` redigiria la salida a `nohup.out` por defecto. Alternativas modernas incluyen usar `screen` o `tmux` que proporcionan sesiones completas persistentes.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.5">
+</div>
+
+<div class="flashcard" data-id="103.5-fc-024">
+<div class="flashcard-front">
+
 **P:** Tip de examen: `nohup` protege contra SIGHUP, pero el proceso **si puede ser matado** con SIGKI...
 
 </div>
@@ -178,7 +448,7 @@ subtema: "103.5"
 <div class="flashcard-deck" data-subtema="103.5">
 </div>
 
-<div class="flashcard" data-id="103.5-fc-010">
+<div class="flashcard" data-id="103.5-fc-025">
 <div class="flashcard-front">
 
 **P:** Tip de examen: `pstree` es util para visualizar la jerarquia de procesos. La opcion `-p` para v...
@@ -196,7 +466,7 @@ subtema: "103.5"
 <div class="flashcard-deck" data-subtema="103.5">
 </div>
 
-<div class="flashcard" data-id="103.5-fc-011">
+<div class="flashcard" data-id="103.5-fc-026">
 <div class="flashcard-front">
 
 **P:** Tip de examen: `/proc/PID/` es una fuente fundamental de informacion sobre procesos. Los archiv...
@@ -214,7 +484,7 @@ subtema: "103.5"
 <div class="flashcard-deck" data-subtema="103.5">
 </div>
 
-<div class="flashcard" data-id="103.5-fc-012">
+<div class="flashcard" data-id="103.5-fc-027">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `R`?
@@ -232,7 +502,7 @@ subtema: "103.5"
 <div class="flashcard-deck" data-subtema="103.5">
 </div>
 
-<div class="flashcard" data-id="103.5-fc-013">
+<div class="flashcard" data-id="103.5-fc-028">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `S`?
@@ -250,7 +520,7 @@ subtema: "103.5"
 <div class="flashcard-deck" data-subtema="103.5">
 </div>
 
-<div class="flashcard" data-id="103.5-fc-014">
+<div class="flashcard" data-id="103.5-fc-029">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `D`?
@@ -268,7 +538,7 @@ subtema: "103.5"
 <div class="flashcard-deck" data-subtema="103.5">
 </div>
 
-<div class="flashcard" data-id="103.5-fc-015">
+<div class="flashcard" data-id="103.5-fc-030">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `T`?
@@ -286,7 +556,7 @@ subtema: "103.5"
 <div class="flashcard-deck" data-subtema="103.5">
 </div>
 
-<div class="flashcard" data-id="103.5-fc-016">
+<div class="flashcard" data-id="103.5-fc-031">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `Z`?
@@ -304,7 +574,7 @@ subtema: "103.5"
 <div class="flashcard-deck" data-subtema="103.5">
 </div>
 
-<div class="flashcard" data-id="103.5-fc-017">
+<div class="flashcard" data-id="103.5-fc-032">
 <div class="flashcard-front">
 
 **P:** Que es/son 4. htop?
@@ -322,7 +592,7 @@ subtema: "103.5"
 <div class="flashcard-deck" data-subtema="103.5">
 </div>
 
-<div class="flashcard" data-id="103.5-fc-018">
+<div class="flashcard" data-id="103.5-fc-033">
 <div class="flashcard-front">
 
 **P:** Que es/son 5. Buscar procesos con `pgrep`?
@@ -340,7 +610,7 @@ subtema: "103.5"
 <div class="flashcard-deck" data-subtema="103.5">
 </div>
 
-<div class="flashcard" data-id="103.5-fc-019">
+<div class="flashcard" data-id="103.5-fc-034">
 <div class="flashcard-front">
 
 **P:** Que es/son 8. `nohup` - Inmunidad a SIGHUP?

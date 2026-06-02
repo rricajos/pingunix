@@ -179,3 +179,243 @@ d) `SRV _ldap._tcp 10 0 389 ldap.ejemplo.com.`
 El formato del registro SRV es: `_servicio._protocolo IN SRV prioridad peso puerto destino`. El nombre del servicio y el protocolo van precedidos por guion bajo (`_`). Los campos numericos van en orden: prioridad (10), peso (0), puerto (389), y finalmente el nombre del servidor destino.
 
 </details>
+
+### Pregunta 11
+
+¿Que directiva en un archivo de zona BIND define el TTL por defecto que se aplicara a todos los registros que no especifiquen uno propio?
+
+a) `$DEFAULT_TTL`
+b) `$TTL`
+c) `$CACHE`
+d) `$TIMER`
+
+<details><summary>Respuesta</summary>
+
+**b) `$TTL`**
+
+La directiva `$TTL` al inicio de un archivo de zona establece el tiempo de vida (Time To Live) por defecto para todos los registros de la zona que no tengan un TTL especificado explicitamente. Por ejemplo, `$TTL 86400` establece un TTL de 1 dia (86400 segundos). Esta directiva es obligatoria segun el RFC 2308.
+
+</details>
+
+### Pregunta 12
+
+Un administrador observa que el servidor esclavo no actualiza la zona a pesar de haber realizado cambios en el maestro. ¿Cual es la causa mas probable?
+
+a) El campo Retry del SOA es demasiado alto
+b) No se incremento el numero de serie (serial) en el registro SOA del maestro
+c) El campo Expire del SOA ha expirado
+d) La directiva `notify no` esta configurada en el esclavo
+
+<details><summary>Respuesta</summary>
+
+**b) No se incremento el numero de serie (serial) en el registro SOA del maestro**
+
+El servidor esclavo compara el serial de su copia local con el del maestro. Si el serial del maestro no es mayor que el del esclavo, este considera que no hay cambios y no solicita una transferencia. Es fundamental incrementar el serial en cada modificacion de la zona para que los esclavos detecten las actualizaciones.
+
+</details>
+
+### Pregunta 13
+
+¿Que tipo de registro DNS se utiliza en una zona inversa IPv4 para asociar una direccion IP con un nombre de host?
+
+a) A
+b) AAAA
+c) CNAME
+d) PTR
+
+<details><summary>Respuesta</summary>
+
+**d) PTR**
+
+El registro PTR (Pointer) se utiliza en las zonas inversas para asociar una direccion IP con un nombre de dominio completo (FQDN). En una zona inversa IPv4, la zona se nombra como `X.Y.Z.in-addr.arpa` y los registros PTR mapean el ultimo octeto de la IP al nombre de host correspondiente.
+
+</details>
+
+### Pregunta 14
+
+¿Cual de las siguientes afirmaciones sobre el registro CNAME es CORRECTA?
+
+a) Un CNAME puede coexistir con un registro MX en el mismo nombre
+b) La raiz de la zona (@) puede tener un registro CNAME
+c) Un registro NS puede apuntar a un nombre que tenga un CNAME
+d) Un CNAME no puede coexistir con ningun otro tipo de registro para el mismo nombre
+
+<details><summary>Respuesta</summary>
+
+**d) Un CNAME no puede coexistir con ningun otro tipo de registro para el mismo nombre**
+
+El registro CNAME es exclusivo: no puede compartir un nombre con ningun otro tipo de registro. La raiz de la zona (@) no puede tener un CNAME porque necesita registros SOA y NS obligatoriamente. Ademas, los registros MX y NS no deben apuntar a nombres que tengan registros CNAME, ya que esto puede causar problemas de resolucion.
+
+</details>
+
+### Pregunta 15
+
+En el registro SOA, ¿que campo define el intervalo en el que el servidor esclavo consulta al maestro para verificar si hubo cambios en la zona?
+
+a) Retry
+b) Expire
+c) Refresh
+d) Minimum
+
+<details><summary>Respuesta</summary>
+
+**c) Refresh**
+
+El campo Refresh del registro SOA especifica el intervalo de tiempo (en segundos) en el que un servidor esclavo consultara al maestro para comprobar si el serial de la zona ha cambiado. Un valor tipico es 3600 segundos (1 hora). Si la consulta falla, el esclavo reintentara segun el valor del campo Retry.
+
+</details>
+
+### Pregunta 16
+
+¿Que opcion de configuracion en BIND permite al servidor maestro enviar notificaciones automaticas a los esclavos cuando se modifica una zona?
+
+a) `allow-transfer { any; };`
+b) `notify yes;`
+c) `auto-sync yes;`
+d) `push-update yes;`
+
+<details><summary>Respuesta</summary>
+
+**b) `notify yes;`**
+
+La directiva `notify yes` en la configuracion de una zona maestra hace que BIND envie automaticamente mensajes NOTIFY a todos los servidores listados en los registros NS de la zona (y a los servidores en `also-notify`) cuando detecta un cambio en el serial. Esto permite a los esclavos actualizar rapidamente sin esperar al intervalo de Refresh.
+
+</details>
+
+### Pregunta 17
+
+¿Que campo del registro SOA define el tiempo de vida para las respuestas negativas (NXDOMAIN)?
+
+a) Expire
+b) Refresh
+c) Retry
+d) Minimum
+
+<details><summary>Respuesta</summary>
+
+**d) Minimum**
+
+Segun el RFC 2308, el campo Minimum (tambien llamado Negative TTL) del registro SOA define el TTL para las respuestas negativas, es decir, las respuestas que indican que un nombre de dominio no existe (NXDOMAIN). Un valor tipico es 86400 segundos (1 dia). Esto controla cuanto tiempo un resolver mantendra en cache la informacion de que un registro no existe.
+
+</details>
+
+### Pregunta 18
+
+En una zona inversa IPv6, ¿que dominio especial se utiliza en lugar de `in-addr.arpa`?
+
+a) `ipv6.arpa`
+b) `ip6.arpa`
+c) `rev6.arpa`
+d) `v6.in-addr.arpa`
+
+<details><summary>Respuesta</summary>
+
+**b) `ip6.arpa`**
+
+Las zonas inversas IPv6 utilizan el dominio `ip6.arpa`. Cada nibble (digito hexadecimal) de la direccion IPv6 se separa por puntos y se escribe en orden inverso. Por ejemplo, para la red `2001:db8:1::/48`, la zona inversa seria `1.0.0.0.8.b.d.0.1.0.0.2.ip6.arpa`.
+
+</details>
+
+### Pregunta 19
+
+¿Que sucede cuando un servidor DNS esclavo no puede contactar al maestro durante un periodo superior al valor del campo Expire del SOA?
+
+a) El esclavo incrementa automaticamente el serial y se convierte en maestro
+b) El esclavo deja de responder consultas para esa zona
+c) El esclavo sigue respondiendo con los datos existentes indefinidamente
+d) El esclavo elimina los archivos de zona y reinicia el servicio
+
+<details><summary>Respuesta</summary>
+
+**b) El esclavo deja de responder consultas para esa zona**
+
+Cuando transcurre el tiempo definido por el campo Expire sin que el esclavo pueda contactar al maestro, el esclavo considera que sus datos son demasiado antiguos y poco confiables, por lo que deja de responder consultas para esa zona. Un valor tipico de Expire es 604800 segundos (1 semana).
+
+</details>
+
+### Pregunta 20
+
+¿Cual es la diferencia principal entre AXFR e IXFR en las transferencias de zona DNS?
+
+a) AXFR usa TCP y IXFR usa UDP
+b) AXFR transfiere la zona completa e IXFR transfiere solo los cambios incrementales
+c) AXFR esta cifrado e IXFR no
+d) AXFR solo funciona en IPv4 e IXFR funciona en IPv4 e IPv6
+
+<details><summary>Respuesta</summary>
+
+**b) AXFR transfiere la zona completa e IXFR transfiere solo los cambios incrementales**
+
+AXFR (Full Zone Transfer) envia la zona completa del maestro al esclavo, mientras que IXFR (Incremental Zone Transfer) solo transfiere los cambios realizados desde un serial determinado. IXFR es mas eficiente en zonas grandes con pocos cambios. Ambos protocolos utilizan TCP. Si el servidor no puede proporcionar una IXFR, se recurre automaticamente a AXFR.
+
+</details>
+
+### Pregunta 21
+
+¿Que comando permite verificar la sintaxis de un archivo de zona DNS en BIND?
+
+<input type="text" class="fill-blank" data-answer="named-checkzone" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**named-checkzone**
+
+El comando `named-checkzone` verifica la sintaxis y la integridad de un archivo de zona. Se ejecuta con el formato `named-checkzone nombre_zona archivo_zona`, por ejemplo: `named-checkzone ejemplo.com /var/cache/bind/db.ejemplo.com`. Si la zona es valida, muestra el serial cargado y devuelve "OK".
+
+</details>
+
+### Pregunta 22
+
+¿Que comando se utiliza para solicitar una transferencia de zona completa (AXFR) desde un servidor DNS?
+
+<input type="text" class="fill-blank" data-answer="dig AXFR" data-alt="dig @servidor dominio AXFR,dig ejemplo.com AXFR" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**dig AXFR**
+
+El comando `dig` con el tipo de consulta `AXFR` solicita una transferencia de zona completa. El formato tipico es `dig @servidor_dns nombre_zona AXFR`. Por ejemplo: `dig @ns1.ejemplo.com ejemplo.com AXFR`. El servidor solo respondera si el cliente tiene permiso segun la directiva `allow-transfer`.
+
+</details>
+
+### Pregunta 23
+
+¿Que comando de BIND se utiliza para verificar la sintaxis del archivo de configuracion `named.conf`?
+
+<input type="text" class="fill-blank" data-answer="named-checkconf" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**named-checkconf**
+
+El comando `named-checkconf` verifica la sintaxis del archivo de configuracion principal de BIND (`named.conf`) y de los archivos incluidos. Si no hay errores, el comando no produce salida y retorna con codigo 0. Es una herramienta esencial para detectar errores antes de reiniciar el servicio DNS.
+
+</details>
+
+### Pregunta 24
+
+¿Que comando permite recargar una zona especifica en BIND sin reiniciar todo el servicio?
+
+<input type="text" class="fill-blank" data-answer="rndc reload" data-alt="rndc reload ejemplo.com" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**rndc reload**
+
+El comando `rndc reload` recarga las zonas y el archivo de configuracion de BIND. Se puede especificar una zona concreta con `rndc reload ejemplo.com` para recargar solo esa zona sin afectar al resto del servicio. Tambien se puede usar `rndc reconfig` para cargar solo las zonas nuevas o modificadas en la configuracion.
+
+</details>
+
+### Pregunta 25
+
+¿Que comando de `dig` permite consultar un registro SOA de un dominio especifico?
+
+<input type="text" class="fill-blank" data-answer="dig SOA" data-alt="dig ejemplo.com SOA,dig SOA ejemplo.com" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**dig SOA**
+
+El comando `dig` seguido del nombre del dominio y el tipo `SOA` consulta el registro SOA de la zona. Por ejemplo: `dig ejemplo.com SOA`. Esto devuelve informacion del servidor primario, email del administrador, serial, y los valores de Refresh, Retry, Expire y Minimum TTL.
+
+</details>

@@ -11,7 +11,7 @@ subtema: "208.3"
 
 # Flashcards: 208.3 - Squid Como Proxy Cache
 
-> 20 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 35 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="208.3">
 </div>
@@ -199,6 +199,276 @@ subtema: "208.3"
 <div class="flashcard" data-id="208.3-fc-011">
 <div class="flashcard-front">
 
+**P:** ¿Qué tipo de ACL en Squid permite filtrar peticiones basándose en una expresión regular aplicada a la URL solicitada?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) url_regex. La ACL de tipo `url_regex` filtra las peticiones comparando la URL completa con una expresión regular. Por ejemplo, `acl descargas url_regex -i \.exe$ \.torrent$` coincide con URLs que terminen en `.exe` o `.torrent`. La opción `-i` hace la comparación insensible a mayúsculas/minúsculas.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.3">
+</div>
+
+<div class="flashcard" data-id="208.3-fc-012">
+<div class="flashcard-front">
+
+**P:** En una jerarquía de caché de Squid, ¿cuál es la diferencia entre un proxy padre (parent) y un proxy hermano (sibling)?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) El padre reenvía peticiones si no tiene la respuesta en caché, el hermano solo comparte contenido cacheado. Un proxy padre (parent) actúa como intermediario completo: si tiene el objeto en caché lo devuelve, y si no, lo solicita al servidor origen en nombre del proxy que lo consulta. Un proxy hermano (sibling) solo devuelve objetos que ya tiene en su caché; si no los tiene, no realiza la petición al servidor origen. La comunicación entre proxies se realiza mediante ICP (UDP 3130).
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.3">
+</div>
+
+<div class="flashcard" data-id="208.3-fc-013">
+<div class="flashcard-front">
+
+**P:** ¿Cuál es el orden de procesamiento de las reglas `http_access` en Squid?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) Se procesan de arriba hacia abajo y se aplica la primera coincidencia. Squid procesa las reglas `http_access` secuencialmente de arriba hacia abajo y aplica la primera regla que coincida con la petición. Por esta razón, el orden es fundamental. Las reglas más específicas deben ir antes que las generales, y la última regla debe ser siempre `http_access deny all` para denegar todo lo que no esté explícitamente permitido.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.3">
+</div>
+
+<div class="flashcard" data-id="208.3-fc-014">
+<div class="flashcard-front">
+
+**P:** ¿Qué tipo de almacenamiento de caché en Squid utiliza operaciones de E/S asíncronas para mejorar el rendimiento frente al formato estándar UFS?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) aufs. AUFS (Asynchronous UFS) es un tipo de almacenamiento de caché que realiza las operaciones de lectura y escritura en disco de forma asíncrona usando hilos, lo que mejora significativamente el rendimiento respecto al UFS estándar que usa E/S síncrona. Se configura con `cache_dir aufs /var/spool/squid 10000 16 256`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.3">
+</div>
+
+<div class="flashcard" data-id="208.3-fc-015">
+<div class="flashcard-front">
+
+**P:** ¿Qué directiva de Squid configura el tamaño máximo de un objeto que puede almacenarse en la caché de disco?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) maximum_object_size. La directiva `maximum_object_size` define el tamaño máximo que puede tener un objeto para ser almacenado en la caché de disco. Objetos más grandes no se cachean. Por ejemplo, `maximum_object_size 4 MB`. Para la caché en memoria existe la directiva equivalente `maximum_object_size_in_memory`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.3">
+</div>
+
+<div class="flashcard" data-id="208.3-fc-016">
+<div class="flashcard-front">
+
+**P:** ¿Qué regla de iptables se necesita para redirigir el tráfico HTTP al proxy Squid en modo transparente?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 3128`. Para el proxy transparente, se usa la tabla `nat` con la cadena `PREROUTING` para interceptar el tráfico HTTP (puerto 80) antes de que sea enrutado y redirigirlo al puerto del proxy Squid (3128). Se usa la acción `REDIRECT` que cambia el puerto de destino del paquete. La cadena PREROUTING es necesaria porque la redirección debe ocurrir antes de la decisión de enrutamiento.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.3">
+</div>
+
+<div class="flashcard" data-id="208.3-fc-017">
+<div class="flashcard-front">
+
+**P:** ¿Qué archivo de log de Squid registra los eventos del servicio como inicios, paradas y errores de configuración?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) /var/log/squid/cache.log. El archivo `cache.log` registra los eventos operativos del servicio Squid: inicios y paradas del demonio, errores de configuración, advertencias y mensajes de diagnóstico. El archivo `access.log` registra las peticiones de los clientes, y `store.log` registra los objetos almacenados y eliminados de la caché.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.3">
+</div>
+
+<div class="flashcard" data-id="208.3-fc-018">
+<div class="flashcard-front">
+
+**P:** ¿Qué directiva de Squid configura el programa de autenticación para validar usuarios con el esquema básico (NCSA)?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `auth_param basic program /usr/lib/squid/basic_ncsa_auth /etc/squid/passwd`. La directiva `auth_param basic program` define el programa externo que Squid utiliza para autenticar usuarios con el esquema básico. `basic_ncsa_auth` verifica las credenciales contra un archivo de contraseñas en formato NCSA (creado con `htpasswd`). La directiva `auth_param basic realm` permite configurar el mensaje que ve el usuario.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.3">
+</div>
+
+<div class="flashcard" data-id="208.3-fc-019">
+<div class="flashcard-front">
+
+**P:** ¿Qué palabra clave se utiliza en la directiva `http_port` de Squid para configurarlo como proxy inverso (acelerador)?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) accel. La palabra clave `accel` en la directiva `http_port` configura Squid como proxy inverso (acelerador web). Por ejemplo: `http_port 80 accel defaultsite=www.ejemplo.com vhost`. En este modo, Squid recibe peticiones de clientes externos y las reenvía a los servidores backend definidos con `cache_peer`, cacheando el contenido para mejorar el rendimiento.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.3">
+</div>
+
+<div class="flashcard" data-id="208.3-fc-020">
+<div class="flashcard-front">
+
+**P:** ¿Qué herramienta de línea de comandos incluida con Squid permite consultar estadísticas de la caché y purgar objetos?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) squidclient. El comando `squidclient` es una herramienta de diagnóstico incluida con Squid que permite consultar estadísticas de la caché (`squidclient mgr:info`), ver el uso de memoria (`squidclient mgr:mem`), consultar contadores de tráfico (`squidclient mgr:counters`) y purgar objetos específicos de la caché (`squidclient -m PURGE http://url`).
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.3">
+</div>
+
+<div class="flashcard" data-id="208.3-fc-021">
+<div class="flashcard-front">
+
+**P:** ¿Qué comando verifica la sintaxis del archivo de configuración de Squid sin iniciar el servicio?
+
+</div>
+<div class="flashcard-back">
+
+**R:** squid -k parse. El comando `squid -k parse` lee y analiza el archivo de configuración `squid.conf` reportando errores de sintaxis o directivas desconocidas sin iniciar ni afectar al servicio en ejecución. Es recomendable ejecutarlo después de cada modificación del archivo de configuración y antes de aplicar cambios con `squid -k reconfigure`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.3">
+</div>
+
+<div class="flashcard" data-id="208.3-fc-022">
+<div class="flashcard-front">
+
+**P:** ¿Qué comando rota los archivos de log de Squid?
+
+</div>
+<div class="flashcard-back">
+
+**R:** squid -k rotate. El comando `squid -k rotate` cierra los archivos de log actuales, los renombra añadiendo un sufijo numérico (access.log.0, access.log.1, etc.) y abre nuevos archivos de log. Esto permite gestionar el tamaño de los logs sin interrumpir el servicio. Se puede automatizar con una tarea cron o un temporizador de systemd.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.3">
+</div>
+
+<div class="flashcard" data-id="208.3-fc-023">
+<div class="flashcard-front">
+
+**P:** ¿Qué comando inicializa la estructura de directorios de caché de Squid?
+
+</div>
+<div class="flashcard-back">
+
+**R:** squid -z. El comando `squid -z` crea la estructura de subdirectorios de la caché en disco según la configuración de `cache_dir` en `squid.conf`. Debe ejecutarse antes del primer inicio de Squid y cada vez que se cambie la configuración de `cache_dir`. Los directorios se crean con los niveles L1 y L2 especificados (por ejemplo, 16 y 256).
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.3">
+</div>
+
+<div class="flashcard" data-id="208.3-fc-024">
+<div class="flashcard-front">
+
+**P:** ¿Qué comando de Squid recarga la configuración sin interrumpir las conexiones activas?
+
+</div>
+<div class="flashcard-back">
+
+**R:** squid -k reconfigure. El comando `squid -k reconfigure` envía la señal SIGHUP al proceso Squid, haciendo que relea su archivo de configuración sin reiniciar el servicio ni interrumpir las conexiones activas. Los cambios se aplican inmediatamente para las nuevas conexiones. Es equivalente a `systemctl reload squid` en sistemas con systemd.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.3">
+</div>
+
+<div class="flashcard" data-id="208.3-fc-025">
+<div class="flashcard-front">
+
+**P:** ¿Qué comando permite purgar un objeto específico de la caché de Squid?
+
+</div>
+<div class="flashcard-back">
+
+**R:** squidclient -m PURGE. El comando `squidclient -m PURGE http://url` envía una solicitud HTTP con el método PURGE a Squid para eliminar un objeto específico de la caché. Por ejemplo: `squidclient -m PURGE http://www.ejemplo.com/imagen.jpg`. Para que funcione, se debe configurar una ACL que permita el método PURGE desde la dirección del administrador.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.3">
+</div>
+
+<div class="flashcard" data-id="208.3-fc-026">
+<div class="flashcard-front">
+
 **P:** Tip de examen: El puerto predeterminado de Squid es 3128. En modo transparente, los clientes no...
 
 </div>
@@ -214,7 +484,7 @@ subtema: "208.3"
 <div class="flashcard-deck" data-subtema="208.3">
 </div>
 
-<div class="flashcard" data-id="208.3-fc-012">
+<div class="flashcard" data-id="208.3-fc-027">
 <div class="flashcard-front">
 
 **P:** Tip de examen: Los días de la semana en la ACL `time` se representan como: S=Sunday, M=Monday, ...
@@ -232,7 +502,7 @@ subtema: "208.3"
 <div class="flashcard-deck" data-subtema="208.3">
 </div>
 
-<div class="flashcard" data-id="208.3-fc-013">
+<div class="flashcard" data-id="208.3-fc-028">
 <div class="flashcard-front">
 
 **P:** Tip de examen: El orden de las reglas `http_access` es fundamental. Squid las procesa de arriba...
@@ -250,7 +520,7 @@ subtema: "208.3"
 <div class="flashcard-deck" data-subtema="208.3">
 </div>
 
-<div class="flashcard" data-id="208.3-fc-014">
+<div class="flashcard" data-id="208.3-fc-029">
 <div class="flashcard-front">
 
 **P:** Tip de examen: ICP (Internet Cache Protocol) utiliza el puerto UDP 3130 por defecto para la com...
@@ -268,7 +538,7 @@ subtema: "208.3"
 <div class="flashcard-deck" data-subtema="208.3">
 </div>
 
-<div class="flashcard" data-id="208.3-fc-015">
+<div class="flashcard" data-id="208.3-fc-030">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `/var/log/squid/access.log`?
@@ -286,7 +556,7 @@ subtema: "208.3"
 <div class="flashcard-deck" data-subtema="208.3">
 </div>
 
-<div class="flashcard" data-id="208.3-fc-016">
+<div class="flashcard" data-id="208.3-fc-031">
 <div class="flashcard-front">
 
 **P:** Que es/son Introducción?
@@ -304,7 +574,7 @@ subtema: "208.3"
 <div class="flashcard-deck" data-subtema="208.3">
 </div>
 
-<div class="flashcard" data-id="208.3-fc-017">
+<div class="flashcard" data-id="208.3-fc-032">
 <div class="flashcard-front">
 
 **P:** Que es/son Listas de Control de Acceso (ACLs)?
@@ -322,7 +592,7 @@ subtema: "208.3"
 <div class="flashcard-deck" data-subtema="208.3">
 </div>
 
-<div class="flashcard" data-id="208.3-fc-018">
+<div class="flashcard" data-id="208.3-fc-033">
 <div class="flashcard-front">
 
 **P:** Que es/son Proxy transparente?
@@ -340,7 +610,7 @@ subtema: "208.3"
 <div class="flashcard-deck" data-subtema="208.3">
 </div>
 
-<div class="flashcard" data-id="208.3-fc-019">
+<div class="flashcard" data-id="208.3-fc-034">
 <div class="flashcard-front">
 
 **P:** Que es/son Proxy inverso (Reverse Proxy)?
@@ -358,7 +628,7 @@ subtema: "208.3"
 <div class="flashcard-deck" data-subtema="208.3">
 </div>
 
-<div class="flashcard" data-id="208.3-fc-020">
+<div class="flashcard" data-id="208.3-fc-035">
 <div class="flashcard-front">
 
 **P:** Que es/son Jerarquía de caché (Cache Hierarchy)?

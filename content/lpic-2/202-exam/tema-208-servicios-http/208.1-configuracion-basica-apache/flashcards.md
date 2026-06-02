@@ -11,7 +11,7 @@ subtema: "208.1"
 
 # Flashcards: 208.1 - Configuracion Basica Apache
 
-> 24 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 36 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="208.1">
 </div>
@@ -199,6 +199,276 @@ subtema: "208.1"
 <div class="flashcard" data-id="208.1-fc-011">
 <div class="flashcard-front">
 
+**P:** ¿Qué directiva de Apache define el directorio raíz desde el cual se sirven los archivos web a los clientes?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) DocumentRoot. La directiva `DocumentRoot` especifica el directorio del sistema de archivos desde el cual Apache sirve los archivos web. Por ejemplo, `DocumentRoot /var/www/html` indica que las peticiones HTTP se resolverán buscando archivos dentro de ese directorio. `ServerRoot` es diferente: define el directorio base de la configuración del servidor, no el contenido web.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.1">
+</div>
+
+<div class="flashcard" data-id="208.1-fc-012">
+<div class="flashcard-front">
+
+**P:** ¿Qué directiva de Apache permite crear un alias que mapea una URL a un directorio fuera del DocumentRoot?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) Alias. La directiva `Alias` del módulo `mod_alias` permite mapear una URL a un directorio del sistema de archivos que puede estar fuera del `DocumentRoot`. Por ejemplo, `Alias /documentos /opt/docs` hace que las peticiones a `/documentos` se sirvan desde `/opt/docs`. `Redirect` envía al cliente a otra URL, mientras que `Alias` sirve contenido directamente desde otra ubicación.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.1">
+</div>
+
+<div class="flashcard" data-id="208.1-fc-013">
+<div class="flashcard-front">
+
+**P:** ¿Qué opción de la directiva `Options` permite que Apache muestre un listado del contenido del directorio cuando no existe un archivo índice?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) Indexes. La opción `Indexes` permite que Apache genere automáticamente un listado de archivos del directorio cuando no encuentra un archivo índice (como `index.html`). Por razones de seguridad, es recomendable deshabilitar esta opción en entornos de producción para evitar que se expongan los contenidos del directorio.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.1">
+</div>
+
+<div class="flashcard" data-id="208.1-fc-014">
+<div class="flashcard-front">
+
+**P:** ¿Qué señal envía `apachectl graceful` al proceso Apache?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) SIGUSR1. El comando `apachectl graceful` envía la señal `SIGUSR1` al proceso Apache, lo que provoca un reinicio elegante. Los procesos hijo activos terminan de atender las peticiones actuales antes de ser reemplazados por nuevos procesos con la configuración actualizada. Esto permite recargar la configuración sin interrumpir conexiones existentes.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.1">
+</div>
+
+<div class="flashcard" data-id="208.1-fc-015">
+<div class="flashcard-front">
+
+**P:** ¿Cuál es el nombre del servicio Apache en distribuciones basadas en Debian/Ubuntu?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) apache2. En distribuciones basadas en Debian/Ubuntu, el servicio Apache se llama `apache2` y se gestiona con `systemctl start apache2`. En distribuciones basadas en Red Hat/CentOS, el servicio se llama `httpd`. Los archivos de configuración también varían: `/etc/apache2/apache2.conf` en Debian y `/etc/httpd/conf/httpd.conf` en Red Hat.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.1">
+</div>
+
+<div class="flashcard" data-id="208.1-fc-016">
+<div class="flashcard-front">
+
+**P:** ¿Qué directiva de Apache especifica los puertos en los que el servidor escucha conexiones entrantes?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) Listen. La directiva `Listen` especifica las direcciones IP y puertos en los que Apache escucha conexiones. Se pueden definir múltiples directivas `Listen` para escuchar en varios puertos o interfaces. Por ejemplo, `Listen 80` y `Listen 443` para HTTP y HTTPS respectivamente. En Debian/Ubuntu, esta directiva suele estar en `/etc/apache2/ports.conf`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.1">
+</div>
+
+<div class="flashcard" data-id="208.1-fc-017">
+<div class="flashcard-front">
+
+**P:** ¿Qué formato de log de Apache incluye las cabeceras Referer y User-Agent además de la información básica de la petición?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) combined. El formato de log `combined` incluye la información básica del formato `common` (IP del cliente, identidad, usuario, fecha, petición, código de estado y tamaño) más las cabeceras `Referer` y `User-Agent`. Se define con `LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined` y es el formato más utilizado.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.1">
+</div>
+
+<div class="flashcard" data-id="208.1-fc-018">
+<div class="flashcard-front">
+
+**P:** ¿Qué MPM de Apache 2.4 es el predeterminado y ofrece el mejor rendimiento para la mayoría de escenarios?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) event. El MPM `event` es el predeterminado en Apache 2.4 y ofrece el mejor rendimiento general. Es similar a `worker` pero con una gestión mejorada de las conexiones keep-alive, dedicando un hilo independiente para gestionarlas sin bloquear los hilos del worker. El MPM `prefork` sigue siendo necesario cuando se usa `mod_php`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.1">
+</div>
+
+<div class="flashcard" data-id="208.1-fc-019">
+<div class="flashcard-front">
+
+**P:** ¿Qué directiva dentro de `<Directory>` controla qué directivas están permitidas en los archivos `.htaccess`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) AllowOverride. La directiva `AllowOverride` dentro de un bloque `<Directory>` controla qué tipos de directivas están permitidas en los archivos `.htaccess`. Los valores incluyen: `None` (deshabilita .htaccess por completo para mejor rendimiento), `All` (permite todas las directivas), `AuthConfig` (solo autenticación) y `FileInfo` (directivas de tipo de documento).
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.1">
+</div>
+
+<div class="flashcard" data-id="208.1-fc-020">
+<div class="flashcard-front">
+
+**P:** Un administrador necesita que Apache ejecute scripts CGI ubicados en el directorio `/usr/lib/cgi-bin/` cuando se acceda a la URL `/cgi-bin/`. ¿Qué directiva debe usar?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/`. La directiva `ScriptAlias` del módulo `mod_alias` mapea una URL a un directorio y marca todos los archivos dentro como scripts CGI ejecutables. A diferencia de `Alias`, que simplemente sirve archivos, `ScriptAlias` también activa la ejecución CGI. No es necesario añadir `Options ExecCGI` por separado cuando se usa `ScriptAlias`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.1">
+</div>
+
+<div class="flashcard" data-id="208.1-fc-021">
+<div class="flashcard-front">
+
+**P:** ¿Qué comando se utiliza en Debian/Ubuntu para habilitar un sitio virtual de Apache que tiene su configuración en el directorio `sites-available`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** a2ensite. El comando `a2ensite` (Apache2 Enable Site) habilita un sitio virtual creando un enlace simbólico desde `sites-available` hacia `sites-enabled`. Por ejemplo, `a2ensite sitio1.conf` habilita la configuración del sitio. Para deshabilitar un sitio se usa `a2dissite`. Después de habilitar o deshabilitar un sitio, es necesario recargar Apache.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.1">
+</div>
+
+<div class="flashcard" data-id="208.1-fc-022">
+<div class="flashcard-front">
+
+**P:** ¿Qué comando de Apache permite verificar la sintaxis de los archivos de configuración sin reiniciar el servicio?
+
+</div>
+<div class="flashcard-back">
+
+**R:** apachectl configtest. El comando `apachectl configtest` (o su equivalente `apachectl -t`) analiza los archivos de configuración de Apache y reporta errores de sintaxis sin afectar al servicio en ejecución. Es una práctica recomendada ejecutarlo antes de reiniciar o recargar Apache para evitar que un error detenga el servicio.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.1">
+</div>
+
+<div class="flashcard" data-id="208.1-fc-023">
+<div class="flashcard-front">
+
+**P:** ¿Qué comando de `apachectl` muestra la lista de todos los módulos cargados en Apache?
+
+</div>
+<div class="flashcard-back">
+
+**R:** apachectl -M. El comando `apachectl -M` muestra la lista de todos los módulos cargados en Apache, indicando si son estáticos (compilados en el binario) o compartidos (cargados dinámicamente). Para ver la configuración de VirtualHosts se utiliza `apachectl -S`, y para verificar la versión y opciones de compilación, `apachectl -V`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.1">
+</div>
+
+<div class="flashcard" data-id="208.1-fc-024">
+<div class="flashcard-front">
+
+**P:** ¿Qué comando en Debian/Ubuntu deshabilita un módulo de Apache?
+
+</div>
+<div class="flashcard-back">
+
+**R:** a2dismod. El comando `a2dismod` (Apache2 Disable Module) deshabilita un módulo de Apache eliminando el enlace simbólico correspondiente del directorio `mods-enabled`. Por ejemplo, `a2dismod status` deshabilita el módulo status. Su opuesto es `a2enmod` que habilita módulos. Después de habilitar o deshabilitar módulos, es necesario reiniciar Apache.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.1">
+</div>
+
+<div class="flashcard" data-id="208.1-fc-025">
+<div class="flashcard-front">
+
+**P:** ¿Qué comando muestra la configuración de VirtualHosts activos en Apache, incluyendo los puertos y nombres de servidor?
+
+</div>
+<div class="flashcard-back">
+
+**R:** apachectl -S. El comando `apachectl -S` muestra un resumen de la configuración de VirtualHosts activos, incluyendo qué archivos de configuración definen cada VirtualHost, los puertos en los que escuchan y los nombres de servidor asociados. Es una herramienta útil para diagnosticar problemas de enrutamiento de peticiones cuando hay múltiples VirtualHosts configurados.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.1">
+</div>
+
+<div class="flashcard" data-id="208.1-fc-026">
+<div class="flashcard-front">
+
 **P:** Tip de examen: Recuerda que en Debian el servicio se llama `apache2` y en Red Hat se llama `htt...
 
 </div>
@@ -214,7 +484,7 @@ subtema: "208.1"
 <div class="flashcard-deck" data-subtema="208.1">
 </div>
 
-<div class="flashcard" data-id="208.1-fc-012">
+<div class="flashcard" data-id="208.1-fc-027">
 <div class="flashcard-front">
 
 **P:** Tip de examen: Los VirtualHosts basados en nombre son los más comunes. Cuando se usan VirtualHo...
@@ -232,7 +502,7 @@ subtema: "208.1"
 <div class="flashcard-deck" data-subtema="208.1">
 </div>
 
-<div class="flashcard" data-id="208.1-fc-013">
+<div class="flashcard" data-id="208.1-fc-028">
 <div class="flashcard-front">
 
 **P:** Tip de examen: El orden de procesamiento es: `<Directory>` y `.htaccess` primero, luego `<Direc...
@@ -250,7 +520,7 @@ subtema: "208.1"
 <div class="flashcard-deck" data-subtema="208.1">
 </div>
 
-<div class="flashcard" data-id="208.1-fc-014">
+<div class="flashcard" data-id="208.1-fc-029">
 <div class="flashcard-front">
 
 **P:** Tip de examen: En Apache 2.4 se usa `Require` en lugar de las directivas `Order`, `Allow` y `De...
@@ -268,7 +538,7 @@ subtema: "208.1"
 <div class="flashcard-deck" data-subtema="208.1">
 </div>
 
-<div class="flashcard" data-id="208.1-fc-015">
+<div class="flashcard" data-id="208.1-fc-030">
 <div class="flashcard-front">
 
 **P:** Tip de examen: `apachectl graceful` envía la señal `SIGUSR1` a Apache para que recargue su conf...
@@ -286,15 +556,15 @@ subtema: "208.1"
 <div class="flashcard-deck" data-subtema="208.1">
 </div>
 
-<div class="flashcard" data-id="208.1-fc-016">
+<div class="flashcard" data-id="208.1-fc-031">
 <div class="flashcard-front">
 
-**P:** Que hace el comando `/etc/apache2/apache2.conf`?
+**P:** Que hace el comando `%b`?
 
 </div>
 <div class="flashcard-back">
 
-**R:** `/etc/apache2/`
+**R:** Tamaño de la respuesta en bytes
 
 </div>
 </div>
@@ -304,79 +574,7 @@ subtema: "208.1"
 <div class="flashcard-deck" data-subtema="208.1">
 </div>
 
-<div class="flashcard" data-id="208.1-fc-017">
-<div class="flashcard-front">
-
-**P:** Que hace el comando `/etc/httpd/conf/httpd.conf`?
-
-</div>
-<div class="flashcard-back">
-
-**R:** `/etc/httpd/`
-
-</div>
-</div>
-
----
-
-<div class="flashcard-deck" data-subtema="208.1">
-</div>
-
-<div class="flashcard" data-id="208.1-fc-018">
-<div class="flashcard-front">
-
-**P:** Que hace el comando `%h`?
-
-</div>
-<div class="flashcard-back">
-
-**R:** Host remoto (IP del cliente)
-
-</div>
-</div>
-
----
-
-<div class="flashcard-deck" data-subtema="208.1">
-</div>
-
-<div class="flashcard" data-id="208.1-fc-019">
-<div class="flashcard-front">
-
-**P:** Que hace el comando `%l`?
-
-</div>
-<div class="flashcard-back">
-
-**R:** Identidad remota (identd)
-
-</div>
-</div>
-
----
-
-<div class="flashcard-deck" data-subtema="208.1">
-</div>
-
-<div class="flashcard" data-id="208.1-fc-020">
-<div class="flashcard-front">
-
-**P:** Que hace el comando `%u`?
-
-</div>
-<div class="flashcard-back">
-
-**R:** Usuario autenticado
-
-</div>
-</div>
-
----
-
-<div class="flashcard-deck" data-subtema="208.1">
-</div>
-
-<div class="flashcard" data-id="208.1-fc-021">
+<div class="flashcard" data-id="208.1-fc-032">
 <div class="flashcard-front">
 
 **P:** Que es/son Introducción?
@@ -394,7 +592,25 @@ subtema: "208.1"
 <div class="flashcard-deck" data-subtema="208.1">
 </div>
 
-<div class="flashcard" data-id="208.1-fc-022">
+<div class="flashcard" data-id="208.1-fc-033">
+<div class="flashcard-front">
+
+**P:** Que es/son Archivos de configuración principales?
+
+</div>
+<div class="flashcard-back">
+
+**R:** | Distribución | Archivo principal | Directorio de configuración |
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.1">
+</div>
+
+<div class="flashcard" data-id="208.1-fc-034">
 <div class="flashcard-front">
 
 **P:** Que es/son VirtualHost (Hosts virtuales)?
@@ -412,7 +628,7 @@ subtema: "208.1"
 <div class="flashcard-deck" data-subtema="208.1">
 </div>
 
-<div class="flashcard" data-id="208.1-fc-023">
+<div class="flashcard" data-id="208.1-fc-035">
 <div class="flashcard-front">
 
 **P:** Que es/son Archivo .htaccess?
@@ -430,7 +646,7 @@ subtema: "208.1"
 <div class="flashcard-deck" data-subtema="208.1">
 </div>
 
-<div class="flashcard" data-id="208.1-fc-024">
+<div class="flashcard" data-id="208.1-fc-036">
 <div class="flashcard-front">
 
 **P:** Que es/son MPM (Multi-Processing Modules)?

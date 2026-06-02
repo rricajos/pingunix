@@ -206,3 +206,273 @@ d) Muestra la configuracion del kernel; `timedatectl sync`
 `timedatectl` (o `timedatectl status`) muestra: hora local, hora UTC, hora del reloj RTC (hardware), zona horaria actual, si el reloj esta sincronizado con NTP y si el servicio NTP esta activo. `timedatectl set-ntp true` activa la sincronizacion de tiempo con NTP (generalmente `systemd-timesyncd` o `chrony`). Otros subcomandos utiles: `timedatectl set-timezone Europe/Madrid` (cambiar zona horaria), `timedatectl list-timezones` (listar zonas disponibles), `timedatectl set-time "2026-05-28 14:00:00"` (establecer fecha/hora manualmente).
 
 </details>
+
+---
+
+### Pregunta 11
+
+Que significa la abreviatura `i18n` en el contexto de la localizacion de software?
+
+a) Un estandar ISO para codificacion de caracteres con 18 variantes
+b) Internacionalizacion, con 18 letras entre la `i` y la `n`
+c) Un formato de archivo con 18 campos de configuracion regional
+d) Un protocolo de red para intercambio de datos en 18 idiomas
+
+<details><summary>Respuesta</summary>
+
+**b) Internacionalizacion, con 18 letras entre la `i` y la `n`**
+
+`i18n` es la abreviatura de "internationalization" (internacionalizacion), donde el numero 18 representa las 18 letras entre la primera `i` y la ultima `n`. La internacionalizacion es el proceso de disenar software para que pueda adaptarse a diferentes idiomas y regiones sin modificar el codigo fuente. De forma similar, `l10n` es la abreviatura de "localization" (localizacion, 10 letras entre la `l` y la `n`), que es el proceso de adaptar el software a un idioma y region especificos.
+
+</details>
+
+---
+
+### Pregunta 12
+
+Si se ejecuta `export LC_ALL=en_US.UTF-8` en un sistema con `LANG=es_ES.UTF-8` y `LC_TIME=de_DE.UTF-8`, en que idioma se mostraran las fechas?
+
+a) Espanol, porque `LANG` es la base
+b) Aleman, porque `LC_TIME` esta definida explicitamente
+c) Ingles, porque `LC_ALL` sobreescribe todas las demas variables
+d) Se usara la configuracion del sistema por defecto
+
+<details><summary>Respuesta</summary>
+
+**c) Ingles, porque `LC_ALL` sobreescribe todas las demas variables**
+
+`LC_ALL` tiene la maxima prioridad y sobreescribe TODAS las demas variables de locale, incluyendo tanto `LANG` como cualquier variable `LC_*` individual. El orden de prioridad es: `LC_ALL` > `LC_*` individuales > `LANG`. Por lo tanto, al definir `LC_ALL=en_US.UTF-8`, todo el sistema usara ingles: las fechas, los mensajes, los numeros, el formato de moneda, etc. Por esta razon, `LC_ALL` solo se recomienda para uso temporal, no para configuracion permanente.
+
+</details>
+
+---
+
+### Pregunta 13
+
+Que opcion de `iconv` permite intentar transliterar caracteres que no existen en la codificacion de destino?
+
+a) `-f //TRANSLIT`
+b) `-t DESTINO//TRANSLIT`
+c) `--transliterate`
+d) `-x TRANSLIT`
+
+<details><summary>Respuesta</summary>
+
+**b) `-t DESTINO//TRANSLIT`**
+
+La opcion `//TRANSLIT` se agrega al nombre de la codificacion de destino en la opcion `-t`. Por ejemplo: `iconv -f UTF-8 -t ASCII//TRANSLIT archivo.txt` intentara transliterar caracteres UTF-8 que no existen en ASCII (por ejemplo, convirtiendo `e` acentuada a `e` sin acento). Si la transliteracion no es posible, se genera un error. Otra opcion es `//IGNORE`, que simplemente omite los caracteres que no se pueden convertir.
+
+</details>
+
+---
+
+### Pregunta 14
+
+Que archivo define la configuracion del locale del sistema en distribuciones basadas en Debian/Ubuntu?
+
+a) `/etc/locale.conf`
+b) `/etc/default/locale`
+c) `/etc/sysconfig/locale`
+d) `/etc/locale.gen`
+
+<details><summary>Respuesta</summary>
+
+**b) `/etc/default/locale`**
+
+En Debian/Ubuntu, la configuracion del locale del sistema se almacena en `/etc/default/locale`, que contiene variables como `LANG="es_ES.UTF-8"`. En Red Hat/Fedora/Arch (sistemas con systemd), se usa `/etc/locale.conf`. El archivo `/etc/locale.gen` en Debian/Ubuntu contiene la lista de locales que se deben generar (se procesan con `locale-gen`). `/etc/sysconfig/locale` no es un archivo estandar.
+
+</details>
+
+---
+
+### Pregunta 15
+
+Que comando genera los locales configurados en `/etc/locale.gen` en un sistema Debian?
+
+a) `localectl generate`
+b) `dpkg-reconfigure locale`
+c) `locale-gen`
+d) `iconv --generate`
+
+<details><summary>Respuesta</summary>
+
+**c) `locale-gen`**
+
+El comando `locale-gen` genera los locales listados y descomentados en `/etc/locale.gen`. En Debian/Ubuntu, los locales se deben generar antes de poder usarlos. El proceso consiste en editar `/etc/locale.gen` para descomentar las lineas de los locales deseados (por ejemplo, `es_ES.UTF-8 UTF-8`) y luego ejecutar `locale-gen`. Alternativamente, se puede usar `dpkg-reconfigure locales` (con `s` al final) que ofrece una interfaz interactiva.
+
+</details>
+
+---
+
+### Pregunta 16
+
+Que directorio contiene todos los archivos de zona horaria del sistema?
+
+a) `/etc/timezone.d/`
+b) `/usr/share/zoneinfo/`
+c) `/var/lib/timezone/`
+d) `/etc/localtime.d/`
+
+<details><summary>Respuesta</summary>
+
+**b) `/usr/share/zoneinfo/`**
+
+El directorio `/usr/share/zoneinfo/` contiene archivos binarios con la informacion de cada zona horaria, organizados por region geografica (por ejemplo, `America/Mexico_City`, `Europe/Madrid`, `Asia/Tokyo`). El archivo `/etc/localtime` es un enlace simbolico que apunta al archivo de zona horaria activa dentro de este directorio. Para cambiar la zona horaria se puede modificar el enlace con `ln -sf /usr/share/zoneinfo/ZONA /etc/localtime` o usar `timedatectl set-timezone ZONA`.
+
+</details>
+
+---
+
+### Pregunta 17
+
+Que variable de locale controla especificamente el formato de presentacion de numeros (separador decimal y de miles)?
+
+a) `LC_MONETARY`
+b) `LC_NUMERIC`
+c) `LC_CTYPE`
+d) `LC_COLLATE`
+
+<details><summary>Respuesta</summary>
+
+**b) `LC_NUMERIC`**
+
+`LC_NUMERIC` controla el formato de numeros, incluyendo el separador decimal (punto o coma) y el separador de miles. Por ejemplo, en `es_ES.UTF-8` el separador decimal es la coma (1.234,56), mientras que en `en_US.UTF-8` es el punto (1,234.56). `LC_MONETARY` controla el formato de moneda. `LC_CTYPE` controla la clasificacion de caracteres. `LC_COLLATE` controla el orden de clasificacion de cadenas de texto.
+
+</details>
+
+---
+
+### Pregunta 18
+
+Que diferencia hay entre la codificacion ISO-8859-1 y la ISO-8859-15?
+
+a) ISO-8859-15 soporta caracteres asiaticos que ISO-8859-1 no tiene
+b) ISO-8859-15 incluye el simbolo del euro y algunos caracteres adicionales que ISO-8859-1 no tiene
+c) ISO-8859-15 es una version cifrada de ISO-8859-1
+d) No hay diferencia, son la misma codificacion con nombres diferentes
+
+<details><summary>Respuesta</summary>
+
+**b) ISO-8859-15 incluye el simbolo del euro y algunos caracteres adicionales que ISO-8859-1 no tiene**
+
+ISO-8859-15 (tambien llamada Latin-9) es una revision de ISO-8859-1 (Latin-1) que reemplaza 8 caracteres poco usados por otros mas utiles, incluyendo el simbolo del euro, las letras ligadas francesa y finlandesa (OE, oe) y la S y Z con caron. Ambas son codificaciones de 8 bits (256 caracteres) para idiomas de Europa Occidental. Ninguna soporta caracteres asiaticos; para eso se necesita UTF-8.
+
+</details>
+
+---
+
+### Pregunta 19
+
+Que comando de systemd cambia la zona horaria del sistema a America/Mexico_City?
+
+a) `localectl set-timezone America/Mexico_City`
+b) `timedatectl set-timezone America/Mexico_City`
+c) `systemctl timezone America/Mexico_City`
+d) `tzselect America/Mexico_City`
+
+<details><summary>Respuesta</summary>
+
+**b) `timedatectl set-timezone America/Mexico_City`**
+
+`timedatectl set-timezone America/Mexico_City` cambia la zona horaria del sistema de forma efectiva e inmediata, modificando el enlace simbolico `/etc/localtime`. `localectl` se usa para configurar el locale y el teclado, no la zona horaria. `tzselect` es una herramienta interactiva que ayuda a elegir una zona horaria pero NO cambia la configuracion del sistema. `systemctl timezone` no es un comando valido.
+
+</details>
+
+---
+
+### Pregunta 20
+
+Que comando permite configurar el layout del teclado de la consola virtual en un sistema con systemd?
+
+a) `timedatectl set-keymap es`
+b) `localectl set-keymap es`
+c) `keyboard-setup es`
+d) `setxkbmap es`
+
+<details><summary>Respuesta</summary>
+
+**b) `localectl set-keymap es`**
+
+`localectl set-keymap es` configura el layout del teclado de la consola virtual (VC Keymap) en sistemas con systemd. Para configurar el layout del teclado de X11 se usa `localectl set-x11-keymap es`. `setxkbmap` tambien puede configurar el teclado de X11 pero de forma temporal (solo para la sesion actual). `timedatectl` se usa para fecha, hora y zona horaria, no para el teclado.
+
+</details>
+
+---
+
+### Pregunta 21
+
+Escribe el comando para mostrar la configuracion actual de todas las variables de locale del sistema.
+
+<input type="text" class="fill-blank" data-answer="locale" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**locale**
+
+El comando `locale` sin argumentos muestra el valor de todas las variables de locale: `LANG`, `LC_CTYPE`, `LC_NUMERIC`, `LC_TIME`, `LC_COLLATE`, `LC_MONETARY`, `LC_MESSAGES`, `LC_PAPER`, `LC_NAME`, `LC_ADDRESS`, `LC_TELEPHONE`, `LC_MEASUREMENT` y `LC_ALL`. Para listar todos los locales disponibles en el sistema se usa `locale -a`.
+
+</details>
+
+---
+
+### Pregunta 22
+
+Escribe el comando para listar todos los locales disponibles en el sistema.
+
+<input type="text" class="fill-blank" data-answer="locale -a" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**locale -a**
+
+El comando `locale -a` lista todos los locales que estan generados y disponibles para su uso en el sistema. La lista incluye variantes como `es_ES.UTF-8`, `en_US.UTF-8`, `C`, `POSIX`, etc. En Debian/Ubuntu, los locales se generan con `locale-gen` a partir de `/etc/locale.gen`. En sistemas con systemd, se pueden listar tambien con `localectl list-locales`.
+
+</details>
+
+---
+
+### Pregunta 23
+
+Escribe el comando de `iconv` para convertir un archivo de ISO-8859-1 a UTF-8.
+
+<input type="text" class="fill-blank" data-answer="iconv -f ISO-8859-1 -t UTF-8" data-alt="iconv -f ISO-8859-1 -t UTF-8 archivo.txt" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**iconv -f ISO-8859-1 -t UTF-8**
+
+El comando `iconv -f ISO-8859-1 -t UTF-8 archivo.txt` convierte el contenido de `archivo.txt` de la codificacion ISO-8859-1 a UTF-8. La opcion `-f` indica la codificacion de origen (from) y `-t` la de destino (to). La salida se envia a stdout por defecto; se puede redirigir con `> salida.txt` o usar la opcion `-o salida.txt`. Para listar todas las codificaciones disponibles: `iconv -l`.
+
+</details>
+
+---
+
+### Pregunta 24
+
+Escribe el comando para cambiar la zona horaria del sistema a Europe/Madrid usando `timedatectl`.
+
+<input type="text" class="fill-blank" data-answer="timedatectl set-timezone Europe/Madrid" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**timedatectl set-timezone Europe/Madrid**
+
+El comando `timedatectl set-timezone Europe/Madrid` cambia la zona horaria del sistema, actualizando el enlace simbolico `/etc/localtime` para apuntar a `/usr/share/zoneinfo/Europe/Madrid`. Para listar todas las zonas horarias disponibles: `timedatectl list-timezones`. Para verificar la configuracion actual: `timedatectl status`.
+
+</details>
+
+---
+
+### Pregunta 25
+
+Escribe el comando para establecer el locale del sistema a `es_ES.UTF-8` usando la herramienta de systemd.
+
+<input type="text" class="fill-blank" data-answer="localectl set-locale LANG=es_ES.UTF-8" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**localectl set-locale LANG=es_ES.UTF-8**
+
+El comando `localectl set-locale LANG=es_ES.UTF-8` establece el locale del sistema en distribuciones con systemd, escribiendo la configuracion en `/etc/locale.conf`. Se pueden configurar multiples variables a la vez: `localectl set-locale LANG=es_ES.UTF-8 LC_MESSAGES=en_US.UTF-8`. Para verificar la configuracion: `localectl status`.
+
+</details>

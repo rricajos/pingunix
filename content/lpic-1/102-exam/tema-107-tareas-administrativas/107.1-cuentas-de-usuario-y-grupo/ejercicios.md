@@ -204,3 +204,273 @@ d) `chage -c` y `chage -s`
 **`chfn`** (change finger) permite modificar el campo GECOS (campo 5 de `/etc/passwd`), que contiene informacion personal como nombre completo, oficina y telefonos. Se puede usar interactivamente o con opciones: `chfn -f "Sandra Garcia" sandra`. **`chsh`** (change shell) permite cambiar el shell de login (campo 7 de `/etc/passwd`): `chsh -s /bin/zsh sandra`. Solo se pueden asignar shells listados en `/etc/shells`. `usermod -c` y `usermod -s` tambien funcionan, pero `chfn` y `chsh` son los comandos especificos del examen LPIC-1.
 
 </details>
+
+---
+
+### Pregunta 11
+
+Que comando crea un usuario del sistema (con UID inferior a 1000) sin directorio home?
+
+a) `useradd -r -M servicio`
+b) `useradd -s /bin/false servicio`
+c) `adduser --system servicio`
+d) `usermod -r servicio`
+
+<details><summary>Respuesta</summary>
+
+**a) `useradd -r -M servicio`**
+
+La opcion `-r` de `useradd` crea un usuario del sistema con un UID en el rango reservado para el sistema (tipicamente inferior a 1000, definido por `SYS_UID_MIN`/`SYS_UID_MAX` en `/etc/login.defs`). La opcion `-M` indica explicitamente que NO se cree el directorio home. La opcion (b) solo cambia el shell pero no crea un usuario del sistema. La opcion (c) es una herramienta de mas alto nivel disponible en Debian pero no es el comando estandar de bajo nivel. `usermod` modifica usuarios existentes, no los crea.
+
+</details>
+
+---
+
+### Pregunta 12
+
+En el archivo `/etc/group`, que representa el cuarto campo?
+
+a) La contrasena cifrada del grupo
+b) El GID numerico del grupo
+c) La lista de usuarios que tienen este grupo como grupo secundario
+d) El administrador del grupo
+
+<details><summary>Respuesta</summary>
+
+**c) La lista de usuarios que tienen este grupo como grupo secundario**
+
+El formato de `/etc/group` tiene 4 campos separados por `:`: nombre del grupo, contrasena (generalmente `x` o vacia), GID y lista de miembros separados por coma. El cuarto campo lista los usuarios que tienen este grupo como grupo **secundario**. Los usuarios cuyo grupo primario es este grupo (definido en `/etc/passwd`) NO aparecen en este campo. Por ejemplo, en `developers:x:1001:sandra,carlos`, sandra y carlos tienen `developers` como grupo secundario.
+
+</details>
+
+---
+
+### Pregunta 13
+
+Que comando agrega al usuario `carlos` al grupo `docker` sin modificar sus otros grupos secundarios existentes?
+
+a) `groupadd -a carlos docker`
+b) `usermod -G docker carlos`
+c) `usermod -aG docker carlos`
+d) `gpasswd -A carlos docker`
+
+<details><summary>Respuesta</summary>
+
+**c) `usermod -aG docker carlos`**
+
+`usermod -aG docker carlos` agrega (append) el grupo `docker` a los grupos secundarios de carlos sin perder los existentes. La opcion `-a` (append) es fundamental: sin ella, `usermod -G docker carlos` reemplazaria TODOS los grupos secundarios, dejando a carlos solo en `docker`. La opcion (a) no es valida para `groupadd` (que crea grupos, no agrega usuarios). La opcion (d) con `-A` establece a carlos como administrador del grupo, no como miembro.
+
+</details>
+
+---
+
+### Pregunta 14
+
+Que archivo contiene la lista de shells validos que se pueden asignar a un usuario con `chsh`?
+
+a) `/etc/login.defs`
+b) `/etc/shells`
+c) `/etc/passwd`
+d) `/etc/profile`
+
+<details><summary>Respuesta</summary>
+
+**b) `/etc/shells`**
+
+El archivo `/etc/shells` contiene la lista de shells de login validos del sistema. Cuando un usuario ejecuta `chsh -s /bin/zsh`, el comando verifica que `/bin/zsh` este listado en `/etc/shells` antes de permitir el cambio. El contenido tipico incluye `/bin/sh`, `/bin/bash`, `/bin/zsh`, `/usr/bin/fish`, etc. `/etc/login.defs` define parametros de creacion de usuarios. `/etc/passwd` contiene la informacion de las cuentas. `/etc/profile` contiene la configuracion del entorno de login.
+
+</details>
+
+---
+
+### Pregunta 15
+
+Un administrador ejecuta `passwd -S sandra` y obtiene la salida: `sandra L 05/26/2026 0 99999 7 -1`. Que indica la letra `L`?
+
+a) Que la cuenta tiene una contrasena valida establecida
+b) Que la cuenta no tiene contrasena
+c) Que la cuenta esta bloqueada (locked)
+d) Que la contrasena ha expirado
+
+<details><summary>Respuesta</summary>
+
+**c) Que la cuenta esta bloqueada (locked)**
+
+En la salida de `passwd -S`, el segundo campo indica el estado de la contrasena: `P` significa que tiene una contrasena valida (password set), `L` significa que la cuenta esta bloqueada (locked, se agrego `!` al hash en `/etc/shadow`), y `NP` significa que no tiene contrasena asignada. Una cuenta bloqueada con `L` no permite la autenticacion por contrasena, aunque podria permitir acceso por otros metodos como claves SSH.
+
+</details>
+
+---
+
+### Pregunta 16
+
+Que hace el comando `gpasswd -d sandra developers`?
+
+a) Elimina el grupo developers del sistema
+b) Elimina al usuario sandra del grupo developers
+c) Desbloquea la contrasena del grupo developers
+d) Establece a sandra como administradora del grupo developers
+
+<details><summary>Respuesta</summary>
+
+**b) Elimina al usuario sandra del grupo developers**
+
+El comando `gpasswd -d usuario grupo` elimina al usuario especificado del grupo indicado. Otras opciones de `gpasswd`: `-a usuario grupo` agrega al usuario al grupo, `-A usuario grupo` establece al usuario como administrador del grupo, `-r grupo` elimina la contrasena del grupo, y `-M user1,user2 grupo` establece la lista completa de miembros. Es una alternativa a `usermod -G` para gestionar la membresia de grupos.
+
+</details>
+
+---
+
+### Pregunta 17
+
+Que directorio contiene los archivos plantilla que se copian al home de cada nuevo usuario creado con `useradd -m`?
+
+a) `/etc/default`
+b) `/etc/profile.d/`
+c) `/etc/skel/`
+d) `/home/template/`
+
+<details><summary>Respuesta</summary>
+
+**c) `/etc/skel/`**
+
+El directorio `/etc/skel/` (skeleton) contiene los archivos plantilla que se copian automaticamente al directorio home de cada nuevo usuario cuando se crea con `useradd -m`. Archivos tipicos incluyen `.bashrc`, `.bash_logout` y `.profile`. La ruta se puede configurar con el parametro `SKEL` en `/etc/login.defs`. Si un administrador quiere que todos los usuarios nuevos tengan ciertos archivos de configuracion, los debe colocar en `/etc/skel/`.
+
+</details>
+
+---
+
+### Pregunta 18
+
+Que informacion muestra el comando `chage -l sandra`?
+
+a) Los grupos secundarios del usuario sandra
+b) El historial de comandos ejecutados por sandra
+c) La politica de envejecimiento de la contrasena de sandra
+d) Los permisos de los archivos de sandra
+
+<details><summary>Respuesta</summary>
+
+**c) La politica de envejecimiento de la contrasena de sandra**
+
+`chage -l sandra` muestra la informacion completa de envejecimiento de la contrasena: fecha del ultimo cambio, fecha de caducidad de la contrasena, fecha de inactividad, fecha de expiracion de la cuenta, dias minimos y maximos entre cambios, y dias de aviso antes de la caducidad. Toda esta informacion se almacena en `/etc/shadow`. Es una herramienta util para verificar las politicas de seguridad aplicadas a cada cuenta de usuario.
+
+</details>
+
+---
+
+### Pregunta 19
+
+Cual es el valor de UID reservado para el superusuario root en Linux?
+
+a) 1
+b) 65534
+c) 1000
+d) 0
+
+<details><summary>Respuesta</summary>
+
+**d) 0**
+
+El UID 0 esta reservado para el superusuario root en todos los sistemas Linux y Unix. Es el unico UID con privilegios completos sobre el sistema. Los UIDs 1-999 estan tipicamente reservados para usuarios del sistema (servicios y daemons). Los UIDs a partir de 1000 (definido por `UID_MIN` en `/etc/login.defs`) se asignan a usuarios regulares. El UID 65534 se usa generalmente para el usuario `nobody`, una cuenta con privilegios minimos.
+
+</details>
+
+---
+
+### Pregunta 20
+
+Que opcion de `useradd` establece la fecha de expiracion de la cuenta?
+
+a) `-d YYYY-MM-DD`
+b) `-e YYYY-MM-DD`
+c) `-E YYYY-MM-DD`
+d) `-x YYYY-MM-DD`
+
+<details><summary>Respuesta</summary>
+
+**b) `-e YYYY-MM-DD`**
+
+La opcion `-e YYYY-MM-DD` de `useradd` establece la fecha de expiracion de la cuenta. Por ejemplo, `useradd -m -e 2026-12-31 temporal` crea un usuario cuya cuenta expirara el 31 de diciembre de 2026. La opcion `-d` especifica el directorio home (no confundir). Para modificar la fecha de expiracion de un usuario existente se puede usar `usermod -e YYYY-MM-DD` o `chage -E YYYY-MM-DD`. La fecha se almacena en el campo 8 de `/etc/shadow`.
+
+</details>
+
+---
+
+### Pregunta 21
+
+Escribe el comando para crear un usuario llamado `ana` con directorio home, shell `/bin/bash` y grupo secundario `sudo`.
+
+<input type="text" class="fill-blank" data-answer="useradd -m -s /bin/bash -G sudo ana" data-alt="useradd -m -G sudo -s /bin/bash ana,useradd -G sudo -m -s /bin/bash ana" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**useradd -m -s /bin/bash -G sudo ana**
+
+El comando `useradd` con la opcion `-m` crea el directorio home (copiando `/etc/skel/`), `-s /bin/bash` establece el shell de login, y `-G sudo` agrega al usuario al grupo secundario `sudo`. El orden de las opciones puede variar. Despues de crear el usuario, se debe establecer su contrasena con `passwd ana`.
+
+</details>
+
+---
+
+### Pregunta 22
+
+Escribe el comando para ver la informacion de UID, GID y grupos del usuario `carlos`.
+
+<input type="text" class="fill-blank" data-answer="id carlos" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**id carlos**
+
+El comando `id carlos` muestra el UID, el GID del grupo primario y la lista de todos los grupos (primario y secundarios) del usuario. La salida tiene el formato: `uid=1001(carlos) gid=1001(carlos) groups=1001(carlos),27(sudo),999(docker)`. Se puede usar `id -u` para obtener solo el UID, `id -g` para solo el GID primario, e `id -Gn` para los nombres de todos los grupos.
+
+</details>
+
+---
+
+### Pregunta 23
+
+Escribe el comando para bloquear la cuenta del usuario `ana` usando `passwd`.
+
+<input type="text" class="fill-blank" data-answer="passwd -l ana" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**passwd -l ana**
+
+El comando `passwd -l ana` (lock) bloquea la cuenta del usuario agegando el caracter `!` delante del hash de la contrasena en `/etc/shadow`. Esto impide la autenticacion por contrasena, pero no bloquea otros metodos como claves SSH. Para desbloquear se usa `passwd -u ana`. Una alternativa es `usermod -L ana` (bloquear) y `usermod -U ana` (desbloquear).
+
+</details>
+
+---
+
+### Pregunta 24
+
+Escribe el comando para eliminar al usuario `temporal` junto con su directorio home y mail spool.
+
+<input type="text" class="fill-blank" data-answer="userdel -r temporal" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**userdel -r temporal**
+
+El comando `userdel -r temporal` elimina la entrada del usuario de `/etc/passwd`, `/etc/shadow` y `/etc/group`, y ademas elimina su directorio home y su mail spool (`/var/mail/temporal`). Sin la opcion `-r`, solo se eliminaria la entrada del usuario pero los archivos quedarian "huerfanos" en el sistema. Es recomendable buscar archivos huerfanos con `find / -nouser` despues de eliminar usuarios.
+
+</details>
+
+---
+
+### Pregunta 25
+
+Escribe el comando para consultar la informacion del usuario `sandra` en todas las fuentes NSS (archivos locales, LDAP, NIS).
+
+<input type="text" class="fill-blank" data-answer="getent passwd sandra" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**getent passwd sandra**
+
+El comando `getent passwd sandra` consulta la base de datos `passwd` buscando al usuario `sandra` en todas las fuentes configuradas en `/etc/nsswitch.conf`, incluyendo archivos locales (`/etc/passwd`), LDAP, NIS y otras bases de datos remotas. Es la forma recomendada de consultar informacion de usuarios en entornos empresariales, ya que `grep` sobre `/etc/passwd` solo muestra usuarios locales.
+
+</details>

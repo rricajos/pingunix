@@ -36,7 +36,7 @@ function extractFromExercises(filepath) {
   const cards = []
 
   // Match pattern: ### Pregunta N\n question \n options \n <details>..answer..</details>
-  const questionRegex = /### Pregunta \d+\n([\s\S]*?)<details>\s*\n\s*<summary>Respuesta<\/summary>\s*\n([\s\S]*?)<\/details>/g
+  const questionRegex = /### Pregunta \d+\n([\s\S]*?)<details>\s*(?:\n\s*)?<summary>Respuesta<\/summary>\s*\n([\s\S]*?)<\/details>/g
   let match
   while ((match = questionRegex.exec(content)) !== null) {
     const questionBlock = match[1].trim()
@@ -71,6 +71,19 @@ function extractFromExercises(filepath) {
   return cards
 }
 
+// ── Headings that produce useless "Que es/son X?" flashcards ──
+const GENERIC_HEADINGS = new Set([
+  'introduccion', 'resumen', 'resumen para el examen', 'objetivos',
+  'requisitos', 'conclusion', 'conclusiones', 'indice', 'contenido',
+  'navegacion', 'archivos', 'referencia', 'referencias', 'notas',
+  'recursos', 'enlaces', 'practica', 'ejercicios', 'tip de examen',
+  'conceptos clave', 'puntos clave', 'comandos clave', 'comandos principales',
+  'ejemplo', 'ejemplos', 'sintaxis', 'formato', 'opciones',
+])
+
+// ── Words that indicate a truncated answer when at the end ──
+const TRUNCATION_ENDINGS = /\s+(de|del|en|el|la|los|las|un|una|al|con|por|para|que|y|o|e|a|su|sus|se|lo|como|entre|sobre|desde|hasta|sin|hacia|ante|bajo|contra|mediante|segun|tras|durante)\s*\.?$/i
+
 // ── Extract key concepts from teoria.md ──
 function extractFromTheory(filepath) {
   if (!existsSync(filepath)) return []
@@ -82,7 +95,7 @@ function extractFromTheory(filepath) {
   let match
   while ((match = examTipRegex.exec(content)) !== null) {
     const tip = match[1].replace(/^>\s*/gm, '').trim()
-    if (tip.length > 20) {
+    if (tip.length > 30 && !TRUNCATION_ENDINGS.test(tip)) {
       cards.push({
         question: 'Tip de examen: ' + tip.substring(0, 80) + (tip.length > 80 ? '...' : ''),
         answer: tip
@@ -97,7 +110,11 @@ function extractFromTheory(filepath) {
   while ((match = tableRowRegex.exec(content)) !== null) {
     const cmd = match[1].trim()
     const desc = match[2].trim()
-    if (cmd && desc && desc !== 'Descripcion' && desc !== 'Comando' && !desc.startsWith('---')) {
+    // Skip header rows, separators, and rows where "description" is another command (starts with `)
+    if (cmd && desc && desc.length >= 30
+        && desc !== 'Descripcion' && desc !== 'Comando'
+        && !desc.startsWith('---') && !desc.startsWith('`')
+        && !TRUNCATION_ENDINGS.test(desc)) {
       commandCards.push({ question: `Que hace el comando \`${cmd}\`?`, answer: desc })
     }
   }
@@ -109,11 +126,14 @@ function extractFromTheory(filepath) {
   while ((match = sectionRegex.exec(content)) !== null) {
     const heading = match[1].trim()
     const text = match[2].trim()
-    if (!heading.startsWith('Contenido') && !heading.startsWith('Navegacion') &&
-        !heading.startsWith('Archivos') && !heading.startsWith('Referencia')) {
+    const answer = text.split('\n')[0]
+    // Skip generic headings and short/truncated answers
+    if (!GENERIC_HEADINGS.has(heading.toLowerCase())
+        && answer.length >= 30
+        && !TRUNCATION_ENDINGS.test(answer)) {
       cards.push({
         question: `Que es/son ${heading}?`,
-        answer: text.split('\n')[0]
+        answer
       })
     }
   }

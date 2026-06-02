@@ -165,3 +165,228 @@ d) `http://servidor/webui`
 
 La interfaz web de FreeIPA está disponible en `https://FQDN/ipa/ui/`. Se accede mediante HTTPS y se puede autenticar con ticket Kerberos (si el navegador está configurado para negociación SPNEGO) o con usuario y contraseña.
 </details>
+
+### Pregunta 11
+
+¿Qué parámetro de `ipa-server-install` define el realm Kerberos?
+
+a) `--kerberos-realm`
+b) `--realm`
+c) `--krb5-realm`
+d) `--domain-realm`
+
+<details><summary>Respuesta</summary>
+
+**b) `--realm`**
+
+El parámetro `--realm` define el realm Kerberos durante la instalación del servidor FreeIPA. Por convención, el realm Kerberos se escribe siempre en mayúsculas (por ejemplo, `--realm=EMPRESA.LOCAL`).
+</details>
+
+### Pregunta 12
+
+¿Qué puerto se utiliza para el servicio Kerberos de cambio de contraseña (kpasswd)?
+
+a) 88
+b) 389
+c) 464
+d) 636
+
+<details><summary>Respuesta</summary>
+
+**c) 464**
+
+El puerto 464 (TCP/UDP) es utilizado por el servicio `kpasswd` de Kerberos, que permite a los usuarios cambiar sus contraseñas. El puerto 88 es para el servicio Kerberos principal (KDC), 389 para LDAP y 636 para LDAPS.
+</details>
+
+### Pregunta 13
+
+¿Qué parámetro de `ipa-client-install` permite la actualización dinámica de registros DNS?
+
+a) `--dns-update`
+b) `--enable-dns-updates`
+c) `--dynamic-dns`
+d) `--update-dns`
+
+<details><summary>Respuesta</summary>
+
+**b) `--enable-dns-updates`**
+
+El parámetro `--enable-dns-updates` configura el cliente FreeIPA para que actualice automáticamente sus registros DNS en el servidor cuando su dirección IP cambie, manteniendo la resolución DNS sincronizada.
+</details>
+
+### Pregunta 14
+
+¿Qué componente de FreeIPA proporciona la infraestructura de clave pública (PKI)?
+
+a) 389 Directory Server
+b) MIT Kerberos
+c) Dogtag CA
+d) BIND
+
+<details><summary>Respuesta</summary>
+
+**c) Dogtag CA**
+
+Dogtag Certificate Authority es el componente de FreeIPA que proporciona la infraestructura PKI completa, incluyendo la emisión, renovación y revocación de certificados X.509. Es un proyecto de Red Hat Certificate System.
+</details>
+
+### Pregunta 15
+
+¿Qué parámetro de `ipa-replica-install` instala una réplica de la autoridad de certificación?
+
+a) `--ca-replica`
+b) `--setup-ca`
+c) `--install-ca`
+d) `--replicate-ca`
+
+<details><summary>Respuesta</summary>
+
+**b) `--setup-ca`**
+
+El parámetro `--setup-ca` instala una réplica de Dogtag CA en el servidor réplica. Esto permite que la réplica emita certificados de forma independiente, proporcionando alta disponibilidad para la infraestructura PKI.
+</details>
+
+### Pregunta 16
+
+¿Qué archivos de configuración se configuran automáticamente en el cliente al ejecutar `ipa-client-install`?
+
+a) Solo `/etc/krb5.conf`
+b) `/etc/krb5.conf`, `/etc/sssd/sssd.conf`, `/etc/nsswitch.conf` y módulos PAM
+c) Solo `/etc/sssd/sssd.conf` y `/etc/nsswitch.conf`
+d) `/etc/ldap.conf` y `/etc/krb5.conf`
+
+<details><summary>Respuesta</summary>
+
+**b) `/etc/krb5.conf`, `/etc/sssd/sssd.conf`, `/etc/nsswitch.conf` y módulos PAM**
+
+`ipa-client-install` configura automáticamente Kerberos (`/etc/krb5.conf`), SSSD (`/etc/sssd/sssd.conf`), NSS (`/etc/nsswitch.conf`), los módulos PAM y los certificados de la CA, proporcionando una integración completa del cliente con el dominio FreeIPA.
+</details>
+
+### Pregunta 17
+
+¿Qué comando se usa para desinstalar un servidor FreeIPA?
+
+a) `ipa-server-remove`
+b) `ipa-server-install --uninstall`
+c) `ipactl uninstall`
+d) `dnf remove freeipa-server`
+
+<details><summary>Respuesta</summary>
+
+**b) `ipa-server-install --uninstall`**
+
+`ipa-server-install --uninstall` deshace la configuración del servidor FreeIPA, desactivando todos los servicios configurados. Simplemente desinstalar el paquete con `dnf remove` no limpia la configuración correctamente.
+</details>
+
+### Pregunta 18
+
+¿Qué servicio de firewall se abre para permitir conexiones LDAP seguras (LDAPS) al servidor FreeIPA?
+
+a) `freeipa-ldap`
+b) `freeipa-ldaps`
+c) `ldaps`
+d) `freeipa-ssl`
+
+<details><summary>Respuesta</summary>
+
+**b) `freeipa-ldaps`**
+
+El servicio `freeipa-ldaps` se añade al firewall con `firewall-cmd --add-service=freeipa-ldaps --permanent` para permitir conexiones LDAPS (puerto 636/TCP) al servidor FreeIPA. El servicio `freeipa-ldap` permite LDAP sin cifrar (puerto 389).
+</details>
+
+### Pregunta 19
+
+¿Qué comando verifica la salud general de una instalación FreeIPA?
+
+a) `ipa-check`
+b) `ipactl check`
+c) `ipa-healthcheck`
+d) `ipa server-status`
+
+<details><summary>Respuesta</summary>
+
+**c) `ipa-healthcheck`**
+
+`ipa-healthcheck` ejecuta una serie de comprobaciones automatizadas sobre todos los componentes de FreeIPA (certificados, replicación, DNS, Kerberos, etc.) y reporta cualquier problema encontrado. Es la herramienta oficial de diagnóstico integral.
+</details>
+
+### Pregunta 20
+
+¿Qué comando permite añadir un registro DNS de tipo A en FreeIPA?
+
+a) `ipa dns-add empresa.local servidor --type=A --ip=192.168.1.20`
+b) `ipa dnsrecord-add empresa.local servidor --a-rec=192.168.1.20`
+c) `ipa dns-record-create empresa.local A servidor 192.168.1.20`
+d) `ipa dnszone-add-record empresa.local servidor A 192.168.1.20`
+
+<details><summary>Respuesta</summary>
+
+**b) `ipa dnsrecord-add empresa.local servidor --a-rec=192.168.1.20`**
+
+`ipa dnsrecord-add` añade un registro DNS a una zona gestionada por FreeIPA. El primer argumento es la zona DNS, el segundo es el nombre del host y `--a-rec` especifica la dirección IPv4 del registro A.
+</details>
+
+### Pregunta 21
+
+Escribe el comando para instalar un servidor FreeIPA de forma no interactiva con realm `EMPRESA.LOCAL`, dominio `empresa.local`, DNS integrado y forwarder `8.8.8.8`.
+
+<input type="text" class="fill-blank" data-answer="ipa-server-install --realm=EMPRESA.LOCAL --domain=empresa.local --setup-dns --forwarder=8.8.8.8 --unattended" data-alt="ipa-server-install --realm EMPRESA.LOCAL --domain empresa.local --setup-dns --forwarder 8.8.8.8 --unattended" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**ipa-server-install --realm=EMPRESA.LOCAL --domain=empresa.local --setup-dns --forwarder=8.8.8.8 --unattended**
+
+Este comando instala un servidor FreeIPA sin intervención interactiva. Se requieren adicionalmente `--ds-password` y `--admin-password` para una instalación completa. `--setup-dns` integra BIND y `--forwarder` configura el reenvío DNS externo.
+</details>
+
+### Pregunta 22
+
+Escribe el comando para verificar el estado de todos los servicios de FreeIPA.
+
+<input type="text" class="fill-blank" data-answer="ipactl status" data-alt="ipactl status" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**ipactl status**
+
+`ipactl status` muestra el estado de todos los servicios que componen FreeIPA (389 DS, KDC, httpd, Dogtag CA, etc.). También se puede usar `ipactl start`, `ipactl stop` y `ipactl restart` para gestionar todos los servicios simultáneamente.
+</details>
+
+### Pregunta 23
+
+Escribe el comando para listar los certificados gestionados por Certmonger.
+
+<input type="text" class="fill-blank" data-answer="getcert list" data-alt="getcert list" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**getcert list**
+
+`getcert list` muestra todos los certificados que Certmonger está monitorizando, incluyendo su estado, fechas de expiración y la CA que los emitió. Certmonger se encarga de renovarlos automáticamente antes de que expiren.
+</details>
+
+### Pregunta 24
+
+Escribe el comando para inscribir un cliente FreeIPA de forma no interactiva con el servidor `ipa.empresa.local`, usando el usuario `admin` con contraseña `AdminPass` y creación automática de directorios home.
+
+<input type="text" class="fill-blank" data-answer="ipa-client-install --server=ipa.empresa.local --domain=empresa.local --principal=admin --password=AdminPass --mkhomedir --unattended" data-alt="ipa-client-install --server ipa.empresa.local --domain empresa.local --principal admin --password AdminPass --mkhomedir --unattended" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**ipa-client-install --server=ipa.empresa.local --domain=empresa.local --principal=admin --password=AdminPass --mkhomedir --unattended**
+
+Este comando inscribe un cliente en el dominio FreeIPA sin intervención manual. `--mkhomedir` configura la creación automática de directorios home y `--unattended` evita preguntas interactivas.
+</details>
+
+### Pregunta 25
+
+Escribe el comando para listar todas las zonas DNS gestionadas por FreeIPA.
+
+<input type="text" class="fill-blank" data-answer="ipa dnszone-find" data-alt="ipa dnszone-find" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**ipa dnszone-find**
+
+`ipa dnszone-find` muestra todas las zonas DNS gestionadas por el servidor DNS integrado de FreeIPA (BIND). Incluye tanto las zonas directas como las inversas que se hayan configurado.
+</details>

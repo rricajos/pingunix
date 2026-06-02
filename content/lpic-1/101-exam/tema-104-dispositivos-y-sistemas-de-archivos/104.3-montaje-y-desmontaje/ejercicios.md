@@ -211,3 +211,273 @@ d) `users`
 La opcion `user` en `/etc/fstab` permite que usuarios normales (no root) monten el sistema de archivos. Por seguridad, automaticamente implica `noexec` (no permitir ejecucion de binarios), `nosuid` (ignorar bits SUID/SGID) y `nodev` (no interpretar dispositivos especiales). Esto evita que un usuario pueda escalar privilegios montando medios con ejecutables SUID. La opcion `defaults` no permite a usuarios normales montar (incluye `nouser`). `noauto` solo evita que se monte con `mount -a`. La opcion `users` es similar a `user`, pero permite que cualquier usuario pueda desmontar el FS, no solo el que lo monto.
 
 </details>
+
+---
+
+### Pregunta 11
+
+Que hace el comando `mount -a`?
+
+a) Monta todos los dispositivos de bloque detectados automaticamente
+b) Monta todos los sistemas de archivos listados en `/etc/fstab` que no tengan la opcion `noauto`
+c) Monta todos los dispositivos USB conectados al sistema
+d) Muestra todos los sistemas de archivos actualmente montados
+
+<details><summary>Respuesta</summary>
+
+**b) Monta todos los sistemas de archivos listados en `/etc/fstab` que no tengan la opcion `noauto`**
+
+El comando `mount -a` lee el archivo `/etc/fstab` e intenta montar todos los sistemas de archivos que no tengan la opcion `noauto` en su campo de opciones. Los que ya estan montados se ignoran. Es util despues de modificar `/etc/fstab` para montar las nuevas entradas sin reiniciar. Los sistemas de archivos con `noauto` estan excluidos porque esa opcion indica que se deben montar manualmente.
+
+</details>
+
+---
+
+### Pregunta 12
+
+Cual es la diferencia entre las opciones `user` y `users` en `/etc/fstab`?
+
+a) `user` permite que cualquier usuario monte y desmonte; `users` solo permite montar
+b) `user` permite montar al usuario que lo monto y solo ese usuario puede desmontarlo; `users` permite que cualquier usuario monte y desmonte
+c) No hay diferencia, son sinonimos
+d) `user` es para un usuario especifico y `users` es para un grupo de usuarios
+
+<details><summary>Respuesta</summary>
+
+**b) `user` permite montar al usuario que lo monto y solo ese usuario puede desmontarlo; `users` permite que cualquier usuario monte y desmonte**
+
+Con la opcion `user`, un usuario normal puede montar el sistema de archivos, pero solo el mismo usuario (o root) puede desmontarlo. Con la opcion `users`, cualquier usuario puede montar el sistema de archivos y tambien cualquier usuario puede desmontarlo, no solo el que lo monto. Ambas opciones implican automaticamente `noexec`, `nosuid` y `nodev` por seguridad.
+
+</details>
+
+---
+
+### Pregunta 13
+
+Un administrador necesita que una particion de datos no bloquee el arranque del sistema si el disco falla. Que opcion debe agregar en `/etc/fstab`?
+
+a) `noauto`
+b) `nofail`
+c) `ro`
+d) `defaults`
+
+<details><summary>Respuesta</summary>
+
+**b) `nofail`**
+
+La opcion `nofail` en `/etc/fstab` indica que el sistema no debe reportar un error ni detenerse si el dispositivo no existe o no esta disponible durante el arranque. Esto es especialmente util para discos externos, particiones de datos no criticas o almacenamiento en red que podria no estar disponible al iniciar. Sin `nofail`, un dispositivo ausente podria hacer que el sistema entre en modo de emergencia. `noauto` impide que se monte con `mount -a` pero no evita errores de arranque por si sola.
+
+</details>
+
+---
+
+### Pregunta 14
+
+Cual de los siguientes comandos muestra los sistemas de archivos montados en formato de arbol junto con el tipo de FS y el UUID?
+
+a) `mount`
+b) `df -hT`
+c) `lsblk -f`
+d) `findmnt`
+
+<details><summary>Respuesta</summary>
+
+**c) `lsblk -f`**
+
+`lsblk -f` muestra los dispositivos de bloque en formato de arbol incluyendo el tipo de sistema de archivos, la etiqueta, el UUID y el punto de montaje. Es una herramienta muy visual y completa. `mount` muestra los montajes pero no en formato de arbol y sin UUIDs. `df -hT` muestra espacio en disco con tipo de FS pero sin UUID. `findmnt` muestra montajes en formato de arbol pero no incluye UUID por defecto.
+
+</details>
+
+---
+
+### Pregunta 15
+
+Que hace la opcion `noatime` cuando se usa como opcion de montaje?
+
+a) No permite el acceso al sistema de archivos en ningun momento
+b) No actualiza el timestamp de acceso (atime) de los archivos al leerlos
+c) No permite montar el sistema de archivos de forma automatica
+d) Monta el sistema de archivos sin soporte de timestamps
+
+<details><summary>Respuesta</summary>
+
+**b) No actualiza el timestamp de acceso (atime) de los archivos al leerlos**
+
+La opcion `noatime` evita que el sistema actualice el timestamp de acceso (atime) cada vez que se lee un archivo. Esto mejora el rendimiento significativamente, especialmente en discos con muchas operaciones de lectura, ya que elimina una escritura innecesaria por cada lectura. La opcion `relatime` (predeterminada en muchas distribuciones) es un compromiso: solo actualiza atime si es mas antiguo que mtime o ctime.
+
+</details>
+
+---
+
+### Pregunta 16
+
+Si un directorio ya tiene archivos y se monta un sistema de archivos sobre el, que ocurre con los archivos originales del directorio?
+
+a) Los archivos se eliminan permanentemente
+b) Los archivos quedan ocultos mientras el sistema de archivos este montado y reaparecen al desmontarlo
+c) Se produce un error y el montaje falla
+d) Los archivos se mueven automaticamente al nuevo sistema de archivos
+
+<details><summary>Respuesta</summary>
+
+**b) Los archivos quedan ocultos mientras el sistema de archivos este montado y reaparecen al desmontarlo**
+
+Cuando se monta un sistema de archivos sobre un directorio que ya contiene archivos, los archivos originales quedan ocultos (no eliminados). El punto de montaje ahora muestra el contenido del sistema de archivos montado. Al desmontar con `umount`, los archivos originales vuelven a ser visibles. Esto no causa perdida de datos pero se recomienda usar directorios vacios como puntos de montaje para evitar confusion.
+
+</details>
+
+---
+
+### Pregunta 17
+
+Que comando se usa para hacer un "lazy unmount" que desconecta inmediatamente el sistema de archivos pero lo limpia cuando ya no este en uso?
+
+a) `umount -f /mnt/datos`
+b) `umount -l /mnt/datos`
+c) `umount -r /mnt/datos`
+d) `umount -d /mnt/datos`
+
+<details><summary>Respuesta</summary>
+
+**b) `umount -l /mnt/datos`**
+
+La opcion `-l` (lazy unmount) desconecta el sistema de archivos del arbol de directorios inmediatamente, haciendo que no sea accesible para nuevas operaciones. Sin embargo, la limpieza real se realiza cuando todos los procesos que lo estan usando terminan o cierran sus archivos. La opcion `-f` fuerza el desmontaje (util para NFS). El lazy unmount es util cuando el sistema de archivos esta "busy" y no se puede desmontar normalmente, pero se debe usar con precaucion.
+
+</details>
+
+---
+
+### Pregunta 18
+
+Cual es el archivo de configuracion principal de `autofs` que define los puntos de montaje base?
+
+a) `/etc/fstab`
+b) `/etc/auto.master`
+c) `/etc/autofs.conf`
+d) `/etc/mount.auto`
+
+<details><summary>Respuesta</summary>
+
+**b) `/etc/auto.master`**
+
+`/etc/auto.master` es el archivo de configuracion principal de `autofs` que define los puntos de montaje base y sus mapas asociados. Cada linea especifica un directorio base, un archivo de mapa con las definiciones de los submontajes y opciones opcionales. Por ejemplo: `/mnt/auto /etc/auto.datos --timeout=60`. Los mapas individuales (como `/etc/auto.datos`) definen los subdirectorios especificos que se montaran automaticamente al acceder a ellos.
+
+</details>
+
+---
+
+### Pregunta 19
+
+En una unidad systemd `.mount`, que seccion contiene los parametros `What`, `Where` y `Type`?
+
+a) `[Unit]`
+b) `[Mount]`
+c) `[Install]`
+d) `[Service]`
+
+<details><summary>Respuesta</summary>
+
+**b) `[Mount]`**
+
+La seccion `[Mount]` de una unidad `.mount` de systemd contiene los parametros principales del montaje: `What` (que dispositivo montar), `Where` (donde montarlo, el punto de montaje), `Type` (tipo de sistema de archivos) y `Options` (opciones de montaje). La seccion `[Unit]` contiene la descripcion y dependencias. La seccion `[Install]` define cuando se habilita la unidad. `[Service]` no se usa en unidades `.mount`.
+
+</details>
+
+---
+
+### Pregunta 20
+
+Que opcion de montaje es necesaria para montar una imagen ISO como si fuera un dispositivo de bloque?
+
+a) `ro`
+b) `loop`
+c) `iso9660`
+d) `bind`
+
+<details><summary>Respuesta</summary>
+
+**b) `loop`**
+
+La opcion `loop` crea un dispositivo de bucle (`/dev/loopN`) que permite tratar un archivo regular (como una imagen ISO) como si fuera un dispositivo de bloque. Sin esta opcion, `mount` no puede montar archivos directamente. El comando completo seria: `mount -o loop imagen.iso /mnt/iso`. Opcionalmente se puede especificar el tipo con `-t iso9660`. La opcion `ro` es para solo lectura y `bind` es para vincular directorios, no para montar archivos.
+
+</details>
+
+---
+
+### Pregunta 21
+
+Escribe el comando para montar la particion `/dev/sdb1` en el directorio `/mnt/datos`.
+
+<input type="text" class="fill-blank" data-answer="mount /dev/sdb1 /mnt/datos" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**mount /dev/sdb1 /mnt/datos**
+
+El comando `mount` con el dispositivo y el punto de montaje monta la particion. Linux detecta automaticamente el tipo de sistema de archivos en la mayoria de casos. Si se necesita especificar el tipo, se usa `mount -t ext4 /dev/sdb1 /mnt/datos`. El directorio `/mnt/datos` debe existir previamente. Solo root puede ejecutar este comando a menos que la entrada en `/etc/fstab` tenga la opcion `user` o `users`.
+
+</details>
+
+---
+
+### Pregunta 22
+
+Escribe el comando para desmontar el sistema de archivos montado en `/mnt/usb`.
+
+<input type="text" class="fill-blank" data-answer="umount /mnt/usb" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**umount /mnt/usb**
+
+El comando es `umount` (sin la primera 'n', no "unmount") seguido del punto de montaje o del dispositivo. Si recibe el error "target is busy", se puede usar `lsof /mnt/usb` o `fuser -mv /mnt/usb` para identificar los procesos que estan usando el sistema de archivos. Como alternativa se puede usar `umount -l` (lazy) para un desmontaje diferido.
+
+</details>
+
+---
+
+### Pregunta 23
+
+Escribe el comando para remontar la particion raiz como solo lectura sin desmontarla.
+
+<input type="text" class="fill-blank" data-answer="mount -o remount,ro /" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**mount -o remount,ro /**
+
+La opcion `remount` permite cambiar las opciones de un sistema de archivos ya montado sin necesidad de desmontarlo. Esto es especialmente util para la particion raiz (`/`), que no se puede desmontar mientras el sistema esta en ejecucion. Remontar como solo lectura (`ro`) es un paso necesario antes de ejecutar `fsck` en la particion raiz. Para volver a lectura-escritura se usa `mount -o remount,rw /`.
+
+</details>
+
+---
+
+### Pregunta 24
+
+Escribe el comando para ver el UUID de todos los dispositivos de bloque del sistema.
+
+<input type="text" class="fill-blank" data-answer="blkid" data-alt="sudo blkid,lsblk -f" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**blkid**
+
+El comando `blkid` muestra el UUID, tipo de sistema de archivos y etiqueta de todos los dispositivos de bloque del sistema. Su salida tipica es: `/dev/sda1: UUID="xxxx" TYPE="ext4" LABEL="root"`. Los UUIDs son importantes para `/etc/fstab` ya que son identificadores unicos que no cambian al agregar o quitar discos, a diferencia de los nombres como `/dev/sda1`.
+
+</details>
+
+---
+
+### Pregunta 25
+
+Escribe el comando para montar una imagen ISO llamada `ubuntu.iso` en el directorio `/mnt/iso` como solo lectura.
+
+<input type="text" class="fill-blank" data-answer="mount -o loop,ro ubuntu.iso /mnt/iso" data-alt="mount -o loop,ro ./ubuntu.iso /mnt/iso" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**mount -o loop,ro ubuntu.iso /mnt/iso**
+
+La opcion `loop` permite montar un archivo como si fuera un dispositivo de bloque, creando un dispositivo loop virtual. La opcion `ro` monta en modo solo lectura, lo cual es apropiado para imagenes ISO que normalmente no se modifican. El directorio `/mnt/iso` debe existir previamente. Opcionalmente se puede especificar el tipo con `-t iso9660`.
+
+</details>

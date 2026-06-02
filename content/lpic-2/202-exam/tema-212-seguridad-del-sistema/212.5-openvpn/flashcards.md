@@ -11,7 +11,7 @@ subtema: "212.5"
 
 # Flashcards: 212.5 - Openvpn
 
-> 22 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 33 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="212.5">
 </div>
@@ -199,6 +199,276 @@ subtema: "212.5"
 <div class="flashcard" data-id="212.5-fc-011">
 <div class="flashcard-front">
 
+**P:** ¿Qué directiva de OpenVPN envía rutas de redes internas a los clientes para que sepan cómo alcanzarlas a través del túnel?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `push "route 192.168.1.0 255.255.255.0"`. La directiva `push "route ..."` en la configuración del servidor envía rutas estáticas a los clientes VPN cuando se conectan. Esto permite que los clientes sepan que deben enrutar el tráfico hacia esas redes a través del túnel VPN.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="212.5">
+</div>
+
+<div class="flashcard" data-id="212.5-fc-012">
+<div class="flashcard-front">
+
+**P:** ¿Qué directiva en la configuración del servidor OpenVPN define la subred que se asigna a los clientes VPN?
+
+</div>
+<div class="flashcard-back">
+
+**R:** c) `server 10.8.0.0 255.255.255.0`. La directiva `server` es un atajo que configura automáticamente la subred VPN, el pool de IPs para clientes, las rutas necesarias y el modo de servidor. En este ejemplo, el servidor recibe la IP 10.8.0.1 y los clientes se asignan direcciones del rango 10.8.0.0/24.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="212.5">
+</div>
+
+<div class="flashcard" data-id="212.5-fc-013">
+<div class="flashcard-front">
+
+**P:** ¿Qué diferencia hay entre `tls-auth` y `tls-crypt` en OpenVPN?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `tls-auth` firma los paquetes de control con HMAC, `tls-crypt` además los cifra. `tls-auth` añade una firma HMAC a los paquetes del handshake TLS para verificar su autenticidad. `tls-crypt` va un paso más allá cifrando también los paquetes de control, lo que oculta la negociación TLS y dificulta la identificación del tráfico OpenVPN.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="212.5">
+</div>
+
+<div class="flashcard" data-id="212.5-fc-014">
+<div class="flashcard-front">
+
+**P:** ¿Qué directiva de OpenVPN reduce los privilegios del proceso después de la inicialización, ejecutándose como un usuario no privilegiado?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `user nobody`. La directiva `user nobody` (junto con `group nogroup`) reduce los privilegios del proceso OpenVPN después de completar la inicialización. Esto limita el daño potencial si el proceso es comprometido, ya que opera con los mínimos privilegios necesarios.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="212.5">
+</div>
+
+<div class="flashcard" data-id="212.5-fc-015">
+<div class="flashcard-front">
+
+**P:** ¿Qué archivo registra las asignaciones de direcciones IP persistentes de los clientes OpenVPN?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) /var/log/openvpn/ipp.txt. El archivo `ipp.txt` (configurado con la directiva `ifconfig-pool-persist`) almacena las asociaciones entre clientes (por nombre de certificado) y sus direcciones IP asignadas, permitiendo que un cliente reciba la misma IP en reconexiones sucesivas.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="212.5">
+</div>
+
+<div class="flashcard" data-id="212.5-fc-016">
+<div class="flashcard-front">
+
+**P:** ¿Qué comando de easy-rsa revoca el certificado de un cliente llamado "cliente1"?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `./easyrsa revoke cliente1`. El comando `./easyrsa revoke cliente1` marca el certificado del cliente como revocado. Después se debe ejecutar `./easyrsa gen-crl` para generar la lista de revocación actualizada (`crl.pem`), y el servidor debe estar configurado con `crl-verify` para verificarla.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="212.5">
+</div>
+
+<div class="flashcard" data-id="212.5-fc-017">
+<div class="flashcard-front">
+
+**P:** ¿Qué directiva de OpenVPN mantiene las claves en memoria y el túnel activo durante un reinicio del servicio con señal SIGUSR1?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `persist-key` y `persist-tun`. Las directivas `persist-key` y `persist-tun` son importantes cuando se ejecuta con privilegios reducidos (`user nobody`). `persist-key` evita releer las claves privadas (que requieren privilegios), y `persist-tun` evita cerrar y reabrir la interfaz tun/tap durante reinicios suaves.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="212.5">
+</div>
+
+<div class="flashcard" data-id="212.5-fc-018">
+<div class="flashcard-front">
+
+**P:** ¿Qué protocolo de transporte y puerto utiliza OpenVPN por defecto?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) UDP puerto 1194. OpenVPN utiliza por defecto el protocolo UDP en el puerto 1194. UDP es preferido porque ofrece mejor rendimiento al evitar el problema de "TCP sobre TCP". Sin embargo, se puede configurar con TCP (generalmente en puerto 443) para atravesar firewalls restrictivos.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="212.5">
+</div>
+
+<div class="flashcard" data-id="212.5-fc-019">
+<div class="flashcard-front">
+
+**P:** ¿Qué directiva del servidor OpenVPN establece los intervalos de keepalive para detectar clientes desconectados?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `keepalive 10 120`. La directiva `keepalive 10 120` envía pings cada 10 segundos y considera la conexión caída si no recibe respuesta en 120 segundos. Es un atajo que configura automáticamente los parámetros `ping` y `ping-restart` tanto en el servidor como en los clientes.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="212.5">
+</div>
+
+<div class="flashcard" data-id="212.5-fc-020">
+<div class="flashcard-front">
+
+**P:** ¿Qué directiva en la configuración del cliente OpenVPN verifica que el certificado del servidor tiene el atributo Extended Key Usage correcto?
+
+</div>
+<div class="flashcard-back">
+
+**R:** b) `remote-cert-tls server`. La directiva `remote-cert-tls server` verifica que el certificado presentado por el servidor tiene el atributo EKU (Extended Key Usage) de tipo servidor. Esto previene un ataque donde un cliente comprometido podría hacerse pasar por servidor usando su propio certificado de cliente.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="212.5">
+</div>
+
+<div class="flashcard" data-id="212.5-fc-021">
+<div class="flashcard-front">
+
+**P:** ¿Qué comando genera la clave estática utilizada para tls-auth en OpenVPN?
+
+</div>
+<div class="flashcard-back">
+
+**R:** openvpn --genkey secret /etc/openvpn/ta.key. El comando `openvpn --genkey secret` genera una clave estática de 2048 bits que se comparte entre servidor y clientes. Esta clave se usa con `tls-auth` o `tls-crypt` para añadir una capa adicional de seguridad al handshake TLS.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="212.5">
+</div>
+
+<div class="flashcard" data-id="212.5-fc-022">
+<div class="flashcard-front">
+
+**P:** ¿Qué comando de easy-rsa inicializa la infraestructura de clave pública (PKI)?
+
+</div>
+<div class="flashcard-back">
+
+**R:** ./easyrsa init-pki. El comando `./easyrsa init-pki` crea la estructura de directorios necesaria para la PKI de OpenVPN, incluyendo los directorios para claves privadas, solicitudes y certificados emitidos. Es el primer paso antes de crear la autoridad certificadora con `build-ca`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="212.5">
+</div>
+
+<div class="flashcard" data-id="212.5-fc-023">
+<div class="flashcard-front">
+
+**P:** ¿Qué comando de easy-rsa genera los parámetros Diffie-Hellman necesarios para el servidor?
+
+</div>
+<div class="flashcard-back">
+
+**R:** ./easyrsa gen-dh. El comando `./easyrsa gen-dh` genera los parámetros Diffie-Hellman (`dh.pem`) necesarios para el intercambio seguro de claves en el handshake TLS del servidor. Este proceso puede tardar varios minutos y solo se necesita ejecutar en el servidor, no en los clientes.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="212.5">
+</div>
+
+<div class="flashcard" data-id="212.5-fc-024">
+<div class="flashcard-front">
+
+**P:** ¿Qué comando de easy-rsa genera la lista de revocación de certificados (CRL) después de revocar un certificado?
+
+</div>
+<div class="flashcard-back">
+
+**R:** ./easyrsa gen-crl. El comando `./easyrsa gen-crl` genera el archivo `crl.pem` que contiene la lista de certificados revocados. El servidor OpenVPN debe estar configurado con `crl-verify /ruta/crl.pem` para rechazar conexiones de clientes con certificados revocados.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="212.5">
+</div>
+
+<div class="flashcard" data-id="212.5-fc-025">
+<div class="flashcard-front">
+
+**P:** ¿Qué comando de easy-rsa crea la autoridad certificadora (CA) para la PKI de OpenVPN?
+
+</div>
+<div class="flashcard-back">
+
+**R:** ./easyrsa build-ca. El comando `./easyrsa build-ca` genera el certificado raíz (`ca.crt`) y la clave privada de la CA (`ca.key`). El certificado de la CA es necesario tanto en el servidor como en los clientes para verificar la autenticidad de los certificados presentados durante la conexión.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="212.5">
+</div>
+
+<div class="flashcard" data-id="212.5-fc-026">
+<div class="flashcard-front">
+
 **P:** Tip de examen: `tun` es el modo más común y recomendado. Se usa routing para conectar subredes....
 
 </div>
@@ -214,7 +484,7 @@ subtema: "212.5"
 <div class="flashcard-deck" data-subtema="212.5">
 </div>
 
-<div class="flashcard" data-id="212.5-fc-012">
+<div class="flashcard" data-id="212.5-fc-027">
 <div class="flashcard-front">
 
 **P:** Tip de examen: La secuencia completa de PKI es: `init-pki` -> `build-ca` -> `gen-req` -> `sign-...
@@ -232,7 +502,7 @@ subtema: "212.5"
 <div class="flashcard-deck" data-subtema="212.5">
 </div>
 
-<div class="flashcard" data-id="212.5-fc-013">
+<div class="flashcard" data-id="212.5-fc-028">
 <div class="flashcard-front">
 
 **P:** Tip de examen: `tls-auth` añade una firma HMAC a los paquetes del handshake TLS, protegiendo co...
@@ -250,7 +520,7 @@ subtema: "212.5"
 <div class="flashcard-deck" data-subtema="212.5">
 </div>
 
-<div class="flashcard" data-id="212.5-fc-014">
+<div class="flashcard" data-id="212.5-fc-029">
 <div class="flashcard-front">
 
 **P:** Tip de examen: El nombre de la instancia después de `@` en `openvpn-server@server` se correspon...
@@ -268,43 +538,7 @@ subtema: "212.5"
 <div class="flashcard-deck" data-subtema="212.5">
 </div>
 
-<div class="flashcard" data-id="212.5-fc-015">
-<div class="flashcard-front">
-
-**P:** Que hace el comando `server 10.8.0.0 255.255.255.0`?
-
-</div>
-<div class="flashcard-back">
-
-**R:** Define la subred VPN
-
-</div>
-</div>
-
----
-
-<div class="flashcard-deck" data-subtema="212.5">
-</div>
-
-<div class="flashcard" data-id="212.5-fc-016">
-<div class="flashcard-front">
-
-**P:** Que hace el comando `push "route ..."`?
-
-</div>
-<div class="flashcard-back">
-
-**R:** Envía rutas a los clientes
-
-</div>
-</div>
-
----
-
-<div class="flashcard-deck" data-subtema="212.5">
-</div>
-
-<div class="flashcard" data-id="212.5-fc-017">
+<div class="flashcard" data-id="212.5-fc-030">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `client-to-client`?
@@ -322,25 +556,7 @@ subtema: "212.5"
 <div class="flashcard-deck" data-subtema="212.5">
 </div>
 
-<div class="flashcard" data-id="212.5-fc-018">
-<div class="flashcard-front">
-
-**P:** Que hace el comando `keepalive 10 120`?
-
-</div>
-<div class="flashcard-back">
-
-**R:** Ping cada 10s, timeout 120s
-
-</div>
-</div>
-
----
-
-<div class="flashcard-deck" data-subtema="212.5">
-</div>
-
-<div class="flashcard" data-id="212.5-fc-019">
+<div class="flashcard" data-id="212.5-fc-031">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `remote-cert-tls server`?
@@ -358,25 +574,7 @@ subtema: "212.5"
 <div class="flashcard-deck" data-subtema="212.5">
 </div>
 
-<div class="flashcard" data-id="212.5-fc-020">
-<div class="flashcard-front">
-
-**P:** Que es/son Introducción a OpenVPN?
-
-</div>
-<div class="flashcard-back">
-
-**R:** OpenVPN es una solución VPN de código abierto que utiliza TLS/SSL para crear túneles cifrados seguros. Opera en espacio de usuario y puede funcionar sobre TCP o UDP, lo que lo hace flexible y capaz de
-
-</div>
-</div>
-
----
-
-<div class="flashcard-deck" data-subtema="212.5">
-</div>
-
-<div class="flashcard" data-id="212.5-fc-021">
+<div class="flashcard" data-id="212.5-fc-032">
 <div class="flashcard-front">
 
 **P:** Que es/son PKI con easy-rsa?
@@ -394,7 +592,7 @@ subtema: "212.5"
 <div class="flashcard-deck" data-subtema="212.5">
 </div>
 
-<div class="flashcard" data-id="212.5-fc-022">
+<div class="flashcard" data-id="212.5-fc-033">
 <div class="flashcard-front">
 
 **P:** Que es/son Requisitos de red del servidor?

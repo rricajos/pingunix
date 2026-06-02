@@ -158,3 +158,243 @@ D) `find /home -type f -name "*.txt, *.md"`
 
 La opcion correcta usa parentesis escapados `\( \)` para agrupar la condicion OR, y `-type f` fuera del grupo para que aplique a ambas condiciones. La opcion A usa dos `-name` con AND implicito, lo que buscaria archivos que terminen en `.txt` Y en `.md` a la vez (imposible). La opcion B sin parentesis aplicaria `-type f` solo a la segunda condicion (`-name "*.md"`) debido a la precedencia de operadores (AND tiene mayor precedencia que OR). La opcion D tiene una sintaxis invalida para `-name`.
 </details>
+
+### Pregunta 9
+
+Que hace el comando `touch -t 202601151030 archivo.txt`?
+
+a) Crea un archivo con un tamano de 202601151030 bytes
+b) Establece la fecha de modificacion y acceso del archivo al 15 de enero de 2026 a las 10:30
+c) Cambia los permisos del archivo al valor 202601151030
+d) Crea 202601151030 copias del archivo
+
+<details><summary>Respuesta</summary>
+
+**b) Establece la fecha de modificacion y acceso del archivo al 15 de enero de 2026 a las 10:30**
+
+`touch -t` permite establecer una fecha y hora especificas para un archivo en formato `YYYYMMDDhhmm`. Asi, `202601151030` corresponde al 15 de enero de 2026 a las 10:30. Si el archivo no existe, se crea con esa fecha. Si ya existe, se actualizan sus timestamps. Tambien se puede usar `-d` con formato legible: `touch -d "2026-01-15 10:30" archivo.txt`. La opcion `-r referencia.txt` copia los timestamps de otro archivo.
+
+</details>
+
+### Pregunta 10
+
+Que opcion de `ls` muestra el numero de inodo de cada archivo?
+
+a) `ls -l`
+b) `ls -a`
+c) `ls -i`
+d) `ls -n`
+
+<details><summary>Respuesta</summary>
+
+**c) `ls -i`**
+
+`ls -i` muestra el numero de inodo de cada archivo junto a su nombre. El inodo es un identificador numerico unico dentro del sistema de archivos que contiene los metadatos del archivo (permisos, propietario, tamanos, punteros a los bloques de datos). Conocer el inodo es util para identificar hard links (que comparten el mismo inodo) y para eliminar archivos con nombres problematicos usando `find -inum`. `ls -l` muestra formato largo, `-a` muestra ocultos y `-n` muestra UIDs/GIDs numericos.
+
+</details>
+
+### Pregunta 11
+
+Cual es la diferencia entre `gzip`, `bzip2` y `xz` en terminos de velocidad y compresion?
+
+a) gzip es el mas lento pero con mejor compresion
+b) xz tiene la mejor compresion pero es el mas lento; gzip es el mas rapido pero con menor compresion
+c) Los tres son equivalentes en velocidad y compresion
+d) bzip2 es el mas rapido y xz tiene la peor compresion
+
+<details><summary>Respuesta</summary>
+
+**b) xz tiene la mejor compresion pero es el mas lento; gzip es el mas rapido pero con menor compresion**
+
+El orden de velocidad (rapido a lento) es: gzip > bzip2 > xz. El orden de compresion (mejor a peor) es el inverso: xz > bzip2 > gzip. En tar, las opciones correspondientes son: `-z` para gzip (.tar.gz), `-j` para bzip2 (.tar.bz2) y `-J` para xz (.tar.xz). Los tres solo comprimen archivos individuales; para directorios se combinan con `tar`. Cada uno tiene su comando de descompresion: `gunzip`, `bunzip2` y `unxz`.
+
+</details>
+
+### Pregunta 12
+
+Que opcion de `find` permite limitar la busqueda a un solo nivel de directorio sin entrar en subdirectorios?
+
+a) `find /ruta -depth 1`
+b) `find /ruta -maxdepth 1`
+c) `find /ruta -level 1`
+d) `find /ruta -norecurse`
+
+<details><summary>Respuesta</summary>
+
+**b) `find /ruta -maxdepth 1`**
+
+`-maxdepth 1` limita la busqueda al directorio especificado sin entrar en subdirectorios. El valor indica la profundidad maxima: 0 es solo el propio directorio, 1 incluye sus archivos directos, 2 incluye un nivel de subdirectorios, etc. Tambien existe `-mindepth N` que establece la profundidad minima (util para excluir el directorio raiz de la busqueda). Las opciones A, C y D no existen en `find`.
+
+</details>
+
+### Pregunta 13
+
+Que comando `tar` extrae un archivo `.tar.xz` en el directorio `/opt/`?
+
+a) `tar -xzvf archivo.tar.xz -C /opt/`
+b) `tar -xJvf archivo.tar.xz -C /opt/`
+c) `tar -cJvf archivo.tar.xz -C /opt/`
+d) `tar -xjvf archivo.tar.xz -C /opt/`
+
+<details><summary>Respuesta</summary>
+
+**b) `tar -xJvf archivo.tar.xz -C /opt/`**
+
+Las opciones correctas son: `-x` para extraer, `-J` (mayuscula) para descompresion xz, `-v` para verbose y `-f` seguido del nombre del archivo. `-C /opt/` cambia al directorio `/opt/` antes de extraer. La opcion A usa `-z` que es para gzip (.tar.gz), no xz. La opcion C usa `-c` que es para crear, no extraer. La opcion D usa `-j` (minuscula) que es para bzip2 (.tar.bz2). Recordar: `-z` = gzip, `-j` = bzip2, `-J` = xz.
+
+</details>
+
+### Pregunta 14
+
+Que comando `cpio` lista el contenido de un archivo cpio sin extraerlo?
+
+a) `cpio -o < backup.cpio`
+b) `cpio -it < backup.cpio`
+c) `cpio -idv < backup.cpio`
+d) `cpio -l backup.cpio`
+
+<details><summary>Respuesta</summary>
+
+**b) `cpio -it < backup.cpio`**
+
+`cpio -i` es el modo de extraccion (input/copy-in) y `-t` lista el contenido sin extraer. La combinacion `-it` muestra los archivos contenidos en el archivo cpio redirigido desde stdin con `<`. La opcion A (`-o`) es el modo de creacion (output/copy-out). La opcion C (`-idv`) extraeria los archivos con creacion de directorios y verbose. cpio siempre lee desde stdin o escribe a stdout, a diferencia de tar que acepta nombres de archivo con `-f`.
+
+</details>
+
+### Pregunta 15
+
+Que opcion de `cp` crea un enlace duro (hard link) en lugar de copiar el archivo?
+
+a) `cp -s`
+b) `cp -l`
+c) `cp -h`
+d) `cp -d`
+
+<details><summary>Respuesta</summary>
+
+**b) `cp -l`**
+
+`cp -l` crea un enlace duro (hard link) al archivo de origen en lugar de realizar una copia fisica de los datos. Ambos nombres apuntan al mismo inodo y comparten los datos en disco. La opcion `-s` crea un enlace simbolico (symlink) en lugar de copiar. La opcion `-d` preserva los enlaces simbolicos (los copia como enlaces en lugar de seguirlos). La opcion `-h` no es una opcion estandar de `cp` para este proposito.
+
+</details>
+
+### Pregunta 16
+
+Un administrador quiere comprimir recursivamente un directorio en formato zip. Cual es el comando correcto?
+
+a) `gzip -r directorio/`
+b) `zip directorio.zip directorio/`
+c) `zip -r directorio.zip directorio/`
+d) `tar -czvf directorio.zip directorio/`
+
+<details><summary>Respuesta</summary>
+
+**c) `zip -r directorio.zip directorio/`**
+
+`zip -r` comprime un directorio y su contenido de forma recursiva en un archivo zip. Sin `-r`, `zip` solo anade los archivos del nivel superior del directorio. `gzip -r` comprime cada archivo del directorio individualmente (no crea un unico archivo comprimido). La opcion B sin `-r` no incluiria el contenido del directorio. La opcion D crearia un archivo tar.gz, no un zip (a pesar del nombre). El formato zip es compatible con Windows y permite descomprimir archivos individuales sin extraer todo.
+
+</details>
+
+### Pregunta 17
+
+Que hace la opcion `-exec` con `+` al final en lugar de `\;` en un comando `find`?
+
+a) Ejecuta el comando una vez por cada archivo encontrado
+b) Agrupa multiples archivos encontrados en una sola invocacion del comando, siendo mas eficiente
+c) Ejecuta el comando en modo interactivo pidiendo confirmacion
+d) Ejecuta el comando en segundo plano
+
+<details><summary>Respuesta</summary>
+
+**b) Agrupa multiples archivos encontrados en una sola invocacion del comando, siendo mas eficiente**
+
+Con `\;`, `-exec` ejecuta el comando una vez por cada archivo encontrado. Con `+`, agrupa multiples nombres de archivo y los pasa como argumentos en una sola invocacion del comando, similar a como lo hace `xargs`. Por ejemplo, `find /ruta -name "*.txt" -exec ls -l {} +` ejecuta un solo `ls -l` con todos los archivos encontrados como argumentos, en lugar de ejecutar `ls -l` una vez por cada archivo. Esto es significativamente mas eficiente con grandes cantidades de archivos.
+
+</details>
+
+### Pregunta 18
+
+Que comando de `find` busca archivos que no tienen un usuario propietario valido en el sistema?
+
+a) `find /ruta -user nobody`
+b) `find /ruta -nouser`
+c) `find /ruta -orphan`
+d) `find /ruta -uid 0`
+
+<details><summary>Respuesta</summary>
+
+**b) `find /ruta -nouser`**
+
+`find -nouser` busca archivos cuyo UID propietario no corresponde a ningun usuario en `/etc/passwd`. Esto ocurre tipicamente cuando se elimina un usuario del sistema pero sus archivos permanecen. De forma similar, `-nogroup` busca archivos sin grupo valido. Estos archivos pueden representar un problema de seguridad y deben ser reasignados o eliminados. La opcion A busca archivos del usuario "nobody", que es un usuario valido. `-uid 0` busca archivos del usuario root.
+
+</details>
+
+### Pregunta 19
+
+Que comando usarias para crear un backup del MBR (primeros 512 bytes) del disco `/dev/sda`?
+
+<input type="text" class="fill-blank" data-answer="dd if=/dev/sda of=mbr_backup.img bs=512 count=1" data-alt="dd if=/dev/sda of=mbr.img bs=512 count=1" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**dd if=/dev/sda of=mbr_backup.img bs=512 count=1**
+
+`dd` copia datos a nivel de bloques. `if=/dev/sda` especifica el disco de origen, `of=mbr_backup.img` el archivo de destino, `bs=512` establece el tamano de bloque a 512 bytes y `count=1` indica que solo se copia un bloque. El MBR ocupa los primeros 512 bytes del disco e incluye el cargador de arranque y la tabla de particiones. Para restaurarlo: `dd if=mbr_backup.img of=/dev/sda bs=512 count=1`.
+
+</details>
+
+### Pregunta 20
+
+Que comando usarias para listar el contenido de un archivo tar comprimido con gzip sin extraerlo?
+
+<input type="text" class="fill-blank" data-answer="tar -tzvf archivo.tar.gz" data-alt="tar -tzf archivo.tar.gz,tar tzvf archivo.tar.gz" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**tar -tzvf archivo.tar.gz**
+
+Las opciones son: `-t` para listar (en lugar de `-c` crear o `-x` extraer), `-z` para gzip, `-v` para verbose (muestra detalles como permisos y fechas) y `-f` seguido del nombre del archivo. Sin `-v`, solo se muestran los nombres de los archivos. Para listar un tar.bz2 se usa `-j` en lugar de `-z`, y para tar.xz se usa `-J`. La opcion `-f` siempre debe ir seguida del nombre del archivo tar.
+
+</details>
+
+### Pregunta 21
+
+Que comando usarias para buscar todos los archivos modificados en los ultimos 60 minutos en `/var/log`?
+
+<input type="text" class="fill-blank" data-answer="find /var/log -mmin -60" data-alt="find /var/log -type f -mmin -60" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**find /var/log -mmin -60**
+
+`find -mmin -60` busca archivos cuya fecha de modificacion es menor a 60 minutos. El signo `-` significa "menos de". Para "mas de 60 minutos" se usa `+60` y para "exactamente 60 minutos" se usa `60`. `-mmin` trabaja en minutos, a diferencia de `-mtime` que trabaja en periodos de 24 horas. Tambien existen `-amin` (tiempo de acceso en minutos) y `-cmin` (tiempo de cambio de metadatos en minutos).
+
+</details>
+
+### Pregunta 22
+
+Que comando usarias para determinar el tipo real de un archivo llamado `datos.bin`?
+
+<input type="text" class="fill-blank" data-answer="file datos.bin" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**file datos.bin**
+
+`file` examina el contenido real del archivo (no su extension) para determinar su tipo. Utiliza los "numeros magicos" (secuencias de bytes al inicio del archivo) y su base de datos interna para identificar el tipo. Por ejemplo, podria mostrar "ELF 64-bit executable", "JPEG image data", "ASCII text", etc. La opcion `-i` muestra el tipo MIME. La opcion `-L` sigue enlaces simbolicos para mostrar la informacion del archivo destino.
+
+</details>
+
+### Pregunta 23
+
+Que comando usarias para crear la estructura de directorios `proyecto/src/main` si ninguno de los directorios padre existe?
+
+<input type="text" class="fill-blank" data-answer="mkdir -p proyecto/src/main" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**mkdir -p proyecto/src/main**
+
+`mkdir -p` crea directorios y todos los directorios padre necesarios que no existan. Sin `-p`, `mkdir proyecto/src/main` fallaria si `proyecto/` o `proyecto/src/` no existen. La opcion `-p` tambien tiene la ventaja de que no da error si el directorio ya existe, lo que la hace segura para usar en scripts. La opcion `-m` permite especificar permisos al crear: `mkdir -p -m 755 proyecto/src/main`.
+
+</details>

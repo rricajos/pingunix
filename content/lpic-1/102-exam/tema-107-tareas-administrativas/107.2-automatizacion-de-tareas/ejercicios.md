@@ -201,3 +201,273 @@ d) `timedatectl run --after=5m /ruta/script.sh`
 `systemd-run` permite ejecutar un comando como una unidad transitoria de systemd. Con `--on-active=5m`, el comando se ejecutara dentro de 5 minutos. Es una alternativa moderna a `at` integrada en systemd. Otras opciones incluyen `--on-calendar` para programar en un momento especifico y `--on-boot` para ejecutar despues del arranque. Las ventajas sobre `at` son: los logs se registran en el journal (consultables con `journalctl`), soporta dependencias de unidades y no requiere archivos allow/deny.
 
 </details>
+
+---
+
+### Pregunta 11
+
+Que cadena especial de cron ejecuta una tarea una vez al mes, el dia 1 a medianoche?
+
+a) `@daily`
+b) `@monthly`
+c) `@weekly`
+d) `@annually`
+
+<details><summary>Respuesta</summary>
+
+**b) `@monthly`**
+
+La cadena `@monthly` es equivalente a `0 0 1 * *`, lo que significa que se ejecuta el dia 1 de cada mes a medianoche (00:00). Otras cadenas especiales son: `@daily` o `@midnight` (equivalente a `0 0 * * *`), `@weekly` (equivalente a `0 0 * * 0`, domingo a medianoche), `@yearly` o `@annually` (equivalente a `0 0 1 1 *`, 1 de enero a medianoche), `@hourly` (equivalente a `0 * * * *`) y `@reboot` (al iniciar el sistema).
+
+</details>
+
+---
+
+### Pregunta 12
+
+En un crontab, que significa la expresion `0 8 * * 1-5`?
+
+a) Ejecutar a las 8:00 AM los dias 1 a 5 de cada mes
+b) Ejecutar a las 8:00 AM de lunes a viernes
+c) Ejecutar cada 5 minutos a partir de las 8:00 AM
+d) Ejecutar 5 veces al dia a las 8:00 AM
+
+<details><summary>Respuesta</summary>
+
+**b) Ejecutar a las 8:00 AM de lunes a viernes**
+
+El formato del crontab es `minuto hora dia_mes mes dia_semana`. En `0 8 * * 1-5`: minuto 0, hora 8, cualquier dia del mes, cualquier mes, dias de la semana del 1 (lunes) al 5 (viernes). El campo de dia de la semana usa: 0 y 7 = domingo, 1 = lunes, 2 = martes, ..., 6 = sabado. El operador `-` indica un rango de valores.
+
+</details>
+
+---
+
+### Pregunta 13
+
+Donde se almacenan los crontabs de usuario en un sistema Debian?
+
+a) `/etc/cron.d/`
+b) `/var/spool/cron/crontabs/`
+c) `/home/usuario/.crontab`
+d) `/etc/crontab.d/`
+
+<details><summary>Respuesta</summary>
+
+**b) `/var/spool/cron/crontabs/`**
+
+Los crontabs de usuario se almacenan en `/var/spool/cron/crontabs/` en sistemas Debian/Ubuntu, y en `/var/spool/cron/` en sistemas Red Hat/CentOS. Cada usuario tiene un archivo con su nombre de login. Estos archivos no deben editarse directamente; se debe usar el comando `crontab -e` para editar el crontab del usuario actual o `crontab -e -u usuario` (como root) para editar el de otro usuario.
+
+</details>
+
+---
+
+### Pregunta 14
+
+Que variable de entorno en `/etc/crontab` define a quien se envian los correos con la salida de los trabajos cron?
+
+a) `SENDMAIL`
+b) `CRON_MAIL`
+c) `MAILTO`
+d) `EMAIL`
+
+<details><summary>Respuesta</summary>
+
+**c) `MAILTO`**
+
+La variable `MAILTO` en un crontab define a quien se envian los correos con la salida (stdout y stderr) de los trabajos cron. Por defecto, la salida se envia al propietario del crontab. Si se establece `MAILTO=root`, se envia a root. Si se establece `MAILTO=""` (vacio), se suprime el envio de correo. Otras variables comunes en `/etc/crontab` son `SHELL` (shell a usar) y `PATH` (rutas de busqueda de comandos).
+
+</details>
+
+---
+
+### Pregunta 15
+
+Que significa la variable `RANDOM_DELAY=45` en `/etc/anacrontab`?
+
+a) El comando se ejecuta exactamente despues de 45 minutos
+b) Se anade un retardo aleatorio de 0 a 45 minutos adicionales antes de ejecutar la tarea
+c) La tarea se repite cada 45 minutos
+d) Anacron espera 45 segundos entre tareas
+
+<details><summary>Respuesta</summary>
+
+**b) Se anade un retardo aleatorio de 0 a 45 minutos adicionales antes de ejecutar la tarea**
+
+`RANDOM_DELAY=45` en `/etc/anacrontab` indica que se anade un retardo aleatorio de entre 0 y 45 minutos adicional al retardo fijo especificado en cada linea de tarea. Esto evita que todas las tareas de anacron se ejecuten al mismo tiempo al arrancar el sistema, distribuyendo la carga. Otra variable importante es `START_HOURS_RANGE`, que define el rango de horas en que anacron puede ejecutar tareas.
+
+</details>
+
+---
+
+### Pregunta 16
+
+Que hora especial de `at` representa las 4:00 PM (16:00)?
+
+a) `noon`
+b) `midnight`
+c) `teatime`
+d) `afternoon`
+
+<details><summary>Respuesta</summary>
+
+**c) `teatime`**
+
+`teatime` es una palabra clave especial de `at` que representa las 16:00 (4:00 PM), la hora tradicional del te britanico. Otras palabras clave son: `noon` (12:00, mediodia), `midnight` (00:00, medianoche) y `tomorrow` (manana). Se puede combinar con otras especificaciones: `at teatime tomorrow` programaria una tarea para las 16:00 del dia siguiente. Tambien se acepta el formato `now + N units` donde units puede ser minutes, hours, days o weeks.
+
+</details>
+
+---
+
+### Pregunta 17
+
+Que comando elimina completamente el crontab del usuario actual?
+
+a) `crontab -d`
+b) `crontab -r`
+c) `crontab -x`
+d) `crontab --delete`
+
+<details><summary>Respuesta</summary>
+
+**b) `crontab -r`**
+
+El comando `crontab -r` elimina completamente el crontab del usuario actual. Es una operacion irreversible que borra todas las tareas programadas. `crontab -e` edita el crontab y `crontab -l` lista su contenido. Para eliminar el crontab de otro usuario (como root) se usa `crontab -r -u usuario`. Las opciones `-d`, `-x` y `--delete` no son validas para el comando `crontab`.
+
+</details>
+
+---
+
+### Pregunta 18
+
+Que comando de systemd lista todos los timers activos junto con la proxima hora de ejecucion?
+
+a) `systemctl status timers`
+b) `systemctl list-timers`
+c) `timedatectl list-timers`
+d) `systemd-analyze timers`
+
+<details><summary>Respuesta</summary>
+
+**b) `systemctl list-timers`**
+
+`systemctl list-timers` muestra todos los timers activos de systemd, incluyendo la proxima hora de ejecucion (NEXT), la ultima ejecucion (LAST), el tiempo restante (LEFT), el tiempo transcurrido (PASSED) y la unidad de servicio asociada (UNIT/ACTIVATES). Se puede usar `systemctl list-timers --all` para ver tambien los timers inactivos. Los timers se habilitan con `systemctl enable nombre.timer` y se inician con `systemctl start nombre.timer`.
+
+</details>
+
+---
+
+### Pregunta 19
+
+En un timer de systemd, que opcion `OnCalendar` programa la ejecucion para todos los dias a las 2:30 AM?
+
+a) `OnCalendar=02:30`
+b) `OnCalendar=*-*-* 02:30:00`
+c) `OnCalendar=daily 02:30`
+d) `OnCalendar=2:30 AM`
+
+<details><summary>Respuesta</summary>
+
+**b) `OnCalendar=*-*-* 02:30:00`**
+
+El formato de `OnCalendar` en timers de systemd sigue el patron `DiaSem Ano-Mes-Dia Hora:Min:Seg`. `*-*-* 02:30:00` significa cualquier dia de la semana, cualquier ano, cualquier mes, cualquier dia del mes, a las 02:30:00. Tambien se aceptan cadenas predefinidas como `daily` (equivalente a `*-*-* 00:00:00`, medianoche), `weekly` (lunes a medianoche) y `monthly` (dia 1 a medianoche). Se puede verificar el formato con `systemd-analyze calendar "*-*-* 02:30:00"`.
+
+</details>
+
+---
+
+### Pregunta 20
+
+Que diferencia hay entre `at` y `batch`?
+
+a) `at` ejecuta tareas recurrentes y `batch` tareas unicas
+b) `at` ejecuta en un momento especifico y `batch` ejecuta cuando la carga del sistema es baja
+c) `at` es para usuarios normales y `batch` solo para root
+d) No hay diferencia, son el mismo comando
+
+<details><summary>Respuesta</summary>
+
+**b) `at` ejecuta en un momento especifico y `batch` ejecuta cuando la carga del sistema es baja**
+
+`at` programa la ejecucion de un comando en un momento especifico del futuro (por ejemplo, `at 15:00` o `at now + 2 hours`). `batch` tambien programa una tarea unica, pero la ejecuta cuando la carga del sistema (load average) es baja (por defecto inferior a 0.8, configurable con `atd -l`). Ambos ejecutan la tarea una sola vez. `batch` es util para tareas pesadas que no deben competir con otros procesos.
+
+</details>
+
+---
+
+### Pregunta 21
+
+Escribe el comando para editar el crontab del usuario actual.
+
+<input type="text" class="fill-blank" data-answer="crontab -e" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**crontab -e**
+
+El comando `crontab -e` abre el crontab del usuario actual en el editor de texto predeterminado (definido por la variable `VISUAL` o `EDITOR`). Cuando se guarda y cierra el editor, cron instala automaticamente el nuevo crontab. Para editar el crontab de otro usuario (como root): `crontab -e -u usuario`. Para listar el contenido: `crontab -l`. Para eliminarlo: `crontab -r`.
+
+</details>
+
+---
+
+### Pregunta 22
+
+Escribe el comando para listar las tareas pendientes programadas con `at`.
+
+<input type="text" class="fill-blank" data-answer="atq" data-alt="at -l" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**atq**
+
+El comando `atq` (equivalente a `at -l`) muestra la lista de tareas pendientes programadas con `at`, incluyendo el ID de la tarea, la fecha y hora programada, la cola y el usuario. Para eliminar una tarea se usa `atrm ID` (equivalente a `at -d ID`). Las tareas se ejecutan una sola vez y se eliminan automaticamente despues de ejecutarse.
+
+</details>
+
+---
+
+### Pregunta 23
+
+Escribe el comando para programar una tarea con `at` que se ejecute dentro de 30 minutos.
+
+<input type="text" class="fill-blank" data-answer="at now + 30 minutes" data-alt="at now + 30 min" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**at now + 30 minutes**
+
+El comando `at now + 30 minutes` abre un prompt interactivo donde se pueden escribir los comandos a ejecutar (se finaliza con Ctrl+D). El formato `now + N unidad` acepta: minutes, hours, days y weeks. Tambien se pueden usar horas fijas (`at 15:00`), palabras clave (`at noon`, `at midnight`, `at teatime`) y fechas (`at 14:00 2026-12-25`). Para leer comandos desde un archivo: `at now + 30 minutes -f script.sh`.
+
+</details>
+
+---
+
+### Pregunta 24
+
+Escribe el comando para listar los timers de systemd activos, incluyendo los inactivos.
+
+<input type="text" class="fill-blank" data-answer="systemctl list-timers --all" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**systemctl list-timers --all**
+
+El comando `systemctl list-timers --all` muestra todos los timers de systemd, tanto activos como inactivos. Sin la opcion `--all`, solo se muestran los timers activos. La salida incluye columnas como NEXT (proxima ejecucion), LEFT (tiempo restante), LAST (ultima ejecucion), PASSED (tiempo desde la ultima) y UNIT (unidad de servicio asociada).
+
+</details>
+
+---
+
+### Pregunta 25
+
+Escribe el comando para eliminar la tarea numero 5 de la cola de `at`.
+
+<input type="text" class="fill-blank" data-answer="atrm 5" data-alt="at -d 5" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**atrm 5**
+
+El comando `atrm 5` (equivalente a `at -d 5`) elimina la tarea con ID 5 de la cola de `at`. El ID de cada tarea se puede consultar con `atq` (o `at -l`). Solo el propietario de la tarea o root puede eliminar una tarea programada. El control de acceso a `at` se gestiona con los archivos `/etc/at.allow` y `/etc/at.deny`, con la misma logica que `cron.allow` y `cron.deny`.
+
+</details>

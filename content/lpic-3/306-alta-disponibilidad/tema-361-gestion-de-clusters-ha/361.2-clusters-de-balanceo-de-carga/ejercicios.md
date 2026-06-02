@@ -164,3 +164,228 @@ d) `first`
 
 El algoritmo `source` realiza un hash de la IP de origen del cliente para asegurar que las peticiones del mismo cliente siempre lleguen al mismo servidor, proporcionando así persistencia de sesión.
 </details>
+
+### Pregunta 11
+
+¿Qué módulo del kernel de Linux implementa el balanceo de carga a nivel de capa 4 (TCP/UDP) en LVS?
+
+a) nf_conntrack
+b) ip_vs (IPVS)
+c) iptables
+d) nftables
+
+<details><summary>Respuesta</summary>
+
+**b) ip_vs (IPVS)**
+
+IPVS (IP Virtual Server) es el módulo del kernel de Linux que implementa LVS. Se carga con `modprobe ip_vs` y proporciona balanceo de carga a nivel de transporte con alto rendimiento al operar directamente en el espacio del kernel.
+</details>
+
+### Pregunta 12
+
+En el modo TUN (IP Tunneling) de LVS, ¿qué tipo de encapsulación se utiliza para enviar los paquetes a los Real Servers?
+
+a) GRE
+b) VXLAN
+c) IP-in-IP
+d) IPsec
+
+<details><summary>Respuesta</summary>
+
+**c) IP-in-IP**
+
+El modo TUN utiliza encapsulación IP-in-IP para enviar los paquetes del Director a los Real Servers. Esto permite que los RS estén en redes diferentes del Director. Las respuestas van directamente al cliente, al igual que en modo DR.
+</details>
+
+### Pregunta 13
+
+¿Qué protocolo utiliza keepalived para gestionar la IP virtual flotante entre nodos?
+
+a) HSRP
+b) VRRP
+c) GLBP
+d) CARP
+
+<details><summary>Respuesta</summary>
+
+**b) VRRP**
+
+Keepalived utiliza VRRP (Virtual Router Redundancy Protocol) para gestionar la alta disponibilidad de la IP virtual. VRRP usa la dirección multicast 224.0.0.18 para los anuncios entre nodos. El nodo con mayor prioridad se convierte en MASTER.
+</details>
+
+### Pregunta 14
+
+En HAProxy, ¿qué diferencia existe entre `mode http` y `mode tcp`?
+
+a) `mode http` es más rápido
+b) `mode tcp` permite inspeccionar cabeceras HTTP
+c) `mode http` opera en capa 7 y permite inspeccionar contenido HTTP, mientras que `mode tcp` opera en capa 4
+d) No hay diferencia funcional
+
+<details><summary>Respuesta</summary>
+
+**c) `mode http` opera en capa 7 y permite inspeccionar contenido HTTP, mientras que `mode tcp` opera en capa 4**
+
+`mode http` permite a HAProxy inspeccionar y modificar cabeceras HTTP, usar ACLs basadas en URL/cookies y realizar health checks HTTP. `mode tcp` solo reenvía tráfico TCP sin inspeccionar su contenido.
+</details>
+
+### Pregunta 15
+
+¿Qué parámetro de HAProxy en la línea de definición de un servidor indica que es un servidor de respaldo que solo recibe tráfico cuando los demás fallan?
+
+a) `standby`
+b) `backup`
+c) `reserve`
+d) `failover`
+
+<details><summary>Respuesta</summary>
+
+**b) `backup`**
+
+La palabra clave `backup` en la definición de un servidor indica que solo recibirá tráfico cuando todos los servidores no marcados como backup estén caídos. Ejemplo: `server web3 192.168.1.12:8080 check backup`.
+</details>
+
+### Pregunta 16
+
+¿Qué algoritmo de planificación en IPVS envía las peticiones al servidor sin conexiones activas, o utiliza SED si todos tienen conexiones?
+
+a) `lc` (Least Connection)
+b) `sed` (Shortest Expected Delay)
+c) `nq` (Never Queue)
+d) `rr` (Round Robin)
+
+<details><summary>Respuesta</summary>
+
+**c) `nq` (Never Queue)**
+
+El algoritmo `nq` (Never Queue) prioriza el envío a servidores sin conexiones activas. Si todos los servidores tienen al menos una conexión, utiliza el algoritmo SED (Shortest Expected Delay) para elegir el destino.
+</details>
+
+### Pregunta 17
+
+¿Qué directiva de nginx define el algoritmo de balanceo basado en la IP de origen del cliente para mantener persistencia de sesión?
+
+a) `least_conn`
+b) `random`
+c) `ip_hash`
+d) `hash $request_uri`
+
+<details><summary>Respuesta</summary>
+
+**c) `ip_hash`**
+
+La directiva `ip_hash` dentro del bloque `upstream` realiza un hash de la dirección IP del cliente para asegurar que las peticiones de un mismo cliente siempre se dirijan al mismo servidor backend, proporcionando así persistencia de sesión.
+</details>
+
+### Pregunta 18
+
+En keepalived, ¿qué parámetro define la prioridad de un nodo en una instancia VRRP, donde un valor mayor indica mayor preferencia?
+
+a) `state`
+b) `weight`
+c) `priority`
+d) `advert_int`
+
+<details><summary>Respuesta</summary>
+
+**c) `priority`**
+
+El parámetro `priority` (valor de 1 a 254) determina qué nodo será MASTER. El nodo con el valor más alto gana la elección. Si el MASTER falla, el BACKUP con la siguiente prioridad más alta toma el control de la VIP.
+</details>
+
+### Pregunta 19
+
+En HAProxy, ¿qué parámetros de health check determinan cuántos checks fallidos marcan un servidor como caído y cuántos exitosos lo restauran?
+
+a) `timeout` y `retry`
+b) `fall` y `rise`
+c) `down` y `up`
+d) `failures` y `successes`
+
+<details><summary>Respuesta</summary>
+
+**b) `fall` y `rise`**
+
+`fall` indica el número de health checks consecutivos fallidos necesarios para marcar un servidor como DOWN. `rise` indica los checks exitosos consecutivos necesarios para marcarlo como UP. Ejemplo: `server web1 10.0.0.1:80 check inter 5s fall 3 rise 2`.
+</details>
+
+### Pregunta 20
+
+¿Cuál de los siguientes balanceadores opera exclusivamente en espacio del kernel proporcionando el mayor rendimiento posible?
+
+a) HAProxy
+b) Nginx
+c) LVS/IPVS
+d) Traefik
+
+<details><summary>Respuesta</summary>
+
+**c) LVS/IPVS**
+
+LVS/IPVS opera directamente en el kernel de Linux, lo que le proporciona el mayor rendimiento posible al evitar el overhead de copiar paquetes al espacio de usuario. HAProxy y Nginx operan en espacio de usuario.
+</details>
+
+### Pregunta 21
+
+¿Qué comando crea un servicio virtual TCP en la IP 10.0.0.100 puerto 443 con algoritmo Weighted Least Connection?
+
+<input type="text" class="fill-blank" data-answer="ipvsadm -A -t 10.0.0.100:443 -s wlc" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**ipvsadm -A -t 10.0.0.100:443 -s wlc**
+
+`-A` añade un nuevo servicio virtual, `-t` indica protocolo TCP con IP:puerto, y `-s wlc` establece el algoritmo Weighted Least Connection. `wlc` es además el algoritmo predeterminado de IPVS.
+</details>
+
+### Pregunta 22
+
+¿Qué comando muestra la tabla completa de servicios virtuales y Real Servers configurados en IPVS en formato numérico?
+
+<input type="text" class="fill-blank" data-answer="ipvsadm -Ln" data-alt="ipvsadm -ln,ipvsadm --list --numeric" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**ipvsadm -Ln**
+
+`ipvsadm -Ln` muestra la tabla IPVS con las direcciones en formato numérico (sin resolución DNS). `-L` o `--list` muestra la tabla y `-n` o `--numeric` evita la resolución de nombres.
+</details>
+
+### Pregunta 23
+
+¿Qué comando elimina toda la tabla de servicios virtuales en IPVS?
+
+<input type="text" class="fill-blank" data-answer="ipvsadm -C" data-alt="ipvsadm --clear" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**ipvsadm -C**
+
+El comando `ipvsadm -C` (o `--clear`) elimina todos los servicios virtuales y Real Servers de la tabla IPVS. Para eliminar solo un servicio específico se usa `ipvsadm -D -t IP:puerto`.
+</details>
+
+### Pregunta 24
+
+¿Qué comando carga el módulo del kernel IPVS necesario para LVS?
+
+<input type="text" class="fill-blank" data-answer="modprobe ip_vs" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**modprobe ip_vs**
+
+El módulo principal de IPVS se carga con `modprobe ip_vs`. Adicionalmente, se pueden cargar módulos de algoritmos específicos como `ip_vs_rr` (Round Robin), `ip_vs_wrr` (Weighted Round Robin), `ip_vs_lc` (Least Connection), etc.
+</details>
+
+### Pregunta 25
+
+¿Qué comando añade un Real Server con IP 192.168.1.10 puerto 80 en modo DR con peso 3 al servicio virtual 10.0.0.100:80?
+
+<input type="text" class="fill-blank" data-answer="ipvsadm -a -t 10.0.0.100:80 -r 192.168.1.10:80 -g -w 3" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**ipvsadm -a -t 10.0.0.100:80 -r 192.168.1.10:80 -g -w 3**
+
+`-a` añade un Real Server (minúscula, diferente de `-A` que crea servicios). `-r` especifica la dirección del RS, `-g` indica modo DR (gatewaying), y `-w 3` establece el peso del servidor.
+</details>

@@ -165,3 +165,228 @@ d) `docker gc`
 
 `docker system prune` elimina todos los recursos no utilizados: contenedores detenidos, redes sin contenedores, imágenes dangling y caché de build. Con `--volumes` también elimina volúmenes no usados. `docker system df` muestra el uso de disco antes de limpiar.
 </details>
+
+### Pregunta 11
+
+¿Qué instrucción del Dockerfile define una comprobación periódica del estado de salud del contenedor?
+
+a) `CHECK`
+b) `MONITOR`
+c) `HEALTHCHECK`
+d) `STATUS`
+
+<details><summary>Respuesta</summary>
+
+**c) `HEALTHCHECK`**
+
+`HEALTHCHECK` define un comando que Docker ejecutará periódicamente para verificar que el contenedor funciona correctamente. Opciones como `--interval`, `--timeout` y `--retries` controlan la frecuencia y tolerancia. Ejemplo: `HEALTHCHECK --interval=30s CMD curl -f http://localhost/ || exit 1`.
+</details>
+
+### Pregunta 12
+
+¿Qué opción de `docker run` establece una política de reinicio para que el contenedor se reinicie siempre excepto cuando se detiene manualmente?
+
+a) `--restart always`
+b) `--restart unless-stopped`
+c) `--restart on-failure`
+d) `--restart auto`
+
+<details><summary>Respuesta</summary>
+
+**b) `--restart unless-stopped`**
+
+`--restart unless-stopped` reinicia el contenedor automáticamente si se detiene por cualquier razón, excepto cuando fue detenido manualmente con `docker stop`. A diferencia de `always`, no reinicia el contenedor tras un reinicio del daemon Docker si fue detenido manualmente.
+</details>
+
+### Pregunta 13
+
+¿Qué tipo de red Docker permite que el contenedor comparta directamente la pila de red del host?
+
+a) bridge
+b) overlay
+c) host
+d) macvlan
+
+<details><summary>Respuesta</summary>
+
+**c) host**
+
+La red `host` elimina el aislamiento de red entre el contenedor y el host. El contenedor comparte directamente la pila de red del host, incluyendo interfaces, puertos e IP. No se necesita mapeo de puertos con `-p`. Es útil cuando el rendimiento de red es crítico pero reduce el aislamiento.
+</details>
+
+### Pregunta 14
+
+¿Qué hace la instrucción `ARG` en un Dockerfile a diferencia de `ENV`?
+
+a) `ARG` persiste como variable de entorno en el contenedor final
+b) `ARG` define variables disponibles solo durante la construcción de la imagen, no en el contenedor final
+c) `ARG` y `ENV` son idénticos en funcionalidad
+d) `ARG` solo acepta valores numéricos
+
+<details><summary>Respuesta</summary>
+
+**b) `ARG` define variables disponibles solo durante la construcción de la imagen, no en el contenedor final**
+
+`ARG` declara variables que solo existen durante el proceso de `docker build` y pueden sobrescribirse con `--build-arg`. `ENV` establece variables de entorno que persisten en la imagen final y están disponibles cuando el contenedor se ejecuta. Se pueden combinar: `ARG VERSION` seguido de `ENV APP_VERSION=$VERSION`.
+</details>
+
+### Pregunta 15
+
+¿Qué comando crea una nueva imagen Docker a partir de un contenedor en ejecución con cambios realizados?
+
+a) `docker save`
+b) `docker export`
+c) `docker commit`
+d) `docker snapshot`
+
+<details><summary>Respuesta</summary>
+
+**c) `docker commit`**
+
+`docker commit contenedor mi-imagen:v1` crea una nueva imagen a partir del estado actual de un contenedor, incluyendo todos los cambios realizados en su filesystem. Aunque útil para pruebas, no se recomienda para producción donde se debe usar un Dockerfile para reproducibilidad.
+</details>
+
+### Pregunta 16
+
+¿Qué configuración en `/etc/docker/daemon.json` habilita user namespaces para mejorar la seguridad de Docker?
+
+a) `{"security-opts": ["userns"]}`
+b) `{"userns-remap": "default"}`
+c) `{"user-namespaces": true}`
+d) `{"remap-users": "enabled"}`
+
+<details><summary>Respuesta</summary>
+
+**b) `{"userns-remap": "default"}`**
+
+La opción `"userns-remap": "default"` en `/etc/docker/daemon.json` habilita el remapeo de usuarios. Docker creará automáticamente un usuario `dockremap` y asignará rangos de UIDs/GIDs subordinados. El UID 0 dentro del contenedor se mapeará a un UID sin privilegios en el host.
+</details>
+
+### Pregunta 17
+
+¿Cuál es la diferencia entre `docker stop` y `docker kill`?
+
+a) No hay diferencia
+b) `docker stop` envía SIGTERM y espera un timeout antes de SIGKILL; `docker kill` envía SIGKILL inmediatamente
+c) `docker stop` elimina el contenedor; `docker kill` solo lo detiene
+d) `docker kill` funciona solo con contenedores privilegiados
+
+<details><summary>Respuesta</summary>
+
+**b) `docker stop` envía SIGTERM y espera un timeout antes de SIGKILL; `docker kill` envía SIGKILL inmediatamente**
+
+`docker stop` envía SIGTERM al proceso principal del contenedor, dándole un período de gracia (por defecto 10 segundos, configurable con `-t`) para un apagado limpio. Si no se detiene, envía SIGKILL. `docker kill` envía SIGKILL (o la señal especificada con `-s`) inmediatamente.
+</details>
+
+### Pregunta 18
+
+¿Qué instrucción del Dockerfile establece el directorio de trabajo para las instrucciones RUN, CMD, ENTRYPOINT, COPY y ADD posteriores?
+
+a) `WORKDIR`
+b) `CHDIR`
+c) `DIR`
+d) `BASEDIR`
+
+<details><summary>Respuesta</summary>
+
+**a) `WORKDIR`**
+
+`WORKDIR /app` establece el directorio de trabajo para todas las instrucciones posteriores del Dockerfile. Si el directorio no existe, se crea automáticamente. Se pueden usar múltiples `WORKDIR` en un Dockerfile, y las rutas relativas se resuelven respecto al `WORKDIR` anterior.
+</details>
+
+### Pregunta 19
+
+¿Qué driver de red Docker permite crear redes que abarcan múltiples hosts Docker en un clúster Swarm?
+
+a) bridge
+b) host
+c) overlay
+d) macvlan
+
+<details><summary>Respuesta</summary>
+
+**c) overlay**
+
+El driver `overlay` crea redes virtuales que abarcan múltiples hosts Docker, permitiendo que contenedores en diferentes nodos de un clúster Swarm se comuniquen entre sí. Utiliza VXLAN para encapsular el tráfico de red entre los hosts.
+</details>
+
+### Pregunta 20
+
+¿Qué opción de `docker run` monta el filesystem del contenedor en modo solo lectura?
+
+a) `--readonly`
+b) `--read-only`
+c) `--ro`
+d) `--fs-readonly`
+
+<details><summary>Respuesta</summary>
+
+**b) `--read-only`**
+
+`docker run --read-only` monta el filesystem raíz del contenedor en modo solo lectura, impidiendo cualquier escritura. Se pueden usar volúmenes o tmpfs para las rutas que necesiten escritura (como `/tmp`). Es una buena práctica de seguridad que previene la modificación del contenido de la imagen.
+</details>
+
+### Pregunta 21
+
+Escribe el comando para construir una imagen Docker con la etiqueta `mi-app:v2` usando el Dockerfile ubicado en el directorio actual.
+
+<input type="text" class="fill-blank" data-answer="docker build -t mi-app:v2 ." data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**docker build -t mi-app:v2 .**
+
+`docker build` construye una imagen a partir de un Dockerfile. `-t` (tag) asigna nombre y etiqueta a la imagen. El `.` al final especifica el contexto de build (directorio actual), que es el conjunto de archivos accesibles durante la construcción.
+</details>
+
+### Pregunta 22
+
+Escribe el comando para ver el uso de disco de Docker mostrando imágenes, contenedores y volúmenes.
+
+<input type="text" class="fill-blank" data-answer="docker system df" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**docker system df**
+
+`docker system df` muestra un resumen del uso de disco de Docker, desglosado por tipo: imágenes, contenedores y volúmenes. Indica el espacio total, activo y recuperable. Con `-v` muestra detalles de cada recurso individual.
+</details>
+
+### Pregunta 23
+
+Escribe el comando para ejecutar un contenedor nginx en modo daemon, con nombre `web`, mapeando el puerto 8080 del host al 80 del contenedor.
+
+<input type="text" class="fill-blank" data-answer="docker run -d --name web -p 8080:80 nginx" data-alt="" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**docker run -d --name web -p 8080:80 nginx**
+
+`-d` ejecuta el contenedor en modo daemon (background). `--name web` asigna el nombre. `-p 8080:80` mapea el puerto 8080 del host al puerto 80 del contenedor. Se accede al servicio en `http://localhost:8080`.
+</details>
+
+### Pregunta 24
+
+Escribe el comando para copiar el archivo `/etc/nginx/nginx.conf` desde el contenedor `web` al directorio actual del host.
+
+<input type="text" class="fill-blank" data-answer="docker cp web:/etc/nginx/nginx.conf ./" data-alt="docker cp web:/etc/nginx/nginx.conf ." placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**docker cp web:/etc/nginx/nginx.conf ./**
+
+`docker cp` copia archivos entre un contenedor y el host. El formato es `contenedor:ruta` para la fuente o destino dentro del contenedor. Funciona tanto con contenedores en ejecución como detenidos.
+</details>
+
+### Pregunta 25
+
+Escribe el comando de Docker Compose para levantar todos los servicios en modo daemon y reconstruir las imágenes.
+
+<input type="text" class="fill-blank" data-answer="docker compose up -d --build" data-alt="docker-compose up -d --build" placeholder="$ escribe aqui...">
+
+<details><summary>Respuesta</summary>
+
+**docker compose up -d --build**
+
+`docker compose up -d --build` levanta todos los servicios definidos en `docker-compose.yml` en modo daemon (`-d`) y reconstruye las imágenes antes de iniciar (`--build`). Sin `--build`, Docker Compose reutiliza imágenes existentes si están disponibles.
+</details>
