@@ -359,3 +359,18 @@ mokutil --import mi_clave.der
 | Uso tipico | Escritorio/Servidor | Medios/Red | Escritorio UEFI | Embebido |
 | Scripting | Si | Limitado | No | Si |
 | Secure Boot | Si (con shim) | No | Si | Parcial |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **SYSLINUX es para FAT, ISOLINUX para ISO 9660, PXELINUX para red** — confundir para que medio esta diseñada cada variante es un error frecuente. SYSLINUX no funciona en ext4, ISOLINUX no funciona en USB con FAT, PXELINUX no funciona sin red
+- **PXELINUX busca configuracion por MAC, luego IP hex, luego default** — el orden de busqueda es: primero `01-<mac>` (con prefijo `01-`), luego la IP en hexadecimal (eliminando digitos desde la derecha), y finalmente `default`. El prefijo `01-` en la MAC es una trampa clasica
+- **`TIMEOUT` en SYSLINUX esta en decimas de segundo, no en segundos** — `TIMEOUT 50` significa 5 segundos, no 50. En GRUB, `GRUB_TIMEOUT=5` si es en segundos. Confundir las unidades es una trampa habitual
+- **`systemd-boot` solo funciona con UEFI, no con BIOS** — a diferencia de GRUB 2 que soporta ambos, `systemd-boot` requiere obligatoriamente firmware UEFI y la ESP (EFI System Partition)
+- **PXE requiere DHCP + TFTP como minimo** — sin servidor DHCP que asigne IP y apunte al archivo de arranque, y sin servidor TFTP que sirva los archivos, el arranque PXE no funciona. NFS o HTTP son opcionales para el sistema raiz
+- **`next-server` en DHCP apunta al servidor TFTP, no al DNS** — la directiva `next-server` indica la IP del servidor TFTP donde esta `pxelinux.0`. `filename` indica el nombre del archivo de arranque a descargar
+- **Secure Boot usa `shim` como cargador de primera etapa** — `shim` esta firmado por Microsoft y permite cargar GRUB. Sin `shim`, GRUB no arrancaria en un sistema con Secure Boot habilitado. `mokutil` gestiona las claves MOK (Machine Owner Key)
+- **`efibootmgr -n` vs `efibootmgr -o`** — `-n` (bootnext) establece la entrada de arranque solo para el proximo reinicio; `-o` cambia el orden de arranque permanentemente. Confundirlos puede hacer que un cambio temporal sea permanente o viceversa

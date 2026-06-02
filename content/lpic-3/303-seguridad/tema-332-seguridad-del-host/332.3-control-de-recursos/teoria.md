@@ -371,3 +371,20 @@ session     required      pam_limits.so
 # /etc/pam.d/login
 session     required      pam_limits.so
 ```
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Soft limit vs Hard limit** — el soft limit es el valor efectivo actual que el usuario puede elevar hasta el hard limit; el hard limit solo puede ser reducido por usuarios normales y solo root puede elevarlo. Confundir quien puede modificar que es un error clasico
+- **`ulimit` es temporal, `limits.conf` es persistente** — `ulimit` solo afecta a la sesion actual del shell y sus hijos. Para limites que sobrevivan al reinicio, se usa `/etc/security/limits.conf`. Ademas, `pam_limits.so` debe estar habilitado en PAM para que `limits.conf` funcione
+- **`pam_limits.so` debe estar en PAM** — si falta la linea `session required pam_limits.so` en los archivos de PAM correspondientes, los limites de `/etc/security/limits.conf` NO se aplican. El examen pregunta frecuentemente por este requisito
+- **cgroups v1 vs v2: jerarquia** — cgroups v1 tiene multiples jerarquias (una por controlador: cpu, memory, etc.); cgroups v2 tiene una jerarquia unica unificada en `/sys/fs/cgroup/`. No confundir los puntos de montaje: v1 usa `/sys/fs/cgroup/controlador/`, v2 usa `/sys/fs/cgroup/` directamente
+- **`CPUQuota=200%` en systemd** — significa que el servicio puede usar hasta 2 cores completos, no que tiene el doble de prioridad. No confundir con `CPUWeight` que establece prioridad relativa (1-10000). `CPUQuota` es un limite absoluto; `CPUWeight` es relativo entre servicios
+- **`systemctl set-property` es persistente por defecto** — crea archivos drop-in automaticamente. Para cambios temporales se necesita el flag `--runtime`. Sin `--runtime`, el cambio sobrevive al reinicio. Este comportamiento es contra-intuitivo y el examen lo pregunta
+- **`MemoryMax` vs `MemoryHigh` en systemd** — `MemoryMax` es un limite duro (el proceso es terminado por OOM killer al superarlo); `MemoryHigh` es un limite suave (el kernel intenta recuperar memoria pero no mata el proceso inmediatamente). Confundir ambos puede causar terminaciones inesperadas o falta de proteccion
+- **Fork bomb y proteccion con `nproc`** — la proteccion contra fork bombs se configura limitando `nproc` en `limits.conf`, NO limitando CPU. Una fork bomb consume PIDs/procesos, no necesariamente CPU. El parametro `kernel.pid_max` tambien ayuda pero es un limite global
+- **`nofile` vs `nproc`** — `nofile` limita el numero de archivos abiertos (file descriptors); `nproc` limita el numero de procesos. Servicios como bases de datos necesitan `nofile` alto; la proteccion contra fork bombs requiere `nproc` bajo. No confundir ambos
+- **Slices de systemd: `system.slice` vs `user.slice`** — los servicios del sistema se agrupan en `system.slice`; las sesiones de usuario en `user.slice`. Los limites aplicados a un slice afectan a todos los servicios/sesiones dentro de el. `systemd-cgls` muestra la jerarquia completa

@@ -329,3 +329,20 @@ chattr -R +i /etc/configuracion/
 | Synchronous | `S` | Escrituras sincronas |
 
 > **Para el examen:** `chattr +i` hace un archivo completamente inmutable: ni siquiera root puede modificarlo o eliminarlo sin quitar primero el atributo. Esto es muy util para proteger archivos criticos como `/etc/passwd`.
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **SUID en directorios no tiene efecto** — SUID (4000) solo funciona en archivos ejecutables binarios. En scripts interpretados (bash, python) se ignora por seguridad. SGID en directorios si tiene efecto (herencia de grupo). Nunca confundir los tres bits especiales y donde aplican
+- **SGID en directorios vs archivos** — en ejecutables, SGID hace que el proceso herede el grupo del archivo; en directorios, los nuevos archivos heredan el grupo del directorio (no del creador). Esta distincion es critica para directorios compartidos
+- **Sticky bit solo en directorios** — el sticky bit (1000) en directorios impide que usuarios borren archivos de otros (ejemplo clasico: /tmp). En archivos modernos no tiene efecto practico. Si se ve `t` en el bit de ejecucion de otros (drwxrwxrwt), es sticky bit
+- **`chmod` modifica la mascara ACL, no el grupo** — en un archivo con ACLs POSIX, ejecutar `chmod g=rx` modifica la **mascara** (mask), no los permisos del grupo propietario directamente. Esto afecta los permisos efectivos de todos los usuarios y grupos adicionales en las ACLs
+- **ACL mask y permisos efectivos** — la mask limita los permisos maximos de usuario nombrado, grupo propietario y grupo nombrado. Los permisos del propietario (user::) y otros (other::) NO se ven afectados por la mask. Los permisos efectivos son la interseccion de la ACL con la mask
+- **`+` en `ls -l` indica ACLs** — si aparece un `+` al final de los permisos (ej: `-rw-r--r--+`), el archivo tiene ACLs extendidas. Sin el `+`, solo tiene permisos tradicionales. Un `.` indica contexto SELinux pero sin ACLs
+- **ACLs por defecto solo en directorios** — las default ACLs (`setfacl -d -m`) solo se aplican a directorios y se heredan por archivos y subdirectorios nuevos creados dentro. No se pueden establecer default ACLs en archivos regulares
+- **`chattr +i` vs `chattr +a`** — `+i` (immutable) impide cualquier modificacion, eliminacion, renombramiento o enlace, incluso para root; `+a` (append-only) permite añadir contenido pero no modificar ni eliminar (ideal para logs). El examen puede presentar escenarios donde root no puede borrar un archivo, y la causa es `+i`
+- **umask no es una resta aritmetica exacta** — aunque se suele decir "666 - umask" para archivos, tecnicamente es una operacion AND NOT a nivel de bits. Con umask 0033, los archivos obtienen 644 (no 633). Para el examen, la simplificacion funciona en la mayoria de casos pero conoce la excepcion
+- **`setfacl -b` vs `setfacl -k`** — `-b` elimina TODAS las ACLs (incluidas las por defecto); `-k` elimina solo las ACLs por defecto del directorio, manteniendo las ACLs de acceso. Confundir ambos puede dejar archivos sin las ACLs heredadas esperadas

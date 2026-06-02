@@ -272,3 +272,19 @@ gsettings set org.gnome.desktop.interface gtk-theme 'HighContrast'
 10. **Toggle Keys:** Retroalimentacion audible al pulsar Caps Lock, Num Lock o Scroll Lock
 11. **AccessX** es el nombre del conjunto de funciones de accesibilidad del teclado en X11
 12. El alto contraste y las fuentes grandes son configuraciones basicas de accesibilidad visual
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Sticky Keys vs Slow Keys vs Bounce Keys** — Sticky Keys permite pulsar combinaciones UNA TECLA A LA VEZ; Slow Keys requiere MANTENER la tecla un tiempo minimo; Bounce Keys IGNORA repeticiones rapidas de la misma tecla. El examen describe el comportamiento y espera que identifiques la funcion correcta
+- **Orca es un lector de pantalla, NO un sintetizador de voz** — Orca lee la pantalla y usa motores TTS (como eSpeak) para producir voz. eSpeak/eSpeak-NG es el sintetizador; Orca es el lector de pantalla. No confundir sus roles
+- **brltty funciona en la CONSOLA de texto** — brltty proporciona soporte Braille en la consola TTY (sin entorno grafico). Para Braille en escritorio grafico, brltty se integra con Orca. El examen puede preguntar donde funciona brltty
+- **Mouse Keys usa el teclado NUMERICO** — La tecla 5 del numpad es clic, las teclas alrededor (2,4,6,8) mueven el cursor. No confundir con atajos de teclado regulares. El numpad DEBE estar activado (Num Lock)
+- **GOK esta descontinuado** — GOK (GNOME Onscreen Keyboard) ya no se mantiene. En GNOME moderno, el teclado en pantalla esta integrado en GNOME Shell. Sin embargo, el examen puede seguir preguntando por GOK como referencia historica
+- **Toggle Keys proporciona retroalimentacion AUDIBLE** — Toggle Keys emite un sonido al activar/desactivar Caps Lock, Num Lock o Scroll Lock. No es lo mismo que Sticky Keys (que pega teclas modificadoras). El examen puede confundir ambas funciones
+- **AccessX es el nombre del CONJUNTO de funciones** — AccessX no es una funcion individual, sino el nombre colectivo de todas las funciones de accesibilidad del teclado en X11 (Sticky Keys, Slow Keys, Bounce Keys, Mouse Keys, Toggle Keys)
+- **Emacspeak NO es un lector de pantalla convencional** — Emacspeak es un escritorio de audio completo basado en Emacs. No lee la pantalla grafica como Orca, sino que proporciona una interfaz de audio nativa dentro de Emacs
+- **eSpeak vs eSpeak-NG** — eSpeak-NG (Next Generation) es el fork activamente mantenido de eSpeak. Son compatibles, pero eSpeak-NG es la version que se debe usar en sistemas modernos

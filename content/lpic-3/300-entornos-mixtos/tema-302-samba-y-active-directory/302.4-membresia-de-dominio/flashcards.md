@@ -11,7 +11,7 @@ subtema: "302.4"
 
 # Flashcards: 302.4 - Membresia De Dominio
 
-> 31 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 32 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="302.4">
 </div>
@@ -565,6 +565,24 @@ subtema: "302.4"
 <div class="flashcard-back">
 
 **R:** - `net ads join` y `realm join` son los dos métodos principales de unión a AD
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="302.4">
+</div>
+
+<div class="flashcard" data-id="302.4-fc-032">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

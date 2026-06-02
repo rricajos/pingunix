@@ -412,3 +412,19 @@ systemctl restart autofs
 11. El comando es **`umount`** (sin 'n'), no "unmount".
 
 12. **`nofail`** en fstab evita que un dispositivo ausente bloquee el arranque.
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **El comando es `umount`, NO "unmount"** — Se escribe sin la primera 'n': `umount /mnt/datos`. El examen puede ofrecer "unmount" como opcion para confundir.
+- **`/etc/fstab` tiene 6 campos, no 5** — Dispositivo, punto de montaje, tipo, opciones, dump, pass. El examen puede omitir un campo o preguntar que va en la posicion 5 o 6.
+- **`defaults` equivale a `rw,suid,dev,exec,auto,nouser,async`** — No incluye `noatime` ni `nofail`. El examen puede preguntar que opciones implica `defaults` o incluir opciones que no estan en `defaults`.
+- **`user` implica `noexec,nosuid,nodev`** — La opcion `user` permite a usuarios normales montar, pero automaticamente activa restricciones de seguridad. `users` permite a cualquiera montar Y desmontar. El examen puede confundir `user` con `users`.
+- **UUID es preferible a `/dev/sd*`** — Los nombres de dispositivo (`/dev/sda1`) pueden cambiar al agregar o quitar discos. El UUID es invariable. El examen puede preguntar por que una configuracion con `/dev/sda1` dejo de funcionar.
+- **`mount -a` monta todo excepto `noauto`** — Las entradas de fstab con opcion `noauto` se ignoran al ejecutar `mount -a`. Son para dispositivos que se montan manualmente. El examen puede preguntar por que un dispositivo no se monta con `mount -a`.
+- **Pass 0 = no verificar, 1 = raiz, 2 = resto** — Solo la particion raiz `/` debe tener pass=1. El resto de particiones usan 2. Swap y dispositivos remotos usan 0. El examen puede preguntar que valor usar para `/home`.
+- **`/proc/mounts` es la fuente autoritativa de montajes actuales** — `/etc/fstab` es la configuracion deseada pero no refleja el estado real. `/etc/mtab` en sistemas modernos es un enlace a `/proc/self/mounts`. El examen puede preguntar cual archivo muestra los montajes REALES.
+- **La unidad systemd `.mount` debe coincidir con la ruta** — Para `/mnt/datos`, la unidad se llama `mnt-datos.mount` (reemplazando `/` por `-`). El examen puede preguntar el nombre correcto de la unidad para un punto de montaje dado.

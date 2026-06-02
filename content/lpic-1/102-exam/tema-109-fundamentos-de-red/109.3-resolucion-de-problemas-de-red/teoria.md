@@ -349,3 +349,20 @@ tcpdump icmp                    # Solo trafico ICMP
 10. **Flags de rutas**: U=up, G=gateway, H=host, !=reject
 11. `netstat -r` e `ip route` muestran la tabla de enrutamiento
 12. **ping6** es el equivalente de ping para IPv6
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`ss` reemplaza a `netstat`** — `netstat` esta deprecado (paquete `net-tools`); `ss` es el reemplazo moderno (paquete `iproute2`). El examen espera que conozcas ambos, pero las opciones son similares: `-tulnp` funciona en los dos
+- **`traceroute` puede requerir root, `tracepath` no** — `tracepath` es la alternativa que no necesita privilegios de root. El examen puede preguntar cual herramienta de trazado de ruta puede usar un usuario normal
+- **`traceroute` usa UDP por defecto, NO ICMP** — A diferencia de `ping` que usa ICMP, `traceroute` envia paquetes UDP. Para usar ICMP se necesita `traceroute -I`. `tracepath` tambien usa UDP
+- **`* * *` en traceroute NO significa que el host esta caido** — Tres asteriscos significan que ese router no respondio, posiblemente por un firewall que filtra los paquetes. La ruta puede seguir funcionando despues de ese salto
+- **`ping -c N` limita el numero de paquetes** — En Linux, `ping` sin `-c` envia paquetes indefinidamente (hay que usar Ctrl+C). El examen puede preguntar como enviar exactamente N pings
+- **Flags de rutas: U=Up, G=Gateway, H=Host** — En la salida de `route -n`, `UG` indica ruta activa que usa gateway (tipicamente la ruta por defecto); `U` sin G indica red directamente conectada; `UGH` indica ruta a un host especifico via gateway
+- **`netstat -r` es equivalente a `route -n` e `ip route`** — Las tres muestran la tabla de enrutamiento. El examen puede preguntar multiples formas de ver la tabla de rutas
+- **`nc -zv host puerto` verifica si un puerto esta abierto** — La opcion `-z` significa zero I/O (solo escaneo, no envia datos); `-v` es verbose. Es la forma rapida de verificar conectividad a un puerto especifico
+- **Metodologia de troubleshooting: de abajo hacia arriba** — Se empieza verificando la capa fisica (interfaz activa), luego IP, luego gateway, luego DNS, y finalmente el servicio. El examen puede describir un problema y preguntar por donde empezar a diagnosticar
+- **`mtr` combina `ping` + `traceroute`** — `mtr` muestra la ruta Y las estadisticas de perdida/latencia en cada salto en TIEMPO REAL. Es mas informativo que ejecutar `ping` y `traceroute` por separado

@@ -345,3 +345,20 @@ Requisitos para contenedores rootless:
 | Seccomp | Filtrado de syscalls |
 | Capabilities | Permisos granulares (sustituyen a root monolítico) |
 | Rootless | Contenedores sin privilegios root en el host |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Contenedores comparten kernel, VMs no** — Esta es la distincion fundamental. Un exploit en el kernel del host afecta a todos los contenedores pero no a VMs (que tienen kernel propio). El examen preguntara cual tecnologia ofrece mejor aislamiento de seguridad (respuesta: VMs).
+- **Cgroups v1 vs v2: estructura de archivos** — En v1, cada controlador tiene su propio directorio (`/sys/fs/cgroup/cpu/`, `/sys/fs/cgroup/memory/`). En v2, hay una unica jerarquia unificada (`/sys/fs/cgroup/`). Los nombres de los archivos cambian: v1 usa `memory.limit_in_bytes`, v2 usa `memory.max`. El examen puede dar una ruta y preguntar que version de cgroups es.
+- **Namespaces aislan, cgroups limitan** — Los namespaces proporcionan aislamiento (el contenedor no ve los procesos/red/filesystem del host). Los cgroups limitan recursos (cuanta CPU, RAM, E/S puede usar). Son complementarios, no alternativos. El examen puede intentar confundir sus funciones.
+- **`CLONE_NEWNS` es el namespace de montajes, no de nombres** — El flag `CLONE_NEWNS` corresponde al namespace `mnt` (mount), no a un "namespace de nombres". Fue el primer namespace implementado, por eso tiene un nombre generico (`NS`). Esta trampa lingueistica es clasica en el examen.
+- **User namespace es clave para rootless** — El namespace `user` permite mapear UID 0 dentro del contenedor a un UID sin privilegios en el host. Sin user namespaces, los contenedores rootless no son posibles. `/etc/subuid` y `/etc/subgid` definen los rangos disponibles.
+- **runc vs containerd vs Docker** — `runc` es el runtime de bajo nivel que crea los contenedores (namespaces, cgroups). `containerd` es el runtime de alto nivel que gestiona el ciclo de vida. Docker es la plataforma completa que incluye CLI, demonio y registros. El examen puede preguntar que componente interactua directamente con el kernel.
+- **OverlayFS: lower es RO, upper es RW** — Las capas inferiores (lower) son de solo lectura; la capa superior (upper) almacena los cambios (read-write). El contenedor ve la vista fusionada (merged). Si se elimina un archivo del lower, se crea un whiteout en el upper. El examen puede preguntar donde se almacenan los cambios del contenedor.
+- **OCI garantiza interoperabilidad** — Una imagen OCI construida con Docker puede ejecutarse con Podman, CRI-O o cualquier runtime compatible OCI. El examen puede preguntar si una imagen Docker solo funciona con Docker (respuesta: no, gracias a OCI).
+- **Seccomp filtra syscalls, capabilities filtra privilegios** — Seccomp decide QUE llamadas al sistema puede hacer un proceso. Capabilities decide QUE privilegios de root tiene. `--cap-drop=ALL` elimina todos los privilegios de root; `seccomp=unconfined` desactiva el filtrado de syscalls. Son mecanismos diferentes y complementarios.
+- **`--privileged` desactiva TODAS las protecciones** — `--privileged` da al contenedor acceso completo al host: todas las capabilities, sin seccomp, acceso a todos los dispositivos. Nunca debe usarse en produccion. El examen puede preguntar que flag elimina el aislamiento de un contenedor.

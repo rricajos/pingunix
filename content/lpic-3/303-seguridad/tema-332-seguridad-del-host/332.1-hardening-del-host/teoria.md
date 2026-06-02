@@ -363,3 +363,20 @@ TMOUT=900
 readonly TMOUT
 export TMOUT
 ```
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`pam_pwquality` vs `pam_cracklib`** — `pam_pwquality` es el reemplazo moderno de `pam_cracklib`. Ambos usan sintaxis similar, pero en distribuciones actuales se espera `pam_pwquality`. Los valores negativos en `dcredit`, `ucredit`, `lcredit`, `ocredit` indican el minimo requerido (ej: `dcredit=-1` exige al menos 1 digito)
+- **`pam_faillock` vs `pam_tally2`** — `pam_tally2` esta obsoleto y eliminado en versiones recientes de PAM. `pam_faillock` es su reemplazo. El examen puede presentar ambos, pero la respuesta correcta en sistemas modernos es `pam_faillock`
+- **`remember=12` en `pam_unix.so`** — esta opcion impide reutilizar las ultimas 12 contraseñas. No confundir con opciones de `pam_pwquality`. Se configura en la linea de `pam_unix.so`, no en `pwquality.conf`
+- **`kernel.randomize_va_space` valores** — 0 = ASLR desactivado; 1 = parcial (solo stack, libraries, mmap); 2 = completo (incluye heap). El valor seguro para el examen es siempre 2. No confundir 1 con "activado completamente"
+- **`systemctl mask` vs `systemctl disable`** — `disable` quita el arranque automatico pero permite iniciar manualmente; `mask` crea un symlink a `/dev/null` e impide que el servicio se inicie de cualquier forma. Para hardening, `mask` es mas seguro
+- **`grub2-mkpasswd-pbkdf2`** — genera un hash PBKDF2 para proteger GRUB con contraseña. No confundir con `grub2-mkconfig` (que regenera la configuracion). La contraseña se configura en `/etc/grub.d/40_custom`, NO directamente en `grub.cfg`
+- **`/etc/cron.allow` vs `/etc/cron.deny`** — si existe `cron.allow`, SOLO los usuarios listados pueden usar cron (cron.deny se ignora). Si solo existe `cron.deny`, todos pueden usar cron excepto los listados. Si ninguno existe, la politica depende de la distribucion. Para hardening: crear `cron.allow` solo con root
+- **USBGuard `allow` vs `block` vs `reject`** — `allow` permite el dispositivo; `block` lo desactiva pero mantiene la informacion; `reject` lo elimina del sistema completamente. `reject` es mas seguro que `block` para dispositivos no autorizados
+- **`chage -d 0` vs `passwd -l`** — `chage -d 0` fuerza cambio de contraseña en el siguiente login (el usuario puede acceder); `passwd -l` bloquea la cuenta completamente (antepone `!` al hash). No confundir ambos efectos
+- **Permisos de archivos de arranque** — `/boot/grub2/grub.cfg`, `/boot/vmlinuz-*` y `/boot/initramfs-*` deben tener permisos 600. Dejarlos legibles permite a un atacante local extraer informacion sensible del kernel o modificar parametros de arranque

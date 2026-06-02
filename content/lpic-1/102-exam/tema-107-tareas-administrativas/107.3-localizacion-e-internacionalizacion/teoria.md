@@ -415,3 +415,20 @@ dpkg-reconfigure tzdata
 9. **`tzselect`** ayuda a elegir zona horaria pero NO cambia la configuracion
 10. **`timedatectl set-timezone`** cambia la zona horaria en sistemas systemd
 11. **Locale `C`/`POSIX`** es el locale minimo (ASCII, ingles, orden por byte)
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Prioridad de locale: `LC_ALL` > `LC_*` > `LANG`** — `LC_ALL` sobreescribe TODO (incluyendo todas las variables `LC_*` individuales y `LANG`). `LANG` solo es el valor por defecto para las `LC_*` que no estan definidas. El examen pregunta frecuentemente cual tiene mayor prioridad
+- **`LC_ALL` es para uso TEMPORAL, no para configuracion permanente** — Establecer `LC_ALL` permanentemente en el sistema es mala practica porque impide configurar categorias individuales. Se usa solo en scripts o pruebas puntuales
+- **`LANG` vs `LC_MESSAGES`** — `LANG` establece TODAS las categorias por defecto; `LC_MESSAGES` solo controla el idioma de los mensajes. Se puede tener `LANG=es_ES.UTF-8` con `LC_MESSAGES=en_US.UTF-8` para sistema en espanol pero mensajes en ingles
+- **`/etc/locale.conf` (Red Hat) vs `/etc/default/locale` (Debian)** — La ubicacion del archivo de configuracion de locale depende de la distribucion. El examen puede preguntar por la ruta segun la distribucion
+- **`iconv -f ORIGEN -t DESTINO`** — El orden de los parametros es importante: `-f` (from) es la codificacion de ORIGEN, `-t` (to) es la de DESTINO. Invertirlos corrompe el archivo. `iconv -l` lista las codificaciones disponibles
+- **UTF-8 es compatible con ASCII pero NO con ISO-8859-1 completo** — Los primeros 128 caracteres de UTF-8 son identicos a ASCII, pero los caracteres 128-255 de ISO-8859-1 tienen codificaciones DIFERENTES en UTF-8. Convertir sin `iconv` corrompe los acentos
+- **`tzselect` NO cambia la zona horaria** — `tzselect` es una herramienta interactiva que solo MUESTRA el nombre de la zona horaria seleccionada. Para cambiarla realmente se debe usar `timedatectl set-timezone` o modificar `/etc/localtime`
+- **`/etc/localtime` es un enlace simbolico, `/etc/timezone` es texto** — `/etc/localtime` apunta a un archivo binario en `/usr/share/zoneinfo/`; `/etc/timezone` (solo Debian) contiene el nombre en texto plano. No son intercambiables
+- **Locale `C` y `POSIX` son equivalentes** — Ambos representan el locale minimo: ASCII, ingles basico, orden de clasificacion por valor de byte. `C` es el nombre mas comun, `POSIX` es el alias
+- **`locale -a` lista locales GENERADOS, no todos los posibles** — En Debian, los locales deben generarse primero con `locale-gen` o `dpkg-reconfigure locales`. Un locale no generado no aparece en `locale -a` aunque exista como definicion

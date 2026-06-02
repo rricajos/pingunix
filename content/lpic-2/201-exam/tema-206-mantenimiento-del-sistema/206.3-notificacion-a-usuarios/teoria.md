@@ -260,3 +260,18 @@ ls /run/systemd/ask-password/
 - **Usar banners legales**: Proteger legalmente a la organizacion con avisos en `/etc/issue` y `/etc/issue.net`
 - **Mantener `/etc/motd` actualizado**: Informacion desactualizada reduce la confianza en las comunicaciones del sistema
 - **Documentar los procedimientos**: Tener scripts estandarizados para notificaciones de mantenimiento
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`/etc/issue` (antes del login) vs `/etc/motd` (despues del login)** — `/etc/issue` se muestra ANTES de que el usuario introduzca su nombre; `/etc/motd` se muestra DESPUES de un login exitoso. Confundir el momento de aparicion es una trampa clasica
+- **`/etc/issue` vs `/etc/issue.net`** — `/etc/issue` es para consolas locales (tty); `/etc/issue.net` es para conexiones remotas (SSH). Las secuencias de escape (`\n`, `\l`, `\r`) generalmente solo funcionan en `/etc/issue`, no en `/etc/issue.net`
+- **SSH no muestra `/etc/issue.net` por defecto** — para que SSH muestre el banner, se debe agregar `Banner /etc/issue.net` en `/etc/ssh/sshd_config` y reiniciar sshd. Sin esta configuracion, el archivo existe pero no se muestra
+- **`mesg n` no bloquea `wall` de root** — un usuario puede usar `mesg n` para bloquear mensajes de `write`, pero los mensajes de `wall` enviados por root generalmente ignoran esta restriccion y se muestran igualmente
+- **`wall` envia a TODOS los usuarios conectados** — no se puede especificar un destinatario. Para enviar a un usuario especifico, se usa `write usuario [tty]`. `wall` es para anuncios generales; `write` para comunicacion directa
+- **`shutdown -c` cancela un apagado programado** — si programaste un `shutdown -h +10` y cambias de opinion, `shutdown -c` lo cancela. El mensaje con `-c` se envia automaticamente a los usuarios informandoles de la cancelacion
+- **`systemd-ask-password` no es una herramienta de notificacion general** — se usa especificamente para solicitar contrasenas durante el arranque del sistema (por ejemplo, para LUKS). No es para enviar mensajes a usuarios
+- **`/etc/update-motd.d/` genera motd dinamicamente en Ubuntu** — en distribuciones modernas, `/etc/motd` puede ser generado por scripts ejecutables en `/etc/update-motd.d/`. Deshabilitar un componente requiere quitarle el permiso de ejecucion con `chmod -x`

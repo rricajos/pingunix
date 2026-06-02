@@ -273,3 +273,29 @@ dhclient eth0        # Solicitar nueva IP
 | `/var/lib/dhcp/dhcpd6.leases` | Base de datos de concesiones DHCPv6 |
 | `/etc/default/isc-dhcp-server` | Configuración de interfaz (Debian/Ubuntu) |
 | `/etc/sysconfig/dhcpd` | Configuración de interfaz (RHEL/CentOS) |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Puertos DHCP: servidor = UDP 67, cliente = UDP 68** — el servidor escucha en el 67 y el cliente en el 68. Para DHCPv6 son 547 (servidor) y 546 (cliente). No invertir los puertos.
+
+- **`fixed-address` requiere `hardware ethernet`** — las reservas estaticas se identifican por la direccion MAC. Sin `hardware ethernet`, la reserva no puede funcionar. La sintaxis es `hardware ethernet AA:BB:CC:DD:EE:FF;` con punto y coma al final.
+
+- **`/var/lib/dhcp/dhcpd.leases` es la ruta del archivo de concesiones** — el examen pregunta frecuentemente por esta ruta exacta. No confundir con `/var/lib/dhcpd/` o `/etc/dhcp/`.
+
+- **`authoritative;` hace que el servidor responda a clientes con IPs invalidas** — sin esta directiva, el servidor DHCP ignora peticiones de clientes que solicitan una IP que no pertenece a sus rangos. Con `authoritative`, les envia un DHCPNAK para que soliciten una nueva IP.
+
+- **Proceso DORA: Discover, Offer, Request, Acknowledge** — el orden es fijo. El examen puede preguntar el orden correcto o que paso se ejecuta despues de otro.
+
+- **`max-lease-time` vs `default-lease-time`** — `default-lease-time` se aplica cuando el cliente NO solicita un tiempo especifico. `max-lease-time` es el maximo que el servidor concedera aunque el cliente pida mas. Ambos se expresan en segundos.
+
+- **DHCPv6 usa `subnet6`, `range6` y prefijo `dhcp6.`** — la sintaxis difiere completamente de DHCPv4. `subnet6 2001:db8::/64 { range6 ...; }`. Las opciones llevan prefijo `dhcp6.` como `dhcp6.name-servers`.
+
+- **`dhcrelay` es necesario si servidor y clientes estan en subredes distintas** — los broadcasts DHCP no cruzan routers. El relay agent escucha los broadcasts del cliente y los reenvia al servidor como unicast.
+
+- **`dhcpd -t -cf /etc/dhcp/dhcpd.conf` para verificar la sintaxis** — antes de reiniciar el servicio, verificar la configuracion con `-t`. Un error de sintaxis puede impedir que el demonio arranque y dejar a los clientes sin IPs.
+
+- **Las opciones dentro de `subnet` sobreescriben las globales** — si defines `option domain-name-servers` tanto globalmente como dentro de un `subnet`, la del subnet prevalece para esos clientes.

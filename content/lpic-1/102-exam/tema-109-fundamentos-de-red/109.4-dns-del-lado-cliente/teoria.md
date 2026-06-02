@@ -250,3 +250,20 @@ Esto redirige todas las consultas DNS al stub resolver local de systemd-resolved
 8. **systemd-resolved** usa `127.0.0.53` como stub resolver local
 9. **`resolvectl`** es la herramienta CLI de systemd-resolved
 10. DNS usa el **puerto 53** (TCP y UDP)
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`dig`, `host` y `nslookup` consultan DNS directamente; `getent` usa nsswitch** — `dig`, `host` y `nslookup` van directamente al servidor DNS configurado, ignorando `/etc/hosts`. `getent hosts` usa el mecanismo completo de `/etc/nsswitch.conf` (primero archivos, luego DNS). El examen evalua esta diferencia critica
+- **`domain` y `search` en resolv.conf son mutuamente excluyentes** — Si ambos estan presentes, se usa el ULTIMO definido. `search` es mas flexible porque permite multiples dominios de busqueda. El examen puede poner ambos y preguntar cual se aplica
+- **Maximo 3 `nameserver` en `/etc/resolv.conf`** — Aunque escribas mas, solo se usan los primeros 3. El examen puede preguntar cuantos servidores DNS se pueden configurar
+- **Registro A (IPv4) vs AAAA (IPv6)** — Un registro A resuelve un nombre a una direccion IPv4; AAAA resuelve a IPv6. El examen puede preguntar que tipo de registro consultar para obtener la direccion IPv6 de un host
+- **`dig -x IP` realiza resolucion INVERSA (PTR)** — La opcion `-x` busca registros PTR (de IP a nombre). Sin `-x`, `dig` busca registros A por defecto. No confundir la resolucion directa con la inversa
+- **CNAME es un ALIAS, no una IP** — Un registro CNAME apunta a OTRO nombre de dominio, no a una direccion IP. `www.ejemplo.com CNAME ejemplo.com` significa que www es un alias de ejemplo.com. La IP se resuelve siguiendo el CNAME hasta un registro A
+- **Registro MX tiene PRIORIDAD numerica** — Los registros MX incluyen un valor de prioridad: menor numero = mayor prioridad. `MX 10 mail1.ejemplo.com` tiene mas prioridad que `MX 20 mail2.ejemplo.com`. El examen puede mostrar registros MX y preguntar cual se usa primero
+- **`systemd-resolved` escucha en 127.0.0.53, no en 127.0.0.1** — Cuando systemd-resolved esta activo, `/etc/resolv.conf` apunta a `nameserver 127.0.0.53` (stub resolver). No confundir con el loopback clasico 127.0.0.1
+- **`dig +short` muestra SOLO la respuesta** — Sin `+short`, `dig` muestra toda la informacion (secciones QUESTION, ANSWER, AUTHORITY, ADDITIONAL). `+short` es util para scripting pero el examen puede pedir interpretar la salida completa
+- **`/etc/nsswitch.conf` con `hosts: files dns`** — El orden importa: `files` significa consultar `/etc/hosts` PRIMERO, luego DNS. Si un nombre esta en `/etc/hosts`, DNS nunca se consulta. Cambiar el orden cambia el comportamiento completamente

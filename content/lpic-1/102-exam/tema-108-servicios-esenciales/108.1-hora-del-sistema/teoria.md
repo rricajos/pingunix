@@ -403,3 +403,20 @@ timedatectl show-timesync             # Propiedades del servicio
 11. **systemd-timesyncd** es solo cliente SNTP, ntpd y chrony pueden ser servidor NTP completo
 12. **/etc/localtime** define la zona horaria del sistema (enlace a `/usr/share/zoneinfo/`)
 13. **pool.ntp.org** es el pool publico de servidores NTP
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`hwclock --systohc` vs `--hctosys`** — `--systohc` copia del SISTEMA al HARDWARE; `--hctosys` copia del HARDWARE al SISTEMA. La confusion entre la direccion de sincronizacion es una de las trampas mas frecuentes. Mnemotecnica: lee las siglas como "System TO Hardware Clock" y "Hardware Clock TO System"
+- **`systemd-timesyncd` es SNTP, NO NTP completo** — `systemd-timesyncd` es un cliente SNTP simple: solo puede actuar como cliente, solo hace ajustes tipo step, y no calcula drift. Para servir NTP a otros equipos se necesita `ntpd` o `chronyd`
+- **`timedatectl set-ntp true` habilita `systemd-timesyncd`, NO ntpd** — Este comando activa el servicio SNTP de systemd, no el demonio NTP clasico. Si necesitas NTP completo, debes instalar y configurar `ntpd` o `chronyd` por separado
+- **NTP usa UDP puerto 123** — No es TCP. El examen espera que sepas que NTP funciona sobre UDP. Confundirlo con TCP es un error frecuente
+- **Estrato (stratum) 0 NO es accesible por red** — Los dispositivos de estrato 0 son relojes atomicos o GPS. Los servidores de estrato 1 estan conectados directamente a ellos. Estrato 16 significa "no sincronizado" (invalido)
+- **`ntpdate` esta DEPRECADO** — Ya no debe usarse. Los reemplazos son `ntpd -gq` (sincronizar una vez y salir), `chronyd -q`, o `timedatectl set-ntp true`. Ademas, `ntpdate` no debe ejecutarse mientras `ntpd` o `chronyd` estan activos
+- **`/etc/adjtime` indica si el RTC esta en UTC o LOCAL** — La tercera linea de este archivo es `UTC` o `LOCAL`. Si el RTC esta en hora local (tipico en dual-boot con Windows), se debe indicar `LOCAL`. En Linux puro, se recomienda `UTC`
+- **Step vs Slew** — Step cambia el reloj de golpe (puede causar problemas en logs y aplicaciones); Slew ajusta gradualmente acelerando o frenando el reloj. SNTP (systemd-timesyncd) solo hace step; NTP completo (ntpd, chronyd) puede hacer slew
+- **`*` en `ntpq -p` indica el servidor SELECCIONADO** — En la salida de `ntpq -p`, `*` marca el servidor de sincronizacion actual, `+` son candidatos aceptables, `-` descartados. El examen puede mostrar una salida y preguntar cual es la fuente activa
+- **`chronyc sources` es el equivalente de `ntpq -p` para chrony** — No confundir los comandos de cada implementacion. Para ntpd se usa `ntpq -p`; para chrony se usa `chronyc sources`. Los simbolos son similares pero no identicos (`^*` vs `*`)

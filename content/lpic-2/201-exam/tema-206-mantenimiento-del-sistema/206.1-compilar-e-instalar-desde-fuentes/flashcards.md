@@ -11,7 +11,7 @@ subtema: "206.1"
 
 # Flashcards: 206.1 - Compilar E Instalar Desde Fuentes
 
-> 40 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 41 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="206.1">
 </div>
@@ -727,6 +727,24 @@ subtema: "206.1"
 <div class="flashcard-back">
 
 **R:** - **Siempre leer** los archivos `README`, `INSTALL` y `CHANGELOG` antes de compilar
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="206.1">
+</div>
+
+<div class="flashcard" data-id="206.1-fc-041">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

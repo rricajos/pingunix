@@ -460,3 +460,20 @@ vagrant cloud search ubuntu
 | Forwarded ports | Redirección de puertos guest-host |
 | Private network | Red solo-host con IP estática/DHCP |
 | Public network | Red bridge a la red física |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`vagrant halt` vs `vagrant destroy`** — `halt` apaga la VM de forma ordenada pero conserva los discos y la definicion (se puede reiniciar con `vagrant up`). `destroy` elimina completamente la VM y sus discos. El examen puede preguntar como liberar espacio en disco permanentemente (respuesta: `destroy`).
+- **`vagrant up` solo ejecuta provisioners la primera vez** — Los provisioners se ejecutan automaticamente en el primer `vagrant up`. En arranques posteriores, `vagrant up` NO re-ejecuta los provisioners. Para forzar la re-ejecucion se usa `vagrant up --provision` o `vagrant provision`. El examen puede preguntar por que un cambio en el provisioner no se aplica.
+- **`vagrant suspend` vs `vagrant halt`** — `suspend` guarda el estado completo de la VM en disco (como hibernar), el resume es instantaneo. `halt` apaga la VM (como shutdown), el arranque es completo. `suspend` consume espacio en disco para guardar la RAM. El examen puede preguntar cual es mas rapido al reanudar.
+- **VirtualBox es el provider por defecto** — Si no se especifica provider, Vagrant usa VirtualBox. Para usar libvirt se necesita instalar el plugin `vagrant-libvirt` (`vagrant plugin install vagrant-libvirt`) y especificar `--provider=libvirt` o configurarlo en el Vagrantfile. El examen puede preguntar que se necesita para usar KVM con Vagrant.
+- **Synced folders: por defecto `.` se monta en `/vagrant`** — El directorio del Vagrantfile se comparte automaticamente como `/vagrant` dentro de la VM. Para desactivarlo: `config.vm.synced_folder ".", "/vagrant", disabled: true`. El examen puede preguntar donde encontrar el Vagrantfile desde dentro de la VM.
+- **`private_network` vs `public_network`** — `private_network` crea una red host-only (solo accesible desde el host y otras VMs). `public_network` crea una red bridged donde la VM obtiene una IP en la red fisica real. El examen puede preguntar que tipo de red usar para que la VM sea accesible desde otros equipos de la LAN.
+- **`Vagrant.configure("2")` es la version de configuracion, no la version de Vagrant** — El `"2"` se refiere a la version del formato de configuracion, no a la version de Vagrant instalada. La version "1" es obsoleta. El examen puede intentar confundir estos conceptos.
+- **`ansible` vs `ansible_local` provisioner** — `ansible` ejecuta Ansible desde el HOST hacia la VM via SSH. `ansible_local` instala y ejecuta Ansible DENTRO de la VM. Si Ansible no esta instalado en el host, se debe usar `ansible_local`. El examen puede preguntar cual usar cuando el host es Windows (respuesta: `ansible_local`, ya que Ansible no corre nativamente en Windows).
+- **`vagrant global-status` muestra VMs de todo el sistema** — `vagrant status` muestra solo las VMs del directorio actual. `vagrant global-status` muestra todas las VMs de Vagrant en el sistema, independientemente del directorio. El examen puede preguntar como ver todas las VMs Vagrant activas.
+- **Multi-maquina: `config.vm.define` es obligatorio** — En entornos multi-maquina, cada VM se define con `config.vm.define "nombre"`. Sin este bloque, solo se puede tener una VM. Los comandos aceptan el nombre como argumento: `vagrant ssh web`, `vagrant halt db`. El examen puede preguntar como dirigir un comando a una VM especifica.

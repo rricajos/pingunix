@@ -452,3 +452,19 @@ apt-key list
 7. `apt-file search` busca archivos en **todos** los paquetes (instalados o no); `dpkg -S` solo en instalados.
 8. `dpkg-reconfigure` re-ejecuta la configuracion post-instalacion de un paquete.
 9. `dpkg --configure -a` intenta configurar paquetes que quedaron en estado roto.
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`dpkg` vs `apt`: nivel bajo vs alto** — `dpkg` NO resuelve dependencias; `apt` si las resuelve. El examen puede preguntar que herramienta usar cuando una instalacion falla por dependencias.
+- **`dpkg -r` vs `dpkg -P`** — `-r` (remove) desinstala pero conserva archivos de configuracion; `-P` (purge) elimina todo incluyendo la configuracion. El examen puede preguntar como eliminar completamente un paquete con sus configuraciones.
+- **`dpkg -S` vs `apt-file search`** — `dpkg -S` busca SOLO entre paquetes instalados; `apt-file search` busca en TODOS los paquetes del repositorio (instalados o no). El examen puede presentar un escenario donde el paquete no esta instalado.
+- **`apt update` vs `apt upgrade`** — `update` actualiza la LISTA de paquetes disponibles (metadatos); `upgrade` instala las actualizaciones de paquetes. El examen puede invertir sus funciones en las opciones.
+- **`apt upgrade` vs `apt full-upgrade`** — `upgrade` nunca elimina paquetes; `full-upgrade` (antes `dist-upgrade`) puede eliminar paquetes si es necesario para resolver dependencias. El examen puede preguntar cual es mas "agresivo".
+- **`dpkg -l` vs `dpkg -L`** — `-l` (minuscula L) lista todos los paquetes instalados; `-L` (mayuscula L) lista los archivos de UN paquete especifico. La diferencia entre mayuscula y minuscula es critica.
+- **`dpkg -i` vs `dpkg -r` requieren nombres diferentes** — `-i` requiere el archivo `.deb` completo (e.g., `paquete_1.0_amd64.deb`); `-r` requiere solo el nombre del paquete (e.g., `paquete`). El examen puede mezclar estos formatos.
+- **`/etc/apt/sources.list` vs `/etc/apt/sources.list.d/`** — El primero es el archivo principal de repositorios; el segundo es un directorio para archivos individuales de repositorios adicionales. El examen puede preguntar donde anadir un repositorio de terceros.
+- **`dpkg-reconfigure` no reinstala el paquete** — Solo re-ejecuta los scripts de configuracion post-instalacion. El examen puede presentarlo como si reinstalara el paquete.

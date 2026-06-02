@@ -268,3 +268,20 @@ Columnas principales de xentop:
 | PVH | Modo híbrido recomendado |
 | xentop | Monitorización de dominios |
 | Xenstore | Base de datos de configuración compartida |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Dom0 vs DomU** — Dom0 es el dominio privilegiado que arranca primero y tiene acceso directo al hardware. Sin Dom0, Xen no puede funcionar ni gestionar guests. DomU son los dominios no privilegiados (las VMs). El examen puede preguntar que sucede si Dom0 falla (respuesta: todo el host cae).
+- **PV vs HVM vs PVH** — PV requiere kernel modificado y NO necesita VT-x; HVM no requiere modificacion del guest pero SI necesita VT-x/AMD-V; PVH es el modo hibrido recomendado que usa VT-x para CPU y drivers PV para E/S. Cuidado: PV NO soporta Windows, HVM si.
+- **`xl` vs `xm`** — `xl` es la herramienta actual de gestion de Xen (reemplazo de `xm`). `xm` dependia del demonio `xend` que ya no existe en Xen moderno. Si el examen menciona `xm`, es probable que sea un distractor o contexto legacy.
+- **`xl destroy` no es lo mismo que destruir la VM** — `xl destroy` es un apagado forzado inmediato (equivalente a cortar la corriente), NO elimina la configuracion ni los discos. `xl shutdown` envia senal ACPI para apagado ordenado. La terminologia puede confundir.
+- **builder "hvm" vs "generic"** — En xl.cfg, `builder = "hvm"` indica virtualizacion completa, `builder = "generic"` (o sin builder) indica paravirtualizacion. Las opciones de `kernel`, `ramdisk` y `extra` solo aplican a PV; `boot`, `vnc` y `sdl` solo a HVM.
+- **Xenstore no es un almacen de datos persistente** — Xenstore es una base de datos jerarquica en memoria compartida entre Dom0 y los DomU para intercambiar configuracion en tiempo real. Se pierde al reiniciar. No confundir con almacenamiento de disco.
+- **xentop vs top** — `xentop` muestra estadisticas por dominio Xen (CPU, memoria, red, VBDs), no por proceso individual. Las columnas STATE usan letras diferentes: r=running, b=blocked, p=paused. No confundir con los estados de `top` de Linux.
+- **Formato de disco `phy:` vs `file:`** — `phy:` accede directamente a dispositivos de bloque (LVM), mejor rendimiento en produccion. `file:` usa archivos de imagen, mas simple pero menor rendimiento. En el formato `phy:/dev/vg0/disk,xvda,w`, la `w` significa read-write y `r` solo lectura.
+- **Migracion en vivo requiere almacenamiento compartido** — `xl migrate` necesita que ambos hosts tengan acceso al mismo almacenamiento (NFS, iSCSI, etc.) y la misma arquitectura de CPU. Sin almacenamiento compartido, la migracion fallara.
+- **Red vif y xenbr0** — Cada DomU tiene interfaces vif (virtual interface) que se conectan al bridge xenbr0 en Dom0. Las MACs en Xen usan el prefijo `00:16:3e:`. El examen puede preguntar como se conectan las VMs a la red externa.

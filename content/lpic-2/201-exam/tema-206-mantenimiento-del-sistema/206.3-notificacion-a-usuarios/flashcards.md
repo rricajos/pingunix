@@ -11,7 +11,7 @@ subtema: "206.3"
 
 # Flashcards: 206.3 - Notificacion A Usuarios
 
-> 34 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 35 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="206.3">
 </div>
@@ -619,6 +619,24 @@ subtema: "206.3"
 <div class="flashcard-back">
 
 **R:** - **Mantener los mensajes breves y claros**: Los usuarios tienden a ignorar mensajes largos
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="206.3">
+</div>
+
+<div class="flashcard" data-id="206.3-fc-035">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

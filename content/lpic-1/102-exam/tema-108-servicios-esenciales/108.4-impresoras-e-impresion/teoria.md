@@ -330,3 +330,20 @@ lpoptions -o media=A4 -o sides=two-sided-long-edge  # Establecer opciones
 10. `/etc/cups/cupsd.conf` es la configuracion del demonio
 11. `/etc/cups/printers.conf` define las impresoras (no editar manualmente con CUPS activo)
 12. Los archivos **PPD** describen las capacidades de cada impresora
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`lp -d` (System V) vs `lpr -P` (BSD) para seleccionar impresora** — `lp` usa `-d nombre` y `lpr` usa `-P nombre` para elegir la impresora. Confundir las opciones entre los estilos System V y BSD es una trampa clasica del examen
+- **`lp -n 3` vs `lpr -# 3` para numero de copias** — System V (`lp`) usa `-n`; BSD (`lpr`) usa `-#`. El examen puede mezclar las opciones de ambos estilos para confundir
+- **CUPS usa puerto 631, NO el puerto 80** — La interfaz web de CUPS esta en `http://localhost:631`. IPP (Internet Printing Protocol) tambien usa el puerto 631/TCP. No confundir con HTTP (puerto 80)
+- **`cupsenable`/`cupsdisable` vs `cupsaccept`/`cupsreject`** — `cupsenable`/`cupsdisable` controlan si la impresora PROCESA trabajos; `cupsaccept`/`cupsreject` controlan si la cola ACEPTA nuevos trabajos. Una impresora puede estar deshabilitada pero seguir aceptando trabajos (se acumulan en cola)
+- **`/etc/cups/printers.conf` NO se debe editar manualmente** — Este archivo se gestiona automaticamente por CUPS. Editarlo mientras cupsd esta en ejecucion puede causar corrupcion. Se usa `lpadmin` para administrar impresoras
+- **`lpadmin -d` establece la impresora PREDETERMINADA** — No confundir con `-p` (crear/modificar impresora) o `-x` (eliminar). `-d` sin mas opciones solo cambia la impresora por defecto
+- **`lpstat -t` muestra el estado COMPLETO** — Para ver toda la informacion del sistema de impresion (impresoras, trabajos, estado) se usa `lpstat -t`. `-a` muestra solo que impresoras aceptan trabajos, `-p` solo el estado de las impresoras
+- **`cancel` (System V) vs `lprm` (BSD) para cancelar** — Ambos cancelan trabajos pero con sintaxis diferente. `cancel MiImpresora-123` o `lprm 123`. `lprm -` cancela todos los trabajos del usuario
+- **`lpinfo -v` lista dispositivos, `lpinfo -m` lista drivers** — No confundir las opciones. `-v` (verbose/devices) muestra las URIs de impresoras detectadas; `-m` (models) muestra los modelos/drivers disponibles
+- **`lpmove` mueve trabajos entre COLAS** — Se usa cuando una impresora falla y hay que migrar sus trabajos pendientes a otra impresora. `lpmove MiImpresora OtraImpresora` mueve TODOS los trabajos

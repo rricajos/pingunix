@@ -297,3 +297,20 @@ Opciones comunes:
 8. La barra invertida en `~/.forward` (`\usuario`) mantiene copia local
 9. `sendmail -bi` equivale a `newaliases`
 10. `sendmail -bp` equivale a `mailq`
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **MUA vs MTA vs MDA** — MUA (Mail User Agent) es el cliente de correo (Thunderbird, mutt); MTA (Mail Transfer Agent) transfiere correo entre servidores (postfix, sendmail, exim); MDA (Mail Delivery Agent) entrega al buzon local (procmail). El examen describe una funcion y espera que identifiques el componente
+- **`newaliases` es OBLIGATORIO despues de editar `/etc/aliases`** — Sin ejecutar `newaliases`, los cambios en aliases NO tienen efecto porque la base de datos (`/etc/aliases.db`) no se actualiza. `sendmail -bi` es equivalente a `newaliases`
+- **`~/.forward` permite redireccion SIN ser root** — A diferencia de `/etc/aliases` (que requiere root), cada usuario puede crear `~/.forward` en su home para redirigir su propio correo. El examen pregunta como un usuario normal redirige su correo
+- **Barra invertida en `~/.forward`: `\usuario`** — Sin `\`, el correo solo se reenvia (no se guarda copia local). Con `\usuario`, se mantiene copia local Y se reenvia. La barra invertida evita la expansion recursiva del alias
+- **SMTP usa puerto 25, submission usa 587** — El puerto 25 es SMTP clasico; 587 es para submission (con autenticacion). El examen puede preguntar que puerto usar para envio autenticado de correo
+- **Todos los MTAs proporcionan un comando `sendmail` compatible** — Aunque uses postfix o exim, existe `/usr/sbin/sendmail` como interfaz compatible. El examen puede preguntar si el comando `sendmail` existe en un sistema con postfix (si, existe)
+- **`sendmail -bp` = `mailq`, `sendmail -bi` = `newaliases`** — Estas equivalencias son clasicas en el examen. `-bp` muestra la cola de correo, `-bi` reconstruye la base de datos de aliases
+- **`/var/spool/mail/` vs `/var/mail/`** — Ambas ubicaciones son validas para buzones mbox. En muchos sistemas `/var/mail` es un enlace simbolico a `/var/spool/mail/`. El examen puede preguntar por cualquiera de las dos
+- **mbox vs Maildir** — mbox almacena todos los mensajes en un SOLO archivo; Maildir usa un directorio con un archivo por mensaje (subdirectorios `cur/`, `new/`, `tmp/`). Maildir es mas robusto ante fallos pero mbox es el formato clasico
+- **`mailq` muestra correo PENDIENTE de envio** — No muestra correo recibido ni el buzon del usuario. Solo muestra la cola de correo saliente que aun no se ha podido entregar

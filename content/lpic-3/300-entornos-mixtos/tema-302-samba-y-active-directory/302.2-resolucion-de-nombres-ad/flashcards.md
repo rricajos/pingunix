@@ -11,7 +11,7 @@ subtema: "302.2"
 
 # Flashcards: 302.2 - Resolucion De Nombres Ad
 
-> 36 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 37 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="302.2">
 </div>
@@ -655,6 +655,24 @@ subtema: "302.2"
 <div class="flashcard-back">
 
 **R:** - DNS es obligatorio para Active Directory; sin él nada funciona
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="302.2">
+</div>
+
+<div class="flashcard" data-id="302.2-fc-037">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

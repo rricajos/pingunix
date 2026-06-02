@@ -383,3 +383,20 @@ aa-enforce /usr/sbin/mi_app
 | Herramientas de diagnostico | audit2allow, sealert | aa-logprof |
 | Curva de aprendizaje | Pronunciada | Moderada |
 | Proteccion rename/hardlink | Si (etiquetas en inodo) | No (basado en ruta) |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **SELinux `enforcing` vs `permissive`** — `permissive` registra violaciones pero NO las bloquea; `enforcing` registra Y bloquea. Cambiar entre ambos con `setenforce` NO requiere reinicio. Pero pasar de `disabled` a `enforcing` SI requiere reinicio y relabeling completo (`touch /.autorelabel` + reboot o `fixfiles relabel`)
+- **`chcon` vs `semanage fcontext` + `restorecon`** — `chcon` cambia contextos temporalmente (se pierden con `restorecon` o relabeling); `semanage fcontext -a` + `restorecon` es la forma correcta y permanente. El examen penaliza responder `chcon` cuando se pide un cambio persistente
+- **`setsebool` vs `setsebool -P`** — sin `-P`, el cambio es temporal (se pierde al reiniciar); con `-P`, el cambio es permanente (se escribe en la politica). Olvidar `-P` es uno de los errores mas comunes en el examen
+- **`audit2allow` genera modulos, no los instala** — `audit2allow -a -M modulo` genera el archivo `.pp`, pero hay que instalarlo manualmente con `semodule -i modulo.pp`. Son dos pasos separados que el examen puede evaluar individualmente
+- **AppArmor: enforce vs complain** — equivalente a enforcing vs permissive de SELinux, pero a nivel de perfil individual (no global). `aa-enforce` activa el bloqueo; `aa-complain` solo registra. Un perfil puede estar en complain mientras otros estan en enforce
+- **SELinux basado en etiquetas vs AppArmor basado en rutas** — SELinux asocia contextos a inodos (persisten tras rename/move); AppArmor usa rutas del sistema de archivos (si se renombra un archivo, puede escapar del perfil). Esta diferencia es fundamental y aparece frecuentemente en el examen
+- **`restorecon` vs `relabel`** — `restorecon` restaura el contexto de archivos individuales/directorios especificos; un relabeling completo (`/.autorelabel` + reboot) restaura contextos de TODO el sistema de archivos. Usar relabeling completo cuando solo se necesita `restorecon -Rv /ruta` es ineficiente
+- **AppArmor `ix` vs `px` vs `ux`** — `ix` hereda el perfil actual; `px` transiciona al perfil del ejecutable llamado; `ux` ejecuta sin confinamiento. `Px` y `Ux` (mayusculas) limpian variables de entorno. Confundir estos modos de ejecucion puede crear brechas de seguridad
+- **`semanage port -a` vs `semanage port -m`** — `-a` (add) añade un puerto nuevo a un tipo; `-m` (modify) cambia la asignacion de un puerto que ya esta asignado a otro tipo. Si el puerto ya pertenece a otro tipo, `-a` falla y se debe usar `-m`
+- **DAC se evalua ANTES que MAC** — el kernel evalua primero los permisos DAC (rwx, ACLs) y luego MAC (SELinux/AppArmor). Si DAC deniega, MAC ni siquiera se consulta. Por tanto, una denegacion puede ser DAC y no MAC, y `ausearch -m AVC` no mostrara nada. Siempre verificar ambas capas

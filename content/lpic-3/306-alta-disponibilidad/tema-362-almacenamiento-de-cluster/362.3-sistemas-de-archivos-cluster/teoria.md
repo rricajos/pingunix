@@ -264,3 +264,20 @@ pcs stonith fence nodo_test
 - Usado en: clusters activo/activo, almacenamiento compartido de VMs
 
 > **Para el examen:** Si el examen pregunta cuando usar GFS2/OCFS2, la respuesta es: cuando multiples nodos necesitan acceso de escritura simultaneo al mismo dispositivo de bloque.
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **GFS2/OCFS2 requieren DLM activo ANTES del montaje** — el DLM debe estar funcionando en todos los nodos como recurso clone de Pacemaker antes de montar el filesystem cluster. Sin DLM, el montaje falla. El orden en Pacemaker es: DLM-clone -> FS-clone
+- **ext4/XFS con multiples escritores = corrupcion** — si dos nodos montan el mismo dispositivo de bloque con ext4 o XFS, los datos se corrompen. Estos FS asumen un unico escritor. Solo GFS2 y OCFS2 soportan escritura simultanea desde multiples nodos
+- **Numero de journals en GFS2 (-j)** — al crear GFS2 con `mkfs.gfs2 -j N`, N debe ser al menos igual al numero de nodos que montaran el FS. Si tienes 3 nodos y creas con `-j 2`, el tercer nodo no puede montar. Para añadir journals despues se usa `gfs2_jadd`
+- **STONITH es requisito obligatorio para GFS2/OCFS2** — sin fencing, un nodo "zombie" que deja de responder al DLM pero sigue escribiendo corrompe el filesystem. Deshabilitar STONITH con FS cluster activo es una combinacion peligrosa que el examen evalua
+- **GFS2 lock_dlm vs lock_nolock** — `lock_dlm` es para uso en cluster (el protocolo de bloqueo normal); `lock_nolock` es para uso en un solo nodo sin cluster (testing/recuperacion). Si el examen muestra `mkfs.gfs2 -p lock_nolock`, es un FS que NO se puede usar en cluster
+- **OCFS2 cluster-stack=pcmk vs o2cb** — con `pcmk`, OCFS2 usa el DLM de Pacemaker; con `o2cb`, usa su propio framework de cluster. No se pueden mezclar: un FS creado con `--cluster-stack=o2cb` no funciona con Pacemaker directamente
+- **Ni GFS2 ni OCFS2 soportan shrink** — ambos soportan expansion online (`gfs2_grow` y `tunefs.ocfs2 -S`), pero ninguno soporta reduccion de tamaño. El examen puede preguntar como reducir un FS cluster: la respuesta es que no se puede, hay que recrear
+- **GFS2 fsck solo offline, nunca en caliente** — `fsck.gfs2` requiere que el filesystem este desmontado en TODOS los nodos. Ejecutar fsck con el FS montado puede corromper datos. Esto es diferente de ext4 donde fsck online es posible (en modo read-only)
+- **DLM como clone, FS como clone** — tanto el DLM como el filesystem cluster deben configurarse como recursos clone en Pacemaker (se ejecutan en todos los nodos). Si se configura como recurso primitivo (un solo nodo), solo un nodo puede montar el FS, anulando el proposito del FS cluster
+- **GFS2 es de Red Hat, OCFS2 es de Oracle** — el examen puede preguntar que FS cluster es nativo de RHEL/CentOS (GFS2) o de Oracle Linux/SUSE (OCFS2). La distribucion afecta al soporte y recomendaciones oficiales

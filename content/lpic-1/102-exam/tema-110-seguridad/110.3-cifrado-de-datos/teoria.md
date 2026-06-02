@@ -526,3 +526,20 @@ gpg --keyserver hkps://keys.openpgp.org --recv-keys ID_CLAVE
 12. **Web of Trust**: Modelo descentralizado de confianza. Niveles: unknown, none, marginal, full, ultimate
 13. **gpg --sign** firma; **gpg --verify** verifica
 14. **Cifrado asimetrico**: Clave publica cifra, clave privada descifra. Clave privada firma, clave publica verifica
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Permisos de `~/.ssh/`** — El directorio debe ser 700, la clave privada 600, `authorized_keys` 600. Cualquier permiso mas abierto hace que SSH rechace las claves SILENCIOSAMENTE. El examen puede describir un fallo de autenticacion por clave y la causa es permisos incorrectos
+- **`ssh-copy-id` copia al `authorized_keys` del SERVIDOR** — La clave publica del cliente se agrega al archivo `~/.ssh/authorized_keys` del usuario en el servidor remoto. No confundir: las claves se generan en el CLIENTE y la publica se copia al SERVIDOR
+- **Tunel local `-L` vs tunel remoto `-R`** — `-L puerto_local:destino:puerto_destino` reenvio LOCAL (acceder desde tu maquina a un servicio remoto); `-R puerto_remoto:destino:puerto_local` reenvio REMOTO (exponer un servicio local en el servidor remoto). El examen puede describir un escenario y preguntar que opcion usar
+- **`gpg --encrypt` necesita `--recipient`** — Sin especificar destinatario, GPG no sabe con que clave publica cifrar. Para cifrado simetrico (con contrasena) se usa `gpg --symmetric` o `gpg -c`, que no necesita destinatario
+- **Cifrar con clave PUBLICA, descifrar con PRIVADA** — Para cifrado asimetrico, se cifra con la clave publica del destinatario y se descifra con su clave privada. Para firma digital es al reves: se firma con la clave PRIVADA del remitente y se verifica con su clave PUBLICA
+- **Ed25519 es el tipo de clave SSH RECOMENDADO** — `ssh-keygen -t ed25519` genera claves modernas, rapidas y seguras. DSA esta deprecado y no debe usarse. RSA sigue siendo valido con 4096 bits. El examen puede preguntar cual es el algoritmo recomendado
+- **`~/.ssh/known_hosts` almacena claves de HOST, no de usuario** — `known_hosts` contiene las claves publicas de los SERVIDORES a los que te has conectado. `authorized_keys` contiene claves de USUARIOS autorizados. No confundir los dos archivos
+- **`gpg --gen-revoke` genera certificado de revocacion** — Se debe generar JUSTO DESPUES de crear la clave y guardarlo en lugar seguro. Si la clave privada se compromete, se importa el certificado con `gpg --import` para revocar la clave
+- **`/etc/ssh/sshd_config` es la configuracion del SERVIDOR** — `sshd_config` (con d) configura el demonio SSH; `ssh_config` (sin d) o `~/.ssh/config` configura el CLIENTE SSH. Confundir ambos archivos es un error frecuente en el examen
+- **`PermitRootLogin prohibit-password`** — Esta opcion permite login de root SOLO con clave publica (no con contrasena). Es diferente de `no` (bloquea todo login de root) y `yes` (permite todo). El examen puede preguntar que valor usar para permitir root solo con claves

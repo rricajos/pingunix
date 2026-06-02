@@ -11,7 +11,7 @@ subtema: "102.5"
 
 # Flashcards: 102.5 - Rpm Y Yum
 
-> 34 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 35 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="102.5">
 </div>
@@ -619,6 +619,24 @@ subtema: "102.5"
 <div class="flashcard-back">
 
 **R:** Zypper es el gestor de paquetes de alto nivel para distribuciones SUSE.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="102.5">
+</div>
+
+<div class="flashcard" data-id="102.5-fc-035">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

@@ -324,3 +324,20 @@ wg set wg0 peer CLAVE_PUBLICA allowed-ips 10.0.0.3/32
 | Configuracion | Compleja | Media | Simple |
 | NAT traversal | IKEv2 nativo | Nativo (UDP) | Nativo |
 | En kernel Linux | Si (XFRM) | No (userspace) | Si (desde 5.6) |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **IPsec tunnel vs transport mode** — tunnel mode encapsula el paquete IP completo (se usa en VPN site-to-site); transport mode solo cifra el payload (se usa en host-to-host). Si la pregunta menciona "site-to-site", la respuesta es tunnel. Si menciona "comunicacion directa entre dos hosts", es transport
+- **ESP vs AH** — ESP proporciona cifrado + autenticacion; AH solo proporciona autenticacion (sin cifrado, obsoleto). En la practica moderna se usa siempre ESP. Si la pregunta pide confidencialidad, AH no es suficiente
+- **IKEv1 vs IKEv2** — IKEv2 es mas eficiente (4 mensajes vs 6-9), tiene NAT traversal integrado y soporte MOBIKE para movilidad. IKEv1 es obsoleto. Si el examen pregunta por la version recomendada, siempre IKEv2
+- **strongSwan: `left` vs `right`** — `left` es siempre el lado local; `right` es siempre el lado remoto. `leftsubnet`/`rightsubnet` definen las redes protegidas detras de cada endpoint. `authby=secret` usa PSK; `authby=rsasig` usa certificados X.509. Confundir left/right invierte la topologia completa
+- **OpenVPN: `tun` vs `tap`** — `tun` opera en capa 3 (IP, punto a punto, mas eficiente); `tap` opera en capa 2 (Ethernet, soporta broadcast, necesario para bridging). Si la pregunta menciona broadcast o bridging de redes, la respuesta es `tap`. Para routing normal, `tun`
+- **OpenVPN: `tls-auth` vs `tls-crypt`** — `tls-auth` añade autenticacion HMAC al canal de control (proteccion DoS); `tls-crypt` añade autenticacion Y cifrado del canal de control (proteccion DoS + ocultacion de trafico). `tls-auth` necesita parametro direccional (0 para servidor, 1 para cliente); `tls-crypt` no
+- **WireGuard: `AllowedIPs` es routing + ACL** — `AllowedIPs` no solo define que IPs se enrutan por el tunel sino tambien que IPs se aceptan del peer. `0.0.0.0/0` enruta todo el trafico (full tunnel); un CIDR especifico solo enruta ese rango (split tunnel). Confundir su funcion dual es un error comun
+- **WireGuard: solo UDP** — WireGuard usa exclusivamente UDP (puerto por defecto 51820). No soporta TCP. Si un firewall bloquea UDP, WireGuard no funciona. OpenVPN puede usar TCP como alternativa en redes restrictivas
+- **WireGuard: `PersistentKeepalive`** — se configura en el peer del CLIENTE (no del servidor) para mantener el tunel abierto a traves de NAT. Sin el, el mapeo NAT puede expirar y el servidor no podra enviar paquetes al cliente. Valor tipico: 25 segundos
+- **OpenVPN opera en userspace, WireGuard en kernel** — OpenVPN corre como proceso de espacio de usuario (usa libssl); WireGuard esta integrado en el kernel Linux desde la version 5.6. Esto da a WireGuard mejor rendimiento y menor latencia. IPsec tambien opera en el kernel via framework XFRM

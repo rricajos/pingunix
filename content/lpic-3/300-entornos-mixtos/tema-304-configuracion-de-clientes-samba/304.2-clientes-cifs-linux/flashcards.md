@@ -11,7 +11,7 @@ subtema: "304.2"
 
 # Flashcards: 304.2 - Clientes Cifs Linux
 
-> 42 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 44 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="304.2">
 </div>
@@ -595,6 +595,24 @@ subtema: "304.2"
 <div class="flashcard" data-id="304.2-fc-033">
 <div class="flashcard-front">
 
+**P:** Tip de examen: `cifsiostat` es la herramienta para monitorizar el rendimiento de montajes CIFS....
+
+</div>
+<div class="flashcard-back">
+
+**R:** `cifsiostat` es la herramienta para monitorizar el rendimiento de montajes CIFS. Es parte del paquete `sysstat` en muchas distribuciones.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="304.2">
+</div>
+
+<div class="flashcard" data-id="304.2-fc-034">
+<div class="flashcard-front">
+
 **P:** Que hace el comando `username=`?
 
 </div>
@@ -610,7 +628,7 @@ subtema: "304.2"
 <div class="flashcard-deck" data-subtema="304.2">
 </div>
 
-<div class="flashcard" data-id="304.2-fc-034">
+<div class="flashcard" data-id="304.2-fc-035">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `password=`?
@@ -628,7 +646,7 @@ subtema: "304.2"
 <div class="flashcard-deck" data-subtema="304.2">
 </div>
 
-<div class="flashcard" data-id="304.2-fc-035">
+<div class="flashcard" data-id="304.2-fc-036">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `uid=`?
@@ -646,7 +664,7 @@ subtema: "304.2"
 <div class="flashcard-deck" data-subtema="304.2">
 </div>
 
-<div class="flashcard" data-id="304.2-fc-036">
+<div class="flashcard" data-id="304.2-fc-037">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `gid=`?
@@ -664,7 +682,7 @@ subtema: "304.2"
 <div class="flashcard-deck" data-subtema="304.2">
 </div>
 
-<div class="flashcard" data-id="304.2-fc-037">
+<div class="flashcard" data-id="304.2-fc-038">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `file_mode=`?
@@ -682,7 +700,7 @@ subtema: "304.2"
 <div class="flashcard-deck" data-subtema="304.2">
 </div>
 
-<div class="flashcard" data-id="304.2-fc-038">
+<div class="flashcard" data-id="304.2-fc-039">
 <div class="flashcard-front">
 
 **P:** Que es/son Introducción?
@@ -700,7 +718,7 @@ subtema: "304.2"
 <div class="flashcard-deck" data-subtema="304.2">
 </div>
 
-<div class="flashcard" data-id="304.2-fc-039">
+<div class="flashcard" data-id="304.2-fc-040">
 <div class="flashcard-front">
 
 **P:** Que es/son Opciones de seguridad (sec=)?
@@ -718,7 +736,7 @@ subtema: "304.2"
 <div class="flashcard-deck" data-subtema="304.2">
 </div>
 
-<div class="flashcard" data-id="304.2-fc-040">
+<div class="flashcard" data-id="304.2-fc-041">
 <div class="flashcard-front">
 
 **P:** Que es/son Montaje multiusuario?
@@ -736,7 +754,7 @@ subtema: "304.2"
 <div class="flashcard-deck" data-subtema="304.2">
 </div>
 
-<div class="flashcard" data-id="304.2-fc-041">
+<div class="flashcard" data-id="304.2-fc-042">
 <div class="flashcard-front">
 
 **P:** Que es/son Autofs para CIFS?
@@ -754,7 +772,7 @@ subtema: "304.2"
 <div class="flashcard-deck" data-subtema="304.2">
 </div>
 
-<div class="flashcard" data-id="304.2-fc-042">
+<div class="flashcard" data-id="304.2-fc-043">
 <div class="flashcard-front">
 
 **P:** Que es/son cifsiostat?
@@ -763,6 +781,24 @@ subtema: "304.2"
 <div class="flashcard-back">
 
 **R:** `cifsiostat` muestra estadísticas de I/O de montajes CIFS:
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="304.2">
+</div>
+
+<div class="flashcard" data-id="304.2-fc-044">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

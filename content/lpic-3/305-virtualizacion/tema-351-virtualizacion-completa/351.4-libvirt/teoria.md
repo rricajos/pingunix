@@ -430,3 +430,20 @@ virsh vol-clone mi-disco.qcow2 mi-disco-copia.qcow2 --pool mi-pool
 | virt-clone | Clonar VMs existentes |
 | Storage pools | Abstracción de almacenamiento en libvirt |
 | Redes: NAT, bridge, isolated | Tres modos principales de red |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`virsh define` vs `virsh create`** — `define` registra una VM persistente (sobrevive reinicios del host) pero NO la arranca. `create` arranca una VM transitoria que desaparece al apagarse. El examen preguntara cual usar para que una VM este disponible tras reiniciar el host.
+- **`virsh destroy` no borra la VM** — `destroy` hace un apagado forzado inmediato (como cortar la corriente), NO elimina la definicion ni los discos. Para eliminar la definicion se usa `virsh undefine`. La terminologia es intencionadamente confusa en el examen.
+- **`virsh undefine` no borra discos por defecto** — `undefine` elimina solo la definicion XML. Los discos permanecen en el disco. Para eliminar tambien los discos hay que usar `--remove-all-storage`. El examen puede preguntar por que el espacio en disco no se libera tras `undefine`.
+- **`qemu:///system` vs `qemu:///session`** — `system` corre como root, acceso a bridges de red reales, VMs visibles para todos los usuarios. `session` corre como usuario normal, solo red NAT, VMs privadas del usuario. Las tres barras (///) indican conexion local (host vacio entre la segunda y tercera barra).
+- **Migracion `--live` vs `--offline`** — `--live` transfiere la VM mientras sigue funcionando (requiere almacenamiento compartido o `--copy-storage-all`). `--offline` solo transfiere la definicion XML sin datos de disco ni memoria. `--copy-storage-all` permite migracion sin almacenamiento compartido pero es mucho mas lenta.
+- **`virsh shutdown` vs `virsh destroy`** — `shutdown` envia senal ACPI al guest para un apagado ordenado (el guest puede ignorarla si no tiene ACPI configurado). `destroy` mata el proceso QEMU inmediatamente. Si `shutdown` no funciona, es porque el guest no tiene soporte ACPI.
+- **Storage pool `pool-define-as` vs `pool-create-as`** — `pool-define-as` define el pool de forma persistente sin iniciarlo. `pool-create-as` crea un pool transitorio que desaparece al reiniciar libvirtd. Sigue el mismo patron que `define` vs `create` para dominios.
+- **Red NAT (default) usa virbr0** — La red `default` de libvirt crea el bridge `virbr0` con la subred `192.168.122.0/24` y DHCP. Esta red es NAT, no bridge. Las VMs en red `default` pueden salir a internet pero no son accesibles desde fuera sin port forwarding.
+- **`virsh edit` vs editar XML manualmente** — `virsh edit` abre el XML en un editor y valida los cambios antes de aplicarlos. Editar directamente los archivos XML en `/etc/libvirt/qemu/` no actualiza la configuracion en memoria y puede causar inconsistencias. Siempre usar `virsh edit`.
+- **`virt-install --os-variant` no es opcional en la practica** — Aunque tecnicamente opcional, `--os-variant` (o `--osinfo`) optimiza la configuracion de hardware virtual para el SO invitado (virtio, ACPI, etc.). Omitirlo puede causar rendimiento suboptimo o fallos de arranque del guest.

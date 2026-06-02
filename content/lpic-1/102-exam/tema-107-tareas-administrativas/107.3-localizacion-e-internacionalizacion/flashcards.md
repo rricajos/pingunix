@@ -11,7 +11,7 @@ subtema: "107.3"
 
 # Flashcards: 107.3 - Localizacion E Internacionalizacion
 
-> 32 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 33 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="107.3">
 </div>
@@ -583,6 +583,24 @@ subtema: "107.3"
 <div class="flashcard-back">
 
 **R:** `iconv` convierte texto de una codificacion a otra.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="107.3">
+</div>
+
+<div class="flashcard" data-id="107.3-fc-033">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

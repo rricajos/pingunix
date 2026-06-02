@@ -281,3 +281,29 @@ squid -z
 ```
 
 > **Para el examen:** El comando `squid -z` debe ejecutarse antes del primer inicio de Squid para crear la estructura de directorios de la caché. Después de modificar `squid.conf`, usa `squid -k reconfigure` para aplicar los cambios sin interrumpir el servicio.
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **El puerto por defecto de Squid es 3128, NO 8080** — muchos proxies usan 8080, pero Squid usa 3128. El examen puede ofrecer ambos como opciones.
+
+- **Orden de `http_access` es critico: primera coincidencia gana** — Squid procesa las reglas de arriba a abajo y aplica la primera que coincida. Si pones `http_access deny all` antes de las reglas allow, nadie tendra acceso. La ultima regla siempre debe ser `http_access deny all`.
+
+- **`transparent` vs `intercept`** — en versiones antiguas de Squid se usaba `http_port 3128 transparent`. En versiones modernas el termino correcto es `intercept`. Ambos pueden aparecer en el examen; saber que `intercept` es el actual.
+
+- **Dias de la semana en ACL `time`: Thursday es `H`, Saturday es `A`** — la notacion es S(Sunday), M(Monday), T(Tuesday), W(Wednesday), H(Thursday), F(Friday), A(Saturday). Confundir T(Tuesday) con Thursday o S(Sunday) con Saturday es un error clasico.
+
+- **`squid -z` se ejecuta ANTES del primer inicio** — este comando crea la estructura de directorios de la cache. Sin ejecutarlo, Squid no puede arrancar si se ha configurado `cache_dir`.
+
+- **`cache_dir ufs /ruta TAMANO L1 L2`** — los numeros despues del tamano son los subdirectorios de nivel 1 y nivel 2, NO niveles de cache. Los valores tipicos son `16 256`. El tamano esta en MB.
+
+- **Proxy transparente NO puede interceptar HTTPS sin romper TLS** — el modo transparente redirige HTTP con iptables, pero HTTPS no puede inspeccionarse sin un certificado CA propio (SSL bumping), lo cual requiere configuracion adicional.
+
+- **`http_access` necesita PRIMERO definir la ACL con `acl`** — no puedes usar una ACL en una regla `http_access` si no la has definido antes. Primero `acl nombre tipo ...`, despues `http_access allow/deny nombre`.
+
+- **ICP (Internet Cache Protocol) usa UDP 3130** — el puerto de ICP para comunicacion entre proxies en jerarquia es UDP 3130, no TCP. Si preguntan por la comunicacion entre proxies hermanos o padres, es ICP por UDP.
+
+- **`cache_peer parent` vs `sibling`** — un `parent` reenvia peticiones que no tiene en cache al servidor origen. Un `sibling` solo comparte cache, nunca reenvia. Confundir estos roles es comun en preguntas de jerarquia de cache.

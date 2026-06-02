@@ -11,7 +11,7 @@ subtema: "362.2"
 
 # Flashcards: 362.2 - Acceso A Almacenamiento Cluster
 
-> 35 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 37 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="362.2">
 </div>
@@ -523,6 +523,24 @@ subtema: "362.2"
 <div class="flashcard" data-id="362.2-fc-029">
 <div class="flashcard-front">
 
+**P:** Tip de examen: Las reservas SPC-3 son fundamentales para el fencing a nivel de almacenamiento e...
+
+</div>
+<div class="flashcard-back">
+
+**R:** Las reservas SPC-3 son fundamentales para el fencing a nivel de almacenamiento en clusters. Permiten que un nodo "expulse" a otro del LUN compartido mediante pre-empt.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="362.2">
+</div>
+
+<div class="flashcard" data-id="362.2-fc-030">
+<div class="flashcard-front">
+
 **P:** Que hace el comando `failover`?
 
 </div>
@@ -538,7 +556,7 @@ subtema: "362.2"
 <div class="flashcard-deck" data-subtema="362.2">
 </div>
 
-<div class="flashcard" data-id="362.2-fc-030">
+<div class="flashcard" data-id="362.2-fc-031">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `multibus`?
@@ -556,7 +574,7 @@ subtema: "362.2"
 <div class="flashcard-deck" data-subtema="362.2">
 </div>
 
-<div class="flashcard" data-id="362.2-fc-031">
+<div class="flashcard" data-id="362.2-fc-032">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `group_by_serial`?
@@ -574,7 +592,7 @@ subtema: "362.2"
 <div class="flashcard-deck" data-subtema="362.2">
 </div>
 
-<div class="flashcard" data-id="362.2-fc-032">
+<div class="flashcard" data-id="362.2-fc-033">
 <div class="flashcard-front">
 
 **P:** Que es/son iSCSI?
@@ -592,7 +610,7 @@ subtema: "362.2"
 <div class="flashcard-deck" data-subtema="362.2">
 </div>
 
-<div class="flashcard" data-id="362.2-fc-033">
+<div class="flashcard" data-id="362.2-fc-034">
 <div class="flashcard-front">
 
 **P:** Que es/son Fibre Channel?
@@ -610,7 +628,7 @@ subtema: "362.2"
 <div class="flashcard-deck" data-subtema="362.2">
 </div>
 
-<div class="flashcard" data-id="362.2-fc-034">
+<div class="flashcard" data-id="362.2-fc-035">
 <div class="flashcard-front">
 
 **P:** Que es/son Multipath I/O?
@@ -628,7 +646,7 @@ subtema: "362.2"
 <div class="flashcard-deck" data-subtema="362.2">
 </div>
 
-<div class="flashcard" data-id="362.2-fc-035">
+<div class="flashcard" data-id="362.2-fc-036">
 <div class="flashcard-front">
 
 **P:** Que es/son Reservas SCSI Persistentes (SPC-3)?
@@ -637,6 +655,24 @@ subtema: "362.2"
 <div class="flashcard-back">
 
 **R:** Las **reservas SCSI persistentes** (SPC-3 PR) permiten que multiples nodos de un cluster coordinen el acceso a un LUN compartido.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="362.2">
+</div>
+
+<div class="flashcard" data-id="362.2-fc-037">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

@@ -11,7 +11,7 @@ subtema: "334.1"
 
 # Flashcards: 334.1 - Hardening De Red
 
-> 33 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 34 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="334.1">
 </div>
@@ -601,6 +601,24 @@ subtema: "334.1"
 <div class="flashcard-back">
 
 **R:** La segmentacion divide la red en zonas con diferentes niveles de confianza:
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="334.1">
+</div>
+
+<div class="flashcard" data-id="334.1-fc-034">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

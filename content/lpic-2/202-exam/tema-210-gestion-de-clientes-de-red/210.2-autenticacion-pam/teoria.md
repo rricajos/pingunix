@@ -278,3 +278,29 @@ auth required pam_unix.so debug
 tail -f /var/log/auth.log       # Debian
 tail -f /var/log/secure         # RHEL
 ```
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`required` vs `requisite`: ambos causan fallo, pero `requisite` es inmediato** — con `required`, PAM continua evaluando los demas modulos (para no revelar cual fallo) y luego devuelve fallo. Con `requisite`, se detiene inmediatamente y devuelve fallo al instante. Esta diferencia es la trampa mas clasica del tema PAM.
+
+- **`sufficient` con exito detiene la evaluacion SI no hay `required` previo fallido** — si un modulo `sufficient` tiene exito y ningun `required` anterior ha fallado, PAM devuelve exito sin evaluar mas modulos. Pero si un `required` previo fallo, el exito del `sufficient` se ignora.
+
+- **Los cuatro tipos de modulos: `auth`, `account`, `password`, `session`** — `auth` verifica identidad, `account` verifica permisos de la cuenta, `password` gestiona cambios de contrasena, `session` configura el entorno. El examen pregunta frecuentemente que tipo usar para cada escenario.
+
+- **`/etc/nologin` bloquea a TODOS excepto root** — si el archivo `/etc/nologin` existe, `pam_nologin.so` impide el login de cualquier usuario que no sea root. El contenido del archivo se muestra como mensaje de error.
+
+- **`pam_limits.so` requiere estar en la pila de `session`** — los limites de `/etc/security/limits.conf` solo se aplican si `session required pam_limits.so` esta configurado. Sin esa linea, `limits.conf` se ignora completamente.
+
+- **`limits.conf`: valores negativos de `dcredit`/`ucredit` REQUIEREN caracteres** — en `pam_pwquality.so`, `dcredit=-1` significa que se requiere al menos 1 digito. Un valor positivo da credito (reduce requisito de longitud), un valor negativo exige caracteres. La logica invertida confunde mucho.
+
+- **`pam_wheel.so` restringe `su` al grupo `wheel`** — si `pam_wheel.so` esta como `required` en `/etc/pam.d/su`, solo los miembros del grupo `wheel` pueden usar `su`. No confundir con sudo.
+
+- **Archivos common en Debian vs system-auth en RHEL** — Debian usa `/etc/pam.d/common-auth`, `common-account`, etc. RHEL usa `/etc/pam.d/system-auth` y `password-auth`. El examen puede preguntar por la ruta segun la distribucion.
+
+- **`pam_tally2` esta obsoleto, `pam_faillock` es el sucesor** — ambos bloquean cuentas tras intentos fallidos, pero `pam_faillock` es el moderno. El examen puede presentar ambos; saber cual es el actual y cual el obsoleto.
+
+- **`limits.conf`: `soft` puede aumentarse hasta `hard`, `hard` es el limite absoluto** — solo root puede aumentar limites `hard`. El tipo `-` establece ambos simultaneamente. El dominio `*` aplica a todos los usuarios.

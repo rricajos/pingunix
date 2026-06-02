@@ -402,3 +402,29 @@ sudo systemctl status named
 # Verificar que el puerto 53 esta en uso
 ss -tlnp | grep :53
 ```
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`forward only` vs `forward first`** — con `forward only` el servidor NUNCA intenta resolver por si mismo; si los forwarders fallan, la consulta falla. Con `forward first`, si los forwarders no responden, BIND intenta la resolucion recursiva normal. Muchas preguntas juegan con este matiz.
+
+- **Rutas de configuracion Debian vs RHEL** — en Debian el archivo principal es `/etc/bind/named.conf` y las zonas se guardan en `/var/cache/bind/`. En RHEL es `/etc/named.conf` con zonas en `/var/named/`. No mezclar rutas entre distribuciones.
+
+- **Las ACLs deben definirse ANTES de usarse** — si colocas una ACL despues del bloque `options` que la referencia, BIND dara error de sintaxis. El orden importa.
+
+- **`allow-transfer { none; }` por defecto** — si no restringes las transferencias de zona, cualquiera podria hacer un AXFR y obtener todos los registros. El examen suele preguntar por la directiva correcta para impedirlo.
+
+- **`rndc reload` vs `rndc flush`** — `reload` recarga la configuracion y los archivos de zona; `flush` vacia la cache DNS. Confundirlos es un error clasico. Si has modificado una zona, necesitas `reload`, no `flush`.
+
+- **Zona `hint` obligatoria para recursion** — sin la zona de tipo `hint` apuntando al archivo de servidores raiz, BIND no puede resolver de forma recursiva. Si preguntan por un servidor caching-only, la zona hint es imprescindible.
+
+- **`named-checkconf` vs `named-checkzone`** — el primero verifica la sintaxis de `named.conf`, el segundo verifica los archivos de zona. Ambos deben ejecutarse antes de recargar, pero no son intercambiables.
+
+- **El servicio se llama `named` en RHEL y `bind9` en Debian** — `systemctl restart named` en CentOS, `systemctl restart bind9` en Ubuntu. Si la pregunta especifica la distribucion, usa el nombre correcto del servicio.
+
+- **`listen-on` solo acepta IPs, no interfaces** — no se puede poner `listen-on { eth0; }`. Hay que especificar las direcciones IP concretas o usar `any`.
+
+- **`recursion yes` en un servidor autoritativo publico es un riesgo de seguridad** — el examen puede preguntar que directiva desactivar para que un servidor solo sea autoritativo. La respuesta es `recursion no` combinado con `allow-recursion { none; }`.

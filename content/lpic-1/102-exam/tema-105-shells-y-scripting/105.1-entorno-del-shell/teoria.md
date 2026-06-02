@@ -401,3 +401,20 @@ LANG="es_ES.UTF-8"
 9. `/etc/skel/` es la plantilla para nuevos usuarios
 10. El PATH se modifica con `export PATH="$PATH:/nuevo/dir"`
 11. Los alias y funciones se hacen permanentes escribiendolos en `~/.bashrc`
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`su` vs `su -`** — `su` solo cambia de usuario sin cargar el entorno; `su -` (o `su -l`) ejecuta un login shell completo que lee `/etc/profile` y `~/.bash_profile`. El examen pregunta frecuentemente cual carga el entorno completo
+- **Orden de archivos en login shell** — Bash busca `~/.bash_profile`, `~/.bash_login` y `~/.profile` EN ESE ORDEN y ejecuta SOLO EL PRIMERO que encuentre. Si existe `~/.bash_profile`, los otros dos se ignoran completamente
+- **`set -o` activa, `set +o` desactiva** — Es contraintuitivo: el guion `-` activa y el mas `+` desactiva. El examen explota esta confusion deliberadamente
+- **`set` vs `env` vs `export`** — `set` (sin argumentos) muestra TODAS las variables y funciones; `env` muestra SOLO variables de entorno; `export` muestra SOLO variables exportadas. Confundir cual comando muestra que es una trampa clasica
+- **`source` y `.` (dot) ejecutan en el shell actual** — A diferencia de `./script.sh` o `bash script.sh` que crean un subshell. Si un script cambia una variable con `export`, solo afecta al shell padre si se ejecuta con `source` o `.`
+- **`env -i` ejecuta con entorno VACIO** — No confundir con `env` sin argumentos (que solo muestra variables). `env -i comando` elimina TODAS las variables de entorno heredadas antes de ejecutar el comando
+- **`/etc/bash.bashrc` vs `~/.bashrc`** — El archivo global para non-login shells es `/etc/bash.bashrc` (en Debian/Ubuntu), no `/etc/bashrc` (que es Red Hat). El examen puede preguntar por la ubicacion segun la distribucion
+- **`/etc/environment` NO es un script** — Es un archivo simple de pares `VARIABLE=valor` leido por PAM. No soporta expansiones como `$HOME` ni comandos. Confundirlo con `/etc/profile` es un error frecuente
+- **`noclobber` y el operador `>|`** — Con `set -o noclobber` activado, `>` no sobrescribe archivos existentes. Para forzar la sobrescritura hay que usar `>|`. El examen pregunta que operador permite forzar la escritura
+- **`/etc/skel/` solo afecta a usuarios NUEVOS** — Modificar archivos en `/etc/skel/` no cambia nada para usuarios ya existentes. Solo se copian al crear un usuario nuevo con `useradd -m`

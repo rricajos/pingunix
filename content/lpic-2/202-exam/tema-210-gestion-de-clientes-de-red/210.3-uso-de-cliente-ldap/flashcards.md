@@ -11,7 +11,7 @@ subtema: "210.3"
 
 # Flashcards: 210.3 - Uso De Cliente Ldap
 
-> 36 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 37 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="210.3">
 </div>
@@ -655,6 +655,24 @@ subtema: "210.3"
 <div class="flashcard-back">
 
 **R:** LDIF (LDAP Data Interchange Format) es el formato de texto para representar entradas LDAP y modificaciones.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="210.3">
+</div>
+
+<div class="flashcard" data-id="210.3-fc-037">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

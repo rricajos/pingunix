@@ -11,7 +11,7 @@ subtema: "353.1"
 
 # Flashcards: 353.1 - Herramientas De Gestion Cloud
 
-> 35 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 36 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="353.1">
 </div>
@@ -637,6 +637,24 @@ subtema: "353.1"
 <div class="flashcard-back">
 
 **R:** OpenStack es una plataforma de cloud privado. Su CLI permite gestionar recursos de computación, red y almacenamiento:
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="353.1">
+</div>
+
+<div class="flashcard" data-id="353.1-fc-036">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

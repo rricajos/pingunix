@@ -549,3 +549,19 @@ zypper clean --all
 7. `yum provides` busca que paquete contiene un archivo (equivale a `apt-file search`).
 8. `dnf` es el sucesor de `yum` con la misma sintaxis pero mejor rendimiento.
 9. `zypper` es la herramienta de SUSE: `zypper in`, `zypper rm`, `zypper se`, `zypper up`.
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`rpm -ivh` vs `rpm -Uvh` vs `rpm -Fvh`** — `-i` solo instala (falla si ya existe); `-U` instala o actualiza (si no existe, lo instala); `-F` solo actualiza (si no existe, no hace nada). El examen puede preguntar cual usar para una primera instalacion.
+- **`rpm -e` siempre purga** — A diferencia de `dpkg -r`, `rpm -e` elimina el paquete incluyendo sus archivos de configuracion. No existe un equivalente a `dpkg -r` (remove sin purgar) en RPM.
+- **`rpm -qp` consulta un archivo .rpm SIN instalarlo** — La `p` indica "package file". Sin `p`, `rpm -q` consulta la base de datos de paquetes instalados. El examen puede preguntar como ver los archivos de un .rpm antes de instalarlo (`rpm -qpl paquete.rpm`).
+- **`rpm -qf /ruta/archivo` vs `yum provides /ruta/archivo`** — `rpm -qf` busca solo entre paquetes instalados; `yum provides` busca en todos los repositorios. El examen puede presentar un caso donde el archivo viene de un paquete no instalado.
+- **`rpm -V` verifica integridad; `rpm -K` verifica firma GPG** — Son cosas diferentes. `-V` compara el estado actual del paquete instalado contra su estado original; `-K` verifica la firma criptografica del archivo .rpm. El examen puede confundir ambos.
+- **`yum` no necesita `update` separado** — A diferencia de `apt` que requiere `apt update` antes de instalar, `yum` actualiza los metadatos automaticamente. El examen puede ofrecer `yum update` como paso previo necesario (no lo es para instalar).
+- **`yum update` vs `yum upgrade`** — En versiones antiguas de yum, `update` mantiene paquetes obsoletos y `upgrade` los elimina. En dnf son sinonimos. El examen puede preguntar sobre la diferencia.
+- **`rpm2cpio` no instala nada** — Solo convierte el .rpm a formato cpio para extraer archivos sin instalar el paquete. Se usa con pipe: `rpm2cpio paquete.rpm | cpio -idmv`. El examen puede preguntar como extraer un archivo de un .rpm sin instalarlo.
+- **Los repos de yum estan en `/etc/yum.repos.d/`** — Los archivos terminan en `.repo`. DNF usa el MISMO directorio `/etc/yum.repos.d/`, no tiene directorio propio para repos. El examen puede ofrecer `/etc/dnf.repos.d/` como distractor.

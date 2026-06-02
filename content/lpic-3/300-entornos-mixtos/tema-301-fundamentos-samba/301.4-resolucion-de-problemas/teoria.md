@@ -375,3 +375,19 @@ tcpdump -i eth0 port 445 -w debug.pcap
 - Orden de resolución: lmhosts, wins, host, bcast
 - Los permisos se evalúan en capas: smb.conf > ACLs NT > permisos POSIX
 - Los códigos `NT_STATUS_*` identifican el tipo de error específico
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Niveles de log: 3 para diagnostico, nunca 10 en produccion** — El nivel 1 es el predeterminado. Nivel 3 es suficiente para problemas de acceso. Nivel 10 genera cantidades masivas de datos y degrada el rendimiento. Las preguntas suelen pedir el nivel adecuado para un escenario.
+- **`smbcontrol` para cambiar log en caliente** — `smbcontrol all debug 3` cambia el nivel de log sin reiniciar Samba. No confundir con editar smb.conf y reiniciar, que es el metodo persistente.
+- **Log por componente: `log level = 1 auth:3 winbind:5`** — Se pueden ajustar niveles individualmente por componente (auth, passdb, winbind, smb, vfs, etc.). Las preguntas suelen presentar problemas de autenticacion donde solo hay que subir el nivel de auth.
+- **`NT_STATUS_ACCESS_DENIED` vs `NT_STATUS_LOGON_FAILURE`** — ACCESS_DENIED indica permisos insuficientes (usuario autenticado pero sin acceso). LOGON_FAILURE indica credenciales incorrectas. Confundir ambos lleva a diagnosticos erroneos.
+- **Orden de resolucion de nombres: `lmhosts wins host bcast`** — Este es el orden predeterminado. `lmhosts` es el archivo estatico local, `wins` consulta servidor WINS, `host` usa DNS del sistema, `bcast` usa broadcast NetBIOS. Las preguntas suelen pedir el orden o que metodo falla primero.
+- **Capas de permisos: smb.conf > ACLs NT > permisos POSIX** — El acceso efectivo es el MAS RESTRICTIVO de todas las capas. Si smb.conf permite pero POSIX deniega, el acceso se deniega. Este concepto es fundamental y frecuentemente evaluado.
+- **`wbinfo -t` vs `wbinfo -p`** — `-t` verifica la confianza del dominio (relacion con el DC). `-p` solo verifica que winbindd responde (ping local). Para diagnosticar problemas de dominio, usar `-t`; para verificar que el servicio esta vivo, usar `-p`.
+- **`getent passwd` no muestra usuarios de dominio** — Si `getent` no resuelve usuarios, verificar en este orden: 1) nsswitch.conf tiene `winbind` o `sss`, 2) winbindd/sssd esta activo, 3) `wbinfo -u` funciona directamente. Las preguntas presentan este flujo de diagnostico.
+- **Puertos de filtrado para tcpdump/Wireshark** — Puerto 445=SMB directo, 139=SMB sobre NetBIOS, 137/138=nombres NetBIOS, 88=Kerberos. Filtrar el puerto incorrecto es error comun en escenarios de captura de red.

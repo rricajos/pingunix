@@ -381,3 +381,19 @@ vgcfgrestore vg_datos
 # Archivo de configuracion principal
 # /etc/lvm/lvm.conf
 ```
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Al ampliar: primero LV, luego FS. Al reducir: primero FS, luego LV** — invertir el orden al reducir destruye datos. Si reduces el LV antes que el FS, el sistema de archivos queda truncado. Esta regla es una de las preguntas mas frecuentes de LVM
+- **XFS no se puede reducir, solo expandir** — si tienes un LV con XFS y necesitas reducirlo, la unica opcion es crear un LV nuevo, copiar los datos y destruir el antiguo. `lvreduce` con XFS pierde datos irrecuperablemente
+- **`/dev/VG/LV` y `/dev/mapper/VG-LV` son equivalentes** — ambas rutas apuntan al mismo dispositivo. El examen puede usar una u otra forma indistintamente. `/dev/mapper/vg_datos-lv_home` es lo mismo que `/dev/vg_datos/lv_home`
+- **`lvextend -r` redimensiona LV y FS en un solo paso** — la opcion `-r` (o `--resizefs`) ejecuta automaticamente `resize2fs` o `xfs_growfs` despues de ampliar el LV. Sin `-r`, debes hacerlo manualmente en un paso separado
+- **Si un snapshot LVM se llena al 100%, se invalida** — el snapshot deja de ser utilizable. Hay que monitorizar la columna `Data%` con `lvs` y asignar suficiente espacio al snapshot para los cambios esperados durante su vida util
+- **`pvmove` permite migrar datos sin tiempo de inactividad** — antes de retirar un disco de un VG, usa `pvmove /dev/sdb1` para mover todos los datos a otros PVs del mismo VG. Luego `vgreduce` para sacar el PV del VG
+- **La jerarquia es PV -> VG -> LV, siempre en ese orden** — no se puede crear un LV sin un VG, ni un VG sin PVs. `pvcreate` -> `vgcreate` -> `lvcreate` -> `mkfs` -> `mount`. Saltarse un paso hace que el siguiente falle
+- **`lvcreate -l 100%FREE` vs `lvcreate -l 100%VG`** — `100%FREE` usa solo el espacio libre disponible en el VG; `100%VG` intentaria usar todo el VG (fallaria si ya hay LVs). Confundir ambas opciones puede crear LVs de tamano incorrecto
+- **Thin provisioning permite asignar mas espacio del fisicamente disponible** — los thin volumes pueden sumar mas que el tamano del pool, pero si el pool se llena, los volumenes fallan. Monitorizar el uso del thin pool es critico

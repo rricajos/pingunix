@@ -293,3 +293,29 @@ net.ipv4.conf.all.rp_filter = 1
 # No aceptar paquetes con source routing
 net.ipv4.conf.all.accept_source_route = 0
 ```
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Sin `ip_forward=1`, Linux NO reenvia paquetes aunque iptables este bien configurado** — es el requisito previo mas olvidado. Se activa con `sysctl -w net.ipv4.ip_forward=1` o permanentemente en `/etc/sysctl.conf`. Sin esto, las reglas de FORWARD y NAT no funcionan.
+
+- **MASQUERADE vs SNAT** — `MASQUERADE` se usa con IPs dinamicas (DHCP, PPPoE) porque detecta la IP de salida automaticamente. `SNAT` es mas eficiente pero requiere una IP fija con `--to-source`. Usar SNAT con IP dinamica es un error.
+
+- **DNAT va en PREROUTING, SNAT/MASQUERADE en POSTROUTING** — DNAT modifica el destino ANTES del routing (PREROUTING). SNAT modifica el origen DESPUES del routing (POSTROUTING). Invertir las cadenas es un error clasico.
+
+- **`-t filter` es la tabla por defecto, no es necesario especificarla** — `iptables -A INPUT` es equivalente a `iptables -t filter -A INPUT`. Pero para NAT se DEBE especificar `-t nat`. Olvidar `-t nat` en reglas de NAT es error frecuente.
+
+- **DROP vs REJECT** — `DROP` descarta silenciosamente (el cliente espera hasta timeout). `REJECT` envia un mensaje ICMP de error (el cliente sabe inmediatamente que fue rechazado). `DROP` es mas "sigiloso", `REJECT` es mas "educado".
+
+- **`iptables-save` / `iptables-restore` para persistencia** — las reglas de iptables se pierden al reiniciar. Hay que guardarlas con `iptables-save > /etc/iptables/rules.v4` y restaurarlas al arranque. Sin esto, el firewall se pierde tras cada reinicio.
+
+- **nftables usa familia `inet` para IPv4 + IPv6 simultaneamente** — con nftables no necesitas reglas separadas para IPv4 e IPv6. La familia `inet` aplica a ambos. En iptables necesitas `iptables` e `ip6tables` por separado.
+
+- **firewalld: `--permanent` requiere `--reload`** — los cambios con `--permanent` no se aplican hasta `firewall-cmd --reload`. Sin `--permanent`, los cambios se aplican inmediatamente pero se pierden al reiniciar. El examen pregunta por este comportamiento.
+
+- **Orden de reglas en iptables: primera coincidencia gana** — iptables procesa las reglas en orden secuencial dentro de cada cadena. La primera regla que coincide se aplica y se deja de evaluar. Poner una regla ACCEPT antes de una DROP mas especifica anula la restriccion.
+
+- **La cadena FORWARD se usa para paquetes que ATRAVIESAN el host** — INPUT es para paquetes destinados al propio host, OUTPUT para paquetes generados por el host, FORWARD para paquetes que pasan a traves (routing). Confundir INPUT con FORWARD es muy comun.

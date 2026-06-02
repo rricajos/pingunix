@@ -330,3 +330,29 @@ a2query -M              # En Debian/Ubuntu
 ```
 
 > **Para el examen:** El MPM `event` es el predeterminado en Apache 2.4 y ofrece el mejor rendimiento para la mayoría de escenarios. El MPM `prefork` sigue siendo necesario cuando se usa `mod_php`.
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Apache 2.4 `Require` vs 2.2 `Order/Allow/Deny`** — la sintaxis antigua (`Order deny,allow` / `Allow from`) NO funciona en Apache 2.4 sin `mod_access_compat`. Si preguntan por control de acceso moderno, siempre es `Require all granted`, `Require ip`, etc.
+
+- **`apachectl graceful` vs `restart`** — `graceful` envia SIGUSR1 y recarga sin cortar conexiones activas. `restart` envia SIGHUP y mata todas las conexiones. En produccion siempre se prefiere `graceful`.
+
+- **Orden de procesamiento de contenedores** — `<Directory>` y `.htaccess` se procesan primero, luego `<DirectoryMatch>`, despues `<Files>`/`<FilesMatch>`, y finalmente `<Location>`/`<LocationMatch>`. Si una pregunta mezcla estos contenedores, el ultimo en procesarse prevalece.
+
+- **`AllowOverride None` deshabilita `.htaccess`** — si `AllowOverride` esta en `None`, Apache ignora completamente los archivos `.htaccess`. Ademas, `AllowOverride` solo es valido dentro de `<Directory>`, no en `<Location>`.
+
+- **`a2enmod`/`a2ensite` son exclusivos de Debian** — en RHEL/CentOS no existen estos comandos. Los modulos se configuran directamente en archivos de `/etc/httpd/conf.modules.d/`. El examen puede preguntar la forma correcta segun la distribucion.
+
+- **MPM `prefork` es obligatorio con `mod_php`** — `mod_php` no es thread-safe, asi que no funciona con `worker` ni `event`. Si la pregunta menciona PHP con mod_php, el MPM debe ser `prefork`.
+
+- **`ServerName` no es lo mismo que `ServerAlias`** — `ServerName` es el nombre principal del VirtualHost. `ServerAlias` son nombres adicionales. Un VirtualHost solo puede tener un `ServerName`, pero multiples `ServerAlias`.
+
+- **VirtualHost basado en nombre requiere la cabecera `Host`** — Apache usa la cabecera HTTP `Host` para decidir que VirtualHost responde. Sin esta cabecera (clientes HTTP/1.0 antiguos), se sirve el primer VirtualHost definido.
+
+- **`-t` y `configtest` son equivalentes en `apachectl`** — ambos verifican la sintaxis de configuracion. Pero `-S` muestra la configuracion de VirtualHosts activos y `-M` lista los modulos cargados. No confundir las opciones.
+
+- **`htpasswd -c` CREA el archivo (sobreescribe)** — la opcion `-c` destruye el contenido previo. Para anadir usuarios adicionales, usar `htpasswd` SIN `-c`. Confundir esto borra todos los usuarios existentes.

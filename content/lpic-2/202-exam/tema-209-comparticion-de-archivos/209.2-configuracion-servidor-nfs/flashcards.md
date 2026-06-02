@@ -11,7 +11,7 @@ subtema: "209.2"
 
 # Flashcards: 209.2 - Configuracion Servidor Nfs
 
-> 41 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 43 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="209.2">
 </div>
@@ -595,6 +595,24 @@ subtema: "209.2"
 <div class="flashcard" data-id="209.2-fc-033">
 <div class="flashcard-front">
 
+**P:** Tip de examen: El demonio `rpc.idmapd` es específico de NFSv4 y se encarga de mapear los UIDs/G...
+
+</div>
+<div class="flashcard-back">
+
+**R:** El demonio `rpc.idmapd` es específico de NFSv4 y se encarga de mapear los UIDs/GIDs numéricos a nombres de usuario y grupo (y viceversa). Esto es importante porque NFSv4 transmite los nombres de usuario en lugar de UIDs numéricos.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="209.2">
+</div>
+
+<div class="flashcard" data-id="209.2-fc-034">
+<div class="flashcard-front">
+
 **P:** Que hace el comando `sync`?
 
 </div>
@@ -610,7 +628,7 @@ subtema: "209.2"
 <div class="flashcard-deck" data-subtema="209.2">
 </div>
 
-<div class="flashcard" data-id="209.2-fc-034">
+<div class="flashcard" data-id="209.2-fc-035">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `async`?
@@ -628,7 +646,7 @@ subtema: "209.2"
 <div class="flashcard-deck" data-subtema="209.2">
 </div>
 
-<div class="flashcard" data-id="209.2-fc-035">
+<div class="flashcard" data-id="209.2-fc-036">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `no_subtree_check`?
@@ -646,7 +664,7 @@ subtema: "209.2"
 <div class="flashcard-deck" data-subtema="209.2">
 </div>
 
-<div class="flashcard" data-id="209.2-fc-036">
+<div class="flashcard" data-id="209.2-fc-037">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `subtree_check`?
@@ -664,7 +682,7 @@ subtema: "209.2"
 <div class="flashcard-deck" data-subtema="209.2">
 </div>
 
-<div class="flashcard" data-id="209.2-fc-037">
+<div class="flashcard" data-id="209.2-fc-038">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `root_squash`?
@@ -682,7 +700,7 @@ subtema: "209.2"
 <div class="flashcard-deck" data-subtema="209.2">
 </div>
 
-<div class="flashcard" data-id="209.2-fc-038">
+<div class="flashcard" data-id="209.2-fc-039">
 <div class="flashcard-front">
 
 **P:** Que es/son Introducción?
@@ -700,7 +718,7 @@ subtema: "209.2"
 <div class="flashcard-deck" data-subtema="209.2">
 </div>
 
-<div class="flashcard" data-id="209.2-fc-039">
+<div class="flashcard" data-id="209.2-fc-040">
 <div class="flashcard-front">
 
 **P:** Que es/son Diferencias entre NFSv3 y NFSv4?
@@ -718,7 +736,7 @@ subtema: "209.2"
 <div class="flashcard-deck" data-subtema="209.2">
 </div>
 
-<div class="flashcard" data-id="209.2-fc-040">
+<div class="flashcard" data-id="209.2-fc-041">
 <div class="flashcard-front">
 
 **P:** Que es/son Configuración del servidor: /etc/exports?
@@ -736,7 +754,7 @@ subtema: "209.2"
 <div class="flashcard-deck" data-subtema="209.2">
 </div>
 
-<div class="flashcard" data-id="209.2-fc-041">
+<div class="flashcard" data-id="209.2-fc-042">
 <div class="flashcard-front">
 
 **P:** Que es/son NFSv4 - Pseudo Filesystem?
@@ -745,6 +763,24 @@ subtema: "209.2"
 <div class="flashcard-back">
 
 **R:** NFSv4 introduce el concepto de pseudo-filesystem, que presenta todas las exportaciones bajo una raíz virtual única.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="209.2">
+</div>
+
+<div class="flashcard" data-id="209.2-fc-043">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

@@ -11,7 +11,7 @@ subtema: "103.2"
 
 # Flashcards: 103.2 - Filtros De Texto
 
-> 47 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 48 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="103.2">
 </div>
@@ -853,6 +853,24 @@ subtema: "103.2"
 <div class="flashcard-back">
 
 **R:** Estos comandos permiten ver el contenido de archivos comprimidos sin descomprimirlos:
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.2">
+</div>
+
+<div class="flashcard" data-id="103.2-fc-048">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

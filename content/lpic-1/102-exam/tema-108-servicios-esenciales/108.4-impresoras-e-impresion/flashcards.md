@@ -11,7 +11,7 @@ subtema: "108.4"
 
 # Flashcards: 108.4 - Impresoras E Impresion
 
-> 34 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 35 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="108.4">
 </div>
@@ -619,6 +619,24 @@ subtema: "108.4"
 <div class="flashcard-back">
 
 **R:** 1. **CUPS** es el sistema de impresion estandar, interfaz web en **puerto 631**
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="108.4">
+</div>
+
+<div class="flashcard" data-id="108.4-fc-035">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

@@ -11,7 +11,7 @@ subtema: "208.3"
 
 # Flashcards: 208.3 - Squid Como Proxy Cache
 
-> 35 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 37 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="208.3">
 </div>
@@ -541,6 +541,24 @@ subtema: "208.3"
 <div class="flashcard" data-id="208.3-fc-030">
 <div class="flashcard-front">
 
+**P:** Tip de examen: El comando `squid -z` debe ejecutarse antes del primer inicio de Squid para crea...
+
+</div>
+<div class="flashcard-back">
+
+**R:** El comando `squid -z` debe ejecutarse antes del primer inicio de Squid para crear la estructura de directorios de la caché. Después de modificar `squid.conf`, usa `squid -k reconfigure` para aplicar los cambios sin interrumpir el servicio.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.3">
+</div>
+
+<div class="flashcard" data-id="208.3-fc-031">
+<div class="flashcard-front">
+
 **P:** Que hace el comando `/var/log/squid/access.log`?
 
 </div>
@@ -556,7 +574,7 @@ subtema: "208.3"
 <div class="flashcard-deck" data-subtema="208.3">
 </div>
 
-<div class="flashcard" data-id="208.3-fc-031">
+<div class="flashcard" data-id="208.3-fc-032">
 <div class="flashcard-front">
 
 **P:** Que es/son Introducción?
@@ -574,7 +592,7 @@ subtema: "208.3"
 <div class="flashcard-deck" data-subtema="208.3">
 </div>
 
-<div class="flashcard" data-id="208.3-fc-032">
+<div class="flashcard" data-id="208.3-fc-033">
 <div class="flashcard-front">
 
 **P:** Que es/son Listas de Control de Acceso (ACLs)?
@@ -592,7 +610,7 @@ subtema: "208.3"
 <div class="flashcard-deck" data-subtema="208.3">
 </div>
 
-<div class="flashcard" data-id="208.3-fc-033">
+<div class="flashcard" data-id="208.3-fc-034">
 <div class="flashcard-front">
 
 **P:** Que es/son Proxy transparente?
@@ -610,7 +628,7 @@ subtema: "208.3"
 <div class="flashcard-deck" data-subtema="208.3">
 </div>
 
-<div class="flashcard" data-id="208.3-fc-034">
+<div class="flashcard" data-id="208.3-fc-035">
 <div class="flashcard-front">
 
 **P:** Que es/son Proxy inverso (Reverse Proxy)?
@@ -628,7 +646,7 @@ subtema: "208.3"
 <div class="flashcard-deck" data-subtema="208.3">
 </div>
 
-<div class="flashcard" data-id="208.3-fc-035">
+<div class="flashcard" data-id="208.3-fc-036">
 <div class="flashcard-front">
 
 **P:** Que es/son Jerarquía de caché (Cache Hierarchy)?
@@ -637,6 +655,24 @@ subtema: "208.3"
 <div class="flashcard-back">
 
 **R:** Squid permite configurar jerarquías de caché con servidores padre (parent) y hermanos (sibling).
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.3">
+</div>
+
+<div class="flashcard" data-id="208.3-fc-037">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

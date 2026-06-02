@@ -281,3 +281,29 @@ ldap_tls_cacert = /etc/ssl/certs/ca-certificates.crt
 | `/etc/nsswitch.conf` | Fuentes de resolución de nombres |
 | `/etc/sssd/sssd.conf` | Configuración de SSSD |
 | `/etc/nslcd.conf` | Configuración del demonio nslcd (nss-ldap) |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **DN vs RDN vs Base DN** — DN es la ruta completa (`uid=juan,ou=personas,dc=ejemplo,dc=com`), RDN es el componente relativo (`uid=juan`), Base DN es el punto de inicio de busquedas (`dc=ejemplo,dc=com`). El examen confunde estos tres conceptos frecuentemente.
+
+- **`-x` es obligatorio para autenticacion simple en ldapsearch** — sin `-x`, los comandos LDAP intentan autenticacion SASL. Si el servidor no tiene SASL configurado, la consulta falla. Casi siempre se necesita `-x` en el examen.
+
+- **`-ZZ` fuerza STARTTLS, `-Z` solo lo intenta** — con `-ZZ` (doble Z), si STARTTLS falla la conexion se aborta. Con `-Z` (una sola Z), si falla se continua sin cifrado. Para seguridad en produccion, siempre `-ZZ`.
+
+- **Puerto 389 (LDAP) vs 636 (LDAPS)** — LDAP en el 389 puede usar STARTTLS para cifrar. LDAPS en el 636 usa TLS desde el inicio. Son mecanismos diferentes: STARTTLS es una actualizacion de la conexion, LDAPS es cifrado desde la conexion.
+
+- **LDIF: las entradas se separan con lineas en blanco** — cada entrada comienza con `dn:` y las entradas consecutivas DEBEN separarse con una linea vacia. Olvidar la linea en blanco causa errores de parseo.
+
+- **`TLS_REQCERT demand` es el valor seguro para produccion** — `never` acepta cualquier certificado (inseguro), `allow` acepta incluso certificados invalidos, `try` verifica solo si se presenta. Solo `demand` garantiza la validacion completa del certificado.
+
+- **Alcance de busqueda: `sub` es el predeterminado** — `sub` busca en todo el subarbol, `one` solo un nivel abajo, `base` solo la entrada exacta. Si no se especifica `-s`, se usa `sub`.
+
+- **`ldapadd` es equivalente a `ldapmodify -a`** — ambos anaden entradas. Pero `ldapmodify` sin `-a` solo modifica entradas existentes. Si usas `ldapmodify` con un LDIF que no tiene `changetype`, falla.
+
+- **Ruta del archivo ldap.conf difiere entre distribuciones** — en Debian es `/etc/ldap/ldap.conf`, en RHEL es `/etc/openldap/ldap.conf`. El examen puede preguntar la ruta segun la distribucion.
+
+- **SSSD es la solucion moderna, nss-ldap/pam_ldap es la tradicional** — el examen puede preguntar por ambas. SSSD usa `/etc/sssd/sssd.conf` con permisos 600 obligatorios. La configuracion tradicional usa `/etc/nsswitch.conf` con `passwd: files ldap`.

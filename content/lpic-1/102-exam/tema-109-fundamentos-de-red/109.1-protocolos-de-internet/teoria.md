@@ -318,3 +318,20 @@ udp     17   UDP
 10. **/etc/services** mapea servicios a puertos
 11. IPv6 **no tiene broadcast**, usa multicast. Tipos de direccion: unicast, multicast, anycast
 12. **CIDR /24** = 254 hosts, **/30** = 2 hosts (punto a punto)
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Formula de hosts: 2^(32-prefijo) - 2** — Se restan 2 porque la primera direccion es la de red y la ultima es broadcast. Para /24: 2^8 - 2 = 254 hosts (NO 256). Para /30: 2^2 - 2 = 2 hosts. Olvidar restar 2 es un error clasico
+- **Rango de direcciones privadas clase B: 172.16.0.0 a 172.31.255.255** — NO es 172.0.0.0/8. El rango privado clase B es 172.16.0.0/12, que abarca de 172.16.x.x a 172.31.x.x. El examen pone direcciones como 172.32.1.1 para ver si la identificas como publica
+- **IPv6 NO tiene broadcast** — IPv6 usa multicast para funciones que en IPv4 requerian broadcast. Es una diferencia fundamental. El examen pregunta directamente si IPv6 tiene broadcast (respuesta: no)
+- **`::1` es loopback en IPv6, NO `::0`** — `::1` es el equivalente de 127.0.0.1; `::` (todo ceros) es la direccion no especificada (equivalente a 0.0.0.0). No confundirlas
+- **`::` solo se puede usar UNA VEZ en una direccion IPv6** — La abreviacion de grupos consecutivos de ceros con `::` solo se puede aplicar una vez. `2001:db8::1::2` es INVALIDA. El examen puede mostrar direcciones IPv6 y preguntar cuales son validas
+- **Notacion de puertos con IPv6: `[direccion]:puerto`** — Las direcciones IPv6 se encierran entre corchetes para separar los `:` de la direccion del `:` del puerto. Ejemplo: `http://[2001:db8::1]:443`. Sin corchetes es ambiguo
+- **SLAAC genera direcciones IPv6 SIN servidor DHCP** — SLAAC usa Router Advertisements para obtener el prefijo y genera el identificador de interfaz automaticamente. No confundir con DHCPv6, que es un mecanismo separado y opcional
+- **NDP reemplaza a ARP en IPv6** — IPv6 usa NDP (Neighbor Discovery Protocol) con mensajes ICMPv6 para resolver direcciones MAC. ARP no existe en IPv6. El examen puede preguntar que protocolo reemplaza a ARP en IPv6
+- **TCP es fiable y orientado a conexion; UDP es rapido y sin conexion** — DNS usa AMBOS (UDP para consultas normales, TCP para transferencias de zona y respuestas grandes). El examen puede preguntar que protocolo de transporte usa DNS (respuesta: ambos, puerto 53)
+- **169.254.0.0/16 es link-local (APIPA)** — Estas direcciones se autoasignan cuando no hay DHCP disponible. No son enrutables. El examen puede mostrar una direccion 169.254.x.x y preguntar que significa (fallo de DHCP)

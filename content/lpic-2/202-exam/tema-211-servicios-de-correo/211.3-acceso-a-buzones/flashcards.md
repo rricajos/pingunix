@@ -11,7 +11,7 @@ subtema: "211.3"
 
 # Flashcards: 211.3 - Acceso A Buzones
 
-> 37 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 38 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="211.3">
 </div>
@@ -673,6 +673,24 @@ subtema: "211.3"
 <div class="flashcard-back">
 
 **R:** El acceso webmail permite a los usuarios consultar su correo a través de un navegador web.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="211.3">
+</div>
+
+<div class="flashcard" data-id="211.3-fc-038">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

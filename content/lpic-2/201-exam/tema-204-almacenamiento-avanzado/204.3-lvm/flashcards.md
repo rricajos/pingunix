@@ -11,7 +11,7 @@ subtema: "204.3"
 
 # Flashcards: 204.3 - Lvm
 
-> 41 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 42 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="204.3">
 </div>
@@ -745,6 +745,24 @@ subtema: "204.3"
 <div class="flashcard-back">
 
 **R:** - Siempre dejar espacio libre en el VG para snapshots y crecimiento futuro
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="204.3">
+</div>
+
+<div class="flashcard" data-id="204.3-fc-042">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

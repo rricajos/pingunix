@@ -263,3 +263,20 @@ unattended-upgrade --dry-run
 | SUSE | SUSE-SU-YYYY:NNNN | SUSE-SU-2021:4111-1 |
 
 > **Para el examen:** Conoce como consultar advisories de seguridad y aplicar parches especificos en las distribuciones principales.
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **CVE vs CVSS** — CVE es un identificador unico de una vulnerabilidad (ej: CVE-2021-44228); CVSS es la puntuacion de severidad de esa vulnerabilidad (0.0-10.0). No confundir: CVE identifica, CVSS cuantifica la gravedad. Una CVE tiene un vector CVSS asociado
+- **CVSS Attack Vector: Network vs Local** — Network (N) significa explotable remotamente sin acceso previo; Local (L) requiere acceso local al sistema. Una vulnerabilidad con AV:N es mas critica que una con AV:L. Si la pregunta habla de "explotable remotamente", el Attack Vector es Network
+- **CVSS puntuacion 10.0** — significa: acceso remoto (AV:N), baja complejidad (AC:L), sin privilegios (PR:N), sin interaccion del usuario (UI:N), scope changed (S:C), impacto total en CIA. Conocer que combinacion produce la puntuacion maxima es importante para el examen
+- **Buffer overflow: stack vs heap** — stack overflow sobreescribe la pila (puede redirigir flujo de ejecucion via return address); heap overflow sobreescribe el heap (manipula estructuras de datos). Las protecciones difieren: ASLR protege ambos (con valor 2), stack canaries solo protegen la pila
+- **ASLR y sus valores** — `kernel.randomize_va_space=0` desactivado; =1 parcial (stack, libraries); =2 completo (incluye heap). El examen puede preguntar que proteccion se pierde con valor 1 vs 2 (respuesta: proteccion del heap)
+- **XSS Reflected vs Stored** — Reflected: el script malicioso se incluye en la URL y se refleja en la respuesta inmediata; Stored: el script se almacena permanentemente en el servidor (BD, foro) y afecta a todos los usuarios que visiten la pagina. Stored es mas peligroso porque no requiere que la victima haga clic en un enlace especifico
+- **Escalada vertical vs horizontal** — vertical: obtener privilegios superiores (user -> root); horizontal: acceder a recursos de otro usuario del mismo nivel. Si la pregunta menciona obtener acceso root, es vertical. Si menciona acceder a la cuenta de otro usuario, es horizontal
+- **OWASP Top 10: A01 Broken Access Control** — es la vulnerabilidad web numero 1 segun OWASP (2021). No confundir con A03 Injection que bajo del puesto 1 al 3. El examen puede preguntar el orden actual
+- **`yum updateinfo list security` vs `yum update --security`** — el primero LISTA los parches disponibles sin instalar nada; el segundo APLICA solo los parches de seguridad. Confundir ambos puede significar no aplicar parches o instalar actualizaciones no deseadas
+- **Race condition (TOCTOU)** — Time of Check, Time of Use: la vulnerabilidad existe entre el momento de verificar un recurso y el momento de usarlo. Un atacante puede modificar el recurso en esa ventana temporal. Relevante para scripts SUID que verifican permisos antes de actuar sobre archivos

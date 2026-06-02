@@ -542,3 +542,19 @@ rm /tmp/datos_pipe
 | `> /dev/null` | Descarta stdout | `cmd > /dev/null` |
 | `2> /dev/null` | Descarta stderr | `cmd 2> /dev/null` |
 | `&> /dev/null` | Descarta todo | `cmd &> /dev/null` |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **El orden de `>` y `2>&1` importa** — `cmd > archivo 2>&1` redirige stdout al archivo y luego stderr a donde apunte stdout (al archivo). Pero `cmd 2>&1 > archivo` redirige stderr a la terminal (donde apuntaba stdout originalmente) y solo stdout al archivo. El examen puede invertir el orden.
+- **`>` sobreescribe; `>>` anade** — `echo "texto" > archivo` destruye el contenido previo; `echo "texto" >> archivo` lo anade al final. El examen puede preguntar por que se perdio el contenido de un archivo tras usar `>`.
+- **`tee` escribe a archivo Y stdout** — `comando | tee archivo` envia la salida al archivo Y a la pantalla. Sin `tee`, la redireccion `>` solo va al archivo. `tee -a` anade en vez de sobreescribir.
+- **`xargs` convierte stdin en argumentos** — `find . -name "*.tmp" | xargs rm` pasa los nombres como argumentos a `rm`. Sin `xargs`, `rm` no recibiria nada porque lee argumentos, no stdin. El examen puede preguntar por que `find | rm` no funciona.
+- **`2>` redirige stderr solamente** — `comando 2> errores.txt` captura solo los errores. `comando > salida.txt` captura solo stdout. `comando &> todo.txt` captura ambos. El examen puede pedir redirigir SOLO los errores.
+- **Here document `<< EOF` expande variables; `<< 'EOF'` no** — Sin comillas en el delimitador, `$HOME` se expande. Con comillas simples (`<< 'EOF'`), el texto es literal. El examen puede preguntar como evitar la expansion de variables en un here document.
+- **`|` solo pasa stdout, no stderr** — El pipe estandar solo conecta stdout del primer comando con stdin del segundo. Para incluir stderr hay que usar `|&` o `2>&1 |`. El examen puede preguntar por que los errores no aparecen tras el pipe.
+- **`/dev/null` descarta datos silenciosamente** — `comando > /dev/null 2>&1` descarta toda la salida. El examen puede preguntar como ejecutar un comando sin producir ninguna salida visible.
+- **Named pipes (`mkfifo`) persisten en el filesystem** — A diferencia de `|`, una named pipe creada con `mkfifo` existe como archivo especial (tipo `p`) y puede ser usada por procesos no relacionados. El examen puede preguntar la diferencia entre pipe anonimo y named pipe.

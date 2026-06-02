@@ -11,7 +11,7 @@ subtema: "332.2"
 
 # Flashcards: 332.2 - Deteccion De Intrusiones Host
 
-> 37 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 38 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="332.2">
 </div>
@@ -673,6 +673,24 @@ subtema: "332.2"
 <div class="flashcard-back">
 
 **R:** El accounting de procesos registra informacion sobre todos los comandos ejecutados en el sistema.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="332.2">
+</div>
+
+<div class="flashcard" data-id="332.2-fc-038">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

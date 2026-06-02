@@ -11,7 +11,7 @@ subtema: "103.5"
 
 # Flashcards: 103.5 - Crear Monitorizar Y Matar Procesos
 
-> 34 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 35 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="103.5">
 </div>
@@ -619,6 +619,24 @@ subtema: "103.5"
 <div class="flashcard-back">
 
 **R:** Cuando cierras una terminal o sesion SSH, el shell envia **SIGHUP** a todos sus procesos hijos, lo que normalmente los termina. `nohup` hace que un proceso ignore la senal SIGHUP.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.5">
+</div>
+
+<div class="flashcard" data-id="103.5-fc-035">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

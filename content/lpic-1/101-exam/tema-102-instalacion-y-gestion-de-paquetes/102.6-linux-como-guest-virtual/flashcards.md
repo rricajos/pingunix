@@ -11,7 +11,7 @@ subtema: "102.6"
 
 # Flashcards: 102.6 - Linux Como Guest Virtual
 
-> 36 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 37 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="102.6">
 </div>
@@ -655,6 +655,24 @@ subtema: "102.6"
 <div class="flashcard-back">
 
 **R:** **cloud-init** es la herramienta estandar de la industria para la configuracion automatica de instancias en la nube durante el **primer arranque**. Es soportada por la mayoria de proveedores cloud (AWS
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="102.6">
+</div>
+
+<div class="flashcard" data-id="102.6-fc-037">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

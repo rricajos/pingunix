@@ -342,3 +342,20 @@ virt-v2v -i ova mi-vm.ova -o local -os /var/lib/libvirt/images/
 | guestfish/guestmount | Acceso al filesystem sin arrancar la VM |
 | OVF/OVA | Formato portátil entre hipervisores |
 | virt-v2v | Conversión entre plataformas |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Backing file eliminado = imagen corrupta** — Si se borra o modifica un backing file, TODAS las imagenes derivadas (overlays) quedan inutilizables. El backing file debe existir siempre y permanecer inmutable. El examen puede plantear un escenario donde se elimina el base y preguntar que sucede.
+- **`qemu-img convert` consolida (flatten) la cadena** — Al convertir una imagen con backing files, la imagen resultante es independiente y contiene todos los datos. Esto equivale a hacer un flatten. El examen puede preguntar como eliminar la dependencia del backing file.
+- **`qemu-img resize` no redimensiona particiones** — `resize` solo cambia el tamano del archivo de imagen (el "disco virtual"), NO modifica las particiones ni filesystems internos. Para redimensionar particiones se necesita `virt-resize` o herramientas dentro del guest como `growpart` y `resize2fs`.
+- **`virt-sparsify` vs `qemu-img convert` para reducir tamano** — `virt-sparsify` entiende el filesystem del guest y rellena con ceros el espacio libre antes de eliminarlo. `qemu-img convert` simplemente copia bloques usados. `virt-sparsify` es mas efectivo porque opera a nivel de filesystem.
+- **raw vs qcow2: thin provisioning** — `qemu-img create -f raw disco.raw 20G` reserva los 20G inmediatamente en disco. `qemu-img create -f qcow2 disco.qcow2 20G` solo ocupa unos KB inicialmente y crece segun se escriben datos. El examen puede preguntar por que una imagen raw de 20G ocupa 20G en disco.
+- **OVA es simplemente un TAR** — Un archivo .ova es un empaquetado TAR de archivos .ovf + .vmdk + .mf. Se puede extraer con `tar xf`. No es un formato comprimido ni cifrado. El examen puede preguntar como inspeccionar el contenido de un OVA.
+- **guestfish vs guestmount** — `guestfish` es un shell interactivo para operar sobre imagenes (cat, ls, edit, upload, download). `guestmount` monta el filesystem de la imagen directamente en el host como un directorio normal. Ambos funcionan con la VM apagada. No confundir con herramientas que requieren la VM en ejecucion.
+- **`virt-customize` vs `virt-edit`** — `virt-customize` realiza operaciones complejas (cambiar hostname, inyectar SSH keys, instalar paquetes, ejecutar comandos). `virt-edit` solo edita un archivo individual dentro de la imagen. Ambos operan offline (VM apagada).
+- **Formato VHD en qemu-img se llama `vpc`** — Al convertir imagenes VHD de Hyper-V con `qemu-img convert`, el formato se especifica como `vpc` (no `vhd`): `qemu-img convert -f vpc -O qcow2 disco.vhd disco.qcow2`. Este es un distractor frecuente.
+- **`-F` en backing files es obligatorio en versiones recientes** — `qemu-img create -f qcow2 -b base.qcow2 -F qcow2 overlay.qcow2`. La opcion `-F` especifica el formato del backing file. Omitir `-F` genera warnings o errores en versiones recientes de QEMU. El examen puede mostrar comandos sin `-F` como error.

@@ -203,3 +203,17 @@ La planificacion de capacidad debe documentarse:
 - **Cronograma**: fechas previstas para cada actuacion
 
 La comunicacion de las necesidades a la direccion es parte esencial del rol del administrador de sistemas avanzado.
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`sadf` vs `sar`** — `sar` muestra datos en formato legible para humanos; `sadf` convierte datos de sar a formatos procesables por otras herramientas (CSV, XML, JSON). El examen puede preguntar cual comando usar para exportar datos a una hoja de calculo
+- **Prediccion sin datos historicos es imposible** — sin herramientas como `sar`, `collectd` o RRD que recopilen datos a lo largo del tiempo, no se puede identificar tendencias. Un punto de datos aislado (`df -h` hoy) no basta
+- **Escalado vertical vs horizontal** — vertical es anadir mas recursos a la misma maquina (mas RAM, mejor CPU); horizontal es agregar mas maquinas. El examen puede describir un escenario y preguntar cual estrategia es adecuada
+- **El umbral de accion es tipicamente 70-80%, no 100%** — esperar a que un recurso se llene al 100% para actuar es un error critico. La planificacion de capacidad exige actuar con anticipacion, dejando margen de seguridad
+- **Crecimiento lineal vs exponencial** — un error frecuente es asumir crecimiento lineal cuando el patron es exponencial (por ejemplo, usuarios que se duplican cada trimestre). Usar la formula incorrecta da predicciones totalmente erroneas
+- **`collectd` almacena en RRD, no en texto plano** — los datos de collectd se guardan en archivos Round Robin Database en `/var/lib/collectd/rrd/`. No son archivos de texto que puedas leer directamente con `cat`
+- **Estacionalidad puede enmascarar tendencias** — si mides uso de CPU solo en diciembre (pico de trafico) y comparas con enero, pareceria que el uso baja. Debes comparar periodos equivalentes (diciembre con diciembre anterior)

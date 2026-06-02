@@ -11,7 +11,7 @@ subtema: "303.4"
 
 # Flashcards: 303.4 - Comparticion De Impresoras
 
-> 40 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 42 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="303.4">
 </div>
@@ -559,6 +559,24 @@ subtema: "303.4"
 <div class="flashcard" data-id="303.4-fc-031">
 <div class="flashcard-front">
 
+**P:** Tip de examen: `lpstat -p` muestra las impresoras disponibles en CUPS. Si Samba no muestra impr...
+
+</div>
+<div class="flashcard-back">
+
+**R:** `lpstat -p` muestra las impresoras disponibles en CUPS. Si Samba no muestra impresoras, verificar primero que CUPS las tiene configuradas y que `load printers = yes` está activo.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="303.4">
+</div>
+
+<div class="flashcard" data-id="303.4-fc-032">
+<div class="flashcard-front">
+
 **P:** Que hace el comando `printing`?
 
 </div>
@@ -574,7 +592,7 @@ subtema: "303.4"
 <div class="flashcard-deck" data-subtema="303.4">
 </div>
 
-<div class="flashcard" data-id="303.4-fc-032">
+<div class="flashcard" data-id="303.4-fc-033">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `printcap name`?
@@ -592,7 +610,7 @@ subtema: "303.4"
 <div class="flashcard-deck" data-subtema="303.4">
 </div>
 
-<div class="flashcard" data-id="303.4-fc-033">
+<div class="flashcard" data-id="303.4-fc-034">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `load printers`?
@@ -610,7 +628,7 @@ subtema: "303.4"
 <div class="flashcard-deck" data-subtema="303.4">
 </div>
 
-<div class="flashcard" data-id="303.4-fc-034">
+<div class="flashcard" data-id="303.4-fc-035">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `cups options`?
@@ -628,7 +646,7 @@ subtema: "303.4"
 <div class="flashcard-deck" data-subtema="303.4">
 </div>
 
-<div class="flashcard" data-id="303.4-fc-035">
+<div class="flashcard" data-id="303.4-fc-036">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `path`?
@@ -646,7 +664,7 @@ subtema: "303.4"
 <div class="flashcard-deck" data-subtema="303.4">
 </div>
 
-<div class="flashcard" data-id="303.4-fc-036">
+<div class="flashcard" data-id="303.4-fc-037">
 <div class="flashcard-front">
 
 **P:** Que es/son Introducción?
@@ -664,7 +682,7 @@ subtema: "303.4"
 <div class="flashcard-deck" data-subtema="303.4">
 </div>
 
-<div class="flashcard" data-id="303.4-fc-037">
+<div class="flashcard" data-id="303.4-fc-038">
 <div class="flashcard-front">
 
 **P:** Que es/son Sección [printers]?
@@ -682,7 +700,7 @@ subtema: "303.4"
 <div class="flashcard-deck" data-subtema="303.4">
 </div>
 
-<div class="flashcard" data-id="303.4-fc-038">
+<div class="flashcard" data-id="303.4-fc-039">
 <div class="flashcard-front">
 
 **P:** Que es/son Impresión raw (sin procesamiento)?
@@ -700,7 +718,7 @@ subtema: "303.4"
 <div class="flashcard-deck" data-subtema="303.4">
 </div>
 
-<div class="flashcard" data-id="303.4-fc-039">
+<div class="flashcard" data-id="303.4-fc-040">
 <div class="flashcard-front">
 
 **P:** Que es/son Pipes SPOOLSS?
@@ -718,7 +736,7 @@ subtema: "303.4"
 <div class="flashcard-deck" data-subtema="303.4">
 </div>
 
-<div class="flashcard" data-id="303.4-fc-040">
+<div class="flashcard" data-id="303.4-fc-041">
 <div class="flashcard-front">
 
 **P:** Que es/son Configuración avanzada de impresoras individuales?
@@ -727,6 +745,24 @@ subtema: "303.4"
 <div class="flashcard-back">
 
 **R:** Se pueden definir impresoras individuales con configuración específica:
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="303.4">
+</div>
+
+<div class="flashcard" data-id="303.4-fc-042">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

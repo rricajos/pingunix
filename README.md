@@ -12,9 +12,9 @@ Plataforma interactiva de estudio en **español** para las certificaciones Linux
 |---------|-------|
 | Paginas de contenido | **821** |
 | Subtemas completos | **143** |
-| Flashcards (SM-2) | **5.050** |
+| Flashcards (SM-2) | **5.215** |
 | Preguntas de practica | **3.559** (2.844 MCQ + 715 fill-blank) |
-| Preguntas de simulacro | **480** (8 examenes × 60) |
+| Preguntas de simulacro | **960** (16 examenes × 60) |
 | Mazos Anki descargables | **4** (LPIC-1/2/3 + Hacking) |
 | Certificaciones cubiertas | LPIC-1, LPIC-2, LPIC-3 (300/303/305/306) |
 
@@ -60,10 +60,10 @@ content/
 │   ├── ofensivo/            Reconocimiento, enumeracion, explotacion, post-ex, IS, CTF
 │   └── defensivo/           Blue Team, hardening, firewalls, criptografia
 │
-├── simulacros/              8 simulacros de examen completos
-│   ├── lpic-1/              Simulacro 101 (60 q) + Simulacro 102 (60 q)
-│   ├── lpic-2/              Simulacro 201 (60 q) + Simulacro 202 (60 q)
-│   └── lpic-3/              Simulacros 300, 303, 305, 306 (60 q cada uno)
+├── simulacros/              16 simulacros de examen (2 por examen)
+│   ├── lpic-1/              Simulacros 101-A/B + 102-A/B (240 q)
+│   ├── lpic-2/              Simulacros 201-A/B + 202-A/B (240 q)
+│   └── lpic-3/              Simulacros 300/303/305/306-A/B (480 q)
 │
 └── recursos/                Glosario, cheatsheets, bibliografia
 ```
@@ -73,9 +73,9 @@ content/
 | Archivo | Contenido |
 |---------|-----------|
 | `index.md` | Objetivos del examen, peso, lista de utilidades clave |
-| `teoria.md` | Contenido teorico detallado con tips de examen |
+| `teoria.md` | Contenido teorico detallado con tips y trampas de examen |
 | `comandos-clave.md` | Referencia rapida: sintaxis, opciones, ejemplos |
-| `ejercicios.md` | 10 preguntas MCQ con respuesta y explicacion |
+| `ejercicios.md` | 25 preguntas (MCQ + fill-blank) con respuesta y explicacion |
 | `flashcards.md` | Tarjetas de repaso generadas desde ejercicios y teoria |
 
 ---

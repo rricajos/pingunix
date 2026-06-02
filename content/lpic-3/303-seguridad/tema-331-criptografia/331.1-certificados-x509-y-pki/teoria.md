@@ -333,3 +333,20 @@ openssl rsa -aes256 -in clave.key -out clave-cifrada.key
 | `openssl pkcs12` | Convertir a/desde formato PKCS#12 |
 | `openssl crl` | Examinar listas de revocación |
 | `openssl ocsp` | Consultas de estado de revocación |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Certificado autofirmado vs CA** — un certificado autofirmado tiene el mismo DN como issuer y subject. Nunca confundir con un certificado firmado por una CA intermedia, donde issuer y subject son diferentes
+- **`openssl req -x509` vs `openssl req`** — sin `-x509` genera un CSR; con `-x509` genera directamente un certificado autofirmado. Confundir ambos es un error clasico
+- **`openssl ca` vs `openssl x509 -req`** — `openssl ca` usa la base de datos de la CA (index.txt, serial) y aplica la politica de openssl.cnf; `openssl x509 -req` firma directamente sin base de datos ni politica
+- **PEM vs DER** — PEM es Base64 con cabeceras `-----BEGIN...-----`; DER es binario puro. Si un comando falla al leer un certificado, probablemente se esta usando el formato incorrecto sin especificar `-inform`
+- **PKCS#12 vs PKCS#7** — PKCS#12 (.p12/.pfx) contiene certificado + clave privada; PKCS#7 (.p7b) contiene solo certificados (nunca clave privada). No confundirlos
+- **CRL vs OCSP** — CRL es una lista completa descargada periodicamente (puede estar desactualizada entre publicaciones); OCSP consulta el estado de un certificado individual en tiempo real. OCSP stapling permite al servidor cachear la respuesta OCSP
+- **`-CAcreateserial` en `openssl x509`** — este flag crea automaticamente el archivo .srl si no existe. Sin el, el comando falla si no hay archivo de serial previo
+- **Ruta de CA en RHEL vs Debian** — RHEL/CentOS usa `/etc/pki/tls/` y `update-ca-trust`; Debian/Ubuntu usa `/etc/ssl/` y `update-ca-certificates`. Mezclar las rutas o los comandos de actualizacion es un error frecuente
+- **`-untrusted` en `openssl verify`** — para verificar una cadena con CA intermedia se necesita `-untrusted ca-intermedia.pem`, no incluirla en `-CAfile`. `-CAfile` es exclusivamente para la CA raiz de confianza
+- **Subject Alternative Name (SAN) vs Common Name (CN)** — los navegadores modernos validan SAN, no CN. Un certificado sin SAN sera rechazado aunque el CN sea correcto. En el examen pueden preguntar donde se configura SAN en openssl.cnf (seccion `[alt_names]`)

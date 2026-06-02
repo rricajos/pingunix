@@ -385,3 +385,29 @@ ip route | grep tun
 | `persist-key` / `persist-tun` | Mantener estado en reinicios |
 | `remote-cert-tls server` | Cliente verifica que el cert es de tipo servidor |
 | `crl-verify` | Verificar lista de revocación |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`tun` (capa 3, routing) vs `tap` (capa 2, bridging)** — `tun` es el modo recomendado y mas comun para VPN de acceso remoto. `tap` se usa solo cuando se necesita trafico de capa 2 (broadcast, NetBIOS, DHCP broadcast). Cliente y servidor DEBEN usar el mismo tipo de interfaz.
+
+- **`tls-auth ta.key 0` en servidor, `tls-auth ta.key 1` en cliente** — la direccion (0 para servidor, 1 para cliente) es obligatoria y NO puede ser la misma en ambos lados. `tls-crypt` no necesita direccion. Invertir los numeros rompe la conexion.
+
+- **La secuencia PKI: `init-pki` -> `build-ca` -> `gen-req` -> `sign-req` -> `gen-dh`** — saltarse algun paso o ejecutarlos en orden incorrecto genera errores. `gen-dh` solo es necesario en el servidor. `sign-req server` para el servidor, `sign-req client` para clientes.
+
+- **Puerto por defecto de OpenVPN: UDP 1194** — muchas preguntas ofrecen TCP 1194 o UDP 1195 como trampa. El protocolo recomendado es UDP (mejor rendimiento). TCP funciona pero con mayor overhead.
+
+- **`push "route ..."` envia rutas al cliente, no configura rutas en el servidor** — la directiva `push` en la configuracion del servidor empuja configuracion al cliente durante la conexion. Sin `push "route 192.168.1.0 255.255.255.0"`, el cliente no sabra como alcanzar la red remota.
+
+- **IP forwarding es requisito previo para que OpenVPN enrute trafico** — `net.ipv4.ip_forward = 1` en el servidor. Ademas se necesita NAT/MASQUERADE para que los paquetes de la red VPN salgan por la interfaz fisica.
+
+- **`remote-cert-tls server` en el cliente verifica el tipo de certificado** — esta directiva asegura que el certificado del servidor fue firmado como `server` (no como `client`). Previene ataques man-in-the-middle donde un cliente intenta hacerse pasar por servidor.
+
+- **`client-to-client` permite trafico entre clientes VPN** — sin esta directiva, los clientes VPN solo pueden comunicarse con el servidor, no entre ellos. Si la pregunta dice que dos clientes VPN no se ven, probablemente falta esta directiva.
+
+- **La clave privada del servidor (`server.key`) NUNCA se comparte** — cada cliente tiene su propio par de claves. Solo se comparten `ca.crt` y `ta.key`. Si una pregunta sugiere enviar `server.key` al cliente, es incorrecta.
+
+- **`openvpn-server@server` en systemd: el nombre despues de `@` es el archivo de configuracion** — `systemctl start openvpn-server@server` busca `/etc/openvpn/server/server.conf`. Si el archivo se llama `oficina.conf`, el servicio seria `openvpn-server@oficina`.

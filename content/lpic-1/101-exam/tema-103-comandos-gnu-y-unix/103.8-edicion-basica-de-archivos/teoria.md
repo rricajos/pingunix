@@ -538,3 +538,19 @@ Copiar linea:     yy
 Pegar:            p
 Borrar linea:     dd
 ```
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`:wq` vs `:q!` vs `ZZ`** — `:wq` guarda y sale; `:q!` sale SIN guardar (descarta cambios); `ZZ` (mayusculas, sin `:`) guarda y sale igual que `:wq`. El examen puede preguntar como salir sin guardar cambios.
+- **Modo normal vs modo insercion** — En vi, las teclas tienen funciones diferentes segun el modo. `dd` en modo normal borra una linea; en modo insercion escribe "dd". El examen puede preguntar que hace una tecla sin especificar el modo (siempre asumir modo normal).
+- **`i` vs `a` vs `o` para entrar en insercion** — `i` inserta antes del cursor; `a` inserta despues del cursor; `o` abre nueva linea debajo. `I` inserta al inicio de la linea; `A` al final; `O` nueva linea arriba. El examen puede confundir estas variantes.
+- **`/patron` busca hacia adelante; `?patron` busca hacia atras** — Despues de buscar, `n` repite la busqueda en la misma direccion; `N` en la direccion opuesta. El examen puede preguntar como buscar hacia atras en vi.
+- **`u` deshace; `Ctrl+r` rehace** — En vim, `u` deshace el ultimo cambio y se puede repetir. En vi clasico, `u` solo deshace/rehace el ultimo cambio (toggle). El examen puede preguntar como deshacer multiples cambios.
+- **`:set number` vs `:set nonumber`** — `:set number` muestra numeros de linea; `:set nonumber` los oculta. El examen puede preguntar como activar la numeracion de lineas en vi.
+- **`EDITOR` vs `VISUAL`** — `VISUAL` se usa para editores de pantalla completa; `EDITOR` para editores de linea. Muchos programas comprueban `VISUAL` primero, luego `EDITOR`. El examen puede preguntar que variable configurar para cambiar el editor por defecto.
+- **`yy` copia la linea; `p` pega debajo; `P` pega arriba** — `yy` (yank) copia la linea actual al buffer. `p` pega despues del cursor/linea; `P` pega antes. `dd` corta la linea (se puede pegar con `p`). El examen puede confundir copiar con cortar.
+- **nano: `Ctrl+O` guarda; `Ctrl+X` sale** — Los atajos de nano usan `^` para Ctrl. `^O` (WriteOut) guarda; `^X` sale; `^K` corta linea; `^U` pega. El examen puede preguntar atajos basicos de nano.

@@ -466,3 +466,19 @@ fusermount -u /ruta/punto_montaje
 | `zfs` | Gestion de datasets y snapshots ZFS |
 | `cryptsetup` | Herramienta de gestion de LUKS/dm-crypt |
 | `mount -t tmpfs` | Montar sistemas de archivos en RAM |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **LUKS cifra a nivel de bloque, eCryptfs a nivel de archivo** — LUKS/dm-crypt cifra toda la particion (nada es legible sin la clave); eCryptfs cifra archivos individuales sobre un FS existente. El examen puede preguntar cual usar segun el escenario (backup incremental favorece eCryptfs, seguridad maxima favorece LUKS)
+- **`cryptsetup luksOpen` vs `cryptsetup open`** — ambos abren un volumen LUKS, pero `open --type luks` es la sintaxis moderna. El dispositivo descifrado aparece en `/dev/mapper/<nombre>`, no en `/dev/`
+- **`/etc/crypttab` con `none` como clave pide contrasena interactivamente** — si el campo de clave es `none`, el sistema solicitara la contrasena durante el arranque. Si apunta a un archivo de clave (`/etc/keys/keyfile`), el montaje es automatico
+- **tmpfs `size=` define el maximo, no una asignacion fija** — `tmpfs size=2G` no reserva 2 GB de RAM. tmpfs crece dinamicamente y solo usa la memoria necesaria. Sin especificar `size=`, el maximo es la mitad de la RAM total
+- **Subvolumenes Btrfs no tienen tamano fijo** — a diferencia de particiones o LVs, los subvolumenes comparten todo el espacio del FS. No puedes asignar un tamano maximo a un subvolumen directamente (se usan quotas para eso)
+- **Snapshots Btrfs de solo lectura vs lectura/escritura** — `btrfs subvolume snapshot -r` crea uno de solo lectura (necesario para `btrfs send`); sin `-r` es de lectura/escritura. El examen puede preguntar cual es necesario para enviar instantaneas
+- **ZFS no esta integrado en el kernel Linux por licencia** — la licencia CDDL de ZFS es incompatible con la GPL del kernel. Se instala como modulo externo (OpenZFS/DKMS). Btrfs si esta integrado nativamente
+- **RAID-Z1 de ZFS equivale a RAID 5, RAID-Z2 a RAID 6** — RAID-Z1 tolera 1 disco fallido, RAID-Z2 tolera 2. Confundir los niveles o los minimos de disco (RAID-Z1 necesita minimo 3, RAID-Z2 minimo 4) es una trampa comun
+- **Compresion Btrfs: `zstd` es el recomendado actualmente** — `lzo` es rapido pero comprime poco, `zlib` comprime mucho pero es lento, `zstd` ofrece el mejor equilibrio. El examen puede preguntar cual algoritmo usar segun el caso de uso

@@ -11,7 +11,7 @@ subtema: "333.1"
 
 # Flashcards: 333.1 - Control De Acceso Discrecional
 
-> 34 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 36 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="333.1">
 </div>
@@ -523,6 +523,24 @@ subtema: "333.1"
 <div class="flashcard" data-id="333.1-fc-029">
 <div class="flashcard-front">
 
+**P:** Tip de examen: `chattr +i` hace un archivo completamente inmutable: ni siquiera root puede modi...
+
+</div>
+<div class="flashcard-back">
+
+**R:** `chattr +i` hace un archivo completamente inmutable: ni siquiera root puede modificarlo o eliminarlo sin quitar primero el atributo. Esto es muy util para proteger archivos criticos como `/etc/passwd`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="333.1">
+</div>
+
+<div class="flashcard" data-id="333.1-fc-030">
+<div class="flashcard-front">
+
 **P:** Que hace el comando `i`?
 
 </div>
@@ -538,7 +556,7 @@ subtema: "333.1"
 <div class="flashcard-deck" data-subtema="333.1">
 </div>
 
-<div class="flashcard" data-id="333.1-fc-030">
+<div class="flashcard" data-id="333.1-fc-031">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `a`?
@@ -556,7 +574,7 @@ subtema: "333.1"
 <div class="flashcard-deck" data-subtema="333.1">
 </div>
 
-<div class="flashcard" data-id="333.1-fc-031">
+<div class="flashcard" data-id="333.1-fc-032">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `s`?
@@ -574,7 +592,7 @@ subtema: "333.1"
 <div class="flashcard-deck" data-subtema="333.1">
 </div>
 
-<div class="flashcard" data-id="333.1-fc-032">
+<div class="flashcard" data-id="333.1-fc-033">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `u`?
@@ -592,7 +610,7 @@ subtema: "333.1"
 <div class="flashcard-deck" data-subtema="333.1">
 </div>
 
-<div class="flashcard" data-id="333.1-fc-033">
+<div class="flashcard" data-id="333.1-fc-034">
 <div class="flashcard-front">
 
 **P:** Que es/son umask?
@@ -610,7 +628,7 @@ subtema: "333.1"
 <div class="flashcard-deck" data-subtema="333.1">
 </div>
 
-<div class="flashcard" data-id="333.1-fc-034">
+<div class="flashcard" data-id="333.1-fc-035">
 <div class="flashcard-front">
 
 **P:** Que es/son ACLs POSIX (Listas de Control de Acceso)?
@@ -619,6 +637,24 @@ subtema: "333.1"
 <div class="flashcard-back">
 
 **R:** Las ACLs POSIX extienden el modelo de permisos tradicional permitiendo definir permisos para usuarios y grupos adicionales.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="333.1">
+</div>
+
+<div class="flashcard" data-id="333.1-fc-036">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

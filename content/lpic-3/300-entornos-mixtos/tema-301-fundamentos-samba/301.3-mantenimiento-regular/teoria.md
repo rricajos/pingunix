@@ -357,3 +357,19 @@ systemctl start smbd nmbd winbindd
 - `net` con subcomandos rpc, ads y registry para gestión avanzada
 - `tdbbackup`, `tdbtool` y `tdbdump` para bases de datos TDB
 - Las copias de seguridad deben incluir `/etc/samba/` y `/var/lib/samba/private/`
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`smbstatus` vs `smbclient -L`** — `smbstatus` muestra conexiones activas en el servidor (quien esta conectado ahora). `smbclient -L` lista los recursos compartidos disponibles. No confundir monitorización con descubrimiento de recursos.
+- **`smbstatus -b` vs `-S` vs `-L`** — `-b` muestra resumen breve de conexiones, `-S` muestra recursos compartidos en uso, `-L` muestra archivos con bloqueos. Las preguntas suelen pedir la opcion correcta para un escenario de diagnostico.
+- **`nmblookup -A` vs `nmblookup`** — `nmblookup NOMBRE` resuelve un nombre NetBIOS a IP. `nmblookup -A IP` consulta la tabla de nombres de un host por su IP (inverso). Confundir la direccion de la consulta es error clasico.
+- **`net ads` vs `net rpc`** — `net ads` es para dominios Active Directory (usa LDAP/Kerberos). `net rpc` es para dominios NT4 (usa RPC). Usar `net rpc join` para AD es incorrecto; lo correcto es `net ads join`.
+- **`tdbbackup` vs `tdbtool` vs `tdbdump`** — `tdbbackup` crea copias de seguridad y verifica integridad. `tdbtool` permite manipulacion interactiva (keys, dump, check). `tdbdump` solo vuelca contenido. Las preguntas piden la herramienta correcta para cada tarea.
+- **`secrets.tdb` vs `passdb.tdb`** — `secrets.tdb` contiene secretos de maquina y contraseña de dominio (critico para membresia). `passdb.tdb` es la base de datos de usuarios locales Samba. Perder `secrets.tdb` requiere re-unirse al dominio.
+- **`rpcclient` con null session** — `rpcclient -U "" -N servidor` permite sesion anonima. Los comandos `enumdomusers`, `srvinfo` y `netshareenum` son los mas preguntados para enumeracion.
+- **`smbclient -k` vs `-U`** — `-k` usa autenticacion Kerberos (requiere ticket valido con kinit). `-U` usa autenticacion por usuario/contraseña NTLM. En entornos AD, `-k` es la forma preferida.
+- **Backup de Samba requiere detener servicios** — Las bases TDB pueden corromperse si se copian con los servicios activos. El procedimiento correcto es: detener smbd/nmbd/winbindd, copiar `/etc/samba/` y `/var/lib/samba/private/`, reiniciar.

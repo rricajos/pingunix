@@ -270,3 +270,20 @@ Componentes clave:
 | SR-IOV | PF y VF para compartir dispositivos |
 | vhost-net | Aceleración de red en kernel |
 | KVM = Tipo 1 | Aunque corre sobre Linux |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Paravirtualizacion vs virtualizacion completa** — Para necesita kernel modificado (drivers virtio o hypercalls), completa emula hardware real sin modificar el guest. KVM con virtio es hibrido (virtualizacion completa asistida por hardware + drivers paravirtualizados para E/S).
+- **KVM es Tipo 1, no Tipo 2** — Aunque KVM se ejecuta sobre Linux, el modulo `kvm.ko` convierte el kernel en un hipervisor bare-metal. Se clasifica oficialmente como Tipo 1. Las preguntas intentaran confundirte diciendo que es Tipo 2 por ejecutarse "sobre un SO".
+- **VT-x/AMD-V vs VT-d/AMD-Vi** — VT-x y AMD-V son extensiones de CPU necesarias para KVM. VT-d y AMD-Vi (IOMMU) son extensiones de E/S necesarias para device passthrough. No confundir: sin VT-d no hay passthrough aunque tengas VT-x.
+- **EPT/NPT vs Shadow Page Tables** — EPT (Intel) y NPT (AMD) son traduccion de paginas por hardware (dos niveles). Shadow Page Tables es el metodo por software, mas lento y con mayor consumo de CPU. El examen puede preguntar cual es mas eficiente.
+- **SR-IOV: PF vs VF** — Physical Function (PF) es el dispositivo fisico completo; Virtual Functions (VF) son las instancias virtuales que se asignan a las VMs. SR-IOV permite compartir una NIC entre varias VMs con rendimiento casi nativo, a diferencia del passthrough que asigna el dispositivo completo a una sola VM.
+- **`grep vmx` vs `grep svm`** — `vmx` es la flag de Intel VT-x en `/proc/cpuinfo`; `svm` es la de AMD-V. El examen puede dar una salida de cpuinfo y preguntar que tecnologia soporta el procesador.
+- **vhost-net no es un driver del guest** — `vhost-net` es un modulo del kernel del HOST que acelera la red moviendo el procesamiento de QEMU (espacio de usuario) al kernel. No confundir con virtio-net que es el driver paravirtualizado dentro del guest.
+- **Emulacion permite arquitectura cruzada, virtualizacion no** — QEMU sin KVM puede emular ARM en x86 (lento). Con KVM solo puede virtualizar la misma arquitectura del host (rapido). El examen preguntara en que escenario se necesita emulacion pura.
+- **OVS vs bridge Linux estandar** — Open vSwitch soporta OpenFlow, VLAN, VXLAN, GRE y es el estandar en entornos cloud (OpenStack). El bridge Linux es mas simple pero carece de estas funcionalidades avanzadas. No son intercambiables en produccion cloud.
+- **`qemu:///system` vs `qemu:///session`** — `system` ejecuta VMs como root con acceso a bridges de red. `session` ejecuta como usuario sin privilegios con red NAT unicamente. Tres barras (///) significan conexion local; la distincion system/session es una de las preguntas mas frecuentes.

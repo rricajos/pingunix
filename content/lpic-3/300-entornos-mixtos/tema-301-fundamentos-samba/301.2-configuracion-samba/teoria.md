@@ -365,3 +365,19 @@ inherit permissions = yes
 - Los módulos VFS extienden funcionalidad (recycle, audit, ACLs)
 - Las variables como `%m`, `%U`, `%I` permiten configuraciones dinámicas
 - La optimización incluye sendfile, async I/O y ajustes de socket
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`server role` vs `security` (legacy)** — `security = share` fue eliminado en Samba 4. La forma moderna es `server role`. Confundir `security = ads` (miembro AD) con `security = user` (standalone) es error frecuente; `server role = member server` con `security = ads` es lo correcto para unirse a AD.
+- **`testparm` es OBLIGATORIO** — Siempre ejecutar `testparm` despues de modificar smb.conf. Las preguntas suelen presentar escenarios donde la configuracion falla y la respuesta correcta es "ejecutar testparm primero".
+- **`tdbsam` vs `smbpasswd` vs `ldapsam`** — `tdbsam` es el backend predeterminado. `smbpasswd` es legacy (archivo texto plano, sin atributos extendidos). `ldapsam` es para entornos distribuidos con LDAP externo. No confundir con el backend de AD DC que usa sam.ldb.
+- **`writable = yes` equivale a `read only = no`** — Son sinonimos opuestos. `read only = yes` es el valor por defecto. Preguntas tramposas presentan ambos parametros en el mismo recurso para confundir.
+- **Variables de sustitucion: `%U` vs `%u` vs `%S`** — `%U` es el usuario solicitado, `%u` es el usuario efectivo (despues de mapeo), `%S` es el nombre del recurso compartido. Confundir estas variables es error muy comun.
+- **Modulos VFS: orden importa** — `vfs objects = acl_xattr recycle full_audit` se ejecutan en orden. `acl_xattr` almacena ACLs NT en xattr, `recycle` implementa papelera, `shadow_copy2` da versiones anteriores, `fruit` es para macOS. Preguntas suelen pedir identificar el modulo correcto para una funcion.
+- **`[homes]` y `[printers]` son secciones especiales** — `[homes]` crea shares dinamicos basados en el directorio home del usuario. `[printers]` comparte automaticamente impresoras del sistema. No son shares estaticos normales.
+- **`hosts allow` se evalua ANTES que `hosts deny`** — Si un host coincide en `hosts allow`, se permite el acceso aunque este en `hosts deny`. Si no hay coincidencia en allow, se evalua deny. El orden de evaluacion es pregunta frecuente.
+- **`include` con variables** — `include = /etc/samba/smb.conf.%m` permite configuracion por cliente. Esto permite configuraciones dinamicas que muchas preguntas asumen es solo un archivo estatico.

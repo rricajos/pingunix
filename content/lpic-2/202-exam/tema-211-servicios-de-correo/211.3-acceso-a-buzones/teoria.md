@@ -377,3 +377,29 @@ tail -f /var/log/mail.log
 | `/etc/dovecot/conf.d/10-ssl.conf` | Configuración SSL/TLS |
 | `/etc/courier/imapd` | Configuración Courier-IMAP |
 | `/etc/roundcube/config.inc.php` | Configuración Roundcube |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Puertos IMAP/POP3: memorizar los cuatro** — IMAP = 143 (sin cifrar) / 993 (IMAPS), POP3 = 110 (sin cifrar) / 995 (POP3S). El examen pregunta frecuentemente por estos puertos. IMAP mantiene correo en servidor, POP3 lo descarga al cliente.
+
+- **`ssl = required` vs `ssl = yes` en Dovecot** — `required` obliga TLS en todas las conexiones (mas seguro). `yes` permite conexiones cifradas y sin cifrar. `no` deshabilita TLS completamente. Para produccion, siempre `required`.
+
+- **Sintaxis especial de certificados en Dovecot: `ssl_cert = </ruta`** — el simbolo `<` antes de la ruta es obligatorio en Dovecot. Sin el, Dovecot interpreta la ruta como el contenido del certificado, no como un archivo. No confundir con la sintaxis de Apache.
+
+- **`mail_location = maildir:~/Maildir` define donde busca Dovecot los buzones** — la variable `%u` se sustituye por el nombre de usuario. Si la ruta esta mal, Dovecot no encuentra los buzones y los usuarios no pueden acceder a su correo.
+
+- **Courier-IMAP solo soporta Maildir, no mbox** — a diferencia de Dovecot que soporta ambos formatos, Courier-IMAP esta limitado a Maildir. Si la pregunta especifica mbox, Courier no es una opcion valida.
+
+- **IMAP gestiona carpetas en el servidor, POP3 solo accede al INBOX** — con IMAP los usuarios pueden crear, renombrar y eliminar carpetas en el servidor. POP3 solo descarga mensajes de la bandeja de entrada. Para acceso multi-dispositivo, IMAP es la unica opcion viable.
+
+- **`disable_plaintext_auth = yes` bloquea login sin TLS** — esta directiva en Dovecot impide que los usuarios envien credenciales en texto plano si no hay conexion cifrada. Es una medida de seguridad esencial.
+
+- **SASL de Dovecot para Postfix: socket en `/var/spool/postfix/private/auth`** — Dovecot proporciona autenticacion SASL a Postfix a traves de un socket Unix. La ruta del socket debe estar dentro del chroot de Postfix (`/var/spool/postfix/`).
+
+- **SquirrelMail y Roundcube son clientes web, NO almacenan correo** — ambos se conectan al servidor via IMAP para acceder a los buzones. No tienen almacenamiento propio de correo. Si el servidor IMAP esta caido, el webmail no funciona.
+
+- **`doveconf -n` muestra solo parametros modificados** — similar a `postconf -n` de Postfix. Es la forma rapida de ver que configuracion se ha personalizado. `doveconf -a` muestra todos los parametros incluyendo los valores por defecto.

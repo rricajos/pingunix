@@ -498,3 +498,20 @@ type -t find
 11. **`which`** solo busca ejecutables en $PATH. **`type`** identifica builtins, alias, funciones y archivos. **`whereis`** busca binario, fuente y man page.
 
 12. **`/root`** es el home de root. NO esta dentro de `/home`.
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`find` busca en tiempo real; `locate` usa base de datos** — `find` siempre da resultados actualizados pero es lento; `locate` es rapido pero puede estar desactualizado. El examen puede preguntar por que `locate` no encuentra un archivo recien creado (falta ejecutar `updatedb`).
+- **`which` solo busca en `$PATH`; `type` identifica builtins** — `which cd` puede no devolver nada (cd es un builtin); `type cd` muestra "cd is a shell builtin". El examen puede preguntar como determinar si un comando es un builtin.
+- **`whereis` busca binario, fuente Y paginas man** — A diferencia de `which` (solo ejecutable), `whereis` tambien localiza codigo fuente y documentacion. El examen puede preguntar que comando busca la pagina man de un programa.
+- **`/tmp` se limpia al reiniciar; `/var/tmp` NO** — Ambos son para archivos temporales, pero `/var/tmp` persiste entre reinicios. El examen puede preguntar donde guardar archivos temporales que deben sobrevivir un reinicio.
+- **`/opt` es para software de terceros autocontenido** — A diferencia de `/usr/local` (software compilado por el admin), `/opt` es para paquetes de software completos de terceros (e.g., `/opt/google/chrome`). El examen puede confundir `/opt` con `/usr/local`.
+- **`/etc` NUNCA contiene ejecutables** — Solo archivos de configuracion. Los ejecutables van en `/bin`, `/sbin`, `/usr/bin`, `/usr/sbin`. El examen puede ofrecer `/etc` como ubicacion de un script de sistema.
+- **`/proc` y `/sys` son virtuales, NO existen en disco** — Son sistemas de archivos generados por el kernel en memoria. `df` puede no mostrarlos como filesystem real. El examen puede preguntar que tipo de filesystem son.
+- **UsrMerge: `/bin` -> `/usr/bin`** — En distribuciones modernas, `/bin`, `/sbin`, `/lib` son enlaces simbolicos a sus equivalentes en `/usr/`. El examen puede preguntar donde esta realmente un binario en un sistema con UsrMerge.
+- **`updatedb` se configura en `/etc/updatedb.conf`** — Este archivo controla que directorios y filesystems incluir/excluir de la base de datos de `locate`. El examen puede preguntar como excluir ciertos directorios de `locate`.
+- **`/root` NO esta dentro de `/home`** — El directorio home de root es `/root`, no `/home/root`. El examen puede ofrecer `/home/root` como distractor.

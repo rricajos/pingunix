@@ -11,7 +11,7 @@ subtema: "103.8"
 
 # Flashcards: 103.8 - Edicion Basica De Archivos
 
-> 35 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 36 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="103.8">
 </div>
@@ -637,6 +637,24 @@ subtema: "103.8"
 <div class="flashcard-back">
 
 **R:** Desde el modo comando, se pueden ejecutar comandos del shell:
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.8">
+</div>
+
+<div class="flashcard" data-id="103.8-fc-036">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

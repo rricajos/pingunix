@@ -422,3 +422,19 @@ Cuando se usa SSH X forwarding, la variable `DISPLAY` se configura automaticamen
 9. **Wayland** es el reemplazo moderno de X11, con compositor integrado
 10. **SSH -X** permite reenvio de X11; requiere `X11Forwarding yes` en el servidor
 11. **~/.Xauthority** almacena las cookies MIT-MAGIC-COOKIE para autenticacion
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Servidor X esta en la maquina LOCAL** — La arquitectura cliente-servidor de X11 es contraintuitiva: el SERVIDOR esta donde esta la pantalla/teclado/raton (tu maquina), y los CLIENTES son las aplicaciones (pueden estar en remoto). El examen explota esta confusion
+- **`DISPLAY=:0` vs `DISPLAY=host:0`** — Sin host (`:0`) significa display local; con host (`192.168.1.10:0`) significa display remoto. El formato completo es `host:display.screen`. Olvidar los dos puntos o confundir los campos es un error frecuente
+- **`xhost +` es INSEGURO** — `xhost +` desactiva toda verificacion de acceso al servidor X, permitiendo que CUALQUIER host se conecte. Nunca es la respuesta correcta en preguntas de seguridad. `xauth` con cookies MIT-MAGIC-COOKIE es el metodo seguro
+- **`ssh -X` vs `ssh -Y`** — `-X` activa X forwarding con restricciones de seguridad; `-Y` es forwarding confiable (trusted) sin restricciones. El examen puede preguntar cual es mas seguro (-X) y cual puede fallar con algunas aplicaciones (-X tambien)
+- **`Xorg -configure` requiere que X este DETENIDO** — No se puede generar `xorg.conf` mientras el servidor X esta en ejecucion. El archivo generado se guarda como `/root/xorg.conf.new`, no directamente en `/etc/X11/`
+- **`/etc/X11/xorg.conf.d/` vs `/usr/share/X11/xorg.conf.d/`** — Los archivos del administrador van en `/etc/X11/xorg.conf.d/` y tienen prioridad. Los de la distribucion van en `/usr/share/X11/xorg.conf.d/` y no deben editarse. Confundir estos directorios es una trampa comun
+- **Marcadores del log de Xorg** — `(EE)` = error, `(WW)` = advertencia, `(II)` = informacion. El examen puede preguntar que buscar en `/var/log/Xorg.0.log` cuando X11 no arranca: la respuesta es buscar lineas con `(EE)`
+- **`$XDG_SESSION_TYPE` para detectar Wayland vs X11** — La variable `$XDG_SESSION_TYPE` indica `wayland` o `x11`. No confundir con `$DISPLAY` (que existe en ambos casos si XWayland esta activo)
+- **Wayland NO tiene red transparente** — A diferencia de X11, Wayland no soporta nativamente ejecutar aplicaciones graficas remotas por red. Para aplicaciones X11 en Wayland se usa XWayland como capa de compatibilidad

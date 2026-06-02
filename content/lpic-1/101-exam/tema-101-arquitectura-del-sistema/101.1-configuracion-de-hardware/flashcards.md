@@ -11,7 +11,7 @@ subtema: "101.1"
 
 # Flashcards: 101.1 - Configuracion De Hardware
 
-> 30 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 31 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="101.1">
 </div>
@@ -547,6 +547,24 @@ subtema: "101.1"
 <div class="flashcard-back">
 
 **R:** | Archivo/Directorio | Proposito |
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="101.1">
+</div>
+
+<div class="flashcard" data-id="101.1-fc-031">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

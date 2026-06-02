@@ -11,7 +11,7 @@ subtema: "204.2"
 
 # Flashcards: 204.2 - Acceso A Dispositivos De Almacenamiento
 
-> 36 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 37 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="204.2">
 </div>
@@ -655,6 +655,24 @@ subtema: "204.2"
 <div class="flashcard-back">
 
 **R:** Device Mapper es la capa del kernel que gestiona dispositivos virtuales de bloque (usada por LVM, multipath, dm-crypt):
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="204.2">
+</div>
+
+<div class="flashcard" data-id="204.2-fc-037">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

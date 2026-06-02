@@ -508,3 +508,19 @@ zcat archivo.txt.gz | head           # Ver las primeras lineas de un .gz
 bzcat archivo.txt.bz2 | grep patron  # Buscar en un .bz2 sin descomprimir
 xzcat archivo.txt.xz | wc -l        # Contar lineas en un .xz
 ```
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`sort` no modifica el archivo original** — `sort` envia la salida a stdout. Para guardar el resultado hay que redirigir (`sort archivo > nuevo`) o usar `-o` (`sort -o archivo archivo`). El examen puede asumir que `sort archivo` modifica el archivo.
+- **`uniq` solo elimina lineas ADYACENTES duplicadas** — Si las lineas duplicadas no son consecutivas, `uniq` no las detecta. Por eso se usa `sort | uniq`. El examen puede preguntar por que `uniq` no elimino todos los duplicados.
+- **`cut -d: -f1` vs `cut -c1-5`** — `-d` y `-f` trabajan con campos delimitados; `-c` trabaja con posiciones de caracteres. Son modos mutuamente excluyentes. El examen puede mezclar `-d` con `-c` en la misma invocacion.
+- **`head` y `tail` muestran 10 lineas por defecto** — Sin opciones, ambos muestran 10 lineas. `head -n 5` muestra las 5 primeras; `tail -n 5` las 5 ultimas. El examen puede preguntar cuantas lineas muestra `head` sin argumentos.
+- **`tail -f` vs `tail -F`** — `-f` sigue el archivo abierto (falla si se rota el log); `-F` sigue el nombre del archivo (funciona aunque se rote). El examen puede preguntar cual usar para monitorizar logs que se rotan.
+- **`wc -l` cuenta saltos de linea, no lineas visibles** — Si la ultima linea no termina en `\n`, `wc -l` no la cuenta. El examen puede presentar un caso donde el conteo es uno menos de lo esperado.
+- **`tr` NO acepta archivos como argumento** — `tr` solo lee de stdin. Se usa con pipe o redireccion: `cat archivo | tr 'a' 'A'` o `tr 'a' 'A' < archivo`. El examen puede ofrecer `tr 'a' 'A' archivo` como opcion correcta (es incorrecta).
+- **`sed -i` modifica el archivo in-place** — Sin `-i`, `sed` solo muestra el resultado en stdout sin modificar el archivo. El examen puede preguntar por que los cambios de `sed 's/old/new/g' archivo` no se guardaron.
+- **`nl` vs `cat -n`** — Ambos numeran lineas, pero `nl` por defecto no numera lineas vacias; `cat -n` numera TODAS las lineas incluyendo vacias. El examen puede preguntar la diferencia en la salida.

@@ -11,7 +11,7 @@ subtema: "104.2"
 
 # Flashcards: 104.2 - Integridad De Sistemas De Archivos
 
-> 33 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 34 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="104.2">
 </div>
@@ -601,6 +601,24 @@ subtema: "104.2"
 <div class="flashcard-back">
 
 **R:** 1. **`fsck` solo en FS desmontado** o montado como solo lectura. NUNCA en FS montado en lectura-escritura.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.2">
+</div>
+
+<div class="flashcard" data-id="104.2-fc-034">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

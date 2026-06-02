@@ -11,7 +11,7 @@ subtema: "351.5"
 
 # Flashcards: 351.5 - Imagenes De Disco Vm
 
-> 35 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 36 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="351.5">
 </div>
@@ -637,6 +637,24 @@ subtema: "351.5"
 <div class="flashcard-back">
 
 **R:** libguestfs permite acceder y modificar el sistema de archivos de imágenes de disco sin necesidad de arrancar la VM.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="351.5">
+</div>
+
+<div class="flashcard" data-id="351.5-fc-036">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

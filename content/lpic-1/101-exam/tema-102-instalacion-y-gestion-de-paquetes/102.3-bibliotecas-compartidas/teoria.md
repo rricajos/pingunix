@@ -333,3 +333,18 @@ Se puede invocar directamente:
 5. Orden de busqueda: RPATH -> LD_LIBRARY_PATH -> cache (ld.so.cache) -> directorios por defecto.
 6. Convencion de nombres: `libNOMBRE.so.MAYOR.MENOR.REVISION`.
 7. Siempre ejecutar `ldconfig` despues de instalar bibliotecas manualmente o modificar ld.so.conf.
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`LD_LIBRARY_PATH` vs `/etc/ld.so.conf.d/`** — `LD_LIBRARY_PATH` es temporal y por usuario (variable de entorno); `/etc/ld.so.conf.d/` es permanente y a nivel de sistema. El examen puede preguntar cual metodo es el recomendado para configuracion permanente.
+- **`ldconfig` actualiza la cache, NO carga bibliotecas** — `ldconfig` regenera `/etc/ld.so.cache` y crea enlaces simbolicos. No carga bibliotecas en memoria ni las instala. El examen puede confundir su funcion.
+- **`ldd` muestra dependencias, NO instala bibliotecas** — `ldd` es una herramienta de diagnostico que lista las bibliotecas que necesita un ejecutable. Si falta una biblioteca, `ldd` la muestra como "not found" pero no la resuelve.
+- **Orden de busqueda de bibliotecas** — El orden es: RPATH -> `LD_LIBRARY_PATH` -> cache (`/etc/ld.so.cache`) -> directorios por defecto (`/lib`, `/usr/lib`). El examen puede preguntar cual tiene prioridad.
+- **`LD_LIBRARY_PATH` es ignorada por programas SUID/SGID** — Por seguridad, los ejecutables con bit SUID/SGID ignoran `LD_LIBRARY_PATH`. El examen puede preguntar por que una biblioteca no se encuentra al ejecutar un programa SUID.
+- **`ldconfig -p` vs `ldconfig -v`** — `-p` muestra el contenido actual de la cache (lista de bibliotecas conocidas); `-v` ejecuta el escaneo mostrando el proceso detallado. El examen puede confundir cual opcion consulta la cache.
+- **El soname no incluye la version menor** — Una biblioteca `libz.so.1.2.11` tiene soname `libz.so.1`. El enlace simbolico del soname apunta al archivo real. El examen puede preguntar que parte de la version incluye el soname.
+- **Despues de modificar `/etc/ld.so.conf` hay que ejecutar `ldconfig`** — Los cambios en los archivos de configuracion NO tienen efecto hasta que se ejecuta `ldconfig` para regenerar la cache. El examen puede preguntar que paso falta tras editar la configuracion.

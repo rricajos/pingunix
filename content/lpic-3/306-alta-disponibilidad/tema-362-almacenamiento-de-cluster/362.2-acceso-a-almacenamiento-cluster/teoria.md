@@ -286,3 +286,20 @@ sg_persist --out --preempt --param-sark=0x456def \
 | Exclusive Access - Registrants Only | Solo nodos registrados pueden acceder |
 
 > **Para el examen:** Las reservas SPC-3 son fundamentales para el fencing a nivel de almacenamiento en clusters. Permiten que un nodo "expulse" a otro del LUN compartido mediante pre-empt.
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **SAN vs NAS: bloque vs archivo** — SAN (iSCSI, Fibre Channel) ofrece acceso a nivel de bloque, el dispositivo aparece como disco local. NAS (NFS, SMB) ofrece acceso a nivel de archivo. El examen puede preguntar cual usar para un cluster que necesita GFS2: la respuesta es SAN porque GFS2 requiere un dispositivo de bloque
+- **Target vs Initiator en iSCSI** — el target es el servidor que exporta almacenamiento, el initiator es el cliente que se conecta. `targetcli` configura el target, `iscsiadm` configura el initiator. Confundir los roles es error comun
+- **Puerto iSCSI: 3260/TCP** — no es 3389 (RDP) ni 860 (antiguo iSCSI). El examen pregunta el puerto predeterminado; si no se especifica en `iscsiadm`, siempre es 3260
+- **IQN tiene formato estricto** — `iqn.YYYY-MM.dominio.invertido:identificador`. El dominio va invertido (com.empresa, no empresa.com). La fecha es cuando se registro el dominio, no la fecha actual. Un IQN mal formado es invalido
+- **multipath -ll vs multipath -v2** — `-ll` muestra la topologia detallada de rutas y estados; `-v2` muestra informacion de descubrimiento. El examen suele preguntar como ver las rutas activas hacia un LUN: la respuesta es `multipath -ll`
+- **failover vs multibus en multipath** — `failover` tiene una ruta activa y las demas en espera (alta disponibilidad); `multibus` usa todas las rutas simultaneamente en round-robin (mayor rendimiento). Elegir la politica incorrecta para el escenario es trampa frecuente
+- **SCSI PR pre-empt: fencing de almacenamiento** — `sg_persist --preempt` permite a un nodo quitar la reserva de otro nodo sobre un LUN. Es el mecanismo que Pacemaker usa para fencing a nivel de recurso. Sin pre-empt, un nodo muerto mantiene su reserva indefinidamente
+- **iscsiadm -m discovery vs -m node** — `discovery` busca targets disponibles en un portal; `node` gestiona conexiones a targets ya descubiertos. Primero se descubre, luego se conecta. Intentar `--login` sin discovery previo falla si no hay cache
+- **user_friendly_names: mpath0 vs WWID** — con `user_friendly_names yes`, los dispositivos multipath se llaman `mpath0`, `mpath1`, etc. Sin esta opcion, se usan nombres basados en WWID (largos y dificiles). En clusters, es mejor usar WWID o alias consistentes porque `mpath0` puede asignarse a distinto LUN en cada nodo
+- **WWNN vs WWPN en Fibre Channel** — WWNN (World Wide Node Name) identifica al nodo FC completo; WWPN (World Wide Port Name) identifica un puerto especifico. El zoning FC se hace por WWPN, no por WWNN

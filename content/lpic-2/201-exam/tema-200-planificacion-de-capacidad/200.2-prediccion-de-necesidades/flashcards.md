@@ -11,7 +11,7 @@ subtema: "200.2"
 
 # Flashcards: 200.2 - Prediccion De Necesidades
 
-> 31 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 32 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="200.2">
 </div>
@@ -565,6 +565,24 @@ subtema: "200.2"
 <div class="flashcard-back">
 
 **R:** La planificacion de capacidad debe documentarse:
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="200.2">
+</div>
+
+<div class="flashcard" data-id="200.2-fc-032">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

@@ -11,7 +11,7 @@ subtema: "108.1"
 
 # Flashcards: 108.1 - Hora Del Sistema
 
-> 36 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 37 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="108.1">
 </div>
@@ -655,6 +655,24 @@ subtema: "108.1"
 <div class="flashcard-back">
 
 **R:** 1. **Dos relojes**: hardware (RTC/CMOS) y sistema (kernel)
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="108.1">
+</div>
+
+<div class="flashcard" data-id="108.1-fc-037">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

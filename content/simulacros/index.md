@@ -12,26 +12,26 @@ Practica con simulacros completos que replican las condiciones reales del examen
 
 ## LPIC-1: Administrador Linux
 
-| Examen | Temas | Enlace |
-|--------|-------|--------|
-| 101-500 | Arquitectura, instalacion, GNU/Unix, dispositivos, filesystems | [[lpic-1/101-exam/simulacro-101|Simulacro 101]] |
-| 102-500 | Shells, interfaces, tareas admin, servicios, red, seguridad | [[lpic-1/102-exam/simulacro-102|Simulacro 102]] |
+| Examen | Temas | Simulacro A | Simulacro B |
+|--------|-------|-------------|-------------|
+| 101-500 | Arquitectura, instalacion, GNU/Unix, dispositivos, filesystems | [[lpic-1/101-exam/simulacro-101|Simulacro 101-A]] | [[lpic-1/101-exam/simulacro-101-b|Simulacro 101-B]] |
+| 102-500 | Shells, interfaces, tareas admin, servicios, red, seguridad | [[lpic-1/102-exam/simulacro-102|Simulacro 102-A]] | [[lpic-1/102-exam/simulacro-102-b|Simulacro 102-B]] |
 
 ## LPIC-2: Ingeniero Linux
 
-| Examen | Temas | Enlace |
-|--------|-------|--------|
-| 201-450 | Capacidad, kernel, arranque, filesystems, almacenamiento, red, mantenimiento | [[lpic-2/201-exam/simulacro-201|Simulacro 201]] |
-| 202-450 | DNS, HTTP, comparticion, LDAP/PAM, correo, seguridad | [[lpic-2/202-exam/simulacro-202|Simulacro 202]] |
+| Examen | Temas | Simulacro A | Simulacro B |
+|--------|-------|-------------|-------------|
+| 201-450 | Capacidad, kernel, arranque, filesystems, almacenamiento, red, mantenimiento | [[lpic-2/201-exam/simulacro-201|Simulacro 201-A]] | [[lpic-2/201-exam/simulacro-201-b|Simulacro 201-B]] |
+| 202-450 | DNS, HTTP, comparticion, LDAP/PAM, correo, seguridad | [[lpic-2/202-exam/simulacro-202|Simulacro 202-A]] | [[lpic-2/202-exam/simulacro-202-b|Simulacro 202-B]] |
 
 ## LPIC-3: Profesional Linux Enterprise
 
-| Examen | Temas | Enlace |
-|--------|-------|--------|
-| 300 | Samba, Active Directory, FreeIPA, NFS Kerberos | [[lpic-3/300-entornos-mixtos/simulacro-300|Simulacro 300]] |
-| 303 | PKI, cifrado, SELinux/AppArmor, IDS, nftables, VPN, pentesting | [[lpic-3/303-seguridad/simulacro-303|Simulacro 303]] |
-| 305 | KVM, Xen, Docker, Kubernetes, Terraform, Packer, Vagrant | [[lpic-3/305-virtualizacion/simulacro-305|Simulacro 305]] |
-| 306 | Pacemaker, DRBD, GlusterFS, Ceph, RAID/LVM avanzado, bonding | [[lpic-3/306-alta-disponibilidad/simulacro-306|Simulacro 306]] |
+| Examen | Temas | Simulacro A | Simulacro B |
+|--------|-------|-------------|-------------|
+| 300 | Samba, Active Directory, FreeIPA, NFS Kerberos | [[lpic-3/300-entornos-mixtos/simulacro-300|Simulacro 300-A]] | [[lpic-3/300-entornos-mixtos/simulacro-300-b|Simulacro 300-B]] |
+| 303 | PKI, cifrado, SELinux/AppArmor, IDS, nftables, VPN, pentesting | [[lpic-3/303-seguridad/simulacro-303|Simulacro 303-A]] | [[lpic-3/303-seguridad/simulacro-303-b|Simulacro 303-B]] |
+| 305 | KVM, Xen, Docker, Kubernetes, Terraform, Packer, Vagrant | [[lpic-3/305-virtualizacion/simulacro-305|Simulacro 305-A]] | [[lpic-3/305-virtualizacion/simulacro-305-b|Simulacro 305-B]] |
+| 306 | Pacemaker, DRBD, GlusterFS, Ceph, RAID/LVM avanzado, bonding | [[lpic-3/306-alta-disponibilidad/simulacro-306|Simulacro 306-A]] | [[lpic-3/306-alta-disponibilidad/simulacro-306-b|Simulacro 306-B]] |
 
 ## Instrucciones
 

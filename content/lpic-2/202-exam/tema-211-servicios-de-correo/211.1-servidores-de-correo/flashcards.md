@@ -11,7 +11,7 @@ subtema: "211.1"
 
 # Flashcards: 211.1 - Servidores De Correo
 
-> 37 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 38 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="211.1">
 </div>
@@ -673,6 +673,24 @@ subtema: "211.1"
 <div class="flashcard-back">
 
 **R:** Sendmail es el MTA histórico de Unix. Aunque Postfix es más popular, conviene conocer los conceptos básicos de Sendmail.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="211.1">
+</div>
+
+<div class="flashcard" data-id="211.1-fc-038">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

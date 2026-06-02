@@ -11,7 +11,7 @@ subtema: "212.4"
 
 # Flashcards: 212.4 - Tareas De Seguridad
 
-> 36 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 38 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="212.4">
 </div>
@@ -577,6 +577,24 @@ subtema: "212.4"
 <div class="flashcard" data-id="212.4-fc-032">
 <div class="flashcard-front">
 
+**P:** Tip de examen: Lynis es una herramienta de auditoría no intrusiva que solo analiza y reporta. N...
+
+</div>
+<div class="flashcard-back">
+
+**R:** Lynis es una herramienta de auditoría no intrusiva que solo analiza y reporta. No modifica la configuración del sistema automáticamente.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="212.4">
+</div>
+
+<div class="flashcard" data-id="212.4-fc-033">
+<div class="flashcard-front">
+
 **P:** Que hace el comando `/etc/fail2ban/jail.conf`?
 
 </div>
@@ -592,7 +610,7 @@ subtema: "212.4"
 <div class="flashcard-deck" data-subtema="212.4">
 </div>
 
-<div class="flashcard" data-id="212.4-fc-033">
+<div class="flashcard" data-id="212.4-fc-034">
 <div class="flashcard-front">
 
 **P:** Que es/son Introducción?
@@ -610,7 +628,7 @@ subtema: "212.4"
 <div class="flashcard-deck" data-subtema="212.4">
 </div>
 
-<div class="flashcard" data-id="212.4-fc-034">
+<div class="flashcard" data-id="212.4-fc-035">
 <div class="flashcard-front">
 
 **P:** Que es/son fail2ban: protección contra fuerza bruta?
@@ -628,7 +646,7 @@ subtema: "212.4"
 <div class="flashcard-deck" data-subtema="212.4">
 </div>
 
-<div class="flashcard" data-id="212.4-fc-035">
+<div class="flashcard" data-id="212.4-fc-036">
 <div class="flashcard-front">
 
 **P:** Que es/son Sistema de auditoría (auditd)?
@@ -646,7 +664,7 @@ subtema: "212.4"
 <div class="flashcard-deck" data-subtema="212.4">
 </div>
 
-<div class="flashcard" data-id="212.4-fc-036">
+<div class="flashcard" data-id="212.4-fc-037">
 <div class="flashcard-front">
 
 **P:** Que es/son Lynis: auditoría de seguridad?
@@ -655,6 +673,24 @@ subtema: "212.4"
 <div class="flashcard-back">
 
 **R:** Lynis es una herramienta de auditoría de seguridad que evalúa la configuración del sistema.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="212.4">
+</div>
+
+<div class="flashcard" data-id="212.4-fc-038">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

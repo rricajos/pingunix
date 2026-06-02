@@ -11,7 +11,7 @@ subtema: "207.3"
 
 # Flashcards: 207.3 - Seguridad Dns
 
-> 44 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 45 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="207.3">
 </div>
@@ -799,6 +799,24 @@ subtema: "207.3"
 <div class="flashcard-back">
 
 **R:** - **Ocultar la version** de BIND: `version "none";`
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="207.3">
+</div>
+
+<div class="flashcard" data-id="207.3-fc-045">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

@@ -296,3 +296,19 @@ dracut -f              # RHEL/CentOS
 - Mantener actualizado `/etc/mdadm.conf` y el initramfs
 - Monitorizar `/proc/mdstat` regularmente
 - No mezclar discos de diferentes tamanos en RAID 5/6 (se usa el menor)
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **RAID 5 necesita minimo 3 discos, RAID 6 minimo 4** — confundir los minimos es una trampa frecuente. RAID 0 y RAID 1 necesitan minimo 2; RAID 10 necesita minimo 4 (pares de espejos)
+- **RAID 5 tolera 1 fallo, RAID 6 tolera 2 fallos** — RAID 5 usa paridad simple y RAID 6 doble paridad. Si fallan 2 discos en un RAID 5, se pierden todos los datos. En RAID 6, se necesitarian 3 fallos simultaneos
+- **Capacidad util: RAID 5 = N-1, RAID 6 = N-2, RAID 10 = N/2** — el examen pregunta frecuentemente cuanta capacidad util tiene un array de N discos. RAID 0 = N (sin redundancia), RAID 1 = 1 disco
+- **`[UU]` vs `[U_]` en `/proc/mdstat`** — `U` indica disco activo (Up), `_` indica disco fallido o ausente. `[UU]` = array sano, `[U_]` = array degradado con un disco fallido. El examen puede mostrar una salida de `/proc/mdstat` y preguntar el estado
+- **`mdadm --detail` vs `mdadm --examine`** — `--detail /dev/md0` muestra informacion del array ensamblado; `--examine /dev/sdb1` muestra los metadatos RAID escritos en un disco miembro individual. Son complementarios
+- **Actualizar `/etc/mdadm.conf` Y el initramfs tras crear un array** — sin actualizar el initramfs (`update-initramfs -u` o `dracut -f`), el array puede no ensamblarse automaticamente tras reiniciar
+- **Los discos spare se activan automaticamente al detectar un fallo** — no necesitan intervencion manual. Cuando un disco falla, el spare entra en accion y comienza la reconstruccion automaticamente
+- **`mdadm --grow` permite expandir un array existente** — puedes agregar discos a un RAID 5 sin destruir datos. Pero despues debes redimensionar el sistema de archivos (`resize2fs` o `xfs_growfs`) para usar el espacio nuevo
+- **La particion tipo `fd` (Linux RAID autodetect) es para MBR** — en tablas GPT se usa el tipo `da00` o el GUID correspondiente. El tipo de particion es importante para que `mdadm --assemble --scan` detecte los discos automaticamente

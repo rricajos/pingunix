@@ -434,3 +434,20 @@ ip route add default via 192.168.1.1
 10. **`/etc/sysconfig/network`** (RHEL): Configuracion global de red (NETWORKING, HOSTNAME, GATEWAY)
 11. **`ip route add default via IP`** establece la ruta por defecto
 12. Las configuraciones con `ip`/`ifconfig` son **temporales**; para persistir se usan archivos de configuracion
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`ip` reemplaza a `ifconfig`, `route` y `arp`** — `ifconfig` y `route` estan deprecados. El examen espera que conozcas ambos, pero `ip addr`, `ip route` e `ip neigh` son las herramientas modernas. `ip` es del paquete `iproute2`; `ifconfig` es de `net-tools`
+- **Cambios con `ip` e `ifconfig` son TEMPORALES** — Cualquier configuracion hecha con `ip addr add` o `ifconfig` se pierde al reiniciar. Para persistir se deben usar archivos de configuracion (`/etc/network/interfaces`, NetworkManager, netplan, etc.)
+- **`/etc/resolv.conf` tiene maximo 3 `nameserver`** — Aunque pongas mas de 3, solo se usan los primeros tres. Ademas, `domain` y `search` son mutuamente excluyentes: si ambos estan presentes, se usa el ULTIMO definido en el archivo
+- **`/etc/nsswitch.conf` define el orden `hosts: files dns`** — Esto significa que `/etc/hosts` se consulta ANTES que DNS. Si el orden fuera `hosts: dns files`, DNS tendria prioridad. El examen puede cambiar el orden y preguntar que ocurre
+- **Netplan usa archivos YAML, no la sintaxis de interfaces** — Netplan (Ubuntu moderno) usa `/etc/netplan/*.yaml` con sintaxis YAML (indentacion con espacios). No confundir con `/etc/network/interfaces` (Debian clasico) que tiene formato propio
+- **`netplan apply` aplica cambios; `netplan generate` solo genera** — `netplan generate` crea la configuracion del backend (NetworkManager o systemd-networkd) pero NO la aplica. `netplan apply` genera Y aplica. `netplan try` aplica temporalmente con rollback automatico
+- **`/etc/sysconfig/network-scripts/` es de Red Hat, NO de Debian** — Los archivos `ifcfg-eth0` son especificos de RHEL/CentOS/Fedora. Debian usa `/etc/network/interfaces`. Ubuntu moderno usa Netplan. El examen puede preguntar la ubicacion segun la distribucion
+- **`ONBOOT=yes` en RHEL vs `auto eth0` en Debian** — Para que una interfaz se active al arrancar, RHEL usa `ONBOOT=yes` en `ifcfg-eth0`; Debian usa la linea `auto eth0` en `/etc/network/interfaces`. Son equivalentes pero con sintaxis diferente
+- **`hostnamectl` vs `hostname`** — `hostnamectl set-hostname` cambia el hostname de forma PERSISTENTE (modifica `/etc/hostname`); `hostname nuevo` lo cambia solo TEMPORALMENTE (se pierde al reiniciar)
+- **`nmcli connection show` vs `nmcli device status`** — `connection show` muestra las CONEXIONES configuradas (pueden estar activas o no); `device status` muestra los DISPOSITIVOS fisicos y su estado. Una conexion puede existir sin estar activa

@@ -11,7 +11,7 @@ subtema: "364.1"
 
 # Flashcards: 364.1 - Ha De Hardware Y Recursos
 
-> 32 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 34 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="364.1">
 </div>
@@ -523,6 +523,24 @@ subtema: "364.1"
 <div class="flashcard" data-id="364.1-fc-029">
 <div class="flashcard-front">
 
+**P:** Tip de examen: IPMI se usa como dispositivo de fencing (`fence_ipmilan`) en clusters Pacemaker....
+
+</div>
+<div class="flashcard-back">
+
+**R:** IPMI se usa como dispositivo de fencing (`fence_ipmilan`) en clusters Pacemaker. `ipmitool` es la herramienta principal para interactuar con el BMC.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="364.1">
+</div>
+
+<div class="flashcard" data-id="364.1-fc-030">
+<div class="flashcard-front">
+
 **P:** Que hace el comando `standalone`?
 
 </div>
@@ -538,7 +556,7 @@ subtema: "364.1"
 <div class="flashcard-deck" data-subtema="364.1">
 </div>
 
-<div class="flashcard" data-id="364.1-fc-030">
+<div class="flashcard" data-id="364.1-fc-031">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `netserver`?
@@ -556,7 +574,7 @@ subtema: "364.1"
 <div class="flashcard-deck" data-subtema="364.1">
 </div>
 
-<div class="flashcard" data-id="364.1-fc-031">
+<div class="flashcard" data-id="364.1-fc-032">
 <div class="flashcard-front">
 
 **P:** Que es/son Watchdog Timers?
@@ -574,7 +592,7 @@ subtema: "364.1"
 <div class="flashcard-deck" data-subtema="364.1">
 </div>
 
-<div class="flashcard" data-id="364.1-fc-032">
+<div class="flashcard" data-id="364.1-fc-033">
 <div class="flashcard-front">
 
 **P:** Que es/son IPMI/BMC?
@@ -583,6 +601,24 @@ subtema: "364.1"
 <div class="flashcard-back">
 
 **R:** **IPMI** (Intelligent Platform Management Interface) y **BMC** (Baseboard Management Controller) permiten la gestion remota del hardware del servidor, incluso cuando esta apagado.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="364.1">
+</div>
+
+<div class="flashcard" data-id="364.1-fc-034">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

@@ -597,3 +597,18 @@ cloud-init query
 10. **D-Bus** permite la comunicacion entre procesos y con el hipervisor.
 11. **cloud-init** configura instancias automaticamente en el primer arranque, usa formato YAML con `#cloud-config`.
 12. `systemd-detect-virt` detecta si el sistema esta virtualizado y que hipervisor usa.
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Hipervisor Tipo 1 vs Tipo 2** — Tipo 1 (bare metal) se ejecuta directamente sobre el hardware: KVM, Xen, ESXi. Tipo 2 (hosted) se ejecuta sobre un SO: VirtualBox, VMware Workstation. El examen puede clasificar incorrectamente KVM como Tipo 2 porque Linux es el host.
+- **KVM es Tipo 1, NO Tipo 2** — Aunque KVM funciona como modulo del kernel Linux, el kernel actua como hipervisor bare metal. El examen frecuentemente intenta confundir esto.
+- **Contenedores comparten kernel; VMs tienen kernel propio** — La diferencia fundamental. Un contenedor NO puede ejecutar un kernel diferente al del host. El examen puede preguntar si un contenedor Linux puede ejecutar un kernel Windows.
+- **`/etc/machine-id` debe ser unico tras clonar** — Dos maquinas con el mismo machine-id causan conflictos en DHCP, D-Bus y otros servicios. El examen puede preguntar que problemas causa no regenerar el machine-id.
+- **`vmx` (Intel) vs `svm` (AMD)** — Son las flags de CPU para virtualizacion por hardware. Se verifican con `grep -E '(vmx|svm)' /proc/cpuinfo`. El examen puede preguntar como verificar si el hardware soporta virtualizacion.
+- **`cloud-init` se ejecuta solo en el primer arranque** — No se re-ejecuta en arranques posteriores a menos que se limpie su estado con `cloud-init clean`. El examen puede preguntar por que los cambios en user-data no se aplican tras un reinicio.
+- **IaaS vs PaaS vs SaaS** — En IaaS el usuario gestiona desde el SO; en PaaS solo la aplicacion y datos; en SaaS no gestiona nada. El examen puede pedir identificar el modelo correcto segun un escenario.
+- **Clonar VM: regenerar SSH host keys** — Si no se regeneran las claves SSH del host (`/etc/ssh/ssh_host_*`), los clientes recibiran advertencias de "host key changed". El examen puede preguntar que archivos hay que regenerar despues de clonar.

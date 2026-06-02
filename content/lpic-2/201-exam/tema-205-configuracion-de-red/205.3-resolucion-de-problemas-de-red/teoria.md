@@ -639,3 +639,19 @@ ethtool -S eth0
 top
 ss -s
 ```
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`ss` reemplaza a `netstat`, pero ambos pueden aparecer en el examen** — `ss -tlnp` es equivalente a `netstat -tlnp`. `ss` es mas rapido y eficiente, pero el examen puede preguntar por cualquiera de los dos
+- **`ss -tlnp`: cada letra importa** — `-t` = TCP, `-l` = listening (solo sockets en escucha), `-n` = numerico (no resolver nombres), `-p` = process (mostrar PID/nombre). Cambiar `-l` por `-a` muestra todos los sockets (no solo los que escuchan)
+- **`traceroute` usa UDP por defecto, no ICMP** — a diferencia de `ping` que usa ICMP, `traceroute` envia paquetes UDP. Para usar ICMP: `traceroute -I`. Para TCP: `traceroute -T`. Esto explica por que a veces traceroute falla donde ping funciona
+- **`tracepath` no requiere root, `traceroute` si (para ICMP/TCP)** — `tracepath` ademas detecta automaticamente la MTU de la ruta. Es la alternativa cuando no tienes privilegios de root
+- **`dig +trace` vs `dig` normal** — `dig` consulta al resolver configurado; `dig +trace` sigue toda la cadena de resolucion desde los servidores raiz, util para diagnosticar problemas de delegacion DNS
+- **`tcpdump -w` guarda en formato pcap, no en texto** — el archivo generado con `-w` es binario (formato pcap) legible con `tcpdump -r` o Wireshark. No es texto plano que puedas leer con `cat`
+- **`nmap -sS` (SYN scan) requiere root, `-sT` (TCP connect) no** — el SYN scan es mas sigiloso y rapido, pero necesita privilegios para crear paquetes raw. Sin root, nmap usa automaticamente `-sT`
+- **`* * *` en traceroute no siempre significa un problema** — muchos routers estan configurados para no responder a paquetes con TTL expirado. Si los saltos siguientes responden normalmente, los `* * *` intermedios no indican un fallo
+- **Ping funciona pero DNS no = problema de resolucion de nombres** — si `ping 8.8.8.8` responde pero `ping google.com` no, el problema esta en la configuracion DNS (`/etc/resolv.conf`), no en la conectividad de red

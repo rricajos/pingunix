@@ -11,7 +11,7 @@ subtema: "331.3"
 
 # Flashcards: 331.3 - Sistemas De Archivos Cifrados
 
-> 40 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 42 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="331.3">
 </div>
@@ -523,6 +523,24 @@ subtema: "331.3"
 <div class="flashcard" data-id="331.3-fc-029">
 <div class="flashcard-front">
 
+**P:** Tip de examen: Conoce las diferencias entre cifrado a nivel de bloque (dm-crypt/LUKS) y a nivel...
+
+</div>
+<div class="flashcard-back">
+
+**R:** Conoce las diferencias entre cifrado a nivel de bloque (dm-crypt/LUKS) y a nivel de archivo (eCryptfs, EncFS). dm-crypt protege toda la partición; eCryptfs permite cifrar archivos selectivamente.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="331.3">
+</div>
+
+<div class="flashcard" data-id="331.3-fc-030">
+<div class="flashcard-front">
+
 **P:** Que hace el comando `noauto`?
 
 </div>
@@ -538,7 +556,7 @@ subtema: "331.3"
 <div class="flashcard-deck" data-subtema="331.3">
 </div>
 
-<div class="flashcard" data-id="331.3-fc-030">
+<div class="flashcard" data-id="331.3-fc-031">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `discard`?
@@ -556,7 +574,7 @@ subtema: "331.3"
 <div class="flashcard-deck" data-subtema="331.3">
 </div>
 
-<div class="flashcard" data-id="331.3-fc-031">
+<div class="flashcard" data-id="331.3-fc-032">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `swap`?
@@ -574,7 +592,7 @@ subtema: "331.3"
 <div class="flashcard-deck" data-subtema="331.3">
 </div>
 
-<div class="flashcard" data-id="331.3-fc-032">
+<div class="flashcard" data-id="331.3-fc-033">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `cipher=`?
@@ -592,7 +610,7 @@ subtema: "331.3"
 <div class="flashcard-deck" data-subtema="331.3">
 </div>
 
-<div class="flashcard" data-id="331.3-fc-033">
+<div class="flashcard" data-id="331.3-fc-034">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `tries=`?
@@ -610,7 +628,7 @@ subtema: "331.3"
 <div class="flashcard-deck" data-subtema="331.3">
 </div>
 
-<div class="flashcard" data-id="331.3-fc-034">
+<div class="flashcard" data-id="331.3-fc-035">
 <div class="flashcard-front">
 
 **P:** Que es/son Introducción?
@@ -628,7 +646,7 @@ subtema: "331.3"
 <div class="flashcard-deck" data-subtema="331.3">
 </div>
 
-<div class="flashcard" data-id="331.3-fc-035">
+<div class="flashcard" data-id="331.3-fc-036">
 <div class="flashcard-front">
 
 **P:** Que es/son Configuración Persistente: /etc/crypttab?
@@ -646,7 +664,7 @@ subtema: "331.3"
 <div class="flashcard-deck" data-subtema="331.3">
 </div>
 
-<div class="flashcard" data-id="331.3-fc-036">
+<div class="flashcard" data-id="331.3-fc-037">
 <div class="flashcard-front">
 
 **P:** Que es/son dm-crypt en Modo Plano (Plain Mode)?
@@ -664,7 +682,7 @@ subtema: "331.3"
 <div class="flashcard-deck" data-subtema="331.3">
 </div>
 
-<div class="flashcard" data-id="331.3-fc-037">
+<div class="flashcard" data-id="331.3-fc-038">
 <div class="flashcard-front">
 
 **P:** Que es/son LUKS sobre LVM?
@@ -682,7 +700,7 @@ subtema: "331.3"
 <div class="flashcard-deck" data-subtema="331.3">
 </div>
 
-<div class="flashcard" data-id="331.3-fc-038">
+<div class="flashcard" data-id="331.3-fc-039">
 <div class="flashcard-front">
 
 **P:** Que es/son LUKS en initramfs?
@@ -700,7 +718,7 @@ subtema: "331.3"
 <div class="flashcard-deck" data-subtema="331.3">
 </div>
 
-<div class="flashcard" data-id="331.3-fc-039">
+<div class="flashcard" data-id="331.3-fc-040">
 <div class="flashcard-front">
 
 **P:** Que es/son eCryptfs?
@@ -718,7 +736,7 @@ subtema: "331.3"
 <div class="flashcard-deck" data-subtema="331.3">
 </div>
 
-<div class="flashcard" data-id="331.3-fc-040">
+<div class="flashcard" data-id="331.3-fc-041">
 <div class="flashcard-front">
 
 **P:** Que es/son EncFS?
@@ -727,6 +745,24 @@ subtema: "331.3"
 <div class="flashcard-back">
 
 **R:** EncFS es una solución de cifrado en espacio de usuario basada en FUSE. Más simple pero con limitaciones de seguridad conocidas.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="331.3">
+</div>
+
+<div class="flashcard" data-id="331.3-fc-042">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

@@ -334,3 +334,20 @@ Todo pentesting debe tener un documento formal que defina:
 | OSSTMM | Open Source Security Testing Methodology Manual |
 | NIST SP 800-115 | Technical Guide to Information Security Testing |
 | OWASP Testing Guide | Guia de pruebas para aplicaciones web |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Autorizacion escrita SIEMPRE obligatoria** — sin autorizacion escrita, cualquier actividad de pentesting es ilegal independientemente de la intencion. El examen enfatiza este punto como el requisito mas importante. Las "rules of engagement" deben firmarse ANTES de cualquier prueba
+- **Black box vs White box vs Grey box** — black box: sin informacion previa (simula atacante externo); white box: acceso total a documentacion, codigo y credenciales; grey box: informacion parcial. Si la pregunta menciona "simular un atacante sin conocimiento", la respuesta es black box
+- **nmap: `-sS` vs `-sT`** — `-sS` (SYN scan) envia SYN y no completa el handshake TCP (mas sigiloso, requiere root); `-sT` (Connect scan) completa el handshake completo (menos sigiloso, no requiere root). Si la pregunta pide el escaneo mas sigiloso por defecto con root, es `-sS`
+- **nmap: `-sF`, `-sX`, `-sN` para evasion** — FIN scan (-sF), Xmas scan (-sX, FIN+PSH+URG) y NULL scan (-sN, sin flags) pueden evadir firewalls que solo filtran paquetes SYN. Sin embargo, no funcionan contra sistemas Windows (que responden RST a todos). Si la pregunta menciona evasion de firewall stateless, estas son las opciones
+- **nmap: `-sA` detecta firewalls, no puertos** — el ACK scan (-sA) no determina si un puerto esta abierto o cerrado, sino si un firewall es stateful (filtra ACKs no solicitados) o stateless (los deja pasar). No confundir con un escaneo de puertos normal
+- **nmap timing templates** — `-T0` (paranoico, mas lento) a `-T5` (insano, mas rapido). `-T0` y `-T1` son para evasion de IDS; `-T4` es recomendado para redes rapidas. El examen puede preguntar que template minimiza la deteccion por IDS (respuesta: `-T0` o `-T1`)
+- **nmap `-p-` vs `--top-ports`** — `-p-` escanea los 65535 puertos; `--top-ports 100` escanea solo los 100 puertos mas comunes. No especificar ninguno escanea los 1000 puertos mas comunes por defecto. Si la pregunta pide "escaneo completo", la respuesta es `-p-`
+- **Metasploit: exploit vs payload** — el exploit es el codigo que aprovecha la vulnerabilidad para obtener acceso; el payload es lo que se ejecuta tras la explotacion (shell, meterpreter, etc.). Son componentes separados que se configuran independientemente con `set PAYLOAD`
+- **Reconocimiento pasivo vs activo** — pasivo: no interactua con el objetivo (WHOIS, DNS publico, OSINT); activo: interactua directamente (nmap, port scanning). El pasivo no puede ser detectado por el objetivo; el activo si. Si la pregunta menciona "sin ser detectado", la respuesta es reconocimiento pasivo
+- **`dig AXFR` (transferencia de zona)** — si un servidor DNS esta mal configurado y permite transferencias de zona sin restriccion, `dig @ns1.ejemplo.com ejemplo.com AXFR` revela todos los registros del dominio. Esto es una vulnerabilidad de configuracion, no un ataque sofisticado. El examen puede preguntar como prevenir esto (respuesta: restringir `allow-transfer` en BIND)

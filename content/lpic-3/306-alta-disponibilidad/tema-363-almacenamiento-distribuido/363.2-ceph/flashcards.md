@@ -11,7 +11,7 @@ subtema: "363.2"
 
 # Flashcards: 363.2 - Ceph
 
-> 38 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 40 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="363.2">
 </div>
@@ -523,6 +523,24 @@ subtema: "363.2"
 <div class="flashcard" data-id="363.2-fc-029">
 <div class="flashcard-front">
 
+**P:** Tip de examen: `cephadm` ha reemplazado a `ceph-deploy` como herramienta oficial de despliegue....
+
+</div>
+<div class="flashcard-back">
+
+**R:** `cephadm` ha reemplazado a `ceph-deploy` como herramienta oficial de despliegue. `public_network` es para clientes, `cluster_network` es para trafico de replicacion entre OSDs.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="363.2">
+</div>
+
+<div class="flashcard" data-id="363.2-fc-030">
+<div class="flashcard-front">
+
 **P:** Que hace el comando `active+degraded`?
 
 </div>
@@ -538,7 +556,7 @@ subtema: "363.2"
 <div class="flashcard-deck" data-subtema="363.2">
 </div>
 
-<div class="flashcard" data-id="363.2-fc-030">
+<div class="flashcard" data-id="363.2-fc-031">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `peering`?
@@ -556,7 +574,7 @@ subtema: "363.2"
 <div class="flashcard-deck" data-subtema="363.2">
 </div>
 
-<div class="flashcard" data-id="363.2-fc-031">
+<div class="flashcard" data-id="363.2-fc-032">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `stale`?
@@ -574,7 +592,7 @@ subtema: "363.2"
 <div class="flashcard-deck" data-subtema="363.2">
 </div>
 
-<div class="flashcard" data-id="363.2-fc-032">
+<div class="flashcard" data-id="363.2-fc-033">
 <div class="flashcard-front">
 
 **P:** Que es/son Introduccion a Ceph?
@@ -592,7 +610,7 @@ subtema: "363.2"
 <div class="flashcard-deck" data-subtema="363.2">
 </div>
 
-<div class="flashcard" data-id="363.2-fc-033">
+<div class="flashcard" data-id="363.2-fc-034">
 <div class="flashcard-front">
 
 **P:** Que es/son Algoritmo CRUSH?
@@ -610,7 +628,7 @@ subtema: "363.2"
 <div class="flashcard-deck" data-subtema="363.2">
 </div>
 
-<div class="flashcard" data-id="363.2-fc-034">
+<div class="flashcard" data-id="363.2-fc-035">
 <div class="flashcard-front">
 
 **P:** Que es/son Placement Groups (PGs)?
@@ -628,7 +646,7 @@ subtema: "363.2"
 <div class="flashcard-deck" data-subtema="363.2">
 </div>
 
-<div class="flashcard" data-id="363.2-fc-035">
+<div class="flashcard" data-id="363.2-fc-036">
 <div class="flashcard-front">
 
 **P:** Que es/son RBD - RADOS Block Device?
@@ -646,7 +664,7 @@ subtema: "363.2"
 <div class="flashcard-deck" data-subtema="363.2">
 </div>
 
-<div class="flashcard" data-id="363.2-fc-036">
+<div class="flashcard" data-id="363.2-fc-037">
 <div class="flashcard-front">
 
 **P:** Que es/son CephFS - Ceph File System?
@@ -664,7 +682,7 @@ subtema: "363.2"
 <div class="flashcard-deck" data-subtema="363.2">
 </div>
 
-<div class="flashcard" data-id="363.2-fc-037">
+<div class="flashcard" data-id="363.2-fc-038">
 <div class="flashcard-front">
 
 **P:** Que es/son RGW - RADOS Gateway?
@@ -682,7 +700,7 @@ subtema: "363.2"
 <div class="flashcard-deck" data-subtema="363.2">
 </div>
 
-<div class="flashcard" data-id="363.2-fc-038">
+<div class="flashcard" data-id="363.2-fc-039">
 <div class="flashcard-front">
 
 **P:** Que es/son Despliegue con cephadm?
@@ -691,6 +709,24 @@ subtema: "363.2"
 <div class="flashcard-back">
 
 **R:** **cephadm** es la herramienta oficial para desplegar y gestionar clusters Ceph modernos (desde Octopus).
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="363.2">
+</div>
+
+<div class="flashcard" data-id="363.2-fc-040">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

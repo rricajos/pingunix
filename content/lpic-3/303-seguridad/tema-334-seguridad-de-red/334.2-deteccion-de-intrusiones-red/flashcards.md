@@ -11,7 +11,7 @@ subtema: "334.2"
 
 # Flashcards: 334.2 - Deteccion De Intrusiones Red
 
-> 33 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 34 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="334.2">
 </div>
@@ -601,6 +601,24 @@ subtema: "334.2"
 <div class="flashcard-back">
 
 **R:** ntopng proporciona monitorizacion de trafico en tiempo real con interfaz web.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="334.2">
+</div>
+
+<div class="flashcard" data-id="334.2-fc-034">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

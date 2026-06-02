@@ -11,7 +11,7 @@ subtema: "109.4"
 
 # Flashcards: 109.4 - Dns Del Lado Cliente
 
-> 30 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 31 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="109.4">
 </div>
@@ -547,6 +547,24 @@ subtema: "109.4"
 <div class="flashcard-back">
 
 **R:** 1. **`/etc/resolv.conf`**: Maximo 3 `nameserver`; `domain` y `search` son mutuamente excluyentes
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="109.4">
+</div>
+
+<div class="flashcard" data-id="109.4-fc-031">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

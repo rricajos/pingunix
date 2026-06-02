@@ -316,3 +316,20 @@ unbound-anchor -a /var/lib/unbound/root.key
 | Cifrado | No | TLS | HTTPS |
 | Bloqueable | Si | Si (puerto conocido) | Difícil (mismo puerto que HTTPS) |
 | Autenticación | DNSSEC opcional | TLS + DNSSEC | HTTPS + DNSSEC |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **DNSSEC NO cifra** — DNSSEC proporciona autenticacion e integridad, pero NO confidencialidad. Las consultas y respuestas DNS viajan en texto plano. Para cifrado se necesita DoT o DoH. Esta distincion es una de las preguntas mas frecuentes
+- **KSK vs ZSK** — la KSK (flags 257) firma las DNSKEY y su hash se publica como registro DS en la zona padre; la ZSK (flags 256) firma los registros normales de la zona. Confundir que clave firma que es un error clasico
+- **Rotacion de ZSK vs KSK** — la ZSK se rota frecuentemente y NO requiere cambios en la zona padre; la KSK se rota menos frecuentemente pero SI requiere actualizar el registro DS en la zona padre. Si la pregunta menciona "coordinacion con el registrador", la respuesta es KSK
+- **NSEC vs NSEC3** — NSEC permite zone walking (enumeracion de todos los registros de la zona); NSEC3 usa hashes para evitar la enumeracion. Si se pregunta por proteccion contra enumeracion de zona, la respuesta es NSEC3
+- **Registro DS** — el DS contiene el hash de la KSK del hijo y se publica en la zona padre. No confundir: el DS NO se publica en la zona propia sino en la zona padre. Sin el DS en la zona padre, la cadena de confianza se rompe
+- **DANE-EE (uso=3)** — DANE-EE autentica el certificado del servidor directamente por DNS sin necesidad de CAs. No confundir con PKIX-TA (uso=0) que requiere validacion de CA adicional. El examen suele preguntar que valor de uso permite prescindir de las CAs
+- **TSIG usa clave simetrica** — TSIG autentica transferencias de zona con HMAC (clave compartida), NO con criptografia asimetrica. No confundir con DNSSEC que usa firmas digitales (asimetrico). TSIG protege la comunicacion servidor-a-servidor, no las respuestas a clientes
+- **DoT puerto 853 vs DoH puerto 443** — DoT usa un puerto dedicado (853) y es facilmente bloqueable; DoH usa el mismo puerto que HTTPS (443) y es practicamente imposible de distinguir del trafico web normal. Si la pregunta es sobre evitar censura, la respuesta es DoH
+- **`dnssec-signzone` genera `.signed`** — tras firmar, el archivo de zona firmada tiene extension `.signed` y es el que debe configurarse en `named.conf` (no el archivo original). Olvidar actualizar el `file` en la configuracion de BIND es un error comun
+- **`auto-dnssec maintain` vs `inline-signing`** — `auto-dnssec maintain` permite a BIND gestionar la re-firma automatica; `inline-signing yes` permite editar la zona sin firmar y BIND firma automaticamente. Ambos suelen usarse juntos pero tienen funciones diferentes

@@ -405,3 +405,18 @@ UUID=ABCD-1234  /boot/efi   vfat    umask=0077          0   1
 5. `fdisk` para MBR, `gdisk` para GPT, `parted` para ambos.
 6. Swap: `mkswap` para crear, `swapon`/`swapoff` para activar/desactivar.
 7. `/etc/fstab` define el montaje automatico; usar UUID es la practica recomendada.
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`parted` aplica cambios inmediatamente** — A diferencia de `fdisk` y `gdisk` (que requieren `w` para escribir), `parted` ejecuta los cambios al instante. El examen puede preguntar cual herramienta aplica cambios sin confirmacion.
+- **MBR: 4 primarias O 3 primarias + 1 extendida** — No se pueden tener 4 primarias Y una extendida. La extendida ocupa una de las 4 ranuras. El examen puede ofrecer opciones como "5 particiones primarias en MBR".
+- **La ESP (EFI System Partition) DEBE ser FAT32** — En sistemas UEFI, la particion EFI siempre es FAT32. El examen puede ofrecer ext4 o xfs como opciones para la ESP.
+- **`/boot` no es lo mismo que la ESP** — `/boot` contiene kernel e initramfs. La ESP (`/boot/efi`) contiene los cargadores EFI. En UEFI ambos son necesarios. El examen puede confundir ambos conceptos.
+- **LVM: PV -> VG -> LV (en ese orden)** — Primero se crean Physical Volumes, luego se agrupan en Volume Groups, y finalmente se crean Logical Volumes dentro. El examen puede alterar este orden.
+- **El campo `pass` en `/etc/fstab`** — `0` = no verificar, `1` = solo para raiz (se verifica primero), `2` = para el resto (se verifica despues). El examen puede preguntar que valor usar para `/home` o para swap.
+- **Swap no necesita punto de montaje** — En `/etc/fstab`, el punto de montaje para swap es `none` (o `swap`). El examen puede preguntar que va en el segundo campo para una particion swap.
+- **`fdisk` es para MBR, `gdisk` es para GPT** — Aunque `fdisk` moderno soporta GPT, el examen clasicamente asocia `fdisk` con MBR y `gdisk` con GPT. `parted` soporta ambos.

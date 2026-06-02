@@ -323,3 +323,20 @@ grep "IP_SOSPECHOSA" /var/log/zeek/conn.log
 # 3. Verificar en logs del sistema
 journalctl --since "2025-01-15 10:00" --until "2025-01-15 11:00" | grep "IP_SOSPECHOSA"
 ```
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **IDS vs IPS** — IDS (Detection) solo detecta y alerta, se coloca fuera de linea (mirror/tap); IPS (Prevention) detecta y bloquea, se coloca en linea (inline). Si el IPS falla, puede interrumpir el trafico de red. El examen pregunta frecuentemente por la posicion en la red y el impacto de un fallo
+- **Snort: modos de operacion** — sniffer (`-v`), logger (`-dev -l`), NIDS (`-c snort.conf`) e IPS inline (`-Q --daq afpacket`). No confundir los modos: `-v` solo muestra paquetes en pantalla, NO analiza contra reglas. Para deteccion real se necesita `-c` con archivo de configuracion
+- **Deteccion por firmas vs anomalias** — firmas: precisa pero no detecta zero-days; anomalias: detecta ataques desconocidos pero mas falsos positivos. El examen puede preguntar que tipo de deteccion captura un ataque completamente nuevo (respuesta: anomalias)
+- **Snort `sid` unico obligatorio** — cada regla de Snort debe tener un `sid` (Signature ID) unico. Las reglas personalizadas deben usar sid >= 1000000 para no colisionar con las reglas oficiales. Olvidar el sid o usar uno duplicado causa errores
+- **Snort `->` vs `<>`** — `->` indica trafico unidireccional (origen a destino); `<>` indica trafico bidireccional. Usar `->` cuando se necesita `<>` puede perder detecciones en la direccion inversa
+- **Suricata multi-hilo vs Snort mono-hilo** — Suricata usa multi-threading nativo (mejor rendimiento en multi-core); Snort clasico es mono-hilo. Para redes de alto ancho de banda, Suricata es mas adecuado. El examen puede preguntar ventajas de rendimiento
+- **Suricata EVE JSON vs Snort unified2** — Suricata genera logs en formato EVE JSON (facil de parsear, integrable con SIEM); Snort clasico usa unified2 (binario). Si la pregunta menciona formato de log moderno o integracion con Elasticsearch, la respuesta es Suricata/EVE
+- **tcpdump: filtros BPF y flags TCP** — `tcp[tcpflags] & tcp-syn != 0` captura paquetes con flag SYN activado (incluyendo SYN-ACK); `tcp[tcpflags] == tcp-syn` captura SOLO paquetes SYN puros. La diferencia entre `&` (AND bit a bit) y `==` (igualdad exacta) es critica
+- **tcpdump `-s 0`** — captura el paquete completo sin truncar. Por defecto, tcpdump puede truncar paquetes largos. Sin `-s 0`, se puede perder el payload relevante para analisis. Siempre usarlo en capturas forenses
+- **Zeek (Bro) genera logs, no alertas** — a diferencia de Snort/Suricata, Zeek genera logs estructurados detallados (conn.log, dns.log, http.log) pero no alerta directamente sobre firmas de ataques. Es un framework de analisis de trafico, no un IDS basado en firmas. Confundir su funcion es un error comun

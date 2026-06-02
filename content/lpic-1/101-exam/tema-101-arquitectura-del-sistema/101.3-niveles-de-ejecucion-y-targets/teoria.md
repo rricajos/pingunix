@@ -574,3 +574,19 @@ acpi_listen
 8. **Cambiar runlevel/target:** `init N` / `telinit N` (SysVinit) o `systemctl isolate target` (systemd).
 9. **Scripts S y K:** S = Start (iniciar servicio), K = Kill (detener servicio). El numero indica el orden.
 10. **Prioridad de archivos systemd:** `/etc/systemd/system/` sobreescribe `/lib/systemd/system/`.
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Runlevels 2, 3 y 4 se mapean TODOS a `multi-user.target`** — systemd no distingue entre ellos. El examen puede preguntar a que target corresponde el runlevel 2 o 4, y la respuesta es siempre `multi-user.target`.
+- **`systemctl isolate` vs `systemctl set-default`** — `isolate` cambia el target en tiempo real (efecto inmediato, no persistente); `set-default` cambia el target para el proximo arranque (persistente, no inmediato). El examen puede intentar confundir ambos.
+- **`/etc/inittab` NO existe en sistemas con systemd** — En systemd, el equivalente al runlevel por defecto se configura con `systemctl set-default`. El examen puede preguntar donde configurar el nivel de ejecucion por defecto y ofrecer `/etc/inittab` como distractor.
+- **`telinit` vs `init`** — En SysVinit, `telinit` envia la senal al proceso init para cambiar de runlevel; `init N` hace lo mismo. En sistemas con systemd, ambos son enlaces simbolicos a `systemctl` por compatibilidad.
+- **Scripts S y K en `/etc/rc.d/`** — `S` = Start (iniciar), `K` = Kill (detener). El numero tras la letra indica el ORDEN de ejecucion (S01 antes que S99). El examen puede preguntar que significa el numero.
+- **`halt` vs `poweroff`** — `halt` detiene el sistema pero NO apaga la alimentacion electrica; `poweroff` detiene Y envia la senal ACPI para apagar el hardware. El examen puede presentarlos como equivalentes, pero no lo son.
+- **`shutdown -k` NO apaga el sistema** — La opcion `-k` solo envia el mensaje de advertencia a los usuarios, sin realizar ningun apagado. El examen puede preguntar que hace `-k`.
+- **`systemctl mask` vs `systemctl disable`** — `disable` quita el inicio automatico pero permite iniciar manualmente; `mask` impide completamente que el servicio se inicie de ninguna forma. El examen puede preguntar como impedir totalmente que un servicio arranque.
+- **`wall` no requiere privilegios de root** — Cualquier usuario puede enviar mensajes con `wall` a todos los terminales. El examen puede preguntar si se necesita ser root para usarlo.

@@ -298,3 +298,19 @@ find / -type f -links +1
 9. El conteo de enlaces en `ls -l` (segundo campo) indica cuantos enlaces duros apuntan al inodo.
 
 10. Un directorio vacio tiene conteo de enlaces **2** (su propia entrada y `.` dentro de el). Cada subdirectorio anade 1 mas (por el `..` del subdirectorio).
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`ln` (sin `-s`) crea enlace duro; `ln -s` crea enlace simbolico** — Olvidar `-s` crea un enlace duro en vez de simbolico. El examen puede preguntar que tipo de enlace crea `ln` sin opciones.
+- **Borrar el original: enlace duro sobrevive, simbolico se rompe** — Al borrar el archivo original, un enlace duro sigue funcionando (los datos persisten mientras el conteo de enlaces sea > 0). Un enlace simbolico queda "roto" (dangling). Esta es la diferencia mas preguntada en el examen.
+- **Enlaces duros NO cruzan filesystems** — Un enlace duro debe estar en el mismo sistema de archivos que el original (comparten inodo). Los enlaces simbolicos SI pueden cruzar filesystems. El examen puede preguntar que tipo de enlace usar entre diferentes particiones.
+- **Enlaces duros NO pueden apuntar a directorios** — Solo root con opciones especiales podria (y no se recomienda). Los enlaces simbolicos SI pueden apuntar a directorios. El examen puede preguntar como crear un enlace a un directorio.
+- **Dos enlaces duros al mismo archivo tienen el MISMO inodo** — `ls -i` muestra el mismo numero de inodo para ambos. Un enlace simbolico tiene su PROPIO inodo diferente. El examen puede pedir verificar con `ls -i` si dos archivos son enlaces duros.
+- **El conteo de enlaces en `ls -l` indica enlaces duros** — El segundo campo de `ls -l` muestra cuantos nombres apuntan al mismo inodo. Un archivo normal tiene 1; con un enlace duro pasa a 2. El examen puede preguntar que indica este numero.
+- **Un directorio vacio tiene conteo 2** — Por `.` (que apunta a si mismo) y la entrada en el directorio padre. Cada subdirectorio anade 1 mas (por `..` del subdirectorio). El examen puede preguntar por que un directorio vacio muestra 2 enlaces.
+- **`readlink` solo funciona con enlaces simbolicos** — `readlink` muestra el destino de un enlace simbolico. No tiene sentido usarlo con enlaces duros (que no tienen "destino", son el mismo archivo). `readlink -f` resuelve toda la cadena de enlaces.
+- **Permisos de enlaces simbolicos son irrelevantes** — Los permisos mostrados como `lrwxrwxrwx` son los del enlace, pero se usan los permisos del archivo destino. Cambiar permisos en un enlace simbolico cambia los del destino, no los del enlace.

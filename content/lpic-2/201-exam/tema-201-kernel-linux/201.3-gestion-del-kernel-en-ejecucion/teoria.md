@@ -477,3 +477,19 @@ $ sysctl -w net.ipv4.tcp_syncookies=1
 ```
 
 > **Para el examen:** Los ajustes de `sysctl` mas preguntados son: `ip_forward` (enrutamiento), `swappiness` (memoria), `tcp_syncookies` (seguridad) y `icmp_echo_ignore_all` (seguridad). Recuerda que `-w` aplica en tiempo real y `/etc/sysctl.conf` hace los cambios permanentes.
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`modprobe` vs `insmod`** — `modprobe` resuelve dependencias automaticamente y busca por nombre; `insmod` requiere la ruta completa del archivo `.ko` y no gestiona dependencias. Siempre se prefiere `modprobe` en produccion
+- **`sysctl -w` vs escribir en `/proc/sys/`** — ambos son equivalentes para cambios temporales, pero ninguno persiste tras reiniciar. Solo `/etc/sysctl.conf` o `/etc/sysctl.d/*.conf` hacen cambios permanentes
+- **`sysctl -p` vs `sysctl --system`** — `-p` carga solo desde `/etc/sysctl.conf` (o el archivo especificado); `--system` carga desde todos los archivos de configuracion del sistema (`/etc/sysctl.d/`, `/usr/lib/sysctl.d/`, etc.)
+- **`blacklist` no bloquea completamente un modulo** — `blacklist nouveau` solo impide la carga automatica. El modulo puede cargarse manualmente con `modprobe nouveau`. Para bloquearlo completamente, usa `install nouveau /bin/true`
+- **`depmod` debe ejecutarse tras instalar modulos manualmente** — si agregas un archivo `.ko` y `modprobe` no lo encuentra, es porque falta ejecutar `depmod` para regenerar `modules.dep`
+- **La notacion de `sysctl` usa puntos, no barras** — `net.ipv4.ip_forward` corresponde a `/proc/sys/net/ipv4/ip_forward`. Confundir la notacion es una trampa comun
+- **`dmesg -T` vs `dmesg` sin opciones** — sin `-T`, las marcas de tiempo son en segundos desde el arranque (ilegibles). Con `-T` se muestran en formato humano. El examen puede preguntar que opcion hace legible la salida
+- **`/proc/modules` vs `lsmod`** — `lsmod` simplemente formatea la salida de `/proc/modules`. Ambos muestran lo mismo, pero en preguntas sobre archivos del kernel, la respuesta es `/proc/modules`
+- **`vm.swappiness=0` no desactiva el swap** — solo minimiza su uso. El kernel seguira usando swap si la memoria esta criticamente baja. Para desactivar swap completamente, se usa `swapoff -a`

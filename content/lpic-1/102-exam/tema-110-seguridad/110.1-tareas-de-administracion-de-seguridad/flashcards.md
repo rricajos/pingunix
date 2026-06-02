@@ -11,7 +11,7 @@ subtema: "110.1"
 
 # Flashcards: 110.1 - Tareas De Administracion De Seguridad
 
-> 32 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 33 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="110.1">
 </div>
@@ -583,6 +583,24 @@ subtema: "110.1"
 <div class="flashcard-back">
 
 **R:** 1. **`find / -perm -4000`** busca archivos SUID; **`-perm -2000`** busca SGID
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="110.1">
+</div>
+
+<div class="flashcard" data-id="110.1-fc-033">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

@@ -11,7 +11,7 @@ subtema: "103.6"
 
 # Flashcards: 103.6 - Prioridades De Procesos
 
-> 25 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 26 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="103.6">
 </div>
@@ -457,6 +457,24 @@ subtema: "103.6"
 <div class="flashcard-back">
 
 **R:** Recuerda que la tecla `r` en `top` sirve para cambiar el nice (renice) de un proceso interactivamente.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.6">
+</div>
+
+<div class="flashcard" data-id="103.6-fc-026">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

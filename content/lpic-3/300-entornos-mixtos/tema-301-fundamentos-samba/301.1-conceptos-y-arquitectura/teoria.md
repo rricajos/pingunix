@@ -195,3 +195,18 @@ systemctl start smbd nmbd winbindd
 - Samba 4 introdujo soporte completo para Active Directory
 - WINS resuelve nombres NetBIOS; DNS resuelve nombres de host
 - El modo AD DC usa un demonio unificado `samba` en lugar de `smbd`/`nmbd` separados
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **smbd vs nmbd vs winbindd** — Confundir que demonio hace que es trampa clasica. smbd=archivos/impresoras/autenticacion (TCP 139,445), nmbd=nombres NetBIOS/WINS (UDP 137,138), winbindd=mapeo usuarios dominio Windows (socket local). winbindd solo se necesita al integrar con AD.
+- **Puerto 445 vs puertos 137-139** — El puerto 445 es SMB directo sobre TCP (sin NetBIOS). Los puertos 137-139 son SMB sobre NetBIOS. Preguntas frecuentes mezclan ambos; recordar que SMB moderno usa 445 exclusivamente.
+- **SMB1 vs SMB2 vs SMB3** — SMB1/CIFS es inseguro y obsoleto (deshabilitado en Windows 10+). Samba 4 soporta SMB2 y SMB3. No confundir CIFS (nombre antiguo de SMB1) con el protocolo SMB moderno.
+- **Demonio unificado `samba` vs demonios separados** — En modo AD DC se ejecuta `samba-ad-dc` (demonio unificado), NO smbd/nmbd/winbindd por separado. Ejecutar ambos simultaneamente causa conflictos.
+- **WINS resuelve nombres NetBIOS, NO nombres DNS** — Es trampa clasica preguntar si WINS resuelve nombres de host DNS. WINS solo resuelve nombres NetBIOS (maximo 15 caracteres, espacio plano). DNS es para AD moderno.
+- **Sufijos NetBIOS** — El 16o caracter define el tipo de servicio: `<00>`=estacion de trabajo, `<20>`=servidor de archivos, `<1B>`=Domain Master Browser, `<1C>`=controlador de dominio. Las preguntas suelen pedir identificar el sufijo correcto.
+- **Samba 3 vs Samba 4** — Samba 3 podia ser PDC de dominio NT4 pero NO controlador AD. Samba 4 es AD DC completo con KDC Heimdal, LDAP y DNS integrados. No confundir las capacidades de cada version.
+- **Workgroup vs Dominio NT4 vs Dominio AD** — Workgroup=peer-to-peer sin autenticacion centralizada. NT4=PDC/BDC con SAM centralizada. AD=LDAP+Kerberos+DNS con replicacion multimaestro. Las preguntas suelen pedir identificar la arquitectura correcta.

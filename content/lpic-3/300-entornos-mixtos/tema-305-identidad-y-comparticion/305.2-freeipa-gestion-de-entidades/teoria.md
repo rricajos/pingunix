@@ -343,3 +343,19 @@ klist -kt /etc/httpd/conf/httpd.keytab
 ```
 
 > **Para el examen:** `ipa-getkeytab` extrae keytabs Kerberos del servidor FreeIPA. Los keytabs permiten a servicios autenticarse sin contraseña interactiva. Cada servicio necesita su propio keytab.
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Patron de comandos `ipa ENTIDAD-ACCION`** — Las acciones comunes son: `add`, `mod`, `del`, `find`, `show`, `enable`, `disable`. Las preguntas piden el comando exacto, como `ipa user-disable` (no `ipa user-deactivate` ni `ipa disable-user`). El orden es siempre entidad-accion.
+- **Regla HBAC `allow_all` activa por defecto** — Por defecto, `allow_all` permite acceso total a todos los hosts. Las reglas HBAC personalizadas NO tienen efecto hasta que se desactiva `allow_all` con `ipa hbacrule-disable allow_all`. Olvidarlo es trampa clasica.
+- **`ipa hbactest` para verificar acceso** — `ipa hbactest --user=X --host=Y --service=Z` simula si el acceso seria permitido o denegado. Es la herramienta de diagnostico HBAC. Las preguntas presentan escenarios donde hay que usar hbactest para depurar.
+- **Reglas sudo: usuarios + hosts + comandos + RunAs** — Una regla sudo completa requiere definir QUIEN (usuarios/grupos), DONDE (hosts), QUE (comandos permitidos) y COMO QUIEN (RunAs). Omitir cualquier componente hace la regla incompleta o inefectiva.
+- **Grupos POSIX vs no-POSIX vs externos** — Grupos POSIX tienen GID numerico (por defecto). No-POSIX no tienen GID (solo organizacion). Externos pueden contener SIDs de AD (para trusts). Las preguntas piden identificar el tipo correcto segun el uso.
+- **Inscripcion con OTP vs credenciales admin** — OTP (`--random`) genera una contraseña de un solo uso para inscribir clientes sin dar credenciales de admin. Es mas seguro para inscripciones delegadas. Las preguntas evaluan cuando usar OTP vs admin directo.
+- **Politicas de contraseñas por grupo con prioridad** — La prioridad se define con `--priority=N` (menor numero = mayor prioridad). Si un usuario pertenece a multiples grupos con politicas, se aplica la de menor numero de prioridad. Las preguntas presentan escenarios de multiples politicas.
+- **Automember usa regex sobre atributos** — `ipa automember-add-condition` usa expresiones regulares (`--inclusive-regex`) sobre atributos de la entidad para asignar automaticamente a grupos. Las reglas se aplican al CREAR entidades; para reaplicar a existentes usar `automember-rebuild`.
+- **ID Views sobrescriben atributos por host** — `ipa idoverrideuser-add` permite que un usuario tenga UIDs o homes diferentes en diferentes hosts. Util para servidores legacy. Las preguntas presentan escenarios de migracion donde ID Views es la solucion.

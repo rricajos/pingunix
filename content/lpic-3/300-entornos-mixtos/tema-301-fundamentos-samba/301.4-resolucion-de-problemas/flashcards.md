@@ -11,7 +11,7 @@ subtema: "301.4"
 
 # Flashcards: 301.4 - Resolucion De Problemas
 
-> 34 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 35 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="301.4">
 </div>
@@ -619,6 +619,24 @@ subtema: "301.4"
 <div class="flashcard-back">
 
 **R:** - Niveles de log del 0 al 10, ajustables por componente y en caliente con `smbcontrol`
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="301.4">
+</div>
+
+<div class="flashcard" data-id="301.4-fc-035">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

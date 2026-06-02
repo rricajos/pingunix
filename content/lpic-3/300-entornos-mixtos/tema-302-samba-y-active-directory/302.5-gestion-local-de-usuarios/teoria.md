@@ -387,3 +387,19 @@ guest ok = no
 - Los rangos idmap no deben solaparse entre backends ni con UIDs locales
 - `getent passwd/group` verifica la integración NSS con winbind
 - `winbind use default domain = yes` permite login sin prefijo de dominio
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`smbpasswd -a` requiere usuario UNIX previo** — El usuario debe existir en `/etc/passwd` ANTES de añadirlo a Samba con `smbpasswd -a`. Si el usuario UNIX no existe, el comando falla. La contraseña Samba es independiente de la contraseña UNIX.
+- **`pdbedit` vs `smbpasswd`** — `pdbedit` permite migracion entre backends (`-i`/`-e`), exportacion, atributos extendidos (fullname, profile, drive, script). `smbpasswd` solo gestiona contraseñas. Las preguntas piden la herramienta correcta para cada operacion.
+- **`username map` se aplica ANTES de la autenticacion** — El mapeo de nombres traduce el nombre del cliente Windows al nombre UNIX antes de verificar credenciales. El mapeo clasico es `root = administrator admin`. Preguntas frecuentes sobre el orden de procesamiento.
+- **`force user` vs `force group` vs `force group = +grupo`** — `force user` fuerza la identidad para TODOS los accesos. `force group` fuerza el grupo para todos. `force group = +grupo` (con +) solo fuerza si el usuario YA es miembro del grupo. El signo + es trampa frecuente.
+- **`map to guest = Bad User` vs `Bad Password`** — `Bad User` mapea a invitado solo si el usuario no existe (seguro). `Bad Password` mapea si la contraseña falla (inseguro: un typo en la contraseña da acceso de invitado sin aviso). Las preguntas suelen pedir la opcion segura.
+- **`guest account = nobody`** — La cuenta de invitado debe existir en el sistema Linux. Si `nobody` no existe, los accesos de invitado fallan. Los archivos creados por invitados pertenecen a esta cuenta.
+- **`pdbedit -i smbpasswd: -e tdbsam:`** — Esta es la sintaxis para migrar del backend smbpasswd al tdbsam. Las preguntas suelen presentar escenarios de migracion donde hay que usar pdbedit con las opciones `-i` (importar) y `-e` (exportar).
+- **Contraseña Samba != contraseña UNIX** — Son bases de datos completamente separadas. Cambiar la contraseña con `passwd` no cambia la de Samba y viceversa. Para sincronizarlas se puede usar PAM con `pam_smbpass`, pero no es automatico por defecto.
+- **`winbind enum users/groups = yes` puede ser lento** — En dominios grandes, enumerar todos los usuarios/grupos es costoso. Las preguntas presentan escenarios de rendimiento donde la solucion es desactivar la enumeracion y usar busquedas directas.

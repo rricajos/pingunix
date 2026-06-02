@@ -11,7 +11,7 @@ subtema: "361.3"
 
 # Flashcards: 361.3 - Clusters De Failover
 
-> 33 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 34 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="361.3">
 </div>
@@ -601,6 +601,24 @@ subtema: "361.3"
 <div class="flashcard-back">
 
 **R:** Un **cluster de failover** garantiza la continuidad del servicio trasladando automáticamente los recursos de un nodo fallido a otro nodo funcional. Pacemaker/Corosync es la solución estándar en Linux.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="361.3">
+</div>
+
+<div class="flashcard" data-id="361.3-fc-034">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

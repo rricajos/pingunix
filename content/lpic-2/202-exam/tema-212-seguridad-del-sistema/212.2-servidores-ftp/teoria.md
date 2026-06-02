@@ -253,3 +253,29 @@ DefaultRoot ~
 - **Usar listas de control** para restringir qué usuarios pueden acceder
 - **No permitir acceso FTP a root** (verificar `/etc/ftpusers`)
 - **Definir rangos de puertos pasivos** y configurar el firewall acorde
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **FTPS no es lo mismo que SFTP** — FTPS es FTP sobre TLS (puertos 990/21, requiere certificados X.509). SFTP es un subsistema de SSH (puerto 22, usa claves SSH). Son protocolos completamente diferentes e incompatibles entre si.
+
+- **Modo activo: el SERVIDOR inicia la conexion de datos. Modo pasivo: el CLIENTE inicia** — en modo activo, el servidor conecta desde su puerto 20 al puerto del cliente (problema con firewalls). En modo pasivo, el cliente conecta a un puerto alto del servidor. El examen pregunta quien inicia la conexion en cada modo.
+
+- **`chroot_local_user=YES` + `chroot_list_enable=YES`: la lista es la EXCEPCION** — cuando ambos estan activos, los usuarios en la lista NO estan confinados (son la excepcion). La logica se invierte. Si `chroot_local_user=NO` y `chroot_list_enable=YES`, los de la lista SI estan confinados.
+
+- **`/etc/ftpusers` es una lista negra procesada por PAM** — los usuarios en este archivo NUNCA pueden acceder por FTP. Es procesado ANTES que las listas de vsftpd (`vsftpd.userlist`). Tipicamente incluye root, daemon, bin, etc.
+
+- **`userlist_deny=YES` convierte la lista en lista negra, `NO` en lista blanca** — con `YES` (por defecto), los usuarios listados son denegados. Con `NO`, SOLO los listados son permitidos. Confundir este booleano es un error grave de seguridad.
+
+- **`pasv_min_port` y `pasv_max_port` deben abrirse en el firewall** — definir el rango pasivo en vsftpd no es suficiente; tambien hay que abrir esos puertos en iptables/firewalld. Sin esto, las transferencias de datos en modo pasivo fallan.
+
+- **`allow_writeable_chroot=YES` es necesario en vsftpd >= 3.0** — desde vsftpd 3.0, si el directorio chroot es escribible, vsftpd se niega a iniciar por seguridad. Esta directiva elimina esa restriccion. Sin ella, los usuarios confinados no pueden conectarse.
+
+- **Puerto 21 es control, puerto 20 es datos (solo modo activo)** — en modo pasivo, el puerto de datos es dinamico (definido por `pasv_min_port`/`pasv_max_port`). El puerto 20 solo se usa como origen en modo activo.
+
+- **ProFTPD usa `DefaultRoot ~` para chroot, similar a `chroot_local_user` de vsftpd** — la sintaxis de ProFTPD recuerda a Apache con bloques `<Directory>`, `<Limit>`, etc. El examen puede presentar ambos servidores FTP.
+
+- **`ssl_enable=YES` sin `force_local_logins_ssl=YES` permite conexiones sin cifrar** — habilitar SSL no significa forzarlo. Sin `force_local_logins_ssl=YES`, los usuarios pueden conectarse en texto plano. Para seguridad real, ambas directivas son necesarias.

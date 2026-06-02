@@ -290,3 +290,20 @@ ipmitool -I lanplus -H 192.168.1.200 -U admin -P password sol activate
 ```
 
 > **Para el examen:** IPMI se usa como dispositivo de fencing (`fence_ipmilan`) en clusters Pacemaker. `ipmitool` es la herramienta principal para interactuar con el BMC.
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **ECC: errores corregidos (CE) vs no corregidos (UE)** — los CE son normales en pequeñas cantidades y se corrigen automaticamente; los UE son criticos y pueden causar crashes o corrupcion. El examen puede preguntar cuando reemplazar la memoria: cuando los UE aparecen o los CE crecen rapidamente
+- **Watchdog: softdog vs hardware watchdog** — `softdog` es un watchdog por software del kernel (menos fiable, depende del kernel); los watchdog de hardware (iTCO_wdt, ipmi_watchdog) funcionan independientemente del SO. Para SBD en clusters, se prefiere hardware watchdog porque funciona incluso si el kernel se cuelga
+- **IPMI funciona con el servidor apagado** — el BMC tiene su propia alimentacion y red. Puede encender, apagar y acceder a la consola del servidor incluso cuando el SO no esta funcionando. El examen puede preguntar como acceder a un servidor que no responde al SO: la respuesta es IPMI/BMC
+- **NUT: master vs slave** — el nodo `master` es el que controla el UPS y decide el shutdown; los `slave` son nodos alimentados por el mismo UPS que se apagan antes que el master. El master espera a que todos los slaves se apaguen antes de ordenar al UPS que corte la energia
+- **NUT modos: standalone vs netserver vs netclient** — `standalone` es un UPS local sin compartir; `netserver` comparte la info del UPS con otros servidores via red; `netclient` se conecta a un netserver remoto. Si multiples servidores comparten un UPS, el conectado fisicamente usa `netserver` y los demas `netclient`
+- **upsc vs upsrw vs upscmd** — `upsc` lee variables (solo lectura); `upsrw` lee y escribe variables configurables; `upscmd` envia comandos al UPS (test.battery, shutdown). Confundir las herramientas es error comun
+- **ipmitool power cycle vs power reset** — `power cycle` apaga y espera un momento antes de encender; `power reset` hace un hard reset inmediato. Para fencing en clusters se suele usar `power off` o `power cycle`, no `power reset`, porque necesitas garantizar que el nodo se detenga completamente
+- **fence_ipmilan es el agente STONITH para IPMI** — en Pacemaker, el dispositivo de fencing para servidores con IPMI es `fence_ipmilan` (con `lanplus=1` para IPMI v2.0). El examen puede preguntar que agente STONITH usar para un servidor fisico con BMC
+- **RuntimeWatchdogSec en systemd** — configurar `RuntimeWatchdogSec=30` en `/etc/systemd/system.conf` hace que systemd reinicie el sistema si no puede alimentar el watchdog en 30 segundos. Es una forma simple de proteger contra congelamientos del sistema sin cluster
+- **Hot-swap no es hot-add** — hot-swap permite reemplazar un componente sin apagar (quitar y poner); hot-add permite añadir un componente nuevo sin apagar pero no necesariamente quitar el existente. La memoria suele soportar hot-add pero no hot-swap

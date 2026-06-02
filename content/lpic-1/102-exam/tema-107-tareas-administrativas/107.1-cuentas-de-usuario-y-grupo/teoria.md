@@ -463,3 +463,20 @@ chage -l sandra
 10. **`chfn`** cambia la informacion GECOS (finger); **`chsh`** cambia el shell de login
 11. **`newgrp`** cambia grupo primario temporalmente
 12. UID 0 = root; 1-999 = sistema; 1000+ = usuarios regulares
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`usermod -G` vs `usermod -aG`** — `usermod -G grupo usuario` REEMPLAZA todos los grupos secundarios (el usuario pierde los anteriores); `usermod -aG grupo usuario` AGREGA al grupo sin perder los existentes. Olvidar la `-a` es una de las trampas mas clasicas del examen
+- **El campo 4 de /etc/group NO lista a los usuarios con ese grupo primario** — El campo miembros de `/etc/group` solo lista miembros secundarios. Los usuarios cuyo grupo primario es ese grupo se definen en `/etc/passwd` (campo GID). El examen explota esta confusion
+- **`useradd` sin `-m` NO crea directorio home** — A diferencia de `adduser` (interactivo en Debian), `useradd` es el comando de bajo nivel que requiere `-m` explicitamente para crear el home. Sin `-m`, la cuenta se crea sin directorio home
+- **`userdel` sin `-r` CONSERVA el directorio home** — `userdel usuario` elimina la cuenta pero deja `/home/usuario` intacto. Solo `userdel -r` elimina tambien el home y el mail spool
+- **`passwd -l` vs `passwd -d`** — `-l` (lock) bloquea la cuenta agregando `!` al hash; `-d` (delete) ELIMINA la contrasena permitiendo acceso SIN contrasena. Son opuestos en terminos de seguridad
+- **`chage -d 0` vs `passwd -e`** — Ambos fuerzan el cambio de contrasena en el proximo login, pero `chage -d 0` establece la fecha del ultimo cambio en epoch 0, mientras que `passwd -e` expira la contrasena inmediatamente. El efecto practico es el mismo
+- **7 campos en /etc/passwd, 9 en /etc/shadow, 4 en /etc/group** — El examen puede preguntar el numero exacto de campos de cada archivo o pedir que identifiques un campo por su posicion. Memorizar los formatos es critico
+- **`!` y `!!` en /etc/shadow significan cuenta bloqueada** — Un `!` delante del hash (como `!$6$...`) indica bloqueo con `passwd -l`. Un `!!` significa que la cuenta nunca tuvo contrasena establecida. `*` significa login deshabilitado permanentemente
+- **`getent` consulta TODAS las fuentes NSS, no solo archivos locales** — `getent passwd usuario` busca en `/etc/passwd`, LDAP, NIS y cualquier fuente configurada en `/etc/nsswitch.conf`. Es la forma correcta de consultar usuarios en entornos empresariales, no `grep /etc/passwd`
+- **`/etc/login.defs` define valores POR DEFECTO, no limites absolutos** — Los valores como `UID_MIN`, `PASS_MAX_DAYS` o `UMASK` en `/etc/login.defs` se aplican solo cuando no se especifican explicitamente en el comando. `useradd -u 500` ignora `UID_MIN`

@@ -336,3 +336,20 @@ Principios:
 - **Defensa en profundidad**: Multiples capas de filtrado
 - **Separacion de funciones**: Diferentes redes para diferentes roles
 - **Zero Trust**: No confiar en ningun trafico por defecto
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`rp_filter=1` vs `rp_filter=2`** — valor 1 (strict mode) verifica que la ruta de retorno del paquete use la misma interfaz por la que llego; valor 2 (loose mode) solo verifica que exista alguna ruta de retorno. En servidores multi-homed, strict mode puede causar drops legitimos. El examen pregunta frecuentemente por estos valores
+- **`net.ipv4.ip_forward=0` vs `=1`** — valor 0 deshabilita el reenvio de paquetes (el host NO actua como router); valor 1 lo habilita. Para hardening de un servidor que NO es router, debe ser 0. Si el host es router, gateway o firewall, debe ser 1. Error clasico: dejar forwarding habilitado en un servidor web
+- **`tcp_syncookies=1`** — protege contra ataques SYN flood enviando cookies criptograficas en lugar de mantener estado en la tabla de conexiones. No confundir con `accept_redirects` o `accept_source_route` que abordan ataques diferentes
+- **TCP Wrappers: orden de evaluacion** — primero se evalua `/etc/hosts.allow`, luego `/etc/hosts.deny`. Si coincide en `hosts.allow`, se permite; si coincide en `hosts.deny`, se deniega; si no coincide en ninguno, se permite. La politica mas segura es `ALL: ALL` en `hosts.deny` y reglas explicitas en `hosts.allow`
+- **TCP Wrappers solo con libwrap** — TCP Wrappers SOLO funciona con servicios compilados con soporte `libwrap`. Servicios modernos como Apache, Nginx y nftables NO lo usan. `sshd` tipicamente SI lo soporta. Verificar con `ldd /usr/sbin/sshd | grep libwrap`
+- **nftables `inet` family** — combina IPv4 e IPv6 en una sola tabla, evitando duplicar reglas. No confundir con `ip` (solo IPv4) o `ip6` (solo IPv6). Para hardening moderno, usar `inet` es la practica recomendada
+- **`send_redirects=0` vs `accept_redirects=0`** — `send_redirects` controla si el host ENVIA redirecciones ICMP a otros; `accept_redirects` controla si el host ACEPTA redirecciones de otros. Para hardening, ambos deben ser 0. Confundir la direccion es un error comun
+- **`log_martians=1`** — registra paquetes con direcciones IP de origen "imposibles" (ej: redes privadas desde la interfaz publica). Util para detectar spoofing, pero puede generar muchos logs en redes mal configuradas. No confundir con `rp_filter` que descarta los paquetes
+- **Deshabilitar IPv6 completamente** — se puede hacer via `sysctl` (net.ipv6.conf.all.disable_ipv6=1) o via parametro de kernel (ipv6.disable=1 en GRUB). El metodo sysctl permite desactivar por interfaz; el parametro de kernel desactiva globalmente. Si IPv6 no se usa, dejarlo habilitado amplía la superficie de ataque
+- **Network namespaces: aislamiento completo** — un namespace de red tiene su propia tabla de rutas, interfaces, reglas de firewall y tabla ARP. Los procesos dentro de un namespace NO pueden ver el trafico de red de otros namespaces. No confundir con VLANs que operan a nivel de red, no de kernel

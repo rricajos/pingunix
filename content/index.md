@@ -25,18 +25,18 @@ Examenes 201-450 y 202-450 — 41 subtemas
 
 ## [[simulacros/index|Simulacros de Examen]]
 
-Practica con condiciones reales: 60 preguntas, 90 minutos, correccion automatica.
+Practica con condiciones reales: 60 preguntas, 90 minutos, correccion automatica. Dos simulacros por examen (A y B).
 
-| Examen | Certificacion | Enlace |
-|--------|---------------|--------|
-| 101-500 | LPIC-1 | [[lpic-1/101-exam/simulacro-101|Simulacro 101]] |
-| 102-500 | LPIC-1 | [[lpic-1/102-exam/simulacro-102|Simulacro 102]] |
-| 201-450 | LPIC-2 | [[lpic-2/201-exam/simulacro-201|Simulacro 201]] |
-| 202-450 | LPIC-2 | [[lpic-2/202-exam/simulacro-202|Simulacro 202]] |
-| 300 | LPIC-3 | [[lpic-3/300-entornos-mixtos/simulacro-300|Simulacro 300]] |
-| 303 | LPIC-3 | [[lpic-3/303-seguridad/simulacro-303|Simulacro 303]] |
-| 305 | LPIC-3 | [[lpic-3/305-virtualizacion/simulacro-305|Simulacro 305]] |
-| 306 | LPIC-3 | [[lpic-3/306-alta-disponibilidad/simulacro-306|Simulacro 306]] |
+| Examen | Certificacion | Simulacro A | Simulacro B |
+|--------|---------------|-------------|-------------|
+| 101-500 | LPIC-1 | [[lpic-1/101-exam/simulacro-101|101-A]] | [[lpic-1/101-exam/simulacro-101-b|101-B]] |
+| 102-500 | LPIC-1 | [[lpic-1/102-exam/simulacro-102|102-A]] | [[lpic-1/102-exam/simulacro-102-b|102-B]] |
+| 201-450 | LPIC-2 | [[lpic-2/201-exam/simulacro-201|201-A]] | [[lpic-2/201-exam/simulacro-201-b|201-B]] |
+| 202-450 | LPIC-2 | [[lpic-2/202-exam/simulacro-202|202-A]] | [[lpic-2/202-exam/simulacro-202-b|202-B]] |
+| 300 | LPIC-3 | [[lpic-3/300-entornos-mixtos/simulacro-300|300-A]] | [[lpic-3/300-entornos-mixtos/simulacro-300-b|300-B]] |
+| 303 | LPIC-3 | [[lpic-3/303-seguridad/simulacro-303|303-A]] | [[lpic-3/303-seguridad/simulacro-303-b|303-B]] |
+| 305 | LPIC-3 | [[lpic-3/305-virtualizacion/simulacro-305|305-A]] | [[lpic-3/305-virtualizacion/simulacro-305-b|305-B]] |
+| 306 | LPIC-3 | [[lpic-3/306-alta-disponibilidad/simulacro-306|306-A]] | [[lpic-3/306-alta-disponibilidad/simulacro-306-b|306-B]] |
 
 ## [[hacking-vault/index|Hacking Vault]]
 
@@ -53,6 +53,7 @@ Base de conocimientos de seguridad ofensiva y defensiva.
 - [[recursos/glosario|Glosario de terminos]]
 - [[recursos/comandos-rapidos/comandos-lpic1|Comandos rapidos LPIC-1]]
 - [[recursos/comandos-rapidos/comandos-lpic2|Comandos rapidos LPIC-2]]
+- [[recursos/comandos-rapidos/comandos-lpic3|Comandos rapidos LPIC-3]]
 - [[recursos/comandos-rapidos/comandos-hacking|Comandos rapidos Hacking]]
 - [[recursos/enlaces-utiles|Enlaces utiles]]
 - [[recursos/libros-recomendados|Libros recomendados]]
@@ -63,9 +64,10 @@ Base de conocimientos de seguridad ofensiva y defensiva.
 |---------|-------|
 | Paginas totales | 821 |
 | Subtemas LPIC | 143 (42 + 41 + 60) |
-| Flashcards | 5.050 |
+| Flashcards | 5.215 |
 | Preguntas de practica | 3.559 (MCQ + fill-blank) |
-| Simulacros de examen | 8 |
+| Preguntas de simulacro | 960 (16 examenes × 60) |
+| Simulacros de examen | 16 (2 por examen) |
 | Laboratorios practicos | 4 |
 
 <div id="study-portability"></div>

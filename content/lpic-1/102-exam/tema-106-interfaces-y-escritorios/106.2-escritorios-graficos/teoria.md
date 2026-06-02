@@ -283,3 +283,19 @@ xdg-settings get default-web-browser
 7. **xdg-open** abre archivos con la aplicacion predeterminada; **xdg-mime** gestiona asociaciones de tipos MIME
 8. **Openbox** es un WM stacking; **i3** es un WM tiling
 9. Un entorno de escritorio incluye un gestor de ventanas, pero un gestor de ventanas puede usarse solo
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **GTK+ vs Qt: que entorno usa cual** — GNOME, Xfce, MATE, Cinnamon y LXDE usan GTK+. KDE Plasma y LXQt usan Qt. El examen pregunta frecuentemente el toolkit de cada entorno. Regla: si tiene "Qt" en el nombre o es KDE, usa Qt; todo lo demas es GTK+
+- **LXDE (GTK+) vs LXQt (Qt)** — Son muy parecidos y ambos son ligeros, pero usan toolkits diferentes. LXDE usa GTK+ 2 (obsoleto), LXQt es su sucesor portado a Qt. Lubuntu moderno usa LXQt, no LXDE
+- **MATE es fork de GNOME 2, Cinnamon es fork de GNOME 3 Shell** — No confundir sus origenes. MATE mantiene el escritorio clasico de GNOME 2; Cinnamon (Linux Mint) es un fork de GNOME Shell con escritorio tradicional
+- **Puerto de VNC: 5900 + numero de display** — El display :0 usa puerto 5900, :1 usa 5901, :2 usa 5902. El examen puede dar un numero de display y preguntar el puerto. No confundir con el puerto 631 de CUPS o 3389 de RDP
+- **VNC no cifra por defecto** — VNC transmite datos sin cifrar. Se debe usar un tunel SSH para cifrar la conexion (`ssh -L 5901:localhost:5901 usuario@servidor`). Decir que VNC es seguro sin tunel SSH es incorrecto
+- **RDP usa puerto 3389, XDMCP usa 177/UDP** — Son puertos que el examen espera que memorices. XDMCP ademas de ser inseguro (sin cifrado) usa UDP, no TCP
+- **`xdg-open` es independiente del entorno** — `xdg-open` abre archivos con la aplicacion predeterminada independientemente de si usas GNOME, KDE o Xfce. No confundir con comandos especificos como `gnome-open` o `kde-open`
+- **Openbox es stacking, i3 es tiling** — Openbox apila ventanas como un escritorio convencional; i3 organiza ventanas automaticamente sin solaparse. El examen puede pedir identificar el tipo de WM
+- **SPICE esta optimizado para virtualizacion** — SPICE no es un protocolo generico de escritorio remoto como VNC. Esta disenado especificamente para VMs (QEMU/KVM). El examen puede preguntar que protocolo es mejor para maquinas virtuales

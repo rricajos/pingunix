@@ -423,3 +423,18 @@ lsblk -J
 | `/dev/disk/by-uuid/` | Enlaces simbolicos a dispositivos por UUID |
 | `/dev/disk/by-label/` | Enlaces simbolicos a dispositivos por etiqueta |
 | `/dev/disk/by-id/` | Enlaces simbolicos a dispositivos por ID hardware |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **UUID vs LABEL vs /dev/sdX en fstab** — UUID es la forma recomendada porque es unica e inmutable. LABEL es legible pero puede no ser unica. `/dev/sdX` puede cambiar si se agregan o remueven discos. El examen insistira en que UUID es la opcion correcta
+- **Campo `pass` en fstab: 0 vs 1 vs 2** — `0` = no ejecutar fsck, `1` = reservado exclusivamente para la particion raiz `/` (se verifica primera), `2` = para el resto de particiones. Poner `1` en una particion que no sea raiz es un error
+- **`defaults` en fstab equivale a `rw,suid,dev,exec,auto,nouser,async`** — no incluye `noatime` ni `relatime`. Si necesitas desactivar el registro de tiempos de acceso para mejorar rendimiento, debes añadir `noatime` explicitamente
+- **`user` vs `users` en opciones de montaje** — `user` permite a cualquier usuario montar, pero solo el usuario que monto puede desmontar. `users` permite a cualquier usuario montar Y desmontar. Ademas, `user` implica automaticamente `noexec,nosuid,nodev`
+- **`_netdev` vs `nofail`** — `_netdev` indica que el dispositivo requiere red (retrasa el montaje hasta que la red este disponible). `nofail` evita que el arranque falle si el dispositivo no existe. Para NFS o iSCSI, necesitas `_netdev`
+- **Automontaje systemd: el nombre del archivo debe coincidir con la ruta** — para montar en `/mnt/datos`, la unidad debe llamarse `mnt-datos.mount` (barras reemplazadas por guiones). Un nombre incorrecto hace que la unidad no funcione
+- **`umount -l` (lazy) vs `umount -f` (force)** — `-l` desvincula el punto de montaje inmediatamente pero espera a que los procesos terminen; `-f` fuerza el desmontaje y puede causar perdida de datos. Para NFS colgado, `-l` es mas seguro
+- **En autofs, `*` y `&` son comodines diferentes** — `*` coincide con cualquier clave (subdirectorio), `&` se sustituye por el valor que coincidio con `*`. Asi, `* -fstype=nfs servidor:/home/&` monta `/home/juan` desde `servidor:/home/juan`

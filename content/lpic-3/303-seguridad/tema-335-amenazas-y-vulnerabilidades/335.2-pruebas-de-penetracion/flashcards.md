@@ -11,7 +11,7 @@ subtema: "335.2"
 
 # Flashcards: 335.2 - Pruebas De Penetracion
 
-> 33 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 34 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="335.2">
 </div>
@@ -601,6 +601,24 @@ subtema: "335.2"
 <div class="flashcard-back">
 
 **R:** La ingenieria social explota la confianza humana para obtener informacion o acceso.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="335.2">
+</div>
+
+<div class="flashcard" data-id="335.2-fc-034">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

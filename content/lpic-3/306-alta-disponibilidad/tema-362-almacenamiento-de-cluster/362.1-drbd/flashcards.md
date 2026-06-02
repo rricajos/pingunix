@@ -11,7 +11,7 @@ subtema: "362.1"
 
 # Flashcards: 362.1 - Drbd
 
-> 34 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 35 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="362.1">
 </div>
@@ -619,6 +619,24 @@ subtema: "362.1"
 <div class="flashcard-back">
 
 **R:** En modo dual-primary, ambos nodos pueden ser primarios simultaneamente. Requiere un sistema de archivos cluster (GFS2, OCFS2):
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="362.1">
+</div>
+
+<div class="flashcard" data-id="362.1-fc-035">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

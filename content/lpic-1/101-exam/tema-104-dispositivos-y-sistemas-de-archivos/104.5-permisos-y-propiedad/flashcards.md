@@ -11,7 +11,7 @@ subtema: "104.5"
 
 # Flashcards: 104.5 - Permisos Y Propiedad
 
-> 28 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 29 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="104.5">
 </div>
@@ -511,6 +511,24 @@ subtema: "104.5"
 <div class="flashcard-back">
 
 **R:** 1. **Permisos en directorios:** `r` = listar, `w` = crear/eliminar, `x` = acceder/entrar.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.5">
+</div>
+
+<div class="flashcard" data-id="104.5-fc-029">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

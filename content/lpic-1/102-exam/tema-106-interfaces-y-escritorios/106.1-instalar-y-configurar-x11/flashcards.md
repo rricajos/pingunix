@@ -11,7 +11,7 @@ subtema: "106.1"
 
 # Flashcards: 106.1 - Instalar Y Configurar X11
 
-> 34 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 35 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="106.1">
 </div>
@@ -619,6 +619,24 @@ subtema: "106.1"
 <div class="flashcard-back">
 
 **R:** Permite ejecutar aplicaciones graficas en un servidor remoto y verlas en la pantalla local.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="106.1">
+</div>
+
+<div class="flashcard" data-id="106.1-fc-035">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

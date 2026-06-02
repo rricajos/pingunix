@@ -11,7 +11,7 @@ subtema: "203.1"
 
 # Flashcards: 203.1 - Operacion Del Sistema De Archivos
 
-> 36 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 37 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="203.1">
 </div>
@@ -655,6 +655,24 @@ subtema: "203.1"
 <div class="flashcard-back">
 
 **R:** Actualizar atime solo si es anterior a mtime
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="203.1">
+</div>
+
+<div class="flashcard" data-id="203.1-fc-037">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

@@ -345,3 +345,20 @@ openstack server delete mi-servidor
 | CloudFormation | IaC | Declarativo | Infraestructura en AWS |
 | Pulumi | IaC | Programático | IaC con lenguajes reales |
 | OpenStack CLI | CLI | Imperativo | Gestión de cloud privado |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Terraform `plan` vs `apply`** — `plan` solo muestra los cambios que se aplicarian sin ejecutarlos. `apply` ejecuta los cambios reales. `apply` sin un `plan` previo guardado pide confirmacion interactiva (a menos que se use `-auto-approve`). El examen puede preguntar que comando usar para ver cambios sin riesgo.
+- **Terraform `state` es critico y contiene datos sensibles** — `terraform.tfstate` mapea la configuracion HCL al estado real de la infraestructura. Contiene IPs, IDs, y posiblemente contraseñas. Nunca debe editarse manualmente ni almacenarse en repositorios publicos. El examen puede preguntar que sucede si se pierde el state file (respuesta: Terraform no sabe que recursos existen).
+- **`terraform destroy` elimina TODO** — `destroy` elimina todos los recursos gestionados por Terraform en el estado actual. No hay undo. El examen puede preguntar como eliminar un recurso especifico sin destruir todo (respuesta: `terraform state rm` para sacarlo del estado, o `terraform destroy -target=recurso`).
+- **Terraform es declarativo, Ansible es (parcialmente) imperativo** — Terraform describe el estado deseado y calcula los cambios. Ansible ejecuta tareas en orden. Terraform gestiona infraestructura (crear/destruir VMs, redes); Ansible configura lo que ya existe (instalar paquetes, copiar archivos). Son complementarios, no sustitutos.
+- **Ansible es agentless** — Ansible solo necesita SSH y Python en los hosts remotos. No instala ningun agente. Esto lo diferencia de Puppet y Chef que requieren agentes. El examen preguntara que herramienta no necesita agente (respuesta: Ansible).
+- **`terraform import` no genera codigo** — `terraform import` solo añade un recurso existente al state file. NO genera la configuracion HCL correspondiente. El usuario debe escribir el bloque `resource` manualmente. El examen puede preguntar que hacer despues de importar (respuesta: escribir el recurso en HCL).
+- **Ansible `--check` es dry-run pero no es fiable al 100%** — `--check` simula la ejecucion sin hacer cambios, pero algunos modulos no soportan check mode y las tareas que dependen de resultados anteriores pueden dar falsos negativos. El examen puede preguntar como verificar un playbook sin aplicar cambios.
+- **CloudFormation es solo AWS, Terraform es multi-cloud** — CloudFormation solo funciona con servicios AWS. Terraform soporta AWS, Azure, GCP, OpenStack, libvirt y cientos de providers mas via plugins. El examen puede preguntar que herramienta elegir para infraestructura multi-cloud.
+- **`terraform init` se ejecuta siempre primero** — `init` descarga providers, modulos y configura el backend de estado. Debe ejecutarse antes de cualquier otro comando (`plan`, `apply`, `destroy`). Olvidar `init` tras cambiar providers o modulos causa errores. El examen puede mostrar un flujo de trabajo desordenado.
+- **OpenStack sigue el patron `openstack <recurso> <accion>`** — Todos los comandos OpenStack CLI siguen este patron: `openstack server list`, `openstack image create`, `openstack network delete`. El examen puede presentar comandos con sintaxis incorrecta y preguntar cual es valido.

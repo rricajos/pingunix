@@ -294,3 +294,18 @@ smbclient //servidor/datos -U usuario -c "ls"
 # Ver log detallado de permisos (nivel 10)
 log level = 3 auth:10 acls:10
 ```
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Acceso efectivo = Samba ∩ Sistema de archivos (el mas restrictivo gana)** — Samba NUNCA puede otorgar mas permisos de los que permite el sistema de archivos POSIX. Si POSIX deniega escritura, `writable = yes` en smb.conf no sirve. Esta regla es la mas evaluada del subtema.
+- **ACLs POSIX default vs ACLs normales** — Las ACLs `default:` (con `setfacl -d`) se aplican automaticamente a nuevos archivos/directorios creados dentro del directorio. Las ACLs normales solo aplican al objeto actual. Confundir ambas lleva a permisos inconsistentes en archivos nuevos.
+- **`smbcacls` opciones `-a` vs `-M` vs `-D`** — `-a` añade una ACL nueva, `-M` modifica una existente, `-D` elimina una ACL. El formato es `ACL:DOMINIO\usuario:ALLOWED/FLAGS/PERMISOS`. Las preguntas piden la opcion correcta y el formato exacto.
+- **`inherit permissions` sobrescribe `create mask`/`directory mask`** — Con `inherit permissions = yes`, los permisos del directorio padre se heredan y `create mask`/`directory mask` son ignorados. Las preguntas presentan configuraciones donde ambos estan presentes y hay que saber cual prevalece.
+- **`vfs objects = acl_xattr` para ACLs NT completas** — Sin este modulo VFS, las ACLs NT se aproximan con ACLs POSIX (perdiendo informacion). Con `acl_xattr`, las ACLs NT se almacenan integramente en atributos extendidos del filesystem. Es requisito para fidelidad total de permisos Windows.
+- **`access based share enum` vs `browseable = no`** — `access based share enum = yes` oculta shares segun permisos del usuario (cada usuario ve solo lo que puede acceder). `browseable = no` oculta el share para TODOS. Son mecanismos diferentes y se confunden facilmente.
+- **`hosts allow` tiene prioridad sobre `hosts deny`** — Si ambos estan presentes, `hosts allow` se evalua primero. Si la IP coincide en allow, se permite aunque este en deny. Si solo hay `hosts deny`, todo se permite excepto lo denegado.
+- **`map acl inherit = yes` es esencial para herencia Windows** — Traduce los flags de herencia de ACLs NT a ACLs POSIX default. Sin este parametro, la herencia configurada desde la pestaña Seguridad de Windows no se traduce correctamente al sistema de archivos Linux.

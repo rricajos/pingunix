@@ -307,3 +307,20 @@ auto_activation_volume_list = [ "mi_vg" ]
 | Exclusivo | `-a ey` | Un solo nodo accede (normal) |
 | Compartido | `-a sy` | Multiples nodos (requiere clvmd/lvmlockd) |
 | Local | `-a ly` | Solo el nodo local |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Thin provisioning permite overprovisioning** — los thin LVs pueden sumar mas espacio virtual que el pool real. Si el pool se llena al 100%, todos los thin LVs se congelan y las escrituras fallan. Monitorizar `data_percent` del thin pool es critico; el examen pregunta que ocurre cuando el pool se queda sin espacio
+- **lvconvert --uncache no pierde datos** — `--uncache` elimina el cache SSD de un LV, pero primero sincroniza los dirty blocks al HDD. Los datos del LV se conservan intactos. Sin embargo, si el SSD falla con datos dirty en modo writeback, esos datos se pierden
+- **pvmove: migracion online sin downtime** — `pvmove /dev/sdb /dev/sdc` migra todos los extents de un PV a otro mientras el LV sigue accesible. Es la forma correcta de reemplazar un disco sin tiempo de inactividad. El examen puede preguntar como migrar datos de un disco viejo a uno nuevo sin desmontar
+- **Thin snapshots vs snapshots clasicos** — los snapshots clasicos de LVM reservan espacio para los cambios; los thin snapshots no reservan espacio previo y son instantaneos. Ademas, los thin snapshots pueden ser snapshots de snapshots (cadenas). El examen puede preguntar la diferencia en uso de espacio
+- **VDO: vdoLogicalSize puede ser mayor que el fisico** — VDO combina thin provisioning con deduplicacion y compresion. El tamaño logico puede ser 10x el fisico si la deduplicacion es alta. Pero si los datos no se deduplican bien, el espacio fisico se agota. XFS es el FS recomendado sobre VDO (con `-K` para no descartar bloques)
+- **LVM RAID vs mdadm RAID** — LVM RAID usa device-mapper internamente (dm-raid) y se gestiona con `lvcreate --type raid5`. mdadm usa md directamente. LVM RAID integra RAID con volumenes logicos; mdadm es mas flexible para arrays independientes. El examen puede preguntar las ventajas de cada uno
+- **Politica smq vs mq en dm-cache** — `smq` (Stochastic Multi Queue) es la politica predeterminada y mas eficiente en memoria; `mq` (Multi Queue) es legacy y consume mas RAM. Si el examen pregunta la politica de cache recomendada, la respuesta es `smq`
+- **Activacion exclusiva (-a ey) vs compartida (-a sy)** — `-a ey` activa un LV en un solo nodo (modo normal); `-a sy` permite multiples nodos (requiere clvmd o lvmlockd). Activar un LV con ext4 en modo compartido en multiples nodos sin FS cluster causa corrupcion
+- **vgcfgrestore restaura metadatos, no datos** — `vgcfgrestore` restaura la configuracion de LVM (estructura de PVs, VGs, LVs) pero no los datos de los LVs. Si un disco falla fisicamente, restaurar metadatos no recupera los datos. El examen puede confundir backup de metadatos con backup de datos
+- **thin_pool_autoextend: prevencion de desastre** — en `lvm.conf`, `thin_pool_autoextend_threshold=70` y `thin_pool_autoextend_percent=20` hacen que el pool se expanda automaticamente al 70% de uso. Sin autoextend, el pool se llena y las escrituras fallan catastricamente

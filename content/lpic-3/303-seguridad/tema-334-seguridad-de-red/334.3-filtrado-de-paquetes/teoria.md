@@ -368,3 +368,20 @@ systemctl enable nftables
 iptables-save > /etc/iptables/rules.v4
 iptables-restore < /etc/iptables/rules.v4
 ```
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **nftables `inet` family** — combina IPv4 e IPv6 en una sola tabla. No confundir con `ip` (solo IPv4) o `ip6` (solo IPv6). Usar `inet` evita duplicar reglas para ambos protocolos. El examen pregunta frecuentemente que familia usar para gestionar ambos protocolos simultaneamente
+- **`add` vs `insert` en nftables** — `nft add rule` añade al final de la cadena; `nft insert rule` inserta al principio. El orden de las reglas importa: la primera coincidencia gana. Insertar una regla de accept al final de una cadena con policy drop despues de una regla drop no tiene efecto
+- **nftables: cadena base vs cadena regular** — las cadenas base estan conectadas a un hook del kernel (tienen type, hook y priority); las cadenas regulares NO estan conectadas a ningun hook y solo se invocan con `jump` o `goto`. Crear una cadena regular pensando que filtra trafico es un error porque no recibira paquetes
+- **`jump` vs `goto` en nftables** — `jump` retorna a la cadena original tras evaluar la cadena destino; `goto` no retorna (como un tail call). Si se necesita seguir evaluando reglas despues de la subcadena, usar `jump`. Si se quiere terminar el procesamiento en la subcadena, usar `goto`
+- **nftables sets con `flags interval`** — para usar rangos o subredes (ej: 192.168.0.0/16) en sets, es necesario el flag `interval`. Sin este flag, nftables solo acepta valores individuales y falla con notacion CIDR. Olvidar `flags interval` es un error comun
+- **NAT: prerouting para DNAT, postrouting para SNAT** — DNAT (redireccion de destino) se configura en el hook prerouting con prioridad -100; SNAT/masquerade se configura en postrouting con prioridad 100. Invertir los hooks es un error que hace que el NAT no funcione
+- **`masquerade` vs `snat to`** — `masquerade` determina la IP de origen dinamicamente desde la interfaz de salida (ideal para IPs dinamicas/DHCP); `snat to IP` usa una IP fija. `masquerade` tiene overhead adicional porque consulta la IP en cada paquete. En servidores con IP fija, usar `snat to` es mas eficiente
+- **`conntrack` estados** — `established` = paquetes que pertenecen a conexiones existentes; `related` = nuevas conexiones relacionadas (ej: FTP data); `new` = primer paquete de una conexion; `invalid` = paquetes que no pertenecen a ninguna conexion conocida. Siempre permitir `established,related` y descartar `invalid` antes que las reglas especificas
+- **firewalld con backend nftables** — en sistemas modernos, firewalld usa nftables como backend (no iptables). Los cambios via `firewall-cmd` se traducen a reglas nftables. Mezclar reglas manuales de nftables con firewalld puede causar conflictos. Verificar backend con `firewall-cmd --state`
+- **`iptables-nft` vs `iptables` legacy** — `iptables-nft` usa sintaxis clasica de iptables pero el backend es nftables (verificar con `iptables -V` que muestre "nf_tables"). Las reglas se traducen internamente. No confundir con iptables legacy que usa el framework xtables directamente

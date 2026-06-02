@@ -434,3 +434,19 @@ id usuario_dominio
 - `kinit`/`klist`/`kdestroy` gestionan tickets Kerberos
 - Backends idmap: `rid` (algorítmico), `ad` (RFC2307), `autorid` (automático), `tdb` (local)
 - El backend `*` es el comodín para dominios no configurados explícitamente
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`net ads join` vs `realm join`** — Ambos unen al dominio AD, pero `realm join` (de realmd/SSSD) configura automaticamente SSSD, Kerberos, PAM y NSS. `net ads join` requiere configuracion manual adicional de winbind. Las preguntas suelen pedir identificar que configura cada uno.
+- **SSSD vs Winbind: cuando usar cada uno** — SSSD es preferido para autenticacion de estaciones de trabajo Linux (no comparten archivos SMB). Winbind es necesario cuando el servidor tambien comparte archivos via Samba. Usar ambos simultaneamente para el mismo servicio causa conflictos.
+- **`winbind` y `sss` NO deben coexistir en nsswitch.conf** — En `/etc/nsswitch.conf`, usar `passwd: files winbind` O `passwd: files sss`, nunca ambos juntos. Las preguntas presentan configuraciones incorrectas con ambos.
+- **Rangos idmap NO deben solaparse** — `idmap config * : range = 10000-19999` y `idmap config EMPRESA : range = 20000-99999` deben ser rangos disjuntos. Si se solapan, los mapeos de IDs son impredecibles. Ademas, no deben incluir UIDs locales del sistema (normalmente < 1000).
+- **`kinit` ANTES de `net ads join`** — Es necesario obtener un ticket Kerberos del administrador antes de unirse al dominio. Sin ticket valido, la union falla. Las preguntas presentan fallos de union cuya causa es la falta de `kinit`.
+- **`security = ads` vs `server role = member server`** — Para un servidor miembro AD, ambos son necesarios: `security = ads` indica el metodo de autenticacion y `server role = member server` define el rol. Omitir cualquiera causa problemas.
+- **`winbind use default domain = yes`** — Con esta opcion, los usuarios pueden hacer login como `usuario` en lugar de `DOMINIO\usuario`. Sin ella, el prefijo de dominio es obligatorio. Las preguntas presentan escenarios de login fallido cuya causa es esta opcion.
+- **`pam_mkhomedir.so` vs `oddjob-mkhomedir`** — Ambos crean directorios home automaticamente. `oddjob` es preferido en Red Hat/CentOS con SELinux porque ejecuta como servicio privilegiado. Las preguntas suelen pedir la solucion correcta segun la distribucion.
+- **`idmap_rid` es deterministico pero puede colisionar** — El backend rid calcula UID = base + RID. Es predecible y consistente entre servidores con la misma configuracion, pero RIDs de diferentes dominios pueden colisionar si los rangos no estan bien separados.

@@ -11,7 +11,7 @@ subtema: "106.2"
 
 # Flashcards: 106.2 - Escritorios Graficos
 
-> 34 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 35 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="106.2">
 </div>
@@ -619,6 +619,24 @@ subtema: "106.2"
 <div class="flashcard-back">
 
 **R:** | Protocolo | Puerto | Cifrado | Uso tipico |
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="106.2">
+</div>
+
+<div class="flashcard" data-id="106.2-fc-035">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

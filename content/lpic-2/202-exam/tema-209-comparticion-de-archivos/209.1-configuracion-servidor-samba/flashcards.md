@@ -11,7 +11,7 @@ subtema: "209.1"
 
 # Flashcards: 209.1 - Configuracion Servidor Samba
 
-> 35 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 37 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="209.1">
 </div>
@@ -559,6 +559,24 @@ subtema: "209.1"
 <div class="flashcard" data-id="209.1-fc-031">
 <div class="flashcard-front">
 
+**P:** Tip de examen: El archivo de mapeo de usuarios permite que los usuarios de Windows inicien sesi...
+
+</div>
+<div class="flashcard-back">
+
+**R:** El archivo de mapeo de usuarios permite que los usuarios de Windows inicien sesión con nombres diferentes a los de sus cuentas Unix. El formato es `usuario_unix = nombre_windows [nombre_windows2 ...]`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="209.1">
+</div>
+
+<div class="flashcard" data-id="209.1-fc-032">
+<div class="flashcard-front">
+
 **P:** Que hace el comando `security = user`?
 
 </div>
@@ -574,7 +592,7 @@ subtema: "209.1"
 <div class="flashcard-deck" data-subtema="209.1">
 </div>
 
-<div class="flashcard" data-id="209.1-fc-032">
+<div class="flashcard" data-id="209.1-fc-033">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `path`?
@@ -592,7 +610,7 @@ subtema: "209.1"
 <div class="flashcard-deck" data-subtema="209.1">
 </div>
 
-<div class="flashcard" data-id="209.1-fc-033">
+<div class="flashcard" data-id="209.1-fc-034">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `browseable`?
@@ -610,7 +628,7 @@ subtema: "209.1"
 <div class="flashcard-deck" data-subtema="209.1">
 </div>
 
-<div class="flashcard" data-id="209.1-fc-034">
+<div class="flashcard" data-id="209.1-fc-035">
 <div class="flashcard-front">
 
 **P:** Que es/son Introducción?
@@ -628,7 +646,7 @@ subtema: "209.1"
 <div class="flashcard-deck" data-subtema="209.1">
 </div>
 
-<div class="flashcard" data-id="209.1-fc-035">
+<div class="flashcard" data-id="209.1-fc-036">
 <div class="flashcard-front">
 
 **P:** Que es/son Archivo de configuración smb.conf?
@@ -637,6 +655,24 @@ subtema: "209.1"
 <div class="flashcard-back">
 
 **R:** El archivo principal de configuración es `/etc/samba/smb.conf`. Se divide en secciones identificadas por corchetes.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="209.1">
+</div>
+
+<div class="flashcard" data-id="209.1-fc-037">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

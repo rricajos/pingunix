@@ -284,3 +284,20 @@ cat /proc/sys/dev/raid/speed_limit_max    # Maximo (KB/s)
 echo 200000 > /proc/sys/dev/raid/speed_limit_min
 echo 500000 > /proc/sys/dev/raid/speed_limit_max
 ```
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **mdadm --create vs --assemble** — `--create` destruye datos existentes y crea un RAID nuevo desde cero; `--assemble` reactiva un RAID existente sin destruir datos. Confundirlos puede causar perdida total de datos. Si el examen pregunta como reactivar un RAID despues de un reinicio, la respuesta es `--assemble`
+- **mdadm --grow permite reshape online** — se puede cambiar el nivel RAID (ej: RAID1 a RAID5), añadir discos y cambiar el chunk size sin desmontar el array. El reshape se hace en caliente pero puede tardar horas. Interrumpir un reshape puede corromper el array
+- **bitmap interno vs externo** — el bitmap interno se almacena en el propio array (mas simple, sobrevive a reinicios); el externo se almacena en un archivo separado (no sobrevive a reinicios sin configuracion). El bitmap acelera la resincronizacion parcial tras fallos breves, no la reconstruccion completa
+- **[UUU] vs [_UU] en /proc/mdstat** — `U` significa disco activo (Up), `_` significa disco fallido o ausente. En RAID 5 con 3 discos, `[UUU]` es normal, `[_UU]` indica un disco fallido y el array esta degradado. El examen muestra salidas de mdstat y pregunta el estado
+- **mismatch_cnt en verificacion RAID** — un `mismatch_cnt` distinto de 0 despues de `echo check > /sys/block/md0/md/sync_action` indica bloques inconsistentes. En RAID 1 con write-behind cache, valores pequeños pueden ser falsos positivos. En RAID 5/6, cualquier mismatch es preocupante
+- **bcache writethrough vs writeback** — `writethrough` escribe simultaneamente en SSD y HDD (seguro, sin riesgo de perdida); `writeback` escribe primero en SSD y luego en HDD (rapido, pero si el SSD falla se pierden las escrituras pendientes). El examen pregunta el modo mas seguro: writethrough
+- **lvmcache (dm-cache) vs bcache: integracion LVM** — lvmcache se integra con LVM y se gestiona con `lvconvert`; bcache se configura a nivel de dispositivo de bloque con `make-bcache`. Si ya usas LVM, lvmcache es mas facil de gestionar. `lvconvert --uncache` elimina el cache sin perder datos
+- **storcli vs ssacli** — `storcli` es para controladoras MegaRAID (LSI/Broadcom); `ssacli` (antes hpacucli) es para HP Smart Array. Usar la herramienta incorrecta para el hardware no funciona. El examen puede preguntar cual herramienta usar segun la marca del controlador
+- **speed_limit_min y speed_limit_max** — controlan la velocidad de reconstruccion de RAID por software. Subir `speed_limit_min` acelera la reconstruccion pero impacta el rendimiento de I/O del sistema. El examen puede preguntar como acelerar una reconstruccion: aumentar estos valores
+- **Journal disk en RAID 5/6 previene write hole** — el write hole ocurre cuando un fallo de energia durante una escritura en RAID 5/6 deja la paridad inconsistente. Un SSD de journal registra las escrituras pendientes y permite recuperarlas. Sin journal ni bitmap, el RAID puede quedar silenciosamente corrupto

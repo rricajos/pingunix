@@ -313,3 +313,20 @@ encfsctl passwd /ruta/datos-cifrados
 | Uso principal | Discos/particiones | Directorios home | Directorios individuales |
 
 > **Para el examen:** Conoce las diferencias entre cifrado a nivel de bloque (dm-crypt/LUKS) y a nivel de archivo (eCryptfs, EncFS). dm-crypt protege toda la partición; eCryptfs permite cifrar archivos selectivamente.
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **LUKS vs plain mode** — LUKS tiene cabecera con metadatos y soporta hasta 8 slots de clave; plain mode no tiene cabecera (denegabilidad plausible) y no permite cambiar la contraseña sin re-cifrar. Si se pregunta por multiples contraseñas, la respuesta es LUKS
+- **`cryptsetup luksFormat` destruye datos** — este comando sobreescribe la cabecera del dispositivo. No hay confirmacion interactiva por defecto en scripts. Confundir `luksFormat` con `luksOpen` puede ser desastroso
+- **`luksAddKey` requiere clave existente** — para añadir una nueva clave a un slot, se necesita proporcionar una clave valida ya existente. No se puede añadir claves sin autenticacion previa
+- **`luksKillSlot` vs `luksRemoveKey`** — `luksKillSlot` elimina por numero de slot (0-7); `luksRemoveKey` elimina por passphrase. Confundir ambos comandos puede dejar el volumen inaccesible si se elimina la unica clave restante
+- **Backup de cabecera LUKS** — si la cabecera se corrompe, los datos son irrecuperables. `cryptsetup luksHeaderBackup` es esencial. El examen puede preguntar especificamente por el flag `--header-backup-file`
+- **`/etc/crypttab` vs `/etc/fstab`** — `crypttab` desbloquea el volumen cifrado creando el dispositivo en `/dev/mapper/`; `fstab` monta el dispositivo ya desbloqueado. Se necesitan ambos para montaje automatico al arrancar. El orden de procesamiento es: crypttab primero, fstab despues
+- **Cifrado de swap con `/dev/urandom`** — usar `/dev/urandom` como key file en crypttab genera una clave aleatoria en cada arranque, lo que hace que el contenido del swap sea irrecuperable tras reinicio. Esto es deseable para swap pero NO para datos persistentes
+- **eCryptfs vs EncFS** — eCryptfs opera en el kernel (mas rendimiento, usa mount -t ecryptfs); EncFS opera en espacio de usuario via FUSE (mas lento, usa fusermount -u para desmontar). EncFS tiene vulnerabilidades de seguridad conocidas y no se recomienda para datos sensibles
+- **LVM sobre LUKS vs LUKS sobre LVM** — LVM sobre LUKS cifra todo el VG con una sola passphrase (preferido por los instaladores); LUKS sobre LVM permite cifrar LVs individuales con diferentes claves. El examen suele preguntar cual configuracion requiere una sola passphrase al arranque
+- **`discard` en crypttab y seguridad** — la opcion `discard` permite TRIM en SSDs, lo que mejora el rendimiento pero puede filtrar informacion sobre que bloques estan en uso, reduciendo la seguridad del cifrado

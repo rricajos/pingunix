@@ -11,7 +11,7 @@ subtema: "103.7"
 
 # Flashcards: 103.7 - Expresiones Regulares
 
-> 33 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 34 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="103.7">
 </div>
@@ -601,6 +601,24 @@ subtema: "103.7"
 <div class="flashcard-back">
 
 **R:** | Secuencia | Significado | Equivalente |
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.7">
+</div>
+
+<div class="flashcard" data-id="103.7-fc-034">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

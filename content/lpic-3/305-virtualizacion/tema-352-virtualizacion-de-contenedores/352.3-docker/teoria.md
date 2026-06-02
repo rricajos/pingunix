@@ -493,3 +493,20 @@ docker image prune -a
 | Docker Compose | Aplicaciones multi-contenedor en YAML |
 | .dockerignore | Excluir archivos del contexto de build |
 | Rootless | Docker sin privilegios de root |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`docker stop` vs `docker kill`** — `stop` envia SIGTERM al proceso principal y espera 10 segundos (configurable con `--time`) antes de enviar SIGKILL. `kill` envia SIGKILL inmediatamente. El examen preguntara cual permite al contenedor hacer cleanup antes de terminar.
+- **CMD vs ENTRYPOINT** — CMD define el comando por defecto que se puede sobrescribir facilmente con `docker run imagen otro-comando`. ENTRYPOINT define el ejecutable fijo que solo se sobrescribe con `--entrypoint`. Cuando ambos coexisten, CMD proporciona argumentos por defecto a ENTRYPOINT. El examen mostrara un Dockerfile y preguntara que se ejecuta.
+- **Forma exec `["cmd"]` vs forma shell `cmd`** — La forma exec (`CMD ["nginx", "-g", "daemon off;"]`) ejecuta el proceso directamente como PID 1. La forma shell (`CMD nginx -g daemon off;`) lo ejecuta via `/bin/sh -c`, lo que impide que las senales (SIGTERM) lleguen correctamente al proceso. Siempre usar forma exec.
+- **COPY vs ADD** — `COPY` solo copia archivos locales. `ADD` ademas descomprime tar automaticamente y soporta URLs. La mejor practica es usar siempre `COPY` excepto cuando se necesita descompresion. El examen puede preguntar cual instruccion descomprime un tar.gz automaticamente.
+- **Red bridge default vs bridge personalizada** — En la red `docker0` (bridge por defecto), los contenedores solo se comunican por IP. En una red bridge personalizada (`docker network create mi-red`), los contenedores se resuelven por nombre via DNS interno automatico. El examen preguntara por que un contenedor no puede resolver el nombre de otro.
+- **`docker compose down -v` borra volumenes** — `docker compose down` detiene y elimina contenedores y redes. Agregar `-v` TAMBIEN elimina los volumenes con datos persistentes. Es una trampa comun en el examen: preguntar como se pierden datos accidentalmente.
+- **`.dockerignore` reduce contexto de build, no la imagen** — `.dockerignore` evita que archivos se envien al daemon Docker como contexto de build. Si un archivo esta en `.dockerignore`, no puede usarse con COPY/ADD. Pero los archivos no afectan al tamano final de la imagen si no se copian, con o sin `.dockerignore`.
+- **Multi-stage builds: solo la ultima etapa cuenta** — En un multi-stage build, la imagen final solo contiene lo que esta en la ultima etapa (o la especificada con `--target`). Las herramientas de compilacion de etapas anteriores no se incluyen. El examen puede preguntar el tamano final de una imagen multi-stage.
+- **Volumenes Docker vs bind mounts** — Los volumenes (`docker volume create`) son gestionados por Docker y almacenados en `/var/lib/docker/volumes/`. Los bind mounts (`-v /host:/container`) montan un directorio del host directamente. El examen puede preguntar cual persiste tras `docker system prune` (respuesta: ambos, a menos que se use `--volumes`).
+- **`EXPOSE` no publica puertos** — `EXPOSE` en el Dockerfile es solo documentacion; no abre puertos. Para publicar puertos se necesita `-p host:container` en `docker run`. El examen puede preguntar por que un servicio no es accesible desde fuera aunque el Dockerfile tiene EXPOSE.

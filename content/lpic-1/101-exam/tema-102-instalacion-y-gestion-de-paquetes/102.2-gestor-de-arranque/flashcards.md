@@ -11,7 +11,7 @@ subtema: "102.2"
 
 # Flashcards: 102.2 - Gestor De Arranque
 
-> 32 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 33 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="102.2">
 </div>
@@ -583,6 +583,24 @@ subtema: "102.2"
 <div class="flashcard-back">
 
 **R:** Aunque GRUB Legacy esta obsoleto, el examen puede incluir preguntas sobre sus diferencias con GRUB2.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="102.2">
+</div>
+
+<div class="flashcard" data-id="102.2-fc-033">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

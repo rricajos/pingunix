@@ -271,3 +271,19 @@ Resumen de como identificar el recurso limitante:
 - `/proc/<PID>/io` - estadisticas de I/O por proceso
 - `/var/log/sysstat/` o `/var/log/sa/` - datos historicos de sar
 - `/etc/collectd/collectd.conf` - configuracion de collectd
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`vmstat` primera linea vs lineas siguientes** — la primera linea de `vmstat` muestra promedios desde el ultimo arranque, no datos en tiempo real. Solo las lineas posteriores reflejan la actividad actual del intervalo especificado
+- **`wa` (iowait) alto no siempre significa disco lento** — un `wa` elevado indica que la CPU esta ociosa esperando I/O, pero puede ser causado por red (NFS) u otros dispositivos, no solo discos locales
+- **Load average NO es un porcentaje de CPU** — es el numero promedio de procesos en estado ejecutable o esperando I/O. Un load de 4.0 en un sistema con 4 CPUs es uso completo; en uno con 1 CPU, hay 3 procesos en cola
+- **`sar -f` vs `sar` sin `-f`** — sin `-f`, `sar` muestra datos del dia actual. Con `-f /var/log/sysstat/saXX` consulta datos historicos del dia XX. Confundir esto hace que no encuentres datos historicos
+- **`iostat` pertenece al paquete `sysstat`, no viene por defecto** — al igual que `sar` y `sadc`, necesitas instalar el paquete `sysstat`. El examen puede preguntar cual es el paquete que proporciona estas herramientas
+- **`collectd` recopila, Nagios alerta, MRTG/Cacti grafican** — confundir sus roles es un error frecuente. `collectd` no genera alertas por si solo; Nagios no genera graficos de tendencias por defecto
+- **`free` muestra memoria usada incluyendo cache** — la columna `available` (no `free`) es la que indica cuanta memoria esta realmente disponible para nuevas aplicaciones, ya que Linux usa RAM libre para cache de disco
+- **`sar -n DEV` vs `sar -n EDEV`** — `DEV` muestra estadisticas normales de red; `EDEV` muestra errores de red. El examen puede presentar la opcion incorrecta para diagnosticar errores de red
+- **`swpd` en `vmstat` vs `si/so`** — `swpd` muestra el total de swap en uso (puede ser alto sin problemas). Lo critico son `si` y `so` (swap in/out), que indican actividad de swap actual. Un sistema puede tener swap usado pero sin actividad de swap

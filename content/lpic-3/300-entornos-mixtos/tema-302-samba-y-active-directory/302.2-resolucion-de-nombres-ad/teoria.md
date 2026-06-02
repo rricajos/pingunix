@@ -323,3 +323,18 @@ nslookup -type=SRV _ldap._tcp.empresa.com
 - Las zonas inversas (PTR) son necesarias para resolución inversa
 - Los reenviadores (`dns forwarder`) resuelven nombres externos
 - `samba_dnsupdate` mantiene automáticamente los registros SRV de AD
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **DNS es OBLIGATORIO para AD, no opcional** — Sin DNS funcional, ningún servicio de AD opera: ni autenticación, ni localización de DCs, ni unión al dominio. Las preguntas presentan escenarios donde "todo falla" y la causa raiz es DNS mal configurado.
+- **Registros SRV `_ldap._tcp` vs `_kerberos._tcp`** — `_ldap._tcp.dominio` localiza servidores LDAP del dominio. `_kerberos._tcp.dominio` localiza el KDC. Si faltan, los clientes no encuentran los DCs. Las preguntas piden identificar que registro SRV falta segun el sintoma.
+- **Zona `_msdcs` y su funcion** — `_msdcs.dominio.com` contiene registros especificos de Microsoft: dc (controladores), gc (catalogo global), pdc (PDC emulator). No confundir con la zona principal del dominio.
+- **SAMBA_INTERNAL vs BIND9_DLZ: keytab necesario** — Con BIND9_DLZ, el keytab `/var/lib/samba/bind-dns/dns.keytab` debe tener permisos correctos (`bind:bind`, 640). Olvidar configurar el keytab es causa frecuente de fallos de DNS con BIND9_DLZ.
+- **`samba-tool dns` vs `nsupdate -g`** — `samba-tool dns` gestiona registros en el DNS interno de Samba directamente. `nsupdate -g` realiza actualizaciones dinamicas con autenticacion Kerberos (funciona con ambos backends). No son intercambiables en todos los contextos.
+- **Zonas inversas (PTR) no se crean automaticamente** — El aprovisionamiento NO crea zonas inversas. Hay que crearlas manualmente con `samba-tool dns zonecreate`. Sin PTR, la resolucion inversa falla y algunos servicios Kerberos pueden tener problemas.
+- **`dns forwarder` en smb.conf vs forwarders en BIND** — Con DNS interno, se usa `dns forwarder = 8.8.8.8` en smb.conf. Con BIND9_DLZ, se configuran forwarders en `named.conf.options`. Mezclar ambas configuraciones es error comun.
+- **`samba_dnsupdate` mantiene registros SRV automaticamente** — Este script actualiza los registros SRV necesarios para AD. Si los registros SRV desaparecen, ejecutar `samba_dnsupdate --verbose` para regenerarlos. No confundir con la actualizacion DNS de clientes.

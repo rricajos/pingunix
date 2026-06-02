@@ -11,7 +11,7 @@ subtema: "208.1"
 
 # Flashcards: 208.1 - Configuracion Basica Apache
 
-> 36 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 38 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="208.1">
 </div>
@@ -559,6 +559,24 @@ subtema: "208.1"
 <div class="flashcard" data-id="208.1-fc-031">
 <div class="flashcard-front">
 
+**P:** Tip de examen: El MPM `event` es el predeterminado en Apache 2.4 y ofrece el mejor rendimiento ...
+
+</div>
+<div class="flashcard-back">
+
+**R:** El MPM `event` es el predeterminado en Apache 2.4 y ofrece el mejor rendimiento para la mayoría de escenarios. El MPM `prefork` sigue siendo necesario cuando se usa `mod_php`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.1">
+</div>
+
+<div class="flashcard" data-id="208.1-fc-032">
+<div class="flashcard-front">
+
 **P:** Que hace el comando `%b`?
 
 </div>
@@ -574,7 +592,7 @@ subtema: "208.1"
 <div class="flashcard-deck" data-subtema="208.1">
 </div>
 
-<div class="flashcard" data-id="208.1-fc-032">
+<div class="flashcard" data-id="208.1-fc-033">
 <div class="flashcard-front">
 
 **P:** Que es/son Introducción?
@@ -592,7 +610,7 @@ subtema: "208.1"
 <div class="flashcard-deck" data-subtema="208.1">
 </div>
 
-<div class="flashcard" data-id="208.1-fc-033">
+<div class="flashcard" data-id="208.1-fc-034">
 <div class="flashcard-front">
 
 **P:** Que es/son Archivos de configuración principales?
@@ -610,7 +628,7 @@ subtema: "208.1"
 <div class="flashcard-deck" data-subtema="208.1">
 </div>
 
-<div class="flashcard" data-id="208.1-fc-034">
+<div class="flashcard" data-id="208.1-fc-035">
 <div class="flashcard-front">
 
 **P:** Que es/son VirtualHost (Hosts virtuales)?
@@ -628,7 +646,7 @@ subtema: "208.1"
 <div class="flashcard-deck" data-subtema="208.1">
 </div>
 
-<div class="flashcard" data-id="208.1-fc-035">
+<div class="flashcard" data-id="208.1-fc-036">
 <div class="flashcard-front">
 
 **P:** Que es/son Archivo .htaccess?
@@ -646,7 +664,7 @@ subtema: "208.1"
 <div class="flashcard-deck" data-subtema="208.1">
 </div>
 
-<div class="flashcard" data-id="208.1-fc-036">
+<div class="flashcard" data-id="208.1-fc-037">
 <div class="flashcard-front">
 
 **P:** Que es/son MPM (Multi-Processing Modules)?
@@ -655,6 +673,24 @@ subtema: "208.1"
 <div class="flashcard-back">
 
 **R:** Apache soporta diferentes modelos de procesamiento:
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.1">
+</div>
+
+<div class="flashcard" data-id="208.1-fc-038">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

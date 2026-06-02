@@ -478,3 +478,19 @@ teamdctl team0 state
 ```
 
 > **Para el examen:** Conoce los modos de bonding mas comunes (0, 1, 4, 6) y como crearlos con `nmcli`. El teaming es la alternativa moderna pero el bonding sigue siendo ampliamente usado.
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`ip addr` reemplaza a `ifconfig`, `ip route` a `route`, `ip neigh` a `arp`** — el examen puede preguntar el equivalente moderno de un comando legacy. `ifconfig` y `route` estan deprecados; `ip` del paquete `iproute2` es la herramienta actual
+- **`ip addr flush` elimina TODAS las direcciones de una interfaz** — a diferencia de `ip addr del` que elimina una direccion especifica. Usar `flush` accidentalmente desconecta la interfaz por completo
+- **`/etc/resolv.conf` puede ser un enlace simbolico gestionado** — en sistemas con NetworkManager o systemd-resolved, editarlo directamente no funciona porque se sobrescribe. Debes configurar DNS a traves de `nmcli` o `systemd-resolved`
+- **`nameserver` en resolv.conf acepta maximo 3 entradas** — aunque pongas mas de 3 lineas `nameserver`, solo se usaran las tres primeras. El examen puede presentar un resolv.conf con 4+ y preguntar cuales se usan
+- **Bonding mode 1 (active-backup) no requiere configuracion del switch** — a diferencia del mode 4 (802.3ad/LACP) que necesita soporte LACP en el switch. El examen puede preguntar que modo usar cuando no se tiene acceso al switch
+- **`/etc/hostname` solo contiene el nombre corto, no el FQDN** — el FQDN se define en `/etc/hosts` mapeando la IP a `fqdn hostname`. `hostnamectl set-hostname` modifica `/etc/hostname` automaticamente
+- **`nmcli connection` vs `nmcli device`** — `connection` gestiona perfiles de configuracion (pueden existir sin estar activos); `device` gestiona interfaces fisicas (hardware real). Una interfaz puede tener multiples perfiles de conexion
+- **BOOTPROTO=none vs BOOTPROTO=dhcp en RHEL** — `none` significa IP estatica (requiere IPADDR, PREFIX, GATEWAY); `dhcp` obtiene configuracion automaticamente. Poner `none` sin IPADDR deja la interfaz sin IP
+- **`systemd-networkd` usa archivos `.network` con secciones `[Match]` y `[Network]`** — no confundir con los archivos `ifcfg-*` de RHEL ni con `/etc/network/interfaces` de Debian. Son tres sistemas de configuracion diferentes

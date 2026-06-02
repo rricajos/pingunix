@@ -11,7 +11,7 @@ subtema: "335.1"
 
 # Flashcards: 335.1 - Vulnerabilidades Comunes
 
-> 29 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 31 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="335.1">
 </div>
@@ -505,6 +505,24 @@ subtema: "335.1"
 <div class="flashcard" data-id="335.1-fc-028">
 <div class="flashcard-front">
 
+**P:** Tip de examen: Conoce como consultar advisories de seguridad y aplicar parches especificos en l...
+
+</div>
+<div class="flashcard-back">
+
+**R:** Conoce como consultar advisories de seguridad y aplicar parches especificos en las distribuciones principales.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="335.1">
+</div>
+
+<div class="flashcard" data-id="335.1-fc-029">
+<div class="flashcard-front">
+
 **P:** Que es/son CVSS (Common Vulnerability Scoring System)?
 
 </div>
@@ -520,7 +538,7 @@ subtema: "335.1"
 <div class="flashcard-deck" data-subtema="335.1">
 </div>
 
-<div class="flashcard" data-id="335.1-fc-029">
+<div class="flashcard" data-id="335.1-fc-030">
 <div class="flashcard-front">
 
 **P:** Que es/son OWASP Top 10?
@@ -529,6 +547,24 @@ subtema: "335.1"
 <div class="flashcard-back">
 
 **R:** El OWASP Top 10 es una lista de las vulnerabilidades web mas criticas:
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="335.1">
+</div>
+
+<div class="flashcard" data-id="335.1-fc-031">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

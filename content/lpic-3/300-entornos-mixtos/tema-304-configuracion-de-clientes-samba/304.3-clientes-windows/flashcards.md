@@ -11,7 +11,7 @@ subtema: "304.3"
 
 # Flashcards: 304.3 - Clientes Windows
 
-> 35 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 36 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="304.3">
 </div>
@@ -637,6 +637,24 @@ subtema: "304.3"
 <div class="flashcard-back">
 
 **R:** Los clientes Windows unidos al dominio Samba AD usan Kerberos automáticamente:
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="304.3">
+</div>
+
+<div class="flashcard" data-id="304.3-fc-036">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

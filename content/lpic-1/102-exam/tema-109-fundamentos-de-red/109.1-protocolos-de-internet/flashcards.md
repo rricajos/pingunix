@@ -11,7 +11,7 @@ subtema: "109.1"
 
 # Flashcards: 109.1 - Protocolos De Internet
 
-> 29 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 30 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="109.1">
 </div>
@@ -529,6 +529,24 @@ subtema: "109.1"
 <div class="flashcard-back">
 
 **R:** 1. **TCP/IP tiene 4 capas**: Acceso a red, Internet, Transporte, Aplicacion
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="109.1">
+</div>
+
+<div class="flashcard" data-id="109.1-fc-030">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

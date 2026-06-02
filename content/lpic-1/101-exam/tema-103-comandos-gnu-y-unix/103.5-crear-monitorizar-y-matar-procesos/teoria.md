@@ -612,3 +612,19 @@ readlink /proc/1234/exe
 11. Proteger de logout:     nohup comando &
 12. Sesion persistente:     screen / tmux
 ```
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`kill` envia SIGTERM (15) por defecto, NO SIGKILL (9)** — `kill PID` envia SIGTERM, que permite al proceso terminar limpiamente. `kill -9 PID` envia SIGKILL, que fuerza la terminacion inmediata y no puede ser ignorada. El examen puede preguntar que senal se envia por defecto.
+- **SIGTERM vs SIGKILL vs SIGHUP** — SIGTERM (15) pide terminar limpiamente; SIGKILL (9) fuerza terminacion sin limpieza; SIGHUP (1) indica que la terminal se cerro (algunos demonios lo usan para recargar configuracion). El examen puede confundir sus numeros.
+- **`kill` vs `killall` vs `pkill`** — `kill` requiere PID; `killall` usa el nombre exacto del proceso; `pkill` usa patrones (coincidencia parcial). El examen puede preguntar cual comando usar cuando solo se conoce parte del nombre.
+- **`&` pone en background; `Ctrl+Z` suspende** — `comando &` ejecuta en segundo plano; `Ctrl+Z` detiene (SIGTSTP) el proceso en primer plano. Despues de `Ctrl+Z`, se usa `bg` para reanudar en background o `fg` para foreground.
+- **`nohup` protege de SIGHUP al cerrar la terminal** — `nohup comando &` permite que el proceso siga ejecutandose despues de cerrar la sesion. Sin `nohup`, los procesos en background reciben SIGHUP al cerrar la terminal. El examen puede preguntar como sobrevivir al cierre de sesion.
+- **`ps aux` vs `ps -ef`** — Son equivalentes en la practica pero con formato diferente. `aux` es estilo BSD (sin guion); `-ef` es estilo UNIX (con guion). El examen puede preguntar las diferencias de formato.
+- **`top`: la columna NI no es lo mismo que PR** — NI es el valor nice (ajustable); PR es la prioridad real del kernel (PR = 20 + NI). El examen puede confundir ambas columnas.
+- **`free -h` muestra RAM, no disco** — `free` muestra memoria RAM y swap; `df` muestra espacio en disco. El examen puede confundir estos comandos en un escenario de "disco lleno" vs "memoria llena".
+- **Los jobs son locales al shell** — `jobs` solo muestra procesos del shell actual. Al abrir otra terminal, `jobs` no muestra los procesos de la terminal anterior. El examen puede preguntar por que `jobs` no muestra un proceso que se inicio en otra sesion.

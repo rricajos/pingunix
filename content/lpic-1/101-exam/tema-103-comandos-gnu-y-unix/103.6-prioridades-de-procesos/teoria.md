@@ -228,3 +228,17 @@ Rango nice:      -20 ........... 0 ........... 19
 | Argumento | Un comando a ejecutar | Un PID, usuario o grupo |
 | Sintaxis | `nice -n 10 comando` | `renice -n 10 -p PID` |
 | Valor por defecto | 10 (si no se especifica) | No tiene default |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`nice` sin valor usa 10, NO 0** — `nice comando` inicia el proceso con nice 10 (menor prioridad), no con 0. El examen puede preguntar con que valor nice se inicia un proceso al usar `nice` sin especificar valor.
+- **Valores negativos de nice = MAS prioridad** — El rango va de -20 (maxima prioridad) a 19 (minima prioridad). Un valor nice MENOR significa MAS prioridad. El examen puede intentar confundir presentando -20 como "baja prioridad".
+- **Solo root puede asignar nice negativo** — Un usuario normal solo puede asignar valores de 0 a 19 a sus propios procesos. Solo root puede usar valores negativos (-20 a -1) o modificar procesos de otros usuarios.
+- **Un usuario normal NO puede revertir su propio nice** — Si un usuario sube el nice de su proceso de 0 a 10, NO puede volver a bajarlo a 0. Solo root puede reducir el valor nice. El examen puede preguntar si un usuario puede deshacer un cambio de nice.
+- **`nice` es para procesos NUEVOS; `renice` para procesos EXISTENTES** — `nice -n 5 comando` inicia el comando con nice 5; `renice -n 5 -p PID` cambia el nice de un proceso ya en ejecucion. El examen puede confundir cuando usar cada uno.
+- **PR = 20 + NI** — La prioridad real (PR) mostrada en `top` se calcula como 20 + NI. Un nice de -20 da PR=0; un nice de 19 da PR=39. El examen puede preguntar que valor de PR corresponde a un nice dado.
+- **`renice` usa `-p` para PID, `-u` para usuario, `-g` para grupo** — `renice -n 5 -p 1234` cambia un proceso; `renice -n 5 -u sandra` cambia todos los procesos de un usuario. El examen puede mezclar estos flags.

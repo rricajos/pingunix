@@ -264,3 +264,19 @@ Filesystem                rB/s  wB/s  rops/s  wops/s  fo/s  fc/s  fd/s
 | fc/s    | Cierres de archivo por segundo        |
 
 > **Para el examen:** `cifsiostat` es la herramienta para monitorizar el rendimiento de montajes CIFS. Es parte del paquete `sysstat` en muchas distribuciones.
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`credentials=` vs `password=` en mount.cifs** — Siempre usar `credentials=/ruta/archivo` (archivo con permisos 0600) en lugar de `password=` en linea de comandos. La contraseña en la linea de comandos es visible en `/proc/mounts` y en el historial del shell. Las preguntas evaluan buenas practicas de seguridad.
+- **`sec=krb5` vs `sec=krb5i` vs `sec=krb5p`** — `krb5` solo autentica. `krb5i` autentica + verifica integridad de datos. `krb5p` autentica + cifra todos los datos. Mayor seguridad = mayor overhead de rendimiento. Las preguntas piden el nivel correcto segun requisitos de seguridad.
+- **`_netdev` obligatorio en fstab para montajes CIFS** — Sin `_netdev`, el sistema intenta montar el share antes de que la red este disponible, causando fallos en el arranque. Es la opcion mas olvidada y mas preguntada para montajes de red en fstab.
+- **`mount.cifs` y `mount -t cifs` son equivalentes** — Ambos usan el mismo driver del kernel. Las opciones se pasan identicamente despues de `-o`. Las preguntas pueden usar cualquiera de las dos formas indistintamente.
+- **`multiuser` con `cifscreds`** — El montaje multiusuario permite que cada usuario acceda con sus propias credenciales. El montaje inicial se hace como root, y cada usuario establece credenciales con `cifscreds add servidor`. Sin `multiuser`, todos acceden con las credenciales del montaje.
+- **Autofs para CIFS: formato `://servidor/share`** — En archivos auto.*, CIFS usa `://servidor/share` (con los dos puntos). Sin los dos puntos, autofs no reconoce el recurso. El `--timeout` define segundos de inactividad antes de desmontar.
+- **`smbclient -L` vs `smbclient //servidor/share`** — `-L` lista shares disponibles (descubrimiento). Sin `-L`, conecta a un share especifico (acceso). `-k` activa Kerberos, `-N` permite acceso sin contraseña (anonimo). Las preguntas piden la opcion correcta segun la tarea.
+- **`vers=` para forzar version de protocolo** — `vers=2.0`, `vers=3.0`, `vers=3.1.1` fuerzan una version SMB especifica. Sin esta opcion, se negocia automaticamente. Util para diagnostico o compatibilidad con servidores antiguos.
+- **`x-systemd.automount` para montaje bajo demanda** — En fstab, esta opcion monta automaticamente al acceder al punto de montaje (similar a autofs pero gestionado por systemd). Combinado con `x-systemd.idle-timeout=` para desmontar tras inactividad.

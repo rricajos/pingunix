@@ -473,3 +473,19 @@ dd if=/dev/zero of=/swapfile bs=1M count=1024
 ```
 
 > **ADVERTENCIA**: `dd` no pide confirmacion y puede destruir datos si se especifican mal `if=` y `of=`. Se le conoce como "disk destroyer" en broma. Siempre verificar los dispositivos antes de ejecutar.
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`tar -c` vs `tar -x` vs `tar -t`** — `-c` crea archivo, `-x` extrae, `-t` lista contenido. El examen puede confundir las opciones, especialmente `-t` (listar) con `-x` (extraer).
+- **Opciones de compresion en tar: `-z` vs `-j` vs `-J`** — `-z` usa gzip (.tar.gz), `-j` usa bzip2 (.tar.bz2), `-J` (mayuscula) usa xz (.tar.xz). Notar que `-j` es bzip2 (no gzip) y `-J` es xz (no bzip2). El examen puede intercambiar estas opciones.
+- **`cp -a` preserva TODO** — `-a` es equivalente a `-dpR` (preserva permisos, enlaces simbolicos, recursivo). Es diferente de `-r` que solo copia recursivamente sin preservar atributos. El examen puede preguntar como copiar preservando permisos y enlaces.
+- **`rm -r` vs `rmdir`** — `rmdir` solo elimina directorios VACIOS; `rm -r` elimina directorios con todo su contenido. El examen puede preguntar por que `rmdir` falla en un directorio con archivos.
+- **`file` determina el tipo por contenido, no por extension** — `file` examina los bytes magicos del archivo, no su nombre. Un archivo `.txt` que contiene datos binarios sera identificado como binario. El examen puede preguntar como determinar el tipo real de un archivo.
+- **`touch` crea archivos O actualiza timestamps** — Si el archivo existe, `touch` actualiza sus timestamps sin modificar el contenido. Si no existe, lo crea vacio. El examen puede presentar `touch` como comando solo para crear archivos.
+- **`dd` usa `if=` y `of=`, no redireccion** — La sintaxis de `dd` es diferente a otros comandos: `dd if=/dev/sda of=imagen.img`. Invertir `if` y `of` puede destruir datos. El examen puede presentar la sintaxis invertida.
+- **gzip/bzip2/xz comprimen archivos individuales** — Ninguno de estos compresores puede comprimir directorios directamente. Se necesita `tar` primero para archivar y luego comprimir. El examen puede ofrecer `gzip directorio/` como opcion valida.
+- **`cpio` lee la lista de archivos desde stdin** — A diferencia de `tar`, `cpio` requiere la lista de archivos por stdin: `find . | cpio -o > archivo.cpio`. El examen puede preguntar como pasar archivos a `cpio`.

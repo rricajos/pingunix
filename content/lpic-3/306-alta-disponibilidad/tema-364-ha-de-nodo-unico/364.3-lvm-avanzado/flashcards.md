@@ -11,7 +11,7 @@ subtema: "364.3"
 
 # Flashcards: 364.3 - Lvm Avanzado
 
-> 38 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 39 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="364.3">
 </div>
@@ -691,6 +691,24 @@ subtema: "364.3"
 <div class="flashcard-back">
 
 **R:** **pvmove** permite migrar datos entre PVs sin desmontar el LV.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="364.3">
+</div>
+
+<div class="flashcard" data-id="364.3-fc-039">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

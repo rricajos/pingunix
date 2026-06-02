@@ -11,7 +11,7 @@ subtema: "205.1"
 
 # Flashcards: 205.1 - Configuracion Basica De Red
 
-> 39 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 41 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="205.1">
 </div>
@@ -559,6 +559,24 @@ subtema: "205.1"
 <div class="flashcard" data-id="205.1-fc-031">
 <div class="flashcard-front">
 
+**P:** Tip de examen: Conoce los modos de bonding mas comunes (0, 1, 4, 6) y como crearlos con `nmcli`...
+
+</div>
+<div class="flashcard-back">
+
+**R:** Conoce los modos de bonding mas comunes (0, 1, 4, 6) y como crearlos con `nmcli`. El teaming es la alternativa moderna pero el bonding sigue siendo ampliamente usado.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="205.1">
+</div>
+
+<div class="flashcard" data-id="205.1-fc-032">
+<div class="flashcard-front">
+
 **P:** Que hace el comando `nameserver`?
 
 </div>
@@ -574,7 +592,7 @@ subtema: "205.1"
 <div class="flashcard-deck" data-subtema="205.1">
 </div>
 
-<div class="flashcard" data-id="205.1-fc-032">
+<div class="flashcard" data-id="205.1-fc-033">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `domain`?
@@ -592,7 +610,7 @@ subtema: "205.1"
 <div class="flashcard-deck" data-subtema="205.1">
 </div>
 
-<div class="flashcard" data-id="205.1-fc-033">
+<div class="flashcard" data-id="205.1-fc-034">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `search`?
@@ -610,7 +628,7 @@ subtema: "205.1"
 <div class="flashcard-deck" data-subtema="205.1">
 </div>
 
-<div class="flashcard" data-id="205.1-fc-034">
+<div class="flashcard" data-id="205.1-fc-035">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `options`?
@@ -628,7 +646,7 @@ subtema: "205.1"
 <div class="flashcard-deck" data-subtema="205.1">
 </div>
 
-<div class="flashcard" data-id="205.1-fc-035">
+<div class="flashcard" data-id="205.1-fc-036">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `TYPE`?
@@ -646,7 +664,7 @@ subtema: "205.1"
 <div class="flashcard-deck" data-subtema="205.1">
 </div>
 
-<div class="flashcard" data-id="205.1-fc-036">
+<div class="flashcard" data-id="205.1-fc-037">
 <div class="flashcard-front">
 
 **P:** Que es/son Herramientas modernas: el comando ip (iproute2)?
@@ -664,7 +682,7 @@ subtema: "205.1"
 <div class="flashcard-deck" data-subtema="205.1">
 </div>
 
-<div class="flashcard" data-id="205.1-fc-037">
+<div class="flashcard" data-id="205.1-fc-038">
 <div class="flashcard-front">
 
 **P:** Que es/son Herramientas legacy?
@@ -682,7 +700,7 @@ subtema: "205.1"
 <div class="flashcard-deck" data-subtema="205.1">
 </div>
 
-<div class="flashcard" data-id="205.1-fc-038">
+<div class="flashcard" data-id="205.1-fc-039">
 <div class="flashcard-front">
 
 **P:** Que es/son NetworkManager?
@@ -700,7 +718,7 @@ subtema: "205.1"
 <div class="flashcard-deck" data-subtema="205.1">
 </div>
 
-<div class="flashcard" data-id="205.1-fc-039">
+<div class="flashcard" data-id="205.1-fc-040">
 <div class="flashcard-front">
 
 **P:** Que es/son systemd-networkd?
@@ -709,6 +727,24 @@ subtema: "205.1"
 <div class="flashcard-back">
 
 **R:** Alternativa de configuracion de red via systemd, comun en servidores minimalistas y contenedores.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="205.1">
+</div>
+
+<div class="flashcard" data-id="205.1-fc-041">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

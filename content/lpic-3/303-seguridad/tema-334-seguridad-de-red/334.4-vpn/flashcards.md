@@ -11,7 +11,7 @@ subtema: "334.4"
 
 # Flashcards: 334.4 - Vpn
 
-> 32 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 33 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="334.4">
 </div>
@@ -583,6 +583,24 @@ subtema: "334.4"
 <div class="flashcard-back">
 
 **R:** | Caracteristica | IPsec | OpenVPN | WireGuard |
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="334.4">
+</div>
+
+<div class="flashcard" data-id="334.4-fc-033">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

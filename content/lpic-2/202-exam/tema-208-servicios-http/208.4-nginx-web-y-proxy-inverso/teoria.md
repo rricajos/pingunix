@@ -382,3 +382,27 @@ nginx -V
 ```
 
 > **Para el examen:** Siempre ejecuta `nginx -t` antes de recargar la configuración con `nginx -s reload`. Esto evita que un error de sintaxis detenga el servicio. El comando `nginx -s reload` envía la señal SIGHUP al proceso maestro.
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Prioridad de `location`: `=` > `^~` > `~`/`~*` > prefijo normal** — la coincidencia exacta (`=`) tiene maxima prioridad. El prefijo preferente (`^~`) detiene la busqueda de regex. Dentro de las regex, se usa la primera que coincida en el orden del archivo. Este orden es pregunta frecuente.
+
+- **`root` vs `alias` en bloques location** — `root` anade la URI al path (`root /var/www` + `/img/foto.jpg` = `/var/www/img/foto.jpg`). `alias` reemplaza la parte que coincide (`alias /var/www/imagenes/` para location `/img/` = `/var/www/imagenes/foto.jpg`). Confundirlos genera errores 404.
+
+- **`nginx -s reload` envia SIGHUP, NO reinicia el servicio** — el proceso maestro sigue vivo y los workers se recargan gradualmente. Es diferente a `nginx -s stop` (SIGTERM) y `nginx -s quit` (SIGQUIT, espera a que terminen las conexiones activas).
+
+- **Maximo de conexiones = `worker_processes` x `worker_connections`** — con 4 workers y 1024 conexiones, el maximo teorico es 4096. El examen puede preguntar por el calculo.
+
+- **`proxy_pass` con y sin barra final** — `proxy_pass http://backend/` (con `/`) elimina la parte de la URI que coincide con el location. Sin barra, la URI se pasa completa al backend. Esta diferencia sutil causa muchos problemas.
+
+- **`server_name _` es un catch-all, no un comodin valido** — `_` no es un nombre valido pero convenciona como servidor por defecto. El verdadero mecanismo es `default_server` en la directiva `listen`.
+
+- **`ip_hash` para persistencia de sesion en upstream** — `ip_hash` asegura que el mismo cliente siempre vaya al mismo backend. Sin el, round-robin distribuye las peticiones y las sesiones se pierden. `least_conn` elige el servidor con menos conexiones activas, sin persistencia.
+
+- **`try_files` termina con `=404` o un URI fallback** — `try_files $uri $uri/ =404` intenta archivo, directorio, y si ninguno existe devuelve 404. Sin el ultimo argumento, Nginx da un error de configuracion.
+
+- **Nginx NO tiene `.htaccess`** — a diferencia de Apache, Nginx no soporta configuracion por directorio. Todo debe estar en los archivos de configuracion centrales. Si el examen pregunta por configuracion descentralizada, Nginx no lo permite.

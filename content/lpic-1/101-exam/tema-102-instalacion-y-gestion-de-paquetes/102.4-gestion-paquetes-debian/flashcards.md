@@ -11,7 +11,7 @@ subtema: "102.4"
 
 # Flashcards: 102.4 - Gestion Paquetes Debian
 
-> 35 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 36 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="102.4">
 </div>
@@ -637,6 +637,24 @@ subtema: "102.4"
 <div class="flashcard-back">
 
 **R:** Los repositorios se firman con claves GPG para verificar la autenticidad de los paquetes.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="102.4">
+</div>
+
+<div class="flashcard" data-id="102.4-fc-036">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

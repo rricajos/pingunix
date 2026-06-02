@@ -427,3 +427,18 @@ systemctl status smartd
 | `/etc/smartd.conf` | Configuracion del demonio smartd |
 | `/etc/e2fsck.conf` | Configuracion de e2fsck |
 | `/forcefsck` | Fuerza fsck en el proximo arranque (si existe) |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`xfs_repair` vs `fsck.xfs`** — `fsck.xfs` existe en el sistema pero es un placeholder que no hace nada real. La herramienta verdadera para reparar XFS es `xfs_repair`. El examen puede ofrecer `fsck.xfs` como respuesta incorrecta
+- **`resize2fs` opera sobre el dispositivo, `xfs_growfs` sobre el punto de montaje** — `resize2fs /dev/sda1` vs `xfs_growfs /mnt/datos`. Ademas, `xfs_growfs` requiere que el FS este montado, mientras que `resize2fs` para reducir necesita que este desmontado
+- **XFS solo puede crecer, nunca reducirse** — a diferencia de ext4 que soporta expansion y reduccion, XFS solo permite expansion. Intentar reducir un XFS no es posible; la unica opcion es crear uno nuevo mas pequeno y copiar los datos
+- **`tune2fs -m` cambia los bloques reservados para root** — por defecto, ext4 reserva el 5% del espacio para root. En particiones grandes de datos (no de sistema), reducir esto con `tune2fs -m 1` puede liberar mucho espacio. El examen puede preguntar como recuperar espacio en una particion ext4 llena
+- **`dumpe2fs -h` vs `dumpe2fs` sin opciones** — sin `-h` muestra toda la informacion incluyendo todos los grupos de bloques (salida muy larga). Con `-h` muestra solo la informacion del superbloque (mas util y manejable)
+- **`xfs_info` requiere el FS montado, `dumpe2fs` no** — para obtener informacion de XFS debe estar montado. Para ext4 con `dumpe2fs`, puede estar montado o desmontado. Esta diferencia es una pregunta frecuente
+- **`smartctl -H` vs `smartctl -a`** — `-H` muestra solo el estado de salud (PASSED/FAILED), mientras que `-a` muestra toda la informacion SMART incluyendo atributos detallados. Para una verificacion rapida, `-H` es suficiente
+- **`e2fsck -f` es necesario antes de reducir con `resize2fs`** — sin la verificacion forzada (`-f`), `resize2fs` se niega a reducir el sistema de archivos. El orden es: desmontar -> `e2fsck -f` -> `resize2fs` -> reducir particion

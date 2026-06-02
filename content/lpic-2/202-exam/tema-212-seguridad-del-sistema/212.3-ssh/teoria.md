@@ -349,3 +349,29 @@ Host interno
 | `~/.ssh/id_*.pub` (clave pública) | 644 |
 | `~/.ssh/config` | 600 |
 | `~/.ssh/known_hosts` | 644 |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`PermitRootLogin prohibit-password`** — permite root con clave SSH pero NO con password. No confundir con `without-password` que es un alias obsoleto del mismo comportamiento. `no` bloquea root completamente, `yes` permite todo, `forced-commands-only` solo permite con clave Y un comando forzado.
+
+- **Orden de evaluacion de acceso: DenyUsers -> AllowUsers -> DenyGroups -> AllowGroups** — si defines `AllowUsers`, SOLO esos usuarios pueden acceder; todos los demas quedan implicitamente denegados. No es necesario (ni recomendable) usar `DenyUsers` y `AllowUsers` simultaneamente.
+
+- **Permisos de `~/.ssh/` = 700, `authorized_keys` = 600, clave privada = 600** — si los permisos son demasiado abiertos, SSH se niega a usar los archivos por seguridad. `chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys` es obligatorio.
+
+- **`-L` (tunel local) vs `-R` (tunel remoto) vs `-D` (proxy SOCKS)** — `-L 8080:destino:80` redirige puerto LOCAL 8080 al destino remoto. `-R 8080:localhost:80` expone el puerto local 80 como 8080 en el servidor remoto. `-D 1080` crea un proxy SOCKS. Confundir la direccion del tunel es error clasico.
+
+- **`ssh-copy-id` copia la clave publica, NUNCA la privada** — `ssh-copy-id` anade la clave publica al archivo `authorized_keys` del servidor remoto. Si una pregunta sugiere copiar la clave privada al servidor, es incorrecta.
+
+- **`ChrootDirectory` debe ser propiedad de root y no escribible por otros** — para SFTP confinado con `ForceCommand internal-sftp`, el directorio chroot debe ser `root:root` con permisos restrictivos. Si el directorio es propiedad del usuario, SSH rechaza la conexion.
+
+- **`ssh-keygen -R host` elimina la entrada de known_hosts** — cuando un servidor cambia su huella (reinstalacion, nueva clave), SSH muestra un error. La solucion es `ssh-keygen -R servidor` para eliminar la entrada antigua, no editar el archivo manualmente.
+
+- **SCP usa `-P` (mayuscula) para el puerto, SSH usa `-p` (minuscula)** — `scp -P 2222 archivo servidor:/ruta` vs `ssh -p 2222 usuario@servidor`. Mezclar mayusculas y minusculas es error frecuente.
+
+- **`ProxyJump` es el reemplazo moderno de `ProxyCommand`** — `ssh -J bastion usuario@destino` salta a traves del bastion. En `~/.ssh/config` se configura con `ProxyJump bastion`. Es mas limpio que el antiguo `ProxyCommand ssh -W %h:%p bastion`.
+
+- **Ed25519 es el algoritmo recomendado actualmente** — `ssh-keygen -t ed25519` genera claves mas seguras y rapidas que RSA. El examen puede preguntar cual es el algoritmo moderno preferido.

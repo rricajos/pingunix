@@ -346,3 +346,29 @@ olcTLSCertificateKeyFile: /etc/ssl/private/slapd-key.pem
 | `/etc/openldap/slapd.d/` | Directorio de configuración OLC (RHEL) |
 | `/var/lib/ldap/` | Base de datos del directorio |
 | `/etc/ldap/schema/` | Esquemas disponibles |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **OLC (cn=config) es el metodo recomendado, slapd.conf es el antiguo** — OLC almacena la configuracion como entradas LDAP en `/etc/ldap/slapd.d/`. Los archivos dentro de `slapd.d/` NO deben editarse a mano; se gestionan con `ldapmodify -Y EXTERNAL -H ldapi:///`. Si la pregunta dice "sin reiniciar el servidor", la respuesta es OLC.
+
+- **`slapadd` y `slapindex` requieren que slapd este DETENIDO** — estas herramientas acceden directamente a la base de datos, no a traves del demonio. Si slapd esta en ejecucion, puede corromper los datos. `slapcat` puede ejecutarse con el servidor activo, pero se recomienda detenerlo.
+
+- **Correspondencia de directivas: `suffix` -> `olcSuffix`, `rootdn` -> `olcRootDN`** — todas las directivas de slapd.conf tienen su equivalente OLC con prefijo `olc`. El examen puede preguntar la equivalencia en ambas direcciones.
+
+- **`mdb` es el backend recomendado, `hdb`/`bdb` estan obsoletos** — las instalaciones nuevas deben usar `mdb` (Memory-Mapped Database). `bdb` y `hdb` basados en BerkeleyDB estan deprecados. Si la pregunta pide el backend moderno, es `mdb`.
+
+- **`slappasswd` genera hashes de contrasena, no gestiona usuarios** — `slappasswd` solo genera el hash (ej: `{SSHA}xxxx`) para ponerlo en `rootpw` o en atributos `userPassword`. No crea ni modifica entradas en el directorio.
+
+- **ACLs de OpenLDAP: la primera regla que coincide gana** — las ACLs se evaluan en orden y la primera que coincide se aplica. Si una regla generica (`access to *`) esta antes de una especifica (`access to attrs=userPassword`), la generica prevalece. El orden importa.
+
+- **Niveles de acceso acumulativos: `write` incluye `read`, `search`, `compare`, `auth`** — `write` es un superconjunto que incluye todos los niveles inferiores. No es necesario dar `read` si ya se da `write`.
+
+- **`slaptest -f slapd.conf -F slapd.d/` convierte de formato antiguo a OLC** — este comando es la forma de migrar de slapd.conf a la configuracion dinamica OLC. No confundir con una verificacion de sintaxis normal.
+
+- **`-Y EXTERNAL` se usa con socket Unix (`ldapi:///`)** — la autenticacion EXTERNAL via socket Unix identifica al usuario por su UID del sistema. Funciona solo con conexiones locales por `ldapi:///`, no con `ldap://` remoto.
+
+- **`nis.schema` es necesario para cuentas POSIX** — sin cargar `nis.schema`, los objectClasses `posixAccount` y `posixGroup` no estan disponibles. Si se intenta crear usuarios POSIX sin este esquema, la operacion falla.

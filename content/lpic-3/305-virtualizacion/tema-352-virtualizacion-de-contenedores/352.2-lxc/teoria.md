@@ -339,3 +339,20 @@ cat /etc/subgid
 | veth + bridge | Modelo de red más común |
 | Unprivileged | Mapeo de UIDs para seguridad |
 | LXD vs LXC | LXD es capa superior con API REST |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Comandos `lxc-*` (LXC) vs `lxc` (LXD)** — `lxc-create`, `lxc-start`, `lxc-attach` son comandos de LXC nativo. `lxc launch`, `lxc exec`, `lxc list` son comandos del cliente LXD. Son herramientas completamente diferentes. El examen puede mezclarlos para confundir.
+- **`lxc-stop` vs `lxc-stop -k`** — `lxc-stop` sin flags envia SIGPWR al proceso init del contenedor para un apagado ordenado. Con `-k` (kill) envia SIGKILL para apagado forzado inmediato. Similar a `shutdown` vs `destroy` en libvirt.
+- **`lxc-copy` reemplazo a `lxc-clone`** — El comando antiguo `lxc-clone` ya no existe. Se usa `lxc-copy -n origen -N destino`. Con `-s` crea un clon con snapshot (copy-on-write), pero requiere backend compatible (btrfs, LVM, ZFS u overlay). Con backend `dir` no se puede usar `-s`.
+- **Contenedores privilegiados vs no privilegiados** — Los no privilegiados mapean UIDs del contenedor a rangos sin privilegios en el host (ej. UID 0 del contenedor = UID 100000 del host). Son mas seguros porque un escape no da root en el host. El examen preguntara cual es mas seguro.
+- **`lxc.idmap` sintaxis** — `lxc.idmap = u 0 100000 65536` mapea el UID 0 del contenedor al UID 100000 del host, con un rango de 65536 UIDs. La letra `u` es para UIDs, `g` para GIDs. El examen puede pedir interpretar una linea de idmap.
+- **`/var/lib/lxc/` vs `~/.local/share/lxc/`** — Los contenedores privilegiados (root) se almacenan en `/var/lib/lxc/`. Los no privilegiados (usuario) se almacenan en `~/.local/share/lxc/`. El examen puede preguntar donde buscar un contenedor no privilegiado.
+- **`lxc-attach` vs `lxc-console`** — `lxc-attach` ejecuta un nuevo proceso dentro de los namespaces del contenedor (como `docker exec`). `lxc-console` conecta a la consola TTY del contenedor (como una terminal virtual). Para salir de la consola se usa Ctrl+a seguido de q, no Ctrl+c.
+- **Backend `dir` no soporta snapshots eficientes** — El backend por defecto (`dir`) hace copias completas al hacer snapshots o clones. Solo btrfs, LVM, ZFS y overlay soportan snapshots eficientes con copy-on-write. El examen puede preguntar por que `lxc-copy -s` falla con el backend `dir`.
+- **`lxc.cgroup.*` vs `lxc.cgroup2.*`** — Las opciones `lxc.cgroup.*` son para cgroups v1, las `lxc.cgroup2.*` para cgroups v2. Usar la version incorrecta segun el sistema del host produce errores silenciosos. El examen puede mostrar un config con la version equivocada.
+- **LXC es contenedores de SISTEMA, Docker de APLICACION** — LXC ejecuta un sistema Linux completo con init, multiples servicios y usuarios (como una VM ligera). Docker ejecuta un unico proceso por contenedor. El examen puede preguntar que tecnologia es mas adecuada para migrar una VM existente (respuesta: LXC).

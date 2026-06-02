@@ -305,3 +305,18 @@ Opciones de almacenamiento en `journald.conf`:
 | `/etc/systemd/journald.conf` | Configuracion del journal |
 | `/var/log/journal/` | Almacenamiento persistente del journal |
 | `/proc/cmdline` | Parametros del kernel del arranque actual |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`grub-mkconfig` vs `grub-install`** — `grub-mkconfig` genera el archivo `grub.cfg` a partir de `/etc/default/grub` y los scripts de `/etc/grub.d/`; `grub-install` escribe el bootloader en el MBR o la ESP. Son complementarios, no equivalentes. Editar GRUB sin ejecutar `grub-mkconfig` despues no tiene efecto
+- **`GRUB_CMDLINE_LINUX` vs `GRUB_CMDLINE_LINUX_DEFAULT`** — `GRUB_CMDLINE_LINUX` se aplica a TODAS las entradas (incluida la de recuperacion); `GRUB_CMDLINE_LINUX_DEFAULT` solo se aplica a la entrada por defecto (no la de recuperacion). Confundir ambas es una trampa clasica
+- **`rescue.target` vs `emergency.target`** — `rescue.target` monta los sistemas de archivos de `/etc/fstab` y carga servicios basicos; `emergency.target` solo monta la raiz en solo lectura y no carga nada mas. Si fstab esta corrupto, `rescue.target` fallara y debes usar `emergency.target`
+- **Los cambios editando GRUB con la tecla `e` son temporales** — solo afectan al arranque actual. Para cambios permanentes, hay que editar `/etc/default/grub` y ejecutar `grub-mkconfig -o /boot/grub/grub.cfg`
+- **`grub.cfg` nunca se edita directamente** — cualquier cambio manual se pierde al ejecutar `grub-mkconfig`. Las personalizaciones van en `/etc/default/grub` o `/etc/grub.d/40_custom`
+- **`runlevel` 2, 3 y 4 son todos `multi-user.target`** — en SysV init, los runlevels 2, 3 y 4 tenian significados diferentes en algunas distribuciones. En systemd, todos se mapean a `multi-user.target`. El examen puede preguntar la equivalencia
+- **El journal de systemd NO es persistente por defecto** — si `/var/log/journal/` no existe, los logs se almacenan solo en memoria (`/run/log/journal/`) y se pierden al reiniciar. Hay que crear el directorio o configurar `Storage=persistent` en `journald.conf`
+- **`systemd.unit=` vs `init=`** — `systemd.unit=rescue.target` cambia el target de arranque de systemd; `init=/bin/bash` reemplaza completamente el proceso init. Con `init=/bin/bash` no hay systemd activo en absoluto

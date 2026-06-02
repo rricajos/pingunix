@@ -437,3 +437,19 @@ xfs_fsr -v /dev/sda1
 10. El **superbloque** contiene metadatos criticos del FS. Los sistemas ext mantienen copias de respaldo.
 
 11. Los **inodos** contienen metadatos de archivos pero NO el nombre del archivo.
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`fsck` NUNCA en un FS montado en lectura-escritura** — Ejecutar `fsck` en un filesystem montado puede causar corrupcion de datos. Debe estar desmontado o montado como solo lectura (`mount -o remount,ro`). El examen puede preguntar cual es el prerequisito para ejecutar `fsck`.
+- **Disco "lleno" con espacio libre: agotamiento de inodos** — `df -h` puede mostrar espacio disponible, pero `df -i` muestra que los inodos estan al 100%. Esto ocurre con muchos archivos pequenos. El examen puede presentar este escenario y preguntar la causa.
+- **`tune2fs` es solo para ext2/ext3/ext4** — No funciona con XFS ni otros filesystems. Para XFS se usa `xfs_info` (consulta) o `xfs_admin` (modificacion). El examen puede ofrecer `tune2fs` como opcion para un filesystem XFS.
+- **`xfs_repair` es la herramienta real; `fsck.xfs` no hace nada** — `fsck.xfs` existe como placeholder pero no realiza ninguna reparacion. La herramienta real para reparar XFS es `xfs_repair`. El examen puede ofrecer `fsck.xfs` como la forma correcta de reparar XFS.
+- **`du` vs `df`** — `du` estima el espacio usado por archivos/directorios; `df` muestra el espacio del filesystem completo. `du -sh /var` da el tamano de /var; `df -h /var` da el espacio total/usado/libre del filesystem donde esta /var.
+- **`dumpe2fs` muestra info del superbloque incluyendo backups** — `dumpe2fs /dev/sda1 | grep -i superblock` muestra las ubicaciones de las copias del superbloque. `e2fsck -b 32768 /dev/sda1` usa una copia de respaldo. El examen puede preguntar como reparar un superbloque corrupto.
+- **El inodo NO contiene el nombre del archivo** — El nombre se almacena en la entrada del directorio. El inodo contiene permisos, propietario, tamano, timestamps y punteros a bloques. El examen puede incluir "nombre del archivo" en una lista de contenidos del inodo.
+- **`xfs_info` requiere FS montado; `dumpe2fs` no** — `xfs_info` acepta el punto de montaje (requiere FS montado); `dumpe2fs` acepta el dispositivo (no necesita estar montado). El examen puede confundir los requisitos de cada herramienta.
+- **`xfs_fsr` funciona en FS montado** — A diferencia de `xfs_repair` que requiere FS desmontado, `xfs_fsr` (desfragmentador) se ejecuta en un XFS montado. El examen puede preguntar que herramienta XFS funciona con el FS montado.

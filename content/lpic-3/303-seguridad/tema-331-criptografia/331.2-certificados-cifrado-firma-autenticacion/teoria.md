@@ -312,3 +312,20 @@ default-key ID_CLAVE
 keyserver hkps://keys.openpgp.org
 auto-key-retrieve
 ```
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Web of Trust vs PKI jerarquico** — GPG/OpenPGP usa Web of Trust (descentralizado, los usuarios firman claves entre si); S/MIME usa PKI (jerarquico, las CAs emiten certificados). Nunca confundir los modelos de confianza
+- **`--clearsign` vs `--detach-sign` vs `--sign`** — `--clearsign` produce texto legible + firma integrada; `--detach-sign` genera un archivo de firma separado (.sig); `--sign` genera un archivo binario que combina datos + firma. Confundir el tipo de firma es un error clasico
+- **Validez de clave en Web of Trust** — una clave se considera valida si esta firmada por al menos 1 clave de confianza "full" O por 3 claves de confianza "marginal". No confundir "confianza del propietario" (trust) con "validez de la clave" (validity)
+- **`gpg2 --export` vs `gpg2 --export-secret-keys`** — `--export` exporta SOLO la clave publica; `--export-secret-keys` exporta la clave privada. Sin `--armor`, la salida es binaria. Exportar la clave privada accidentalmente es un riesgo de seguridad critico
+- **Cifrado simetrico vs asimetrico con GPG** — `gpg2 -c` (o `--symmetric`) cifra con passphrase (simetrico); `gpg2 -e -r destinatario` cifra con la clave publica del destinatario (asimetrico). En la practica, GPG usa cifrado hibrido: asimetrico para la clave de sesion y simetrico para los datos
+- **`hkps://` vs `hkp://`** — `hkps://` usa HTTPS (cifrado, puerto 443); `hkp://` usa HTTP sin cifrar en el puerto 11371. El examen puede preguntar el puerto por defecto de HKP
+- **`gpg-agent` cache TTL** — `default-cache-ttl` controla cuanto tiempo se cachea la passphrase tras cada uso; `max-cache-ttl` es el limite absoluto independientemente del uso. Si ambos estan configurados, se aplica el que venza primero
+- **S/MIME usa `openssl smime`, no `gpg`** — S/MIME trabaja con certificados X.509 y se gestiona con OpenSSL. No mezclar comandos de GPG con operaciones S/MIME
+- **MD5 y SHA-1 estan rotos** — MD5 (128 bits) tiene colisiones conocidas desde 2004; SHA-1 (160 bits) desde 2017. Para el examen, solo SHA-256 o superior se consideran seguros. Pero deben conocerse los tamaños de salida de todos
+- **`--delete-secret-keys` antes de `--delete-keys`** — para eliminar un par de claves completo, primero se debe borrar la clave privada y luego la publica. Intentar borrar la publica primero cuando existe la privada genera un error

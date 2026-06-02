@@ -274,3 +274,18 @@ $ modinfo ext4
 | `/usr/src/linux/Makefile` | Makefile principal con version |
 | `/lib/modules/<version>/` | Modulos compilados del kernel |
 | `/proc/config.gz` | Configuracion del kernel en ejecucion (si disponible) |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`vmlinux` vs `vmlinuz` vs `bzImage`** — `vmlinux` es el kernel sin comprimir (formato ELF, para depuracion), `vmlinuz` es el nombre generico del kernel comprimido instalado en `/boot/`, y `bzImage` es el formato de compilacion que se carga en memoria alta. La "b" de bzImage viene de "big", no de bzip2
+- **`zImage` vs `bzImage`** — `zImage` carga el kernel en los primeros 640 KB de RAM (memoria baja) y esta obsoleto para x86. `bzImage` carga en memoria alta (por encima de 1 MB). El examen puede preguntar cual es el formato actual estandar
+- **La version del kernel se define en el `Makefile`, no en `.config`** — las variables `VERSION`, `PATCHLEVEL`, `SUBLEVEL` y `EXTRAVERSION` estan en el Makefile principal del codigo fuente, no en el archivo de configuracion
+- **`=y` vs `=m` vs no configurado** — `y` compila la funcionalidad dentro del kernel (built-in), `m` la compila como modulo cargable, y las lineas comentadas con `# CONFIG_X is not set` indican que esta deshabilitada. Confundir built-in con modulo es un error clasico
+- **`/proc/config.gz` no siempre existe** — solo esta disponible si `CONFIG_IKCONFIG_PROC=y` fue habilitado durante la compilacion. La alternativa es `/boot/config-$(uname -r)`
+- **Linux es monolitico CON soporte de modulos** — no es un microkernel. Linux es un kernel monolitico que soporta carga dinamica de modulos, lo cual es diferente de un kernel modular puro (como un microkernel)
+- **`patch -p1` no `patch -p0`** — los parches del kernel se aplican con `-p1` para eliminar el primer componente de la ruta (tipicamente `a/` o `b/`). Usar `-p0` hara que las rutas no coincidan
+- **`/usr/src/linux` es un enlace simbolico** — apunta al directorio real del codigo fuente. Algunos comandos dependen de que este enlace exista y apunte a la version correcta

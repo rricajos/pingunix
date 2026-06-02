@@ -322,3 +322,20 @@ lastb -n 10                      # Ultimos 10 intentos fallidos
 8. **`nmap host`** escanea puertos abiertos
 9. **`visudo`** es la forma segura de editar `/etc/sudoers`
 10. **`who`** = conectados ahora, **`w`** = conectados + actividad, **`last`** = historico
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`find -perm -4000` vs `-perm /4000` vs `-perm 4000`** — `-perm -4000` busca archivos que tengan AL MENOS el bit SUID (AND); `-perm /4000` busca archivos que tengan ALGUNO de los bits (OR); `-perm 4000` busca permisos EXACTOS. El examen puede preguntar cual es la forma correcta de buscar todos los archivos SUID
+- **SUID en directorios NO tiene efecto** — El bit SUID (4000) solo afecta a archivos ejecutables. En directorios, el bit relevante es SGID (2000), que hace que los archivos nuevos hereden el grupo del directorio. El examen puede preguntar el efecto de SUID en un directorio (respuesta: ninguno)
+- **`who` vs `w` vs `last`** — `who` muestra usuarios conectados ahora; `w` muestra usuarios conectados Y que estan haciendo (mas detallado); `last` muestra historico de logins (lee `/var/log/wtmp`). `lastb` muestra intentos fallidos (lee `/var/log/btmp`)
+- **`lsof -i :80` vs `fuser -n tcp 80`** — Ambos muestran que proceso usa el puerto 80, pero con sintaxis diferente. `lsof` usa `-i :puerto`; `fuser` usa `-n tcp puerto`. El examen puede pedir que identifiques el comando correcto
+- **`visudo` SIEMPRE para editar sudoers** — Nunca editar `/etc/sudoers` directamente con un editor de texto. `visudo` valida la sintaxis antes de guardar, previniendo errores que podrian bloquear el acceso a sudo
+- **`sudo -l` lista los permisos del usuario** — Muestra que comandos puede ejecutar el usuario actual con sudo. Es la forma correcta de verificar los privilegios sudo sin necesidad de leer `/etc/sudoers`
+- **Soft limit vs Hard limit en ulimit** — El soft limit es el limite actual que el usuario puede aumentar hasta el hard limit; el hard limit solo puede ser aumentado por root. `ulimit -S` muestra soft, `ulimit -H` muestra hard
+- **`/etc/security/limits.conf` se aplica via PAM** — Los limites definidos aqui solo funcionan si el modulo PAM `pam_limits` esta habilitado. `@grupo` define limites para un grupo, `*` para todos los usuarios
+- **`fuser -k` MATA procesos** — `fuser archivo` solo muestra PIDs; `fuser -k archivo` envia SIGKILL a todos los procesos que usan el archivo. Es una operacion destructiva. `-i` agrega confirmacion interactiva
+- **`nmap -sS` (SYN scan) requiere root** — El escaneo SYN stealth necesita privilegios de root para crear paquetes raw. `nmap -sT` (TCP connect) no requiere root pero es mas detectable. El examen puede preguntar que tipo de escaneo requiere root

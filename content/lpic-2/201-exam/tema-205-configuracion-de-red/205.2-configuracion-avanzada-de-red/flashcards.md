@@ -11,7 +11,7 @@ subtema: "205.2"
 
 # Flashcards: 205.2 - Configuracion Avanzada De Red
 
-> 38 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 39 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="205.2">
 </div>
@@ -691,6 +691,24 @@ subtema: "205.2"
 <div class="flashcard-back">
 
 **R:** El comando `tc` (traffic control) permite controlar el ancho de banda, la latencia y la priorizacion del trafico de red.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="205.2">
+</div>
+
+<div class="flashcard" data-id="205.2-fc-039">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

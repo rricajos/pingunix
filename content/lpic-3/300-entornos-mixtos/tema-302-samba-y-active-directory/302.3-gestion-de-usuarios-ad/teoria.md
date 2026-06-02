@@ -345,3 +345,19 @@ samba-tool ou delete "OU=Ventas,DC=empresa,DC=com"
 - idmap mapea SIDs a UIDs/GIDs con backends: tdb, rid, ad, autorid
 - Las OUs organizan objetos jerárquicamente dentro del dominio
 - RFC2307 permite almacenar atributos POSIX directamente en AD
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`samba-tool user create` vs `smbpasswd -a`** — `samba-tool user create` es para dominios AD (crea usuario en el directorio LDAP de AD). `smbpasswd -a` es para usuarios locales Samba (requiere usuario UNIX previo). Usar smbpasswd en un AD DC es incorrecto.
+- **Politica de complejidad de contraseñas AD** — Las contraseñas deben cumplir requisitos de complejidad (mayusculas, minusculas, numeros, caracteres especiales, minimo 7 caracteres). Si `samba-tool user create` falla, la causa suele ser que la contraseña no cumple la politica.
+- **PSO (Fine-Grained Password Policy) vs politica global** — La politica global aplica a todos. Las PSO aplican a grupos especificos con mayor prioridad. Las preguntas suelen presentar escenarios donde un usuario tiene una PSO diferente a la politica global.
+- **idmap backend `rid` vs `ad` vs `autorid`** — `rid` calcula UID/GID algoritmicamente (predecible, sin datos extra en AD). `ad` lee atributos RFC2307 de AD (requiere uidNumber/gidNumber configurados). `autorid` asigna automaticamente rangos por dominio. Confundir cuando usar cada uno es trampa clasica.
+- **`ldbsearch` vs `ldapsearch`** — `ldbsearch -H ldap://localhost` consulta el LDAP de Samba usando su propia libreria LDB. `ldapsearch` es la herramienta LDAP estandar. Ambos funcionan contra el AD de Samba pero con sintaxis diferente.
+- **Grupos Security vs Distribution** — Los grupos Security se usan para asignar permisos (tienen SID). Los grupos Distribution son solo para listas de correo. Las preguntas piden identificar el tipo correcto para cada escenario.
+- **RSAT necesario para GPOs complejas** — `samba-tool gpo` puede crear y vincular GPOs, pero la edicion del contenido (configuraciones de registro, scripts) requiere RSAT desde Windows. Esta limitacion es pregunta frecuente.
+- **`sAMAccountName` vs `userPrincipalName`** — `sAMAccountName` es el nombre pre-Windows 2000 (formato DOMINIO\usuario). `userPrincipalName` es formato UPN (usuario@dominio.com). Las preguntas LDAP suelen pedir buscar por uno u otro atributo.
+- **OUs y `samba-tool user move`** — Los usuarios se crean en el contenedor Users por defecto, no en una OU. Moverlos a OUs requiere `samba-tool user move`. Las GPOs se vinculan a OUs, no al contenedor Users por defecto.

@@ -183,3 +183,16 @@ smbclient //servidor/namespace/datos -U usuario
 ```
 
 > **Para el examen:** La seguridad de DFS tiene dos niveles: los permisos de la raíz DFS (quién puede ver los enlaces) y los permisos de los shares destino (quién puede acceder a los datos). Ambos se evalúan independientemente.
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Dos parametros necesarios para DFS** — Se requiere `host msdfs = yes` en `[global]` Y `msdfs root = yes` en el share. Olvidar cualquiera de los dos desactiva DFS. Las preguntas suelen presentar configuraciones donde falta uno de ellos.
+- **Enlaces DFS son symlinks con prefijo `msdfs:`** — Los enlaces se crean como `ln -s "msdfs:servidor\share" /ruta/dfs/enlace`. El formato usa backslash (`\`) no forward slash. Multiples destinos se separan con coma. Errores en el formato del symlink son causa comun de fallo.
+- **`msdfs proxy` vs `msdfs root`** — `msdfs proxy` redirige un share COMPLETO a otro servidor sin necesitar symlinks ni `msdfs root`. `msdfs root` convierte un share en raiz DFS con enlaces. Son mecanismos diferentes; las preguntas piden identificar cual usar en cada escenario.
+- **DFS NO proporciona replicacion de datos** — DFS en Samba solo redirige clientes a los servidores correctos. NO replica datos entre servidores. Para replicacion se necesitan herramientas externas (rsync, etc.). Confundir DFS con DFS-R (replicacion) es error clasico.
+- **Failover con multiples destinos** — `ln -s "msdfs:srv1\datos,srv2\datos" /dfs/datos` proporciona failover: si srv1 falla, el cliente intenta srv2. El cliente selecciona aleatoriamente entre destinos disponibles. `msdfs shuffle referrals` controla la aleatorizacion.
+- **Seguridad en dos niveles** — Los permisos de la raiz DFS (quien ve los enlaces) y los permisos de los shares destino (quien accede a los datos) se evaluan independientemente. Un usuario puede ver un enlace DFS pero no tener acceso al share destino.

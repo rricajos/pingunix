@@ -11,7 +11,7 @@ subtema: "201.3"
 
 # Flashcards: 201.3 - Gestion Del Kernel En Ejecucion
 
-> 35 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 37 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="201.3">
 </div>
@@ -577,6 +577,24 @@ subtema: "201.3"
 <div class="flashcard" data-id="201.3-fc-032">
 <div class="flashcard-front">
 
+**P:** Tip de examen: Los ajustes de `sysctl` mas preguntados son: `ip_forward` (enrutamiento), `swapp...
+
+</div>
+<div class="flashcard-back">
+
+**R:** Los ajustes de `sysctl` mas preguntados son: `ip_forward` (enrutamiento), `swappiness` (memoria), `tcp_syncookies` (seguridad) y `icmp_echo_ignore_all` (seguridad). Recuerda que `-w` aplica en tiempo real y `/etc/sysctl.conf` hace los cambios permanentes.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="201.3">
+</div>
+
+<div class="flashcard" data-id="201.3-fc-033">
+<div class="flashcard-front">
+
 **P:** Que hace el comando `/proc/sys/kernel/`?
 
 </div>
@@ -592,7 +610,7 @@ subtema: "201.3"
 <div class="flashcard-deck" data-subtema="201.3">
 </div>
 
-<div class="flashcard" data-id="201.3-fc-033">
+<div class="flashcard" data-id="201.3-fc-034">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `kernel.panic`?
@@ -610,7 +628,7 @@ subtema: "201.3"
 <div class="flashcard-deck" data-subtema="201.3">
 </div>
 
-<div class="flashcard" data-id="201.3-fc-034">
+<div class="flashcard" data-id="201.3-fc-035">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `kernel.sysrq`?
@@ -628,7 +646,7 @@ subtema: "201.3"
 <div class="flashcard-deck" data-subtema="201.3">
 </div>
 
-<div class="flashcard" data-id="201.3-fc-035">
+<div class="flashcard" data-id="201.3-fc-036">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `kernel/`?
@@ -637,6 +655,24 @@ subtema: "201.3"
 <div class="flashcard-back">
 
 **R:** Directorio con modulos organizados por categoria
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="201.3">
+</div>
+
+<div class="flashcard" data-id="201.3-fc-037">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

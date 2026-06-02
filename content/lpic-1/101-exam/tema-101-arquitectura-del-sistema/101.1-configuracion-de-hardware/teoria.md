@@ -310,3 +310,19 @@ lsdev                  # Requiere paquete procinfo
 | `/etc/udev/rules.d/` | Reglas personalizadas de udev |
 | `/lib/modules/` | Modulos del kernel |
 | `/etc/modprobe.d/` | Configuracion de modulos |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`modprobe` vs `insmod`** — `modprobe` resuelve dependencias automaticamente y usa el nombre del modulo; `insmod` requiere la ruta completa al archivo `.ko` y NO resuelve dependencias. El examen pregunta cual usar en cada situacion.
+- **`modprobe -r` vs `rmmod`** — `modprobe -r` elimina el modulo y sus dependencias no utilizadas; `rmmod` solo elimina el modulo especificado. Ambos fallan si el modulo esta en uso.
+- **`/proc/` es virtual, no esta en disco** — Los archivos en `/proc/` se generan dinamicamente por el kernel. No ocupan espacio en disco. El examen puede preguntar si `/proc/cpuinfo` es un archivo real o virtual.
+- **`/sys/` vs `/proc/`** — `/sys/` (sysfs) expone informacion estructurada de dispositivos y drivers; `/proc/` (procfs) expone informacion de procesos y del kernel. Ambos son sistemas de archivos virtuales pero con propositos distintos.
+- **`lspci -v` vs `lspci -k`** — `-v` muestra informacion detallada del dispositivo; `-k` muestra especificamente que modulo del kernel esta usando cada dispositivo. El examen puede pedir identificar que modulo gestiona un hardware.
+- **`udevadm monitor` vs `udevadm info`** — `monitor` muestra eventos en tiempo real (conectar/desconectar dispositivos); `info` muestra informacion estatica de un dispositivo especifico.
+- **Los archivos en `/etc/modprobe.d/` no cargan modulos** — Solo configuran opciones, alias y blacklists. Para cargar modulos al arranque se usa `/etc/modules` o `/etc/modules-load.d/`.
+- **`lsmod` lee `/proc/modules`** — `lsmod` simplemente formatea el contenido de `/proc/modules`. Ambos muestran la misma informacion de modulos cargados actualmente.
+- **`/dev/` lo gestiona udev, no se crea manualmente** — En sistemas modernos, los archivos de dispositivo en `/dev/` son creados automaticamente por udev. Solo en casos excepcionales se usa `mknod` para crearlos manualmente.

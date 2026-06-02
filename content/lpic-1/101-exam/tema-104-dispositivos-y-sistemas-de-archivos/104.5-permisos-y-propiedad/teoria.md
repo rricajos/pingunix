@@ -401,3 +401,19 @@ chmod 6755 archivo
 9. Los permisos base para umask son `666` (archivos) y `777` (directorios).
 
 10. **SGID en archivo vs directorio:** En archivo, ejecuta con permisos del grupo. En directorio, hereda el grupo.
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`umask 022` produce archivos 644, NO 755** — Los archivos base son 666 (no 777). Directorios base son 777. Con umask 022: archivos = 644, directorios = 755. El examen puede confundir los permisos base de archivos y directorios.
+- **`s` minuscula vs `S` mayuscula** — `s` (minuscula) = SUID/SGID activo Y permiso de ejecucion activo. `S` (mayuscula) = SUID/SGID activo pero SIN permiso de ejecucion (inutil en la practica). Lo mismo aplica a sticky bit: `t` vs `T`. El examen puede preguntar que significa `S` o `T`.
+- **SGID en directorio vs en archivo** — En un archivo ejecutable, SGID hace que se ejecute con permisos del grupo. En un directorio, SGID hace que los archivos nuevos hereden el grupo del directorio. Son comportamientos completamente diferentes. El examen puede confundir ambos.
+- **`chmod 4755` vs `chmod u+s`** — Ambos establecen SUID. El digito extra (4=SUID, 2=SGID, 1=sticky) se antepone a los 3 digitos normales. El examen puede preguntar que hace `chmod 2775` (SGID + rwxrwxr-x).
+- **Sticky bit: solo el propietario puede borrar SUS archivos** — En un directorio con sticky bit (`/tmp`), incluso con permisos `777`, un usuario solo puede borrar archivos que le pertenecen. Root y el propietario del directorio tambien pueden borrar. El examen puede preguntar quien puede borrar archivos en `/tmp`.
+- **Solo root puede cambiar el propietario con `chown`** — Un usuario normal NO puede cambiar el propietario de un archivo, ni siquiera el suyo. Solo puede cambiar el grupo a grupos a los que pertenece. El examen puede preguntar si un usuario normal puede usar `chown`.
+- **Permiso `x` en directorio = acceder/entrar** — Sin `x` en un directorio, no se puede hacer `cd` ni acceder a archivos dentro, aunque se tenga `r`. `r` sin `x` permite listar nombres pero no acceder a los archivos. El examen puede preguntar que pasa con `r` pero sin `x` en un directorio.
+- **`umask` NO es una resta aritmetica simple** — Tecnicamente es una operacion AND NOT de bits. Para valores comunes funciona como resta, pero `umask 077` con base 666 da 600 (no 589). El examen usa valores donde la resta funciona, pero es importante entender que es una operacion de bits.
+- **`/usr/bin/passwd` tiene SUID de root** — Es el ejemplo clasico. Permite a usuarios normales cambiar su contrasena escribiendo en `/etc/shadow` (propiedad de root). El examen puede preguntar por que un usuario normal puede cambiar su contrasena.

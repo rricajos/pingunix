@@ -11,7 +11,7 @@ subtema: "104.7"
 
 # Flashcards: 104.7 - Ubicacion De Archivos Del Sistema
 
-> 34 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 35 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="104.7">
 </div>
@@ -619,6 +619,24 @@ subtema: "104.7"
 <div class="flashcard-back">
 
 **R:** 1. **`/bin` y `/sbin`** contienen binarios esenciales. En distros modernas con **UsrMerge**, son enlaces simbolicos a `/usr/bin` y `/usr/sbin`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="104.7">
+</div>
+
+<div class="flashcard" data-id="104.7-fc-035">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

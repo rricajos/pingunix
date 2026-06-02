@@ -283,3 +283,18 @@ tail -f /var/log/samba/log.smbd
 # Verificar comunicación Kerberos cross-realm
 kvno krbtgt/EMPRESA.LOCAL@EMPRESA.IPA
 ```
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Trust (recomendado) vs Winsync (obsoleto)** — Trust es federado (los datos de usuario se quedan en AD, no se duplican). Winsync sincroniza/copia datos de AD a IPA (escalabilidad limitada, mantenimiento alto). Las preguntas piden identificar el metodo recomendado y sus diferencias.
+- **Forest trust vs External trust** — Forest trust abarca TODO el bosque AD (todos los dominios, transitivo). External trust abarca UN dominio especifico (no transitivo). Para la mayoria de escenarios se recomienda forest trust. Las preguntas piden identificar el tipo correcto.
+- **`ipa-adtrust-install` ANTES de crear el trust** — Este comando prepara FreeIPA para relaciones de confianza con AD (instala Samba, configura SIDs). Debe ejecutarse ANTES de `ipa trust-add`. `--add-sids` genera SIDs para usuarios IPA existentes (necesario para que sean visibles en AD).
+- **DNS bidireccional obligatorio** — Ambos dominios deben resolver mutuamente sus registros. FreeIPA debe resolver el DC de AD y viceversa. `ipa dnsforwardzone-add` configura reenvio DNS hacia AD. Sin DNS bidireccional, el trust no funciona.
+- **Mapeo de grupos: externo -> POSIX (tres pasos)** — 1) Crear grupo externo IPA (`--external`). 2) Añadir grupo AD como miembro externo. 3) Vincular grupo externo a grupo POSIX IPA. Los grupos externos NO pueden usarse directamente en HBAC o sudo; solo los POSIX.
+- **`ipa-ad-trust` vs `ipa-ad-trust-posix` para ID ranges** — `ipa-ad-trust` genera UIDs automaticamente desde el SID (no requiere atributos POSIX en AD). `ipa-ad-trust-posix` lee uidNumber/gidNumber del AD (requiere RFC2307). Elegir el incorrecto causa fallos de mapeo.
+- **Usuarios AD se referencian como `usuario@dominio.ad`** — Con trust configurado, los usuarios AD se acceden con formato completo: `id juan@empresa.local`. SSSD descubre automaticamente los subdominios (dominios AD de confianza) via `subdomains_provider = ipa`.
+- **`ipa trust-add --trust-secret` vs `--admin`** — `--admin` usa credenciales de administrador AD directamente. `--trust-secret` usa un secreto compartido previamente configurado en ambos lados (mas seguro, no requiere exponer credenciales admin). Las preguntas piden identificar el metodo mas seguro.

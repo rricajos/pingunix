@@ -11,7 +11,7 @@ subtema: "103.3"
 
 # Flashcards: 103.3 - Gestion Basica De Archivos
 
-> 36 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 37 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="103.3">
 </div>
@@ -655,6 +655,24 @@ subtema: "103.3"
 <div class="flashcard-back">
 
 **R:** `dd` copia y convierte datos a nivel de bloques. Es muy potente y peligroso si se usa incorrectamente.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.3">
+</div>
+
+<div class="flashcard" data-id="103.3-fc-037">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

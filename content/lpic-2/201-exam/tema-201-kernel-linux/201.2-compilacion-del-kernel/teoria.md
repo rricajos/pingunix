@@ -347,3 +347,18 @@ $ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- -j$(nproc)
 8. Actualizar GRUB     → update-grub / grub2-mkconfig
 9. Reiniciar           → reboot
 ```
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`make mrproper` vs `make clean` vs `make distclean`** — `clean` elimina archivos objeto pero conserva `.config`. `mrproper` elimina todo, incluyendo `.config`. `distclean` es como `mrproper` pero ademas elimina archivos de editor y parches. Ejecutar `mrproper` sin respaldar `.config` es un error irreversible
+- **El orden de compilacion e instalacion es critico** — la secuencia correcta es: configurar -> `make bzImage` -> `make modules` -> `make modules_install` -> `make install`. Invertir `modules_install` con `install` o saltarse pasos causa errores
+- **`make oldconfig` vs `make olddefconfig`** — `oldconfig` pregunta interactivamente por cada opcion nueva; `olddefconfig` acepta los valores por defecto automaticamente sin preguntar. El examen puede presentar escenarios donde uno es preferible al otro
+- **`mkinitramfs` vs `dracut` vs `mkinitrd`** — `mkinitramfs` es Debian/Ubuntu, `dracut` es Red Hat/Fedora (moderno), `mkinitrd` es legacy. El examen puede preguntar cual corresponde a cada familia de distribuciones
+- **DKMS recompila modulos de terceros automaticamente** — cuando se instala un nuevo kernel, DKMS reconstruye modulos como los drivers de NVIDIA o VirtualBox. Sin DKMS, estos modulos dejan de funcionar tras una actualizacion del kernel
+- **`make -j$(nproc)` no cambia el resultado, solo la velocidad** — la opcion `-j` paraleliza la compilacion usando multiples nucleos de CPU. No afecta al binario resultante
+- **`CONFIG_LOCALVERSION` anade un sufijo a la version** — permite identificar kernels personalizados (por ejemplo, `5.15.60-miservidor`). Sin esto, un kernel personalizado puede confundirse con el original de la distribucion
+- **Los headers del kernel no son el codigo fuente completo** — los headers (`linux-headers-*`) contienen solo lo necesario para compilar modulos externos, no para recompilar el kernel entero. Se acceden desde `/lib/modules/<version>/build`

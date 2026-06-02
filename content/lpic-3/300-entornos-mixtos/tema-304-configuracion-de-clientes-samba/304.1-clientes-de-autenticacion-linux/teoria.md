@@ -361,3 +361,19 @@ sudo_provider = ad
 | Integración con FreeIPA  | No                    | Sí (nativo)             |
 | Configuración            | smb.conf              | sssd.conf               |
 | Recomendado para         | Samba member server   | Workstations Linux      |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`pam_winbind.so` vs `pam_sss.so`** — Son modulos PAM mutuamente excluyentes para el mismo proposito. `pam_winbind` es de Samba/Winbind, `pam_sss` es de SSSD. Usar ambos simultaneamente en PAM causa comportamiento impredecible. Las preguntas piden identificar el modulo correcto segun la solucion elegida.
+- **Orden en nsswitch.conf: `files` siempre primero** — `passwd: files winbind` o `passwd: files sss`. `files` primero asegura que los usuarios locales (root, daemon) se resuelven antes que los de dominio. Invertir el orden puede causar problemas de arranque.
+- **SSSD con `id_provider = ad` vs `id_provider = ldap`** — `id_provider = ad` usa el protocolo nativo de AD (descubre automaticamente DCs, soporta GPOs). `id_provider = ldap` trata el AD como un servidor LDAP generico (menos funcional). Para AD, siempre preferir `ad`.
+- **`ldap_id_mapping = true` vs `false`** — Con `true`, SSSD genera UIDs/GIDs automaticamente a partir del SID (no requiere atributos POSIX en AD). Con `false`, lee uidNumber/gidNumber de AD (requiere RFC2307). Las preguntas piden saber la implicacion de cada opcion.
+- **`use_fully_qualified_names = false` para login sin dominio** — Con `true`, los usuarios deben loguearse como `usuario@dominio`. Con `false`, basta con `usuario`. Equivalente a `winbind use default domain = yes` en Winbind. Las preguntas presentan fallos de login por esta opcion.
+- **Cuatro tipos de modulos PAM: auth, account, password, session** — Todos deben configurarse para integracion completa con AD. `auth` verifica credenciales, `account` verifica autorizacion, `password` cambia contraseña, `session` gestiona inicio/fin de sesion. Omitir cualquiera causa fallos parciales.
+- **`pam_mkhomedir` vs `oddjob-mkhomedir`** — `pam_mkhomedir` crea homes al primer login. `oddjob` es preferido en Red Hat con SELinux porque ejecuta como servicio privilegiado con los contextos SELinux correctos. La pregunta suele ser cual usar en RHEL/CentOS.
+- **Realm Kerberos en MAYUSCULAS obligatorio** — `default_realm = EMPRESA.LOCAL` (correcto) vs `default_realm = empresa.local` (incorrecto). Las preguntas presentan configuraciones krb5.conf con el realm en minusculas como causa de fallo.
+- **`cache_credentials = true` para login offline** — Tanto SSSD como Winbind (`winbind offline logon = yes`) permiten autenticacion con credenciales en cache cuando el DC no esta disponible. Las preguntas presentan escenarios de conectividad intermitente.

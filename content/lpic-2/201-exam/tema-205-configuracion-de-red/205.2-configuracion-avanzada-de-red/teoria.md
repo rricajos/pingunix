@@ -459,3 +459,18 @@ sysctl net.ipv6.conf.eth0.use_tempaddr
 # ARP proxy
 /proc/sys/net/ipv4/conf/all/proxy_arp
 ```
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`ip_forward=1` es obligatorio para que Linux actue como router** — sin habilitar `/proc/sys/net/ipv4/ip_forward`, el kernel descarta los paquetes destinados a otras redes aunque tenga las rutas configuradas. Para IPv6 es `net.ipv6.conf.all.forwarding`
+- **Policy routing: `ip rule` determina la tabla, `ip route` define las rutas en la tabla** — primero creas rutas en una tabla personalizada con `ip route add ... table X`, luego creas reglas con `ip rule add from ... table X`. Sin la regla, la tabla nunca se consulta
+- **VLANs requieren el modulo `8021q`** — sin cargar el modulo del kernel (`modprobe 8021q`), no se pueden crear interfaces VLAN. La interfaz se nombra tipicamente como `eth0.100` donde 100 es el VLAN ID
+- **`tc` controla trafico de SALIDA, no de entrada** — `tc` (traffic control) solo puede aplicar shaping al trafico que sale por una interfaz. Para controlar trafico entrante, se necesita un dispositivo IFB (Intermediate Functional Block) o filtrado con iptables
+- **`netem` es para simular condiciones de red, no para produccion** — `tc qdisc add dev eth0 root netem delay 100ms` simula latencia para pruebas. Confundir `netem` con `tbf` o `htb` (que si son para limitar ancho de banda real) es un error
+- **`brctl` esta deprecado, usar `ip link add type bridge`** — el examen puede preguntar tanto el metodo moderno (`ip link`) como el legacy (`brctl`). `bridge link show` reemplaza a `brctl show`
+- **Tuneles GRE vs SIT vs IPIP** — GRE encapsula cualquier protocolo sobre IP, SIT es especificamente IPv6 sobre IPv4 (6in4), IPIP es IPv4 sobre IPv4. Confundir el tipo de tunel con el protocolo encapsulado es un error comun
+- **Link-local (`fe80::`) siempre existe en IPv6** — toda interfaz con IPv6 habilitado tiene automaticamente una direccion link-local. No necesita configuracion ni DHCP. Es la primera direccion que se verifica al diagnosticar IPv6

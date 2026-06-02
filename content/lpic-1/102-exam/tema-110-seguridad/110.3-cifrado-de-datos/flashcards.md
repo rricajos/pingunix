@@ -11,7 +11,7 @@ subtema: "110.3"
 
 # Flashcards: 110.3 - Cifrado De Datos
 
-> 31 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 32 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="110.3">
 </div>
@@ -565,6 +565,24 @@ subtema: "110.3"
 <div class="flashcard-back">
 
 **R:** 1. **ssh-keygen**: `-t` tipo (rsa, ecdsa, ed25519), `-b` bits. Ed25519 es el recomendado
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="110.3">
+</div>
+
+<div class="flashcard" data-id="110.3-fc-032">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

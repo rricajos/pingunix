@@ -315,3 +315,27 @@ freshclam
 | `/etc/postfix/transport` | Mapa de transporte |
 | `/etc/spamassassin/local.cf` | Configuración de SpamAssassin |
 | `/etc/amavis/conf.d/` | Configuración de amavisd-new |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Maildir con barra final (`/`), mbox sin barra** — en Postfix, `home_mailbox = Maildir/` crea un directorio Maildir con subdirectorios `cur/`, `new/`, `tmp/`. Sin barra, se trata como archivo mbox. En Procmail, el destino `.carpeta/` (con `/`) es Maildir; sin barra es mbox. Este detalle es trampa constante.
+
+- **Procmail: `:0 c` copia el mensaje y continua, `:0` sin `c` mueve y detiene** — sin el flag `c`, el mensaje se entrega al destino y se deja de procesar. Con `c` se hace una copia y se continua evaluando las siguientes reglas.
+
+- **amavisd-new escucha en puerto 10024 y devuelve en 10025** — Postfix envia al 10024, amavisd-new procesa (antivirus + antispam) y devuelve al 10025. Si la pregunta pide los puertos de la cadena de filtrado, son estos.
+
+- **`postmap` es OBLIGATORIO despues de editar archivos de mapa** — tras modificar `/etc/postfix/vmailbox`, `/etc/postfix/transport` u otros mapas hash, se debe ejecutar `postmap /etc/postfix/archivo` para regenerar el `.db`. Sin esto, Postfix usa la version anterior.
+
+- **`virtual_mailbox_domains` y `mydestination` son mutuamente excluyentes** — un dominio NO puede estar en ambas directivas. Si esta en `mydestination`, Postfix lo trata como local. Si esta en `virtual_mailbox_domains`, lo trata como virtual.
+
+- **Sieve usa `fileinto` para mover, `redirect` para reenviar, `discard` para descartar** — `fileinto "Junk"` mueve a carpeta. `redirect "otro@email.com"` reenvia. `reject "mensaje"` rechaza con notificacion. `discard` descarta silenciosamente. No confundir `redirect` con `reject`.
+
+- **SpamAssassin: `required_score 5.0` es el umbral por defecto** — un mensaje con puntuacion >= 5.0 se marca como spam. Bajar el umbral aumenta la deteccion pero tambien los falsos positivos.
+
+- **`freshclam` actualiza las firmas de ClamAV, no escanea** — `freshclam` descarga actualizaciones de firmas de virus. El escaneo lo hace `clamscan` (bajo demanda) o `clamd` (demonio residente). No confundir los componentes.
+
+- **Procmail: `! usuario@dominio` reenvia, `| programa` ejecuta un pipe** — el caracter `!` al inicio del destino reenvia el correo. El pipe `|` ejecuta un programa externo pasandole el mensaje por stdin.

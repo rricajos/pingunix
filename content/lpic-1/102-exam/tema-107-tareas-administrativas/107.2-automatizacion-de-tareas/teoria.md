@@ -464,3 +464,20 @@ systemd-run --on-calendar="*-*-* 03:00:00" --timer-property=Persistent=true /usr
 10. **systemd timers:** Usan archivos `.timer` + `.service`. OnCalendar para programacion
 11. **`systemd-run`:** Tareas unicas con systemd. `--on-active=30s` para ejecucion relativa, `--on-calendar` para momento especifico
 12. `systemctl list-timers` para ver timers activos
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **El campo 5 de crontab es dia de la semana (0-7, donde 0 Y 7 son domingo)** — La confusion con mes/dia es una trampa clasica. El orden es: minuto, hora, dia del mes, mes, dia de la semana. Tanto 0 como 7 representan domingo
+- **Crontab del sistema tiene campo USUARIO extra** — El crontab de usuario tiene 5 campos + comando; `/etc/crontab` y archivos en `/etc/cron.d/` tienen 6 campos + comando (incluyen el usuario). Olvidar el campo usuario al editar `/etc/crontab` causa errores
+- **`cron.allow` tiene PRIORIDAD sobre `cron.deny`** — Si `/etc/cron.allow` existe, SOLO los usuarios listados pueden usar cron (cron.deny se ignora completamente). Si solo existe `cron.deny`, todos pueden usar cron excepto los listados. La misma logica aplica a `at.allow`/`at.deny`
+- **`/etc/cron.daily/` contiene SCRIPTS, no lineas crontab** — Los directorios `cron.{hourly,daily,weekly,monthly}` contienen scripts ejecutables normales, NO archivos con formato crontab. Se ejecutan con `run-parts`
+- **Anacron tiene precision de DIAS, no minutos** — Anacron no puede programar tareas para horas o minutos especificos. Solo garantiza que se ejecuten una vez cada N dias. Para precision por minutos, se usa cron
+- **Anacron solo lo ejecuta ROOT** — A diferencia de cron que cualquier usuario puede usar (si tiene permiso), anacron solo es para root. Los usuarios normales no tienen anacrontab
+- **`at teatime` = 16:00** — Las palabras clave especiales de `at` incluyen `noon` (12:00), `midnight` (00:00) y `teatime` (16:00). El examen puede preguntar la hora equivalente a `teatime`
+- **`batch` ejecuta cuando la carga es BAJA** — `batch` no programa para un momento especifico, sino que ejecuta cuando la carga del sistema baja de 0.8 (por defecto). No confundir con `at` que ejecuta en un momento determinado
+- **Systemd timers necesitan DOS archivos** — Un `.timer` (cuando ejecutar) y un `.service` (que ejecutar). Si falta el `.service`, el timer no funciona. `Persistent=true` permite recuperar ejecuciones perdidas (como anacron)
+- **`systemd-run --on-active` usa tiempo RELATIVO** — `systemd-run --on-active=30s` ejecuta dentro de 30 segundos; `--on-calendar` usa tiempo absoluto. No confundir los formatos de tiempo de cada opcion

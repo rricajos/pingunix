@@ -394,3 +394,20 @@ cloud-init schema --config-file user-data.yaml
 | `cloud-init query` | Consultar datos de la instancia |
 | runcmd | Comandos ejecutados en etapa final |
 | write_files | Crear/escribir archivos en el guest |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`#cloud-config` es obligatorio en la primera linea** — El formato cloud-config YAML DEBE comenzar con `#cloud-config` exactamente en la primera linea (incluyendo el `#`). Si falta o esta mal escrito, cloud-init no lo reconoce como cloud-config y lo ignora silenciosamente. El examen puede mostrar un YAML sin esta linea y preguntar por que no funciona.
+- **Etapas de cloud-init: orden fijo** — Las cuatro etapas (init-local, init, config, final) se ejecutan siempre en ese orden. `init-local` se ejecuta ANTES de que la red este disponible. Los paquetes (`packages:`) y comandos (`runcmd:`) se ejecutan en la etapa `final`, la ultima. El examen puede preguntar cuando se instalan los paquetes.
+- **user-data vs meta-data** — user-data es la configuracion proporcionada por el usuario (hostname, paquetes, scripts). meta-data es informacion de la instancia proporcionada por la plataforma (instance-id, hostname, red). Son archivos distintos con propositos distintos. El examen puede confundir donde va cada dato.
+- **NoCloud requiere volid `cidata`** — Al crear un ISO para NoCloud, el volid DEBE ser `cidata` (en minusculas): `genisoimage -volid cidata ...`. Si el volid es diferente, cloud-init no detecta el datasource. Esta es una trampa muy frecuente en el examen.
+- **`runcmd` se ejecuta solo en el primer arranque** — Los comandos en `runcmd` se ejecutan una unica vez, en el primer boot. En arranques posteriores, cloud-init detecta que ya se ejecuto (via instance-id en meta-data) y no repite la ejecucion. Para re-ejecutar se necesita `cloud-init clean`.
+- **`cloud-init clean` resetea el estado** — `cloud-init clean` elimina los datos de ejecucion anterior, permitiendo que cloud-init se ejecute de nuevo en el proximo arranque como si fuera el primer boot. `cloud-init clean --logs` tambien elimina los logs. El examen puede preguntar como forzar la re-ejecucion.
+- **Shell script vs cloud-config: shebang vs `#cloud-config`** — Si el user-data comienza con `#!/bin/bash` (shebang), se ejecuta como script de shell. Si comienza con `#cloud-config`, se procesa como YAML. Ambos formatos son validos pero mutuamente excluyentes (a menos que se use MIME multipart). El examen puede mostrar un archivo que mezcla ambos.
+- **`write_files` se ejecuta antes que `runcmd`** — `write_files` se procesa en la etapa `config`, mientras que `runcmd` en la etapa `final`. Esto permite escribir archivos de configuracion antes de ejecutar comandos que los necesiten. El examen puede preguntar si un archivo creado con `write_files` esta disponible para `runcmd`.
+- **`169.254.169.254` es la IP del metadata service** — En clouds publicas (AWS, GCP, Azure), los metadatos se obtienen via HTTP en `http://169.254.169.254/`. Esta IP es una link-local fija. El examen puede preguntar como un script dentro de la instancia obtiene su propia IP publica o instance-id.
+- **vendor-data no sobrescribe user-data** — vendor-data es configuracion del proveedor cloud que se procesa ademas de (no en lugar de) user-data. Si hay conflictos, user-data tiene prioridad. El examen puede preguntar que sucede cuando ambos definen el mismo hostname.

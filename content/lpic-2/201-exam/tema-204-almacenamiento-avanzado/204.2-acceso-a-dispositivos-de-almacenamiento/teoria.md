@@ -354,3 +354,18 @@ dmsetup status
 # Eliminar un dispositivo
 dmsetup remove nombre_dispositivo
 ```
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Target vs Initiator en iSCSI** — el target es el servidor que exporta el almacenamiento; el initiator es el cliente que lo consume. Confundir los roles es un error comun en las preguntas del examen
+- **El puerto por defecto de iSCSI es TCP 3260** — no es 3269 ni 3389. El examen puede presentar puertos incorrectos como distractores
+- **Secuencia iSCSI: discovery -> login -> uso -> logout** — primero se descubren los targets con `iscsiadm -m discovery`, luego se hace login con `--login`. Sin discovery previo, no hay targets conocidos para conectar
+- **`iscsiadm -m node` vs `-m session` vs `-m discovery`** — `discovery` descubre targets, `node` gestiona targets descubiertos (login/logout/configuracion), `session` muestra sesiones activas. Confundir los modos es una trampa frecuente
+- **IQN tiene un formato estricto: `iqn.AAAA-MM.dominio.invertido:identificador`** — el dominio va invertido (como en Java: `com.empresa`). La fecha indica cuando se registro el dominio, no cuando se creo el target
+- **Multipath requiere excluir discos locales con `blacklist`** — sin la seccion `blacklist` en `/etc/multipath.conf`, multipath intentara gestionar los discos locales del sistema, causando problemas. Los discos con vendor "ATA" suelen excluirse
+- **`/dev/disk/by-id/` vs `/dev/disk/by-uuid/` vs `/dev/disk/by-path/`** — `by-id` usa el identificador del fabricante (persistente al mover entre puertos), `by-uuid` usa el UUID del FS (cambia si reformateas), `by-path` usa la posicion en el bus (cambia si mueves el disco a otro puerto)
+- **Despues de conectar un target iSCSI, el disco aparece como `/dev/sdX` local** — el sistema lo trata como un disco local mas. Necesitas crear particiones, FS y montarlo como cualquier disco. En fstab, usa `_netdev` como opcion

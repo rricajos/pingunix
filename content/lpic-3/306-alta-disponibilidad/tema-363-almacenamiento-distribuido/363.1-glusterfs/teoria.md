@@ -349,3 +349,20 @@ gluster volume set mi_vol cluster.self-heal-daemon on
 | 24008 | Gestion interna |
 | 49152+ | Bricks (un puerto por brick) |
 | 2049 | NFS-Ganesha |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Distributed vs Replicated: sin replica NO hay redundancia** — un volumen `distributed` (sin replica) reparte archivos entre bricks. Si un brick falla, los archivos de ese brick se pierden. El examen puede preguntar que pasa al perder un brick en modo distributed: se pierden datos
+- **Numero de bricks debe ser multiplo del factor de replica** — para `replica 2` con distributed-replicated necesitas 2, 4, 6... bricks. Si intentas crear con 3 bricks y `replica 2`, GlusterFS rechaza la operacion. Calcular mal el numero de bricks es error frecuente
+- **Rebalance es obligatorio despues de add-brick** — cuando añades bricks a un volumen existente, los archivos ya existentes NO se redistribuyen automaticamente. Solo los archivos nuevos van a los bricks nuevos. Sin `gluster volume rebalance start`, la distribucion queda desbalanceada
+- **GlusterFS no tiene servidor de metadatos** — a diferencia de Ceph (que usa MDS para CephFS), GlusterFS usa DHT (Distributed Hash Table) para localizar archivos. Esto elimina un SPOF pero significa que los nombres de archivo determinan su ubicacion via hash
+- **gluster peer probe: no se hace desde el nodo a si mismo** — ejecutar `gluster peer probe` sobre el propio nodo da error. Solo se hace hacia nodos remotos. Ademas, desde el nodo1 se hace probe de nodo2, y nodo2 automaticamente ve a nodo1 como peer
+- **Dispersed volume (erasure coding) vs replicated** — dispersed usa erasure coding (similar a RAID 5/6) y ofrece mejor uso de espacio; replicated copia archivos completos (similar a RAID 1). Con `disperse 3 redundancy 1`, se toleran 1 fallo con capacidad de 2/3. El examen puede pedir calcular la capacidad util
+- **Geo-replicacion es asincrona** — la replicacion normal entre bricks de un volumen replicado es sincrona; la geo-replicacion entre clusters remotos es asincrona. Confundirlas puede llevar a respuestas incorrectas sobre consistencia de datos en sitios remotos
+- **Self-heal no es instantaneo** — cuando un brick se recupera, el self-heal daemon repara los datos desincronizados, pero no es inmediato. `gluster volume heal info` muestra los archivos pendientes. El examen puede preguntar como verificar si el healing termino
+- **Puerto 24007 para glusterd, 49152+ para bricks** — el daemon de gestion escucha en 24007, pero cada brick usa un puerto dinamico a partir de 49152. Si el firewall solo abre 24007, la gestion funciona pero el acceso a datos falla
+- **FUSE mount: backup-volfile-servers para HA** — al montar con FUSE, si solo especificas un servidor y este cae, el montaje falla. Usar `backup-volfile-servers=server2:server3` permite que el cliente contacte otros servidores si el primero no responde

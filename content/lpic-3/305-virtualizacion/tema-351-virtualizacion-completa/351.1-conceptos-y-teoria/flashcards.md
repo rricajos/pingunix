@@ -11,7 +11,7 @@ subtema: "351.1"
 
 # Flashcards: 351.1 - Conceptos Y Teoria
 
-> 39 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 40 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="351.1">
 </div>
@@ -709,6 +709,24 @@ subtema: "351.1"
 <div class="flashcard-back">
 
 **R:** | Concepto | Importancia para el examen |
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="351.1">
+</div>
+
+<div class="flashcard" data-id="351.1-fc-040">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

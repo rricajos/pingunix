@@ -407,3 +407,20 @@ tty2
 10. **`$6$`** = SHA-512, **`$5$`** = SHA-256, **`$1$`** = MD5 en /etc/shadow
 11. **`!`** en el campo hash de shadow = cuenta bloqueada
 12. La seguridad basica incluye: deshabilitar servicios innecesarios, shadow passwords, TCP wrappers, politicas de contrasenas
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **TCP Wrappers: se evalua PRIMERO `hosts.allow`** — El orden es: 1) consultar `hosts.allow` (si hay match, permitir y parar); 2) consultar `hosts.deny` (si hay match, denegar); 3) si no hay match en ninguno, PERMITIR por defecto. El examen evalua constantemente este orden
+- **`/usr/sbin/nologin` vs `/etc/nologin`** — `/usr/sbin/nologin` es un PROGRAMA (shell falso) asignado a cuentas individuales en `/etc/passwd` para impedir su login; `/etc/nologin` es un ARCHIVO cuya existencia bloquea el login de TODOS los usuarios excepto root. Confundirlos es una trampa clasica
+- **`/etc/securetty` solo afecta al login DIRECTO de root en TTY** — NO afecta a SSH (eso se controla con `PermitRootLogin` en `sshd_config`), ni a `su`, ni a `sudo`. Solo controla desde que consolas fisicas (tty1, tty2...) root puede hacer login directo
+- **`systemctl mask` vs `systemctl disable`** — `disable` evita que un servicio se inicie al arrancar, pero permite iniciarlo manualmente; `mask` crea un enlace a `/dev/null` que impide que el servicio se inicie DE CUALQUIER FORMA. `mask` es mas restrictivo
+- **xinetd: `disable = yes` deshabilita, `disable = no` habilita** — En los archivos de `/etc/xinetd.d/`, el parametro `disable` controla el servicio. Es contraintuitivo: `disable = yes` significa que el servicio esta DESACTIVADO. Para inetd, se COMENTA la linea con `#`
+- **`$6$` = SHA-512, `$5$` = SHA-256, `$1$` = MD5** — Los prefijos del hash en `/etc/shadow` indican el algoritmo. `$6$` (SHA-512) es el estandar actual. `$1$` (MD5) es inseguro y obsoleto. El examen puede mostrar un hash y preguntar el algoritmo
+- **`!` vs `!!` vs `*` en el campo hash de /etc/shadow** — `!` (o `!$6$...`) significa cuenta bloqueada con `passwd -l`; `!!` significa que nunca se establecio contrasena; `*` significa login deshabilitado permanentemente (cuentas de sistema). Campo vacio = sin contrasena (inseguro)
+- **`pwconv` crea shadow passwords, `pwunconv` las revierte** — `pwconv` mueve las contrasenas de `/etc/passwd` a `/etc/shadow`; `pwunconv` hace lo contrario. `grpconv`/`grpunconv` hacen lo mismo para grupos. El examen puede preguntar como habilitar shadow passwords
+- **Estrategia restrictiva: `ALL: ALL` en hosts.deny + excepciones en hosts.allow** — La politica de seguridad recomendada es denegar todo por defecto en `hosts.deny` y permitir solo lo necesario en `hosts.allow`. El examen puede pedir implementar esta politica
+- **TCP Wrappers solo funciona con servicios que usan libwrap** — No todos los servicios soportan TCP Wrappers. Solo aquellos compilados con soporte para `libwrap` o lanzados via inetd/xinetd. Muchos servicios modernos (como nginx) no lo soportan

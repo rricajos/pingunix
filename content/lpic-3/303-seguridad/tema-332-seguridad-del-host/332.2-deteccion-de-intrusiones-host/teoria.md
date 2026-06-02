@@ -384,3 +384,20 @@ watchfor /segfault/
 # Ejecutar swatch
 swatch --config-file=/etc/swatch.conf --tail-file=/var/log/auth.log
 ```
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **AIDE: `--init` genera `.new.gz`, no `.db.gz`** — tras ejecutar `aide --init`, la base de datos se genera como `aide.db.new.gz`. Es necesario copiar/renombrar manualmente a `aide.db.gz` para que funcione `aide --check`. Olvidar este paso es el error mas comun con AIDE
+- **AIDE: `--check` vs `--update`** — `--check` solo compara (no modifica la base de datos); `--update` compara Y genera una nueva base de datos. Tras `--update`, tambien hay que mover manualmente `.new.gz` a `.db.gz`
+- **AIDE: regla `LOG = p+u+g+i+n+S`** — la `S` mayuscula verifica que el tamaño solo crece (ideal para logs); la `s` minuscula verifica el tamaño exacto. Usar `s` en archivos de log generaria alertas constantes
+- **`auditctl -w` vs `-a`** — `-w /ruta -p wa -k etiqueta` vigila un archivo/directorio; `-a always,exit -S syscall` vigila llamadas al sistema. Son sintaxis completamente diferentes para propositos diferentes. No mezclarlas
+- **Permisos de auditd: `r`, `w`, `x`, `a`** — `r` = lectura, `w` = escritura, `x` = ejecucion, `a` = cambio de atributos. No confundir `a` (attribute change) con append. Es un error frecuente en el examen
+- **`ausearch -k` vs `aureport`** — `ausearch` busca eventos especificos (por clave, usuario, fecha, tipo); `aureport` genera informes resumidos (auth, failed, login, file). Usar `ausearch` cuando se necesita detalle, `aureport` para vision general
+- **`augenrules --load` vs `auditctl -R`** — `augenrules` procesa todos los archivos de `/etc/audit/rules.d/` y los carga; `auditctl -R` carga un archivo de reglas especifico. En sistemas modernos con systemd, `augenrules` es el metodo preferido
+- **AIDE vs Tripwire vs Samhain** — los tres verifican integridad de archivos, pero Samhain incluye capacidad cliente/servidor nativa y verificacion continua en background. AIDE y Tripwire son herramientas de verificacion bajo demanda (cron). El examen enfatiza AIDE
+- **Process accounting: `lastcomm` vs `sa`** — `lastcomm` muestra los ultimos comandos ejecutados (por usuario); `sa` muestra estadisticas resumidas por comando o usuario. `ac` muestra tiempos de conexion. No confundir las tres herramientas
+- **OSSEC/Wazuh `syscheck` frecuencia** — la directiva `<frequency>` en syscheck define el intervalo en segundos entre verificaciones de integridad. Un valor bajo genera carga; un valor muy alto deja ventanas sin monitorizacion. El examen puede preguntar donde se configura y su formato (segundos, no minutos)

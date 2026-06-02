@@ -446,3 +446,20 @@ pcs property set default-resource-stickiness=100
 # 6. Verificar
 pcs status
 ```
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **pcs resource move crea una restriccion permanente** — despues de `pcs resource move VIP nodo2`, se crea un constraint de location con score `-INFINITY` contra el nodo original. Si no ejecutas `pcs resource clear VIP` despues, el recurso NUNCA volvera al nodo original. Es la trampa mas clasica del examen
+- **Promotable no es lo mismo que clone** — un clone ejecuta la misma instancia en todos los nodos; un promotable (antes master/slave) tiene una instancia Promoted y las demas Unpromoted. DRBD usa promotable: solo el Promoted monta el filesystem
+- **INFINITY vs valores numericos en constraints** — `INFINITY` en colocation/location significa obligatorio (el recurso NO puede funcionar sin cumplirlo). Un valor numerico (ej: 100) es una preferencia que puede ignorarse. Confundirlos causa que recursos no arranquen
+- **Orden de restricciones: location, colocation, order** — location controla DONDE, colocation controla CON QUIEN, order controla CUANDO. El examen pregunta cual constraint usar para un escenario: si necesitas que VIP y Apache esten juntos es colocation, no location
+- **stonith-enabled=false rompe la integridad** — desactivar STONITH permite que el cluster funcione sin fencing, pero en split-brain no se puede garantizar la integridad de datos. El examen puede presentar un cluster que funciona pero pierde datos: la causa es STONITH deshabilitado
+- **no-quorum-policy=ignore es solo para testing** — con `ignore`, el cluster sigue funcionando sin quorum, lo que permite split-brain. En produccion debe ser `stop` (predeterminado) o `freeze`. El examen puede preguntar la politica correcta para produccion
+- **resource cleanup vs resource restart** — `cleanup` limpia el contador de fallos y re-evalua el estado; `restart` detiene y reinicia el recurso. Si un recurso esta en estado fallido y ha superado el migration-threshold, necesitas `cleanup` antes de que pueda reiniciarse en ese nodo
+- **SBD requiere watchdog Y disco compartido** — SBD (STONITH Block Device) no funciona solo con disco compartido; necesita un watchdog timer configurado. Sin watchdog, un nodo que debe hacer self-fencing no puede garantizar su propia muerte
+- **Los grupos inician en orden y paran en orden inverso** — si el grupo es VIP, WebFS, WebServer, inician en ese orden pero se detienen WebServer, WebFS, VIP. Si un recurso del grupo falla, todo el grupo se mueve al otro nodo
+- **cibadmin --erase destruye toda la configuracion** — `cibadmin --erase --force` borra la CIB completa. `cibadmin --replace` reemplaza con un XML. El examen puede preguntar como restaurar la configuracion: `cibadmin --replace --xml-file backup.xml`

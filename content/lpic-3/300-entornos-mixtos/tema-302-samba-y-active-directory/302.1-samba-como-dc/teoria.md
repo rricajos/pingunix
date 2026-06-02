@@ -362,3 +362,19 @@ samba-tool domain level raise --domain-level=2008_R2 --forest-level=2008_R2
 - SYSVOL requiere replicación externa (rsync) ya que DFS-R no está implementado
 - `samba-tool` es la herramienta principal: domain, user, group, dns, fsmo, drs
 - El realm Kerberos debe estar en MAYÚSCULAS y coincidir con el dominio DNS
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`samba-tool domain provision` vs `net ads join`** — `provision` crea un dominio AD NUEVO desde cero (configura DNS, Kerberos, LDAP de una sola vez). `net ads join` une un servidor a un dominio EXISTENTE como miembro. Confundir ambos es una de las trampas mas clasicas.
+- **Realm Kerberos SIEMPRE en MAYUSCULAS** — `--realm=EMPRESA.COM` correcto, `--realm=empresa.com` incorrecto. El realm Kerberos debe coincidir con el dominio DNS pero en mayusculas. Preguntas frecuentes presentan el realm en minusculas como opcion incorrecta.
+- **SAMBA_INTERNAL vs BIND9_DLZ** — SAMBA_INTERNAL es el DNS integrado (simple, para entornos pequeños). BIND9_DLZ usa BIND9 con modulo DLZ que carga zonas desde Samba (mas funcional, permite zonas adicionales). No confundir con un BIND9 independiente que no lee la BD de Samba.
+- **5 roles FSMO: 2 de bosque + 3 de dominio** — Schema Master y Domain Naming Master son a nivel de BOSQUE (uno por bosque). PDC Emulator, RID Master e Infrastructure Master son a nivel de DOMINIO (uno por dominio). Confundir el alcance es trampa frecuente.
+- **`fsmo transfer` vs `fsmo seize`** — `transfer` es la transferencia ordenada (el DC original esta disponible). `seize` es la toma forzosa (el DC original esta caido permanentemente). Usar seize cuando el DC esta vivo puede causar conflictos graves.
+- **Replicacion SYSVOL requiere rsync (DFS-R NO implementado)** — Samba NO soporta DFS-R (protocolo propietario de Microsoft). La replicacion de SYSVOL se hace con rsync + cron. Las preguntas suelen presentar DFS-R como opcion incorrecta.
+- **NTP es requisito obligatorio** — Kerberos requiere diferencia de tiempo menor a 5 minutos entre DC y clientes. Sin NTP sincronizado, la autenticacion Kerberos falla. Las preguntas presentan fallos de autenticacion cuya causa real es la desincronizacion de tiempo.
+- **`--use-rfc2307` durante provision** — Esta opcion habilita atributos POSIX (uidNumber, gidNumber) en AD. Si no se usa durante el aprovisionamiento, no se pueden asignar UIDs/GIDs especificos a usuarios AD. Es irreversible: hay que re-aprovisionar si se omite.
+- **smb.conf generado por provision NO se debe editar manualmente para cambiar server role** — El aprovisionamiento genera un smb.conf especifico para AD DC. Cambiar `server role` manualmente puede romper la configuracion. Usar `samba-tool` para cambios.

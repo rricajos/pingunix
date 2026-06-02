@@ -11,7 +11,7 @@ subtema: "107.2"
 
 # Flashcards: 107.2 - Automatizacion De Tareas
 
-> 31 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 32 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="107.2">
 </div>
@@ -565,6 +565,24 @@ subtema: "107.2"
 <div class="flashcard-back">
 
 **R:** `systemd-run` permite ejecutar un comando como una unidad transitoria de systemd, incluyendo la posibilidad de programar su ejecucion para un momento futuro. Es una alternativa moderna a `at` integrada
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="107.2">
+</div>
+
+<div class="flashcard" data-id="107.2-fc-032">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

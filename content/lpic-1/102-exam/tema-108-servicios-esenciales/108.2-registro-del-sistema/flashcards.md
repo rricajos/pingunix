@@ -11,7 +11,7 @@ subtema: "108.2"
 
 # Flashcards: 108.2 - Registro Del Sistema
 
-> 31 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 32 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="108.2">
 </div>
@@ -565,6 +565,24 @@ subtema: "108.2"
 <div class="flashcard-back">
 
 **R:** 1. **Facilities** definen el origen del mensaje, **priorities** la severidad
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="108.2">
+</div>
+
+<div class="flashcard" data-id="108.2-fc-032">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

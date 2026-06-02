@@ -338,3 +338,19 @@ sed 's#http://#https://#g' archivo.txt
 | `a{3}` (ERE) | Exactamente tres "a" |
 | `a{2,5}` (ERE) | De dos a cinco "a" |
 | `(abc|def)` (ERE) | "abc" o "def" |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **BRE vs ERE: `\(\)` vs `()`** — En BRE (grep, sed), los metacaracteres `()`, `{}`, `+`, `?` y `|` necesitan backslash para ser especiales: `\(abc\)`, `\{3\}`. En ERE (egrep, grep -E, sed -E), se usan directamente: `(abc)`, `{3}`, `+`, `?`, `|`. El examen mezcla ambas notaciones.
+- **`grep` usa BRE; `egrep`/`grep -E` usa ERE** — `grep 'a\+b'` (BRE) es equivalente a `grep -E 'a+b'` (ERE). Sin backslash en BRE, `+` es un caracter literal. El examen puede ofrecer `grep 'a+b'` como opcion correcta para "una o mas a" (es incorrecta sin `-E`).
+- **`fgrep`/`grep -F` no interpreta regex** — Busca cadenas literales, tratando `.`, `*`, `+` como caracteres normales. El examen puede preguntar como buscar el texto literal `192.168.1.1` sin que el punto coincida con cualquier caracter.
+- **`^` y `$` funcionan en BRE y ERE** — Los anclajes inicio (`^`) y fin de linea (`$`) no necesitan backslash en ninguna variante. `^$` coincide con lineas vacias en ambos casos.
+- **`[^abc]` vs `[!abc]`** — En regex, la negacion dentro de corchetes es `[^abc]`. En globbing (shell), la negacion es `[!abc]`. El examen puede mezclar ambas sintaxis.
+- **`.` en regex coincide con CUALQUIER caracter** — Dentro de una regex, el punto coincide con cualquier caracter (excepto newline por defecto). Para buscar un punto literal hay que escaparlo: `\.`. El examen puede usar `grep '192.168.1.1'` esperando coincidencia exacta (pero el punto coincidira con cualquier caracter).
+- **`*` en regex vs `*` en globbing** — En regex, `*` significa "cero o mas del caracter anterior". En globbing, `*` coincide con cualquier secuencia de caracteres. El examen puede confundir ambos significados.
+- **`sed` modifica la primera ocurrencia por linea sin `/g`** — `sed 's/a/b/' archivo` solo reemplaza la PRIMERA `a` de cada linea. Con `/g`, reemplaza TODAS las ocurrencias. El examen puede preguntar por que solo se reemplazo la primera coincidencia.
+- **Las clases POSIX van dentro de dobles corchetes** — La sintaxis correcta es `[[:digit:]]`, no `[:digit:]`. Los corchetes externos son del bracket expression; los internos son de la clase POSIX. El examen puede omitir un par de corchetes.

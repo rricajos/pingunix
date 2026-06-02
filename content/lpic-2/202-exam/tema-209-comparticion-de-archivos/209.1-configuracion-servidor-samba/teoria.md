@@ -375,3 +375,29 @@ juan = jperez "Juan Perez"
 ```
 
 > **Para el examen:** El archivo de mapeo de usuarios permite que los usuarios de Windows inicien sesión con nombres diferentes a los de sus cuentas Unix. El formato es `usuario_unix = nombre_windows [nombre_windows2 ...]`.
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`security = share` fue eliminado en Samba 4** — si una pregunta ofrece `security = share` como opcion, es incorrecta para versiones modernas. Los modos validos actuales son `user` (predeterminado) y `ads` (Active Directory).
+
+- **El usuario Unix DEBE existir antes de crear el usuario Samba** — `smbpasswd -a usuario` fallara si el usuario no existe en `/etc/passwd`. Primero `useradd`, despues `smbpasswd -a`.
+
+- **`smbpasswd` vs `pdbedit`** — ambos gestionan usuarios Samba, pero `pdbedit` es mas completo y soporta distintos backends (tdbsam, ldapsam). Para listar usuarios con detalle, `pdbedit -L -v` es el comando correcto.
+
+- **`testparm` verifica smb.conf, NO la conectividad** — `testparm` valida la sintaxis del archivo de configuracion. Para diagnosticar conexiones se usa `smbclient` o `smbstatus`. No confundir sus funciones.
+
+- **`read only = yes` y `writable = yes` son mutuamente excluyentes** — son la misma directiva con logica inversa. Si pones ambas, la ultima prevalece. El examen puede incluir configuraciones contradictoria para confundir.
+
+- **`browseable = no` NO impide el acceso, solo oculta el recurso** — el recurso sigue siendo accesible si conoces el nombre (`\\servidor\recurso`). Solo deja de aparecer al explorar la red.
+
+- **Puertos de Samba: TCP 139/445 y UDP 137/138** — `smbd` usa TCP 139 y 445 para comparticion de archivos. `nmbd` usa UDP 137 y 138 para NetBIOS. El examen puede preguntar que demonio usa cada puerto.
+
+- **Variables de sustitucion: `%U` (usuario), `%m` (cliente NetBIOS), `%S` (recurso)** — `log file = /var/log/samba/log.%m` crea un log por cada cliente. `valid users = %S` en `[homes]` restringe el acceso al propio usuario. Confundir estas variables es comun.
+
+- **`net ads join -U admin` para unir a Active Directory** — requiere `security = ads` y `realm = DOMINIO.COM` en smb.conf. Sin el realm o con `security = user`, la union al dominio AD falla.
+
+- **`force user` y `force group` afectan los permisos del sistema de archivos** — todos los archivos creados por cualquier usuario de Samba se crearan como si fueran de ese usuario/grupo forzado. Es util pero peligroso si no se entiende el impacto.

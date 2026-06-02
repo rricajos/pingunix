@@ -347,3 +347,20 @@ disk {
 | `/dev/drbdX` | Dispositivos de bloque DRBD |
 | `/usr/lib/drbd/` | Scripts de handlers |
 | `/var/lib/drbd/` | Datos persistentes de DRBD |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **DRBD primary vs secondary** — solo el nodo primario permite escritura y montaje del filesystem. `drbdadm primary datos` lo promueve. En modo single-primary, intentar montar el dispositivo en el secundario falla. En dual-primary necesitas un filesystem de cluster (GFS2/OCFS2)
+- **Protocolo C vs A** — el protocolo C (sincrono) confirma la escritura cuando el dato llega al disco remoto; el A (asincrono) confirma cuando llega al buffer TCP local. El examen puede preguntar cual protocolo garantiza cero perdida de datos: la respuesta es C, no B
+- **--discard-my-data se usa en el nodo victima, no en el sobreviviente** — en recuperacion de split-brain, el nodo cuyos datos se descartan ejecuta `drbdadm connect --discard-my-data`. El nodo con datos correctos solo ejecuta `drbdadm connect`. Invertirlos descarta los datos buenos
+- **create-md vs up vs primary** — la secuencia correcta de inicializacion es: 1) `create-md` (crear metadatos), 2) `up` (activar recurso), 3) `primary --force` (solo la primera vez). Saltarse `create-md` da error; `--force` solo se usa en la sincronizacion inicial
+- **meta-disk internal vs externo** — `internal` almacena los metadatos al final del disco subyacente (reduce espacio disponible); un meta-disk externo usa otro dispositivo. El examen puede preguntar donde se guardan los metadatos cuando se configura `meta-disk internal`
+- **Disk state Outdated vs Inconsistent** — `Outdated` significa que el nodo tiene datos que sabe que estan desactualizados; `Inconsistent` significa que los datos pueden estar parcialmente sincronizados. Un nodo `Outdated` no puede promoverse a primario, un nodo `Inconsistent` tampoco
+- **dual-primary requiere allow-two-primaries Y filesystem cluster** — activar `allow-two-primaries yes` sin GFS2/OCFS2 causa corrupcion inmediata. El examen puede ofrecer escenarios donde se habilita dual-primary con ext4: siempre es incorrecto
+- **drbdadm adjust vs disconnect+connect** — `adjust` aplica cambios de configuracion sin interrumpir la conexion; `disconnect` seguido de `connect` interrumpe la replicacion temporalmente. Para cambios menores se usa `adjust`, para recovery de split-brain se usa disconnect/connect
+- **resync-rate limita la resincronizacion, no la replicacion normal** — el parametro `resync-rate` solo afecta a la resincronizacion (cuando un nodo se reconecta). La replicacion normal en tiempo real no tiene limite de tasa configurable por este parametro
+- **verify-alg compara pero no corrige** — la verificacion online (`drbdadm verify`) compara datos bloque a bloque entre nodos y reporta diferencias, pero NO las corrige automaticamente. Se necesita desconectar y reconectar para forzar resincronizacion de los bloques divergentes

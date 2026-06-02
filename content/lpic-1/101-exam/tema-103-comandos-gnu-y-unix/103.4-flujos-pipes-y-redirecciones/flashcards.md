@@ -11,7 +11,7 @@ subtema: "103.4"
 
 # Flashcards: 103.4 - Flujos Pipes Y Redirecciones
 
-> 41 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 42 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="103.4">
 </div>
@@ -745,6 +745,24 @@ subtema: "103.4"
 <div class="flashcard-back">
 
 **R:** | Operador | Descripcion | Ejemplo |
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.4">
+</div>
+
+<div class="flashcard" data-id="103.4-fc-042">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

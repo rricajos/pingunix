@@ -11,7 +11,7 @@ subtema: "103.1"
 
 # Flashcards: 103.1 - Linea De Comandos
 
-> 39 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 41 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="103.1">
 </div>
@@ -505,6 +505,24 @@ subtema: "103.1"
 <div class="flashcard" data-id="103.1-fc-028">
 <div class="flashcard-front">
 
+**P:** Tip de examen: `hash` es un builtin de bash. La tabla hash se limpia automaticamente al iniciar...
+
+</div>
+<div class="flashcard-back">
+
+**R:** `hash` es un builtin de bash. La tabla hash se limpia automaticamente al iniciar un nuevo shell. Se usa `hash -r` para resetear la tabla cuando se han movido o instalado nuevos ejecutables.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.1">
+</div>
+
+<div class="flashcard" data-id="103.1-fc-029">
+<div class="flashcard-front">
+
 **P:** Que hace el comando `sh`?
 
 </div>
@@ -520,7 +538,7 @@ subtema: "103.1"
 <div class="flashcard-deck" data-subtema="103.1">
 </div>
 
-<div class="flashcard" data-id="103.1-fc-029">
+<div class="flashcard" data-id="103.1-fc-030">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `zsh`?
@@ -538,7 +556,7 @@ subtema: "103.1"
 <div class="flashcard-deck" data-subtema="103.1">
 </div>
 
-<div class="flashcard" data-id="103.1-fc-030">
+<div class="flashcard" data-id="103.1-fc-031">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `csh`?
@@ -556,7 +574,7 @@ subtema: "103.1"
 <div class="flashcard-deck" data-subtema="103.1">
 </div>
 
-<div class="flashcard" data-id="103.1-fc-031">
+<div class="flashcard" data-id="103.1-fc-032">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `ksh`?
@@ -574,7 +592,7 @@ subtema: "103.1"
 <div class="flashcard-deck" data-subtema="103.1">
 </div>
 
-<div class="flashcard" data-id="103.1-fc-032">
+<div class="flashcard" data-id="103.1-fc-033">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `dash`?
@@ -592,7 +610,7 @@ subtema: "103.1"
 <div class="flashcard-deck" data-subtema="103.1">
 </div>
 
-<div class="flashcard" data-id="103.1-fc-033">
+<div class="flashcard" data-id="103.1-fc-034">
 <div class="flashcard-front">
 
 **P:** Que es/son 8. Paginas info?
@@ -610,7 +628,7 @@ subtema: "103.1"
 <div class="flashcard-deck" data-subtema="103.1">
 </div>
 
-<div class="flashcard" data-id="103.1-fc-034">
+<div class="flashcard" data-id="103.1-fc-035">
 <div class="flashcard-front">
 
 **P:** Que es/son 9. Alias?
@@ -628,7 +646,7 @@ subtema: "103.1"
 <div class="flashcard-deck" data-subtema="103.1">
 </div>
 
-<div class="flashcard" data-id="103.1-fc-035">
+<div class="flashcard" data-id="103.1-fc-036">
 <div class="flashcard-front">
 
 **P:** Que es/son 10. Expansion de llaves?
@@ -646,7 +664,7 @@ subtema: "103.1"
 <div class="flashcard-deck" data-subtema="103.1">
 </div>
 
-<div class="flashcard" data-id="103.1-fc-036">
+<div class="flashcard" data-id="103.1-fc-037">
 <div class="flashcard-front">
 
 **P:** Que es/son 11. Globbing (comodines de archivos)?
@@ -664,7 +682,7 @@ subtema: "103.1"
 <div class="flashcard-deck" data-subtema="103.1">
 </div>
 
-<div class="flashcard" data-id="103.1-fc-037">
+<div class="flashcard" data-id="103.1-fc-038">
 <div class="flashcard-front">
 
 **P:** Que es/son 12. El comando exec?
@@ -682,7 +700,7 @@ subtema: "103.1"
 <div class="flashcard-deck" data-subtema="103.1">
 </div>
 
-<div class="flashcard" data-id="103.1-fc-038">
+<div class="flashcard" data-id="103.1-fc-039">
 <div class="flashcard-front">
 
 **P:** Que es/son 13. El comando uname?
@@ -700,7 +718,7 @@ subtema: "103.1"
 <div class="flashcard-deck" data-subtema="103.1">
 </div>
 
-<div class="flashcard" data-id="103.1-fc-039">
+<div class="flashcard" data-id="103.1-fc-040">
 <div class="flashcard-front">
 
 **P:** Que es/son 15. El comando `hash`?
@@ -709,6 +727,24 @@ subtema: "103.1"
 <div class="flashcard-back">
 
 **R:** El shell bash mantiene una **tabla hash interna** que almacena las rutas de los comandos externos ya ejecutados. Esto evita que el shell tenga que buscar en todos los directorios de `$PATH` cada vez qu
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="103.1">
+</div>
+
+<div class="flashcard" data-id="103.1-fc-041">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

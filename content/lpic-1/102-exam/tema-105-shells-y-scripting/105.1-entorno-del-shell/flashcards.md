@@ -11,7 +11,7 @@ subtema: "105.1"
 
 # Flashcards: 105.1 - Entorno Del Shell
 
-> 38 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 39 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="105.1">
 </div>
@@ -691,6 +691,24 @@ subtema: "105.1"
 <div class="flashcard-back">
 
 **R:** Este archivo es diferente a los demas: **NO es un script de shell**. Es un archivo simple de pares `VARIABLE=valor` leido por el modulo PAM (`pam_env`).
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="105.1">
+</div>
+
+<div class="flashcard" data-id="105.1-fc-039">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

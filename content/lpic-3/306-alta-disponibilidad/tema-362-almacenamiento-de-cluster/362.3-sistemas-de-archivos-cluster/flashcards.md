@@ -11,7 +11,7 @@ subtema: "362.3"
 
 # Flashcards: 362.3 - Sistemas De Archivos Cluster
 
-> 33 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 35 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="362.3">
 </div>
@@ -523,6 +523,24 @@ subtema: "362.3"
 <div class="flashcard" data-id="362.3-fc-029">
 <div class="flashcard-front">
 
+**P:** Tip de examen: Si el examen pregunta cuando usar GFS2/OCFS2, la respuesta es: cuando multiples ...
+
+</div>
+<div class="flashcard-back">
+
+**R:** Si el examen pregunta cuando usar GFS2/OCFS2, la respuesta es: cuando multiples nodos necesitan acceso de escritura simultaneo al mismo dispositivo de bloque.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="362.3">
+</div>
+
+<div class="flashcard" data-id="362.3-fc-030">
+<div class="flashcard-front">
+
 **P:** Que es/son DLM - Distributed Lock Manager?
 
 </div>
@@ -538,7 +556,7 @@ subtema: "362.3"
 <div class="flashcard-deck" data-subtema="362.3">
 </div>
 
-<div class="flashcard" data-id="362.3-fc-030">
+<div class="flashcard" data-id="362.3-fc-031">
 <div class="flashcard-front">
 
 **P:** Que es/son GFS2 - Global File System 2?
@@ -556,7 +574,7 @@ subtema: "362.3"
 <div class="flashcard-deck" data-subtema="362.3">
 </div>
 
-<div class="flashcard" data-id="362.3-fc-031">
+<div class="flashcard" data-id="362.3-fc-032">
 <div class="flashcard-front">
 
 **P:** Que es/son OCFS2 - Oracle Cluster File System 2?
@@ -574,7 +592,7 @@ subtema: "362.3"
 <div class="flashcard-deck" data-subtema="362.3">
 </div>
 
-<div class="flashcard" data-id="362.3-fc-032">
+<div class="flashcard" data-id="362.3-fc-033">
 <div class="flashcard-front">
 
 **P:** Que es/son Requisitos de Fencing?
@@ -592,7 +610,7 @@ subtema: "362.3"
 <div class="flashcard-deck" data-subtema="362.3">
 </div>
 
-<div class="flashcard" data-id="362.3-fc-033">
+<div class="flashcard" data-id="362.3-fc-034">
 <div class="flashcard-front">
 
 **P:** Que es/son Comparativa GFS2 vs OCFS2?
@@ -601,6 +619,24 @@ subtema: "362.3"
 <div class="flashcard-back">
 
 **R:** | Caracteristica | GFS2 | OCFS2 |
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="362.3">
+</div>
+
+<div class="flashcard" data-id="362.3-fc-035">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

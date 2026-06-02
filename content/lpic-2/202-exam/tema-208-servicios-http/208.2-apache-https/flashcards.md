@@ -11,7 +11,7 @@ subtema: "208.2"
 
 # Flashcards: 208.2 - Apache Https
 
-> 38 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 40 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="208.2">
 </div>
@@ -559,6 +559,24 @@ subtema: "208.2"
 <div class="flashcard" data-id="208.2-fc-031">
 <div class="flashcard-front">
 
+**P:** Tip de examen: La autenticación con certificado de cliente proporciona autenticación mutua (mTL...
+
+</div>
+<div class="flashcard-back">
+
+**R:** La autenticación con certificado de cliente proporciona autenticación mutua (mTLS). El servidor verifica el certificado del cliente contra la CA especificada en `SSLCACertificateFile`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.2">
+</div>
+
+<div class="flashcard" data-id="208.2-fc-032">
+<div class="flashcard-front">
+
 **P:** Que hace el comando `SSLEngine on`?
 
 </div>
@@ -574,7 +592,7 @@ subtema: "208.2"
 <div class="flashcard-deck" data-subtema="208.2">
 </div>
 
-<div class="flashcard" data-id="208.2-fc-032">
+<div class="flashcard" data-id="208.2-fc-033">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `SSLCertificateFile`?
@@ -592,7 +610,7 @@ subtema: "208.2"
 <div class="flashcard-deck" data-subtema="208.2">
 </div>
 
-<div class="flashcard" data-id="208.2-fc-033">
+<div class="flashcard" data-id="208.2-fc-034">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `SSLCACertificateFile`?
@@ -610,7 +628,7 @@ subtema: "208.2"
 <div class="flashcard-deck" data-subtema="208.2">
 </div>
 
-<div class="flashcard" data-id="208.2-fc-034">
+<div class="flashcard" data-id="208.2-fc-035">
 <div class="flashcard-front">
 
 **P:** Que es/son Introducción?
@@ -628,7 +646,7 @@ subtema: "208.2"
 <div class="flashcard-deck" data-subtema="208.2">
 </div>
 
-<div class="flashcard" data-id="208.2-fc-035">
+<div class="flashcard" data-id="208.2-fc-036">
 <div class="flashcard-front">
 
 **P:** Que es/son Let's Encrypt y Certbot?
@@ -646,7 +664,7 @@ subtema: "208.2"
 <div class="flashcard-deck" data-subtema="208.2">
 </div>
 
-<div class="flashcard" data-id="208.2-fc-036">
+<div class="flashcard" data-id="208.2-fc-037">
 <div class="flashcard-front">
 
 **P:** Que es/son SNI (Server Name Indication)?
@@ -664,7 +682,7 @@ subtema: "208.2"
 <div class="flashcard-deck" data-subtema="208.2">
 </div>
 
-<div class="flashcard" data-id="208.2-fc-037">
+<div class="flashcard" data-id="208.2-fc-038">
 <div class="flashcard-front">
 
 **P:** Que es/son HSTS (HTTP Strict Transport Security)?
@@ -682,7 +700,7 @@ subtema: "208.2"
 <div class="flashcard-deck" data-subtema="208.2">
 </div>
 
-<div class="flashcard" data-id="208.2-fc-038">
+<div class="flashcard" data-id="208.2-fc-039">
 <div class="flashcard-front">
 
 **P:** Que es/son OCSP Stapling?
@@ -691,6 +709,24 @@ subtema: "208.2"
 <div class="flashcard-back">
 
 **R:** OCSP Stapling permite al servidor obtener y enviar la respuesta OCSP junto con el certificado, evitando que el cliente tenga que contactar a la CA para verificar la revocación del certificado.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.2">
+</div>
+
+<div class="flashcard" data-id="208.2-fc-040">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

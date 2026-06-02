@@ -326,3 +326,29 @@ postfix reload              # Equivalente a systemctl reload
 | `/var/log/maillog` | Log de correo (RHEL) |
 | `/etc/mail/sendmail.mc` | Fuente de configuración de Sendmail |
 | `/etc/mail/sendmail.cf` | Configuración generada de Sendmail |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Puerto 25 (MTA a MTA) vs puerto 587 (MUA a MTA)** — el puerto 25 es para transferencia entre servidores. El puerto 587 (submission) es para que los clientes envien correo con autenticacion. El examen puede preguntar cual usar en cada escenario.
+
+- **`mynetworks` mal configurado = open relay** — si `mynetworks` incluye redes demasiado amplias o `0.0.0.0/0`, cualquiera puede usar tu servidor para enviar spam. `reject_unauth_destination` en `smtpd_recipient_restrictions` es esencial para evitarlo.
+
+- **`newaliases` es OBLIGATORIO despues de editar `/etc/aliases`** — sin ejecutar `newaliases` (o `postalias /etc/aliases`), los cambios en el archivo de alias no surten efecto. Postfix lee la base de datos compilada `.db`, no el archivo de texto.
+
+- **`mydestination` define los dominios LOCALES, `relay_domains` los de relay** — si un dominio esta en `mydestination`, Postfix lo acepta para entrega local. Si necesitas reenviar correo a otro servidor, se usa `relayhost` o `transport_maps`.
+
+- **Nunca editar `sendmail.cf` directamente** — se edita `sendmail.mc` y se regenera con `m4 sendmail.mc > sendmail.cf`. El `.cf` es extremadamente complejo y se genera automaticamente.
+
+- **`main.cf` vs `master.cf` en Postfix** — `main.cf` define la configuracion global (parametros). `master.cf` define los servicios y procesos que Postfix ejecuta. El puerto 587 (submission) se configura en `master.cf`.
+
+- **`postconf -n` muestra solo parametros modificados** — `postconf -d` muestra los valores por defecto, `postconf -n` solo los que difieren del default. Para diagnosticar, `-n` es mas util.
+
+- **MUA, MTA, MDA, MSA: conocer las siglas y sus funciones** — MUA es el cliente (Thunderbird), MTA transfiere correo (Postfix), MDA entrega al buzon (Procmail), MSA recibe del MUA para envio (Postfix en puerto 587). El examen puede pedir identificar el componente correcto.
+
+- **`mailq` y `postqueue -p` son equivalentes** — ambos muestran la cola de correo. `postqueue -f` fuerza el reenvio. `postsuper -d ALL` borra toda la cola. Conocer los equivalentes es importante.
+
+- **`home_mailbox = Maildir/` la barra final indica formato Maildir** — sin la barra, se interpreta como archivo mbox. Con la barra, se crea la estructura de directorios `cur/`, `new/`, `tmp/`. Este detalle sutil es trampa clasica.

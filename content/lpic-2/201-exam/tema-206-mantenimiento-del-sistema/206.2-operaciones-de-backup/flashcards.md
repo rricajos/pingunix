@@ -11,7 +11,7 @@ subtema: "206.2"
 
 # Flashcards: 206.2 - Operaciones De Backup
 
-> 37 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 39 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="206.2">
 </div>
@@ -577,6 +577,24 @@ subtema: "206.2"
 <div class="flashcard" data-id="206.2-fc-032">
 <div class="flashcard-front">
 
+**P:** Tip de examen: Los snapshots LVM permiten realizar backups consistentes de un sistema en funcio...
+
+</div>
+<div class="flashcard-back">
+
+**R:** Los snapshots LVM permiten realizar backups consistentes de un sistema en funcionamiento. El snapshot se crea instantaneamente y captura el estado del volumen en ese momento.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="206.2">
+</div>
+
+<div class="flashcard" data-id="206.2-fc-033">
+<div class="flashcard-front">
+
 **P:** Que hace el comando `--delete`?
 
 </div>
@@ -592,7 +610,7 @@ subtema: "206.2"
 <div class="flashcard-deck" data-subtema="206.2">
 </div>
 
-<div class="flashcard" data-id="206.2-fc-033">
+<div class="flashcard" data-id="206.2-fc-034">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `--exclude=PATRON`?
@@ -610,7 +628,7 @@ subtema: "206.2"
 <div class="flashcard-deck" data-subtema="206.2">
 </div>
 
-<div class="flashcard" data-id="206.2-fc-034">
+<div class="flashcard" data-id="206.2-fc-035">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `--progress`?
@@ -628,7 +646,7 @@ subtema: "206.2"
 <div class="flashcard-deck" data-subtema="206.2">
 </div>
 
-<div class="flashcard" data-id="206.2-fc-035">
+<div class="flashcard" data-id="206.2-fc-036">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `-e`?
@@ -646,7 +664,7 @@ subtema: "206.2"
 <div class="flashcard-deck" data-subtema="206.2">
 </div>
 
-<div class="flashcard" data-id="206.2-fc-036">
+<div class="flashcard" data-id="206.2-fc-037">
 <div class="flashcard-front">
 
 **P:** Que es/son dd - Copia a bajo nivel?
@@ -664,7 +682,7 @@ subtema: "206.2"
 <div class="flashcard-deck" data-subtema="206.2">
 </div>
 
-<div class="flashcard" data-id="206.2-fc-037">
+<div class="flashcard" data-id="206.2-fc-038">
 <div class="flashcard-front">
 
 **P:** Que es/son cpio - Archivado alternativo?
@@ -673,6 +691,24 @@ subtema: "206.2"
 <div class="flashcard-back">
 
 **R:** `cpio` (Copy In and Out) es una herramienta de archivado que lee nombres de archivo desde la entrada estandar.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="206.2">
+</div>
+
+<div class="flashcard" data-id="206.2-fc-039">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

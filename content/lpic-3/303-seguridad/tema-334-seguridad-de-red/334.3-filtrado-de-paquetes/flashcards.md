@@ -11,7 +11,7 @@ subtema: "334.3"
 
 # Flashcards: 334.3 - Filtrado De Paquetes
 
-> 29 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 30 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="334.3">
 </div>
@@ -529,6 +529,24 @@ subtema: "334.3"
 <div class="flashcard-back">
 
 **R:** Traduccion de direcciones de red
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="334.3">
+</div>
+
+<div class="flashcard" data-id="334.3-fc-030">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

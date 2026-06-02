@@ -11,7 +11,7 @@ subtema: "210.1"
 
 # Flashcards: 210.1 - Configuracion Dhcp
 
-> 41 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 42 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="210.1">
 </div>
@@ -745,6 +745,24 @@ subtema: "210.1"
 <div class="flashcard-back">
 
 **R:** Cuando el servidor DHCP se encuentra en una red diferente a la de los clientes, se necesita un agente relay que reenvíe las peticiones DHCP entre subredes.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="210.1">
+</div>
+
+<div class="flashcard" data-id="210.1-fc-042">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

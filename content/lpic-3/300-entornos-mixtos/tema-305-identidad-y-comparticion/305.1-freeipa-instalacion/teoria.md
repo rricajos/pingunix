@@ -318,3 +318,19 @@ ipa-server-install --uninstall
 # Desinstalar cliente
 ipa-client-install --uninstall
 ```
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Componentes de FreeIPA: 389 DS + MIT Kerberos + Dogtag CA + BIND** — FreeIPA usa 389 Directory Server (LDAP), MIT Kerberos (autenticacion), Dogtag CA (certificados PKI) y BIND (DNS). No confundir con Samba AD DC que usa su propio LDAP interno y Heimdal Kerberos.
+- **`ipa-server-install` vs `samba-tool domain provision`** — `ipa-server-install` instala FreeIPA (identidad Linux). `samba-tool domain provision` crea un dominio AD con Samba. Son soluciones diferentes para problemas diferentes. Las preguntas piden identificar la herramienta correcta segun el escenario.
+- **`--realm` en MAYUSCULAS, `--domain` en minusculas** — `--realm=EMPRESA.LOCAL` (Kerberos, mayusculas) y `--domain=empresa.local` (DNS, minusculas). Invertirlos causa fallos en la instalacion. Es la misma regla que para Samba AD.
+- **`--ds-password` vs `--admin-password`** — `--ds-password` es la contraseña del Directory Manager (administrador LDAP directo, cn=Directory Manager). `--admin-password` es la del usuario admin de IPA. Son cuentas diferentes con propositos diferentes. Confundirlas es error comun.
+- **`--setup-dns` integra BIND, no es obligatorio** — Sin `--setup-dns`, FreeIPA no gestiona DNS y se necesita un DNS externo preconfigurado. Con `--setup-dns`, BIND se integra y gestiona automaticamente los registros SRV necesarios.
+- **`ipa-client-install` configura TODO automaticamente** — El instalador del cliente configura Kerberos (`krb5.conf`), SSSD (`sssd.conf`), NSS (`nsswitch.conf`), PAM y certificados CA. No hay que configurar estos archivos manualmente. Las preguntas suelen presentar escenarios donde alguien edita manualmente estos archivos innecesariamente.
+- **Replicas: primero cliente, luego promover** — Desde FreeIPA 4.x, se inscribe primero como cliente (`ipa-client-install`) y luego se promueve con `ipa-replica-install`. Ya NO se necesita preparar archivo de replica manualmente (metodo legacy).
+- **Certmonger y `getcert list`** — Certmonger gestiona la renovacion automatica de certificados. `getcert list` muestra los certificados gestionados. Si un certificado no se renueva automaticamente, verificar certmonger. Las preguntas piden identificar la herramienta de gestion de certificados.
+- **`ipactl status` para verificar todos los servicios** — Este comando muestra el estado de todos los componentes de FreeIPA (dirsrv, krb5kdc, httpd, etc.). Es el primer comando de diagnostico. Las preguntas lo presentan como alternativa correcta frente a verificar servicios individualmente.

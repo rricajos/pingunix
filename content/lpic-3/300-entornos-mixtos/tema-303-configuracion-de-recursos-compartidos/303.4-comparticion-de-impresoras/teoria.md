@@ -257,3 +257,18 @@ tail -f /var/log/cups/error_log
 ```
 
 > **Para el examen:** `lpstat -p` muestra las impresoras disponibles en CUPS. Si Samba no muestra impresoras, verificar primero que CUPS las tiene configuradas y que `load printers = yes` está activo.
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`printable = yes` distingue share de impresora de share de archivos** — Sin `printable = yes`, un share no acepta trabajos de impresion. Es el parametro obligatorio para impresoras. `writable = no` es correcto para shares de impresora (se usa printable, no writable).
+- **`printing = cups` y `printcap name = cups` son esenciales** — Estos dos parametros en [global] configuran la integracion Samba-CUPS. Sin ellos, Samba no descubre las impresoras de CUPS. Las preguntas presentan escenarios donde las impresoras no aparecen y la causa es la ausencia de estos parametros.
+- **`cups options = raw` vs procesamiento CUPS** — Con `raw`, CUPS envia los datos sin filtrar (el driver del cliente hace el trabajo). Sin `raw`, CUPS aplica sus propios filtros que pueden causar problemas con drivers Windows. Las preguntas piden saber cuando usar cada opcion.
+- **`[print$]` es para drivers, `[printers]` es para impresoras** — `[print$]` almacena los drivers de impresora para Point-and-Print (distribucion automatica). `[printers]` define la configuracion por defecto de las impresoras compartidas. Confundir ambos shares especiales es error comun.
+- **Estructura de drivers: W32X86 vs x64** — `W32X86/3/` es para drivers Windows 32-bit, `x64/3/` para 64-bit. La estructura de subdirectorios debe existir con permisos correctos. Las preguntas piden identificar el directorio correcto segun la arquitectura del cliente.
+- **`rpcclient adddriver` y `setdriver`** — `adddriver` sube un driver al servidor. `setdriver` asocia un driver a una impresora. Son dos pasos separados. `enumdrivers 3` lista los drivers version 3 instalados. Las preguntas piden la secuencia correcta.
+- **SPOOLSS pipes para comunicacion de impresion** — El protocolo SPOOLSS gestiona la comunicacion de impresion entre Windows y Samba via RPC. Las operaciones se pueden hacer con `rpcclient` (Linux) o herramientas RSAT (Windows). Las preguntas suelen pedir identificar la herramienta correcta.
+- **Directorio spool con permisos 1777** — `/var/spool/samba` necesita permisos `1777` (sticky bit) para que todos los usuarios puedan crear trabajos de impresion pero no puedan eliminar los de otros. Permisos incorrectos causan errores de impresion.

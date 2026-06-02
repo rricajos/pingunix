@@ -406,3 +406,20 @@ logrotate -d /etc/logrotate.conf     # Modo debug (simular sin ejecutar)
 8. **logrotate** se ejecuta via cron, no es un demonio permanente
 9. `/var/log/wtmp` y `/var/log/btmp` son **binarios** (usar `last` y `lastb`)
 10. `journalctl --vacuum-size` y `--vacuum-time` controlan el tamano del journal
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`facility.priority` incluye esa prioridad Y TODAS LAS SUPERIORES** — La regla `mail.warning` captura warning, err, crit, alert y emerg (no solo warning). Para capturar SOLO una prioridad exacta se usa `=`: `mail.=warning`. Esta es una de las trampas mas repetidas
+- **Orden de prioridades: emerg > alert > crit > err > warning > notice > info > debug** — emerg (0) es la mas critica, debug (7) la menos. El examen puede pedir ordenar prioridades o identificar cual es "superior". Mnemotecnica: "Every Alley Cat Eats Wet Noodles In December"
+- **rsyslog: `@` = UDP, `@@` = TCP** — Un solo arroba envia por UDP, doble arroba por TCP. El examen puede preguntar como enviar logs de forma fiable a un servidor remoto (respuesta: `@@` para TCP)
+- **`/var/log/wtmp` y `/var/log/btmp` son archivos BINARIOS** — No se pueden leer con `cat` o `less`. Se usan `last` (para wtmp) y `lastb` (para btmp). El examen puede preguntar que comando leer estos archivos
+- **`Storage=auto` vs `Storage=persistent` en journald.conf** — Con `auto`, el journal es persistente SOLO si existe `/var/log/journal/`; con `persistent`, systemd crea el directorio automaticamente. El examen pregunta como hacer persistente el journal
+- **`journalctl -b -1` muestra el arranque ANTERIOR** — `-b` (o `-b 0`) es el arranque actual; `-b -1` es el anterior; `-b -2` es el anteanterior. El examen puede preguntar como ver logs de un arranque anterior
+- **`logrotate` NO es un demonio** — logrotate se ejecuta via cron (normalmente una vez al dia), no es un servicio permanente. El examen puede preguntar como se invoca logrotate
+- **`ForwardToSyslog=yes` en journald.conf** — Esta opcion permite que journald reenvie mensajes al syslog tradicional (rsyslog). Si esta en `no`, rsyslog no recibe los mensajes del journal. Es clave para la coexistencia de ambos sistemas
+- **`auth` vs `authpriv`** — Ambas son facilities de autenticacion, pero `authpriv` es para mensajes que contienen informacion sensible (como intentos de contrasena) y tiene acceso restringido. El examen puede preguntar la diferencia
+- **`logger` genera mensajes syslog desde la linea de comandos** — `logger -p facility.priority -t etiqueta "mensaje"` es la forma de enviar mensajes al syslog desde scripts. Sin `-p`, usa `user.notice` por defecto

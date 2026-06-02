@@ -285,3 +285,27 @@ openssl s_client -connect www.ejemplo.com:443 -tls1_3
 ```
 
 > **Para el examen:** La autenticación con certificado de cliente proporciona autenticación mutua (mTLS). El servidor verifica el certificado del cliente contra la CA especificada en `SSLCACertificateFile`.
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`SSLCertificateChainFile` fue eliminado en Apache 2.4.8+** — desde esa version, los certificados intermedios se incluyen directamente en el archivo de `SSLCertificateFile`. Si una pregunta ofrece esta directiva como opcion para Apache 2.4 moderno, es incorrecta.
+
+- **La clave privada NUNCA se envia a la CA** — el CSR contiene la clave publica y la informacion del solicitante. La clave privada jamas sale del servidor. Si una pregunta sugiere enviar la clave privada, es trampa.
+
+- **SSLv2 y SSLv3 SIEMPRE deben estar deshabilitados** — la configuracion correcta es `SSLProtocol all -SSLv2 -SSLv3 -TLSv1 -TLSv1.1`. Si una respuesta incluye SSLv3 como protocolo valido, es incorrecta.
+
+- **SNI permite multiples certificados en una misma IP** — sin SNI, solo se podia tener un certificado SSL por direccion IP. Con SNI el cliente envia el hostname durante el handshake TLS. Todos los navegadores modernos lo soportan.
+
+- **`SSLHonorCipherOrder on` hace que el servidor elija el cifrado** — sin esta directiva, el cliente decide el cipher suite. Con ella, el servidor impone su orden de preferencia, lo que es mas seguro.
+
+- **HSTS con `includeSubDomains` aplica a TODOS los subdominios** — si activas `includeSubDomains` y tienes un subdominio sin HTTPS, los navegadores lo bloquearan. Es una trampa comun en preguntas sobre efectos secundarios.
+
+- **`certbot renew` vs `certbot certonly`** — `renew` renueva TODOS los certificados proximos a expirar. `certonly` obtiene un certificado nuevo sin modificar Apache. `certbot --apache` obtiene Y configura automaticamente.
+
+- **Verificar que clave y certificado coinciden** — con `openssl x509 -noout -modulus -in cert.crt | openssl md5` y `openssl rsa -noout -modulus -in key.key | openssl md5`. Si los hashes MD5 no coinciden, el par clave/certificado es invalido.
+
+- **OCSP Stapling: el servidor obtiene la respuesta OCSP, no el cliente** — sin stapling, el navegador contacta directamente al servidor OCSP de la CA, lo que anade latencia y revela informacion de navegacion. Con stapling, Apache obtiene y cachea la respuesta.

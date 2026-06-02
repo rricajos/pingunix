@@ -351,3 +351,20 @@ mds_cache_memory_limit = 4294967296
 ```
 
 > **Para el examen:** `cephadm` ha reemplazado a `ceph-deploy` como herramienta oficial de despliegue. `public_network` es para clientes, `cluster_network` es para trafico de replicacion entre OSDs.
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **MON requiere numero impar (3 o 5) para quorum** — con 2 MONs no hay quorum posible si uno falla. Con 3 se tolera 1 fallo, con 5 se toleran 2. El examen puede preguntar cuantos MONs se necesitan para tolerar N fallos: la respuesta es `2N + 1`
+- **MDS solo es necesario para CephFS** — RBD y RGW no necesitan MDS. Si el examen pregunta los componentes minimos para usar RBD, la respuesta es MON, OSD y MGR. Incluir MDS cuando solo se usa RBD es incorrecto
+- **OSD: uno por disco, no uno por nodo** — un nodo con 4 discos tendra 4 OSDs. El examen puede confundir preguntando cuantos OSDs tiene un cluster de 3 nodos con 6 discos cada uno: la respuesta es 18, no 3
+- **CRUSH map: la replicacion respeta la jerarquia** — una regla CRUSH que replica entre `rack` distribuye copias en racks diferentes. Si la regla dice `host`, las copias van a hosts diferentes del mismo rack. Configurar mal el nivel de fallo tolerado es trampa clasica
+- **PG active+clean vs active+degraded** — `active+clean` es el estado normal; `active+degraded` significa que el PG funciona pero le faltan replicas (un OSD caido). El examen puede preguntar si el cluster sigue operativo con PGs degraded: si, pero con riesgo de perdida de datos si otro OSD falla
+- **pool size vs min_size** — `size` es el numero total de replicas (normalmente 3); `min_size` es el minimo de replicas para seguir aceptando escrituras (normalmente 2). Si `min_size=2` y solo queda 1 replica, el PG se vuelve inactivo y las escrituras fallan
+- **public_network vs cluster_network** — `public_network` es para trafico de clientes (RBD, CephFS, RGW); `cluster_network` es para replicacion entre OSDs. Si solo se configura `public_network`, todo el trafico va por la misma red, pero funciona. El examen puede preguntar que red separar para rendimiento
+- **cephadm reemplazo a ceph-deploy** — `ceph-deploy` esta deprecado desde Ceph Octopus. Si el examen presenta ambas opciones, `cephadm` es la herramienta actual. `cephadm bootstrap --mon-ip` es el primer comando para crear un cluster nuevo
+- **Erasure coded pools no soportan escrituras parciales** — los pools EC son eficientes en espacio pero no soportan RBD directamente (necesitan un pool replicado como cache tier) ni permiten OMAP. CephFS metadata DEBE estar en pool replicado, no EC
+- **ceph osd pool delete requiere doble confirmacion** — `ceph osd pool delete pool pool --yes-i-really-really-mean-it` exige escribir el nombre dos veces y la flag larga. Es una medida de proteccion. El examen puede preguntar por que falla un delete: falta la doble confirmacion o falta habilitar `mon_allow_pool_delete`

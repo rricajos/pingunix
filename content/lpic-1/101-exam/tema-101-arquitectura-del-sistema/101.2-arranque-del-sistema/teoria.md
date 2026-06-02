@@ -512,3 +512,18 @@ Storage=persistent
 6. **Logs de arranque:** `dmesg` (buffer del kernel), `journalctl -b` (systemd), `/var/log/boot.log`, `/var/log/messages`.
 7. **Sistemas de init:** SysVinit (clasico, secuencial), Upstart (Ubuntu antiguo, eventos), systemd (moderno, paralelo).
 8. **Parametros del kernel:** `ro`, `root=`, `init=`, `single`, `quiet`, `splash`, `systemd.unit=`.
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`initramfs` vs `initrd` son diferentes pero se nombran igual** — El archivo en `/boot/` se llama `initrd.img-*` por convencion historica, aunque tecnicamente es un initramfs (archivo cpio). El examen puede preguntar sobre esta distincion.
+- **`mkinitramfs` vs `dracut` vs `mkinitrd`** — `mkinitramfs` es de Debian/Ubuntu, `dracut` es de Red Hat/Fedora moderno, `mkinitrd` es de Red Hat antiguo. El examen pregunta cual herramienta corresponde a cual distribucion.
+- **`dmesg` muestra el ring buffer, no un archivo de log** — El ring buffer es circular y de tamano fijo: los mensajes antiguos se sobrescriben. El examen puede preguntar por que ciertos mensajes de arranque ya no aparecen en `dmesg`.
+- **BIOS + MBR vs UEFI + GPT** — BIOS usa MBR (limite 2 TB, 4 particiones primarias). UEFI usa GPT (sin limite practico, 128 particiones). El examen puede combinar incorrectamente BIOS con GPT o UEFI con MBR para confundir.
+- **`/var/log/messages` vs `/var/log/syslog`** — `messages` es de Red Hat/CentOS/SUSE; `syslog` es de Debian/Ubuntu. El examen puede preguntar cual archivo consultar segun la distribucion.
+- **El parametro `init=` sobreescribe el proceso init** — `init=/bin/bash` arranca directamente a una shell sin init. Es diferente de `single` o `1` que arrancan en modo monousuario CON init.
+- **`journalctl -b -1` vs `journalctl -b`** — `-b` muestra logs del arranque actual; `-b -1` del arranque anterior. Sin persistencia configurada (`/var/log/journal/`), los logs anteriores se pierden al reiniciar.
+- **La secuencia POST ocurre ANTES del bootloader** — POST (Power-On Self-Test) es del firmware BIOS/UEFI. El orden es: POST -> buscar dispositivo de arranque -> cargar bootloader -> kernel. El examen puede alterar este orden en las opciones.

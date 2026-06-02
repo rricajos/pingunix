@@ -390,3 +390,29 @@ named-checkzone 1.168.192.in-addr.arpa /var/cache/bind/db.192.168.1
 | CNAME da error | CNAME coexiste con otro registro | Eliminar registros conflictivos |
 | PTR no funciona | Zona inversa mal configurada | Verificar el orden inverso de los octetos |
 | Delegacion falla | Faltan glue records | Agregar registros A para los NS delegados |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **SOA serial: si olvidas incrementarlo, los esclavos NO actualizan** — formato recomendado: `YYYYMMDDNN`. Si editas la zona y no cambias el serial, los secundarios seguiran sirviendo datos antiguos. Es la causa mas comun de "he cambiado la zona pero no funciona".
+
+- **Punto final (`.`) en los FQDN dentro de archivos de zona** — `www.ejemplo.com.` (con punto) es un nombre absoluto. `www.ejemplo.com` (sin punto) se interpreta como `www.ejemplo.com.ejemplo.com.` porque BIND anade el `$ORIGIN`. Este error es muy frecuente en el examen.
+
+- **CNAME no puede coexistir con otros registros del mismo nombre** — no puedes tener un CNAME y un MX (o A, o NS) para el mismo nombre. Ademas, el apex de la zona (`@`) NUNCA puede ser un CNAME.
+
+- **MX con valor bajo = mayor prioridad** — MX 10 tiene MAS prioridad que MX 20. El correo se intenta entregar primero al servidor con el numero mas bajo. No confundir con "mayor numero = mayor prioridad".
+
+- **Zona inversa: octetos en orden INVERSO + `.in-addr.arpa`** — para la red `192.168.1.0/24` la zona es `1.168.192.in-addr.arpa`, NO `192.168.1.in-addr.arpa`. Es uno de los errores mas clasicos del examen.
+
+- **RNAME en el SOA usa `.` en lugar de `@`** — el email `admin@ejemplo.com` se escribe como `admin.ejemplo.com.` en el registro SOA. El primer punto sustituye a la arroba.
+
+- **`notify yes` solo funciona en el maestro** — el esclavo NO envia notificaciones. Si preguntan donde se configura `notify`, siempre es en la zona de tipo `master`.
+
+- **AXFR vs IXFR** — AXFR transfiere la zona completa, IXFR solo los cambios incrementales. Si un esclavo se acaba de configurar, la primera transferencia siempre es AXFR.
+
+- **Glue records obligatorios cuando el NS esta dentro del subdominio delegado** — si delegas `sub.ejemplo.com` a `ns1.sub.ejemplo.com`, DEBES incluir un registro A para `ns1.sub` en la zona padre. Sin el glue record, la delegacion no puede resolverse.
+
+- **`$TTL` es obligatorio al inicio del archivo de zona** — define el TTL por defecto para todos los registros. Si falta, `named-checkzone` dara un warning o error segun la version.

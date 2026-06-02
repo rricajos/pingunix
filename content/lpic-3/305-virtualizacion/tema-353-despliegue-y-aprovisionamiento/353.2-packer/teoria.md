@@ -384,3 +384,20 @@ build {
 | `packer validate` | Verificar template |
 | Multi-plataforma | Un template, múltiples imágenes |
 | File provisioner | Subir archivos a /tmp/, luego mover con shell |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Packer crea imagenes, no gestiona infraestructura** — Packer construye imagenes de maquinas (AMIs, qcow2, vmdk, OVA). NO despliega ni gestiona infraestructura, eso es responsabilidad de Terraform o Ansible. El examen puede preguntar que herramienta usar para crear una imagen base (Packer) vs desplegarla (Terraform).
+- **HCL2 vs JSON** — HCL2 (archivos `.pkr.hcl`) es el formato actual y recomendado desde Packer v1.7+. El formato JSON antiguo sigue soportado pero esta en desuso. El examen puede mostrar ambos formatos y preguntar cual es el moderno.
+- **Builder vs Provisioner vs Post-processor** — Builder crea la imagen para una plataforma (QEMU, AWS, VirtualBox). Provisioner configura la imagen durante la construccion (shell, ansible, file). Post-processor procesa la imagen despues (comprimir, checksum, subir). El examen puede confundir estos tres conceptos.
+- **File provisioner no puede escribir en rutas protegidas** — El file provisioner sube archivos al guest pero ejecuta como usuario SSH (normalmente sin root). Para mover archivos a `/etc/` u otras rutas protegidas, hay que subir a `/tmp/` primero y luego usar un shell provisioner con `sudo mv`. El examen puede mostrar un file provisioner escribiendo en `/etc/` y preguntar por que falla.
+- **`packer validate` no detecta errores de runtime** — `validate` verifica la sintaxis y estructura del template, pero NO verifica que las ISOs existan, que las credenciales sean validas o que el hipervisor este disponible. Esos errores solo aparecen durante `packer build`.
+- **`packer build -only` filtra builders** — `-only=qemu.ubuntu` construye solo el builder especificado cuando el template tiene multiples builders. La sintaxis es `tipo.nombre`. Sin `-only`, Packer construye todos los builders en paralelo. El examen puede preguntar como construir solo para una plataforma.
+- **El `accelerator` en el builder QEMU determina el rendimiento** — `accelerator = "kvm"` usa aceleracion KVM (rapido). Sin esta opcion o con `accelerator = "none"`, Packer usa emulacion pura (muy lento). El examen puede presentar un build QEMU que tarda horas y preguntar por que.
+- **`packer init` descarga plugins, no inicializa templates** — Similar a `terraform init`, `packer init` descarga los plugins (builders, provisioners, post-processors) declarados en el bloque `packer { required_plugins {} }`. No confundir con la inicializacion de un proyecto desde cero.
+- **boot_command usa una sintaxis especial** — Las teclas especiales se escriben entre angulos: `<enter>`, `<esc>`, `<tab>`, `<wait>`. `{{ .HTTPIP }}` y `{{ .HTTPPort }}` son variables del servidor HTTP integrado de Packer. El examen puede preguntar como automatizar la instalacion del SO durante el build.
+- **Builds multi-plataforma producen imagenes identicas** — Un unico template de Packer con multiples builders genera imagenes para cada plataforma con la misma configuracion. Esto garantiza consistencia entre entornos (desarrollo en VirtualBox, produccion en AWS). El examen puede preguntar como asegurar que una imagen local sea identica a la de cloud.

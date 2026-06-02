@@ -311,3 +311,20 @@ totem {
 | **CRM** | Gestor de recursos del cluster (Pacemaker) |
 | **Resource Agent** | Script para gestionar un recurso |
 | **Heartbeat** | Señal periódica de vida entre nodos |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Split-brain vs perdida de quorum** — el split-brain ocurre cuando los nodos pierden comunicacion y ambos creen ser el primario; la perdida de quorum es cuando ninguna particion tiene mayoria. No son lo mismo: split-brain corrompe datos, perdida de quorum detiene servicios
+- **STONITH es obligatorio, no opcional** — Pacemaker se niega a iniciar recursos si `stonith-enabled=false` en produccion. La opcion de deshabilitarlo es solo para testing. En el examen, si preguntan como resolver un cluster que no arranca recursos, verifica STONITH primero
+- **MTBF vs MTTR** — MTBF mide fiabilidad (tiempo entre fallos), MTTR mide capacidad de recuperacion (tiempo de reparacion). La disponibilidad depende de ambos: `MTBF / (MTBF + MTTR)`. Un MTTR bajo importa mas que un MTBF alto para HA
+- **Quorum en cluster de 2 nodos** — un cluster de 2 nodos NO tiene quorum natural (necesita 2 de 2, tolerancia = 0). Requiere `two_node: 1` en Corosync o un quorum device externo. Confundir esto con un cluster de 3 nodos es un error clasico
+- **99.999% no es lo mismo que 99.99%** — cinco nueves = 5.26 min/año de inactividad; cuatro nueves = 52.6 min/año. La diferencia es un orden de magnitud. LPI pregunta los valores exactos de la tabla de nueves
+- **Activo/Pasivo vs Activo/Activo** — en activo/activo ambos nodos procesan peticiones y se necesita almacenamiento compartido o filesystem cluster (GFS2/OCFS2). En activo/pasivo basta con replicacion (DRBD). Confundir los requisitos de almacenamiento es trampa frecuente
+- **Corosync vs Pacemaker: roles distintos** — Corosync gestiona comunicacion, membresia y quorum; Pacemaker gestiona recursos, restricciones y decisiones de failover. LPI pregunta que componente hace que: el CIB y el Policy Engine son de Pacemaker, Totem es de Corosync
+- **Resource Agents OCF vs LSB** — los agentes OCF soportan monitor, promote y demote; los LSB solo start/stop/status. Si el examen pregunta sobre recursos promotable (master/slave), la respuesta siempre es OCF
+- **Fencing a nivel de nodo vs recurso** — STONITH apaga o reinicia el nodo completo; el fencing de recurso (ej: SAN zoning) solo bloquea acceso al almacenamiento. STONITH es mas seguro porque elimina toda posibilidad de escritura zombi
+- **SPOF ocultos** — un unico switch de red, una unica fuente de alimentacion o un unico heartbeat son SPOF aunque el cluster tenga multiples nodos. El examen presenta diagramas donde hay que identificar el SPOF no obvio

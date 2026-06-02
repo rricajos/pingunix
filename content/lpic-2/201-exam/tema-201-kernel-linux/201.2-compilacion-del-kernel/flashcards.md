@@ -11,7 +11,7 @@ subtema: "201.2"
 
 # Flashcards: 201.2 - Compilacion Del Kernel
 
-> 36 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 37 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="201.2">
 </div>
@@ -655,6 +655,24 @@ subtema: "201.2"
 <div class="flashcard-back">
 
 **R:** Los headers del kernel son necesarios para compilar modulos externos (fuera del arbol del kernel):
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="201.2">
+</div>
+
+<div class="flashcard" data-id="201.2-fc-037">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

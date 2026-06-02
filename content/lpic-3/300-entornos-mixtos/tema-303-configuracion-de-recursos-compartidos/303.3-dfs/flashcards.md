@@ -11,7 +11,7 @@ subtema: "303.3"
 
 # Flashcards: 303.3 - Dfs
 
-> 34 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 36 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="303.3">
 </div>
@@ -541,6 +541,24 @@ subtema: "303.3"
 <div class="flashcard" data-id="303.3-fc-030">
 <div class="flashcard-front">
 
+**P:** Tip de examen: La seguridad de DFS tiene dos niveles: los permisos de la raíz DFS (quién puede ...
+
+</div>
+<div class="flashcard-back">
+
+**R:** La seguridad de DFS tiene dos niveles: los permisos de la raíz DFS (quién puede ver los enlaces) y los permisos de los shares destino (quién puede acceder a los datos). Ambos se evalúan independientemente.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="303.3">
+</div>
+
+<div class="flashcard" data-id="303.3-fc-031">
+<div class="flashcard-front">
+
 **P:** Que es/son Introducción?
 
 </div>
@@ -556,7 +574,7 @@ subtema: "303.3"
 <div class="flashcard-deck" data-subtema="303.3">
 </div>
 
-<div class="flashcard" data-id="303.3-fc-031">
+<div class="flashcard" data-id="303.3-fc-032">
 <div class="flashcard-front">
 
 **P:** Que es/son DFS Proxy (msdfs proxy)?
@@ -574,7 +592,7 @@ subtema: "303.3"
 <div class="flashcard-deck" data-subtema="303.3">
 </div>
 
-<div class="flashcard" data-id="303.3-fc-032">
+<div class="flashcard" data-id="303.3-fc-033">
 <div class="flashcard-front">
 
 **P:** Que es/son Failover con DFS?
@@ -592,7 +610,7 @@ subtema: "303.3"
 <div class="flashcard-deck" data-subtema="303.3">
 </div>
 
-<div class="flashcard" data-id="303.3-fc-033">
+<div class="flashcard" data-id="303.3-fc-034">
 <div class="flashcard-front">
 
 **P:** Que es/son Parámetros DFS en smb.conf?
@@ -610,7 +628,7 @@ subtema: "303.3"
 <div class="flashcard-deck" data-subtema="303.3">
 </div>
 
-<div class="flashcard" data-id="303.3-fc-034">
+<div class="flashcard" data-id="303.3-fc-035">
 <div class="flashcard-front">
 
 **P:** Que es/son Consideraciones de seguridad?
@@ -619,6 +637,24 @@ subtema: "303.3"
 <div class="flashcard-back">
 
 **R:** - Los permisos en la raíz DFS controlan quién puede ver los enlaces
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="303.3">
+</div>
+
+<div class="flashcard" data-id="303.3-fc-036">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

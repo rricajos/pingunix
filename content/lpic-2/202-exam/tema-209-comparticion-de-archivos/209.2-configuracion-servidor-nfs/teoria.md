@@ -344,3 +344,27 @@ rpcinfo -u servidor nfs
 ```
 
 > **Para el examen:** El demonio `rpc.idmapd` es específico de NFSv4 y se encarga de mapear los UIDs/GIDs numéricos a nombres de usuario y grupo (y viceversa). Esto es importante porque NFSv4 transmite los nombres de usuario en lugar de UIDs numéricos.
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Espacio entre cliente y parentesis en `/etc/exports` cambia el significado** — `192.168.1.0/24(rw)` da acceso rw a esa red. `192.168.1.0/24 (rw)` da acceso ro a esa red Y acceso rw a TODOS los hosts (el espacio crea dos entradas separadas). Este es el error mas peligroso y mas preguntado.
+
+- **NFSv4 solo usa TCP 2049, NFSv3 necesita rpcbind (111) y puertos dinamicos** — esta diferencia es crucial para la configuracion de firewalls. Si preguntan "que puerto abrir para NFSv4", la respuesta es solo TCP 2049. Para NFSv3 tambien se necesita 111 y los puertos de mountd, statd y lockd.
+
+- **`root_squash` es el comportamiento POR DEFECTO** — si no se especifica nada, root remoto se mapea a nobody. `no_root_squash` debe habilitarse explicitamente y es un riesgo de seguridad. El examen puede preguntar cual es el comportamiento predeterminado.
+
+- **`exportfs -ra` para aplicar cambios, NO reiniciar NFS** — despues de editar `/etc/exports`, se usa `exportfs -ra` para re-exportar. No es necesario (ni recomendable) reiniciar el servicio NFS completo.
+
+- **`fsid=0` marca la raiz del pseudo-filesystem en NFSv4** — la opcion `fsid=0` indica a NFSv4 cual es el directorio raiz virtual. Sin ella, NFSv4 no puede presentar las exportaciones como una estructura unificada.
+
+- **`hard` vs `soft` en montaje del cliente** — `hard` (predeterminado) reintenta indefinidamente si el servidor no responde, lo que puede colgar procesos. `soft` devuelve error despues de los reintentos, pero puede causar corrupcion de datos. El examen pregunta frecuentemente cual es el predeterminado (hard).
+
+- **`_netdev` en fstab es necesario para montajes NFS** — esta opcion indica al sistema que espere a que la red este disponible antes de intentar el montaje. Sin ella, el montaje puede fallar durante el arranque.
+
+- **`all_squash` mapea TODOS los usuarios al anonimo, no solo root** — con `all_squash`, cualquier UID/GID del cliente se convierte en el anonimo (configurable con `anonuid`/`anongid`). No confundir con `root_squash` que solo afecta a UID 0.
+
+- **`showmount -e` revela las exportaciones y es un riesgo de seguridad** — en NFSv3, `showmount -e servidor` lista todas las exportaciones de un servidor. En produccion, esto deberia restringirse con firewall.

@@ -375,3 +375,20 @@ ip link set eth2 netns ns_servicio
 | JSON config | No | Si |
 | Max interfaces | Ilimitado | Ilimitado |
 | Latencia | Menor (kernel) | Mayor (userspace) |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Bonding modo 1 (active-backup) no requiere configuracion del switch** — los modos 0, 2, 3 y 4 requieren soporte en el switch (EtherChannel o LACP). El modo 1 funciona con cualquier switch porque solo una interfaz esta activa. El examen pregunta que modo usar cuando no se puede configurar el switch: modo 1
+- **Bonding modo 4 (802.3ad/LACP) requiere soporte LACP en el switch** — si el switch no soporta LACP, el modo 4 no funciona y las interfaces no se agregan. El examen puede presentar un bond modo 4 que no funciona: la causa suele ser que el switch no tiene LACP habilitado
+- **miimon vs arp_interval** — `miimon` detecta caida del enlace fisico (cable desconectado); `arp_interval` detecta caida del enlace logico (ping a un gateway). Si un switch intermedio falla pero el enlace fisico sigue activo, solo `arp_interval` lo detecta. El examen puede preguntar cuando usar cada uno
+- **Teaming (teamd) vs Bonding: userspace vs kernel** — bonding opera en el kernel (menor latencia); teaming usa teamd en userspace (mas flexible, configuracion JSON, D-Bus). El examen puede preguntar la diferencia principal: bonding es kernel, teaming es userspace
+- **VRRP virtual_router_id unico por red** — dos instancias VRRP en la misma LAN con el mismo `virtual_router_id` interfieren entre si. Cada servicio VRRP necesita un ID diferente (0-255). El examen puede presentar dos servicios VRRP que fallan: verifica que los IDs no colisionen
+- **nopreempt evita flapping** — sin `nopreempt`, un nodo MASTER que se recupera de un fallo retoma inmediatamente el rol, provocando otra migracion de la VIP. Con `nopreempt`, el BACKUP que tomo el control lo mantiene hasta que falle. El examen puede preguntar como evitar failback automatico
+- **track_script weight negativo reduce prioridad** — un `vrrp_script` con `weight -20` reduce la prioridad efectiva del nodo si el script falla. Si la prioridad cae por debajo del BACKUP, se produce failover. El examen puede pedir calcular la prioridad efectiva: `priority + weight` cuando el script falla
+- **ip route con nexthop para balanceo multi-ISP** — usar `ip route add default nexthop via GW1 weight 1 nexthop via GW2 weight 1` distribuye trafico entre dos ISPs. Las tablas de enrutamiento personalizadas (`/etc/iproute2/rt_tables`) permiten routing por origen. El examen puede preguntar como configurar failover entre dos ISPs
+- **Bonding: /proc/net/bonding/bond0 muestra el estado completo** — este archivo muestra modo, interfaz activa, estado de cada slave, MII status, velocidad y errores. Es el comando principal para diagnosticar problemas de bonding. El examen puede pedir como verificar que interfaz esta activa
+- **teamdctl vs nmcli para gestionar teaming** — `teamdctl team0 state` muestra el estado en tiempo real del team; `nmcli` gestiona la configuracion persistente. Para diagnostico rapido se usa `teamdctl`, para configuracion permanente se usa `nmcli`

@@ -309,3 +309,20 @@ qemu-system-x86_64 \
 | QEMU Monitor | Control interactivo de la VM en ejecución |
 | virtio | Drivers PV para mejor rendimiento en E/S |
 | SPICE > VNC | SPICE para escritorio, VNC para acceso básico |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`-enable-kvm` vs modo emulacion** — Sin `-enable-kvm` (o `-accel kvm`), QEMU funciona en modo emulacion pura por software, ordenes de magnitud mas lento. El examen puede mostrar un comando qemu-system-x86_64 y preguntar por que la VM es muy lenta: la respuesta es que falta `-enable-kvm`.
+- **qcow2 vs raw: snapshots** — Solo qcow2 soporta snapshots internos, backing files, compresion y cifrado LUKS. Las imagenes raw NO soportan ninguna de estas funcionalidades. Si te preguntan como crear un snapshot interno en una imagen raw, la respuesta es que no es posible.
+- **`qemu-img resize --shrink`** — Aumentar el tamano de una imagen no requiere flag especial (`qemu-img resize disco.qcow2 +10G`), pero reducir el tamano SI requiere `--shrink` como medida de seguridad. Olvidar `--shrink` al reducir produce un error.
+- **Snapshot `-c` vs `-a` vs `-d`** — En `qemu-img snapshot`: `-c` crea (create), `-a` aplica/revierte (apply), `-d` elimina (delete), `-l` lista. El examen puede mezclar estas flags para confundir.
+- **Snapshots internos vs externos** — Los internos se almacenan dentro del propio archivo qcow2. Los externos crean un nuevo archivo overlay que usa la imagen original como backing file (solo lectura). Los externos son mas eficientes para ramificacion (branching) pero crean cadenas de dependencia.
+- **QEMU Monitor: `savevm` vs `snapshot`** — `savevm` en el QEMU Monitor captura el estado completo (disco + RAM + dispositivos). `qemu-img snapshot -c` desde la linea de comandos solo captura el estado del disco. No son equivalentes.
+- **VNC `:1` = puerto 5901** — El display VNC `:N` corresponde al puerto `5900 + N`. Asi, `-vnc :1` escucha en el puerto 5901, `-vnc :0` en 5900. El examen puede preguntar en que puerto se conecta un cliente VNC.
+- **SPICE vs VNC** — SPICE ofrece audio, USB remoto, copiar/pegar bidireccional y mejor rendimiento para escritorio. VNC es mas simple y universal pero con menos funcionalidades. El examen preguntara cual protocolo elegir para entornos de escritorio (SPICE) vs acceso basico remoto (VNC).
+- **`-net user` vs `-netdev tap`** — `-net user` proporciona NAT simple sin configuracion (ideal para pruebas), pero no permite que la VM sea accesible desde el exterior. `-netdev tap` con bridge permite conectividad completa bidireccional. Cuidado con confundir cuando se necesita cada uno.
+- **`-cpu host` expone las flags reales de la CPU** — Esta opcion pasa las caracteristicas reales del procesador al guest, necesaria para migracion en vivo (la CPU debe ser compatible) y para funcionalidades avanzadas. Sin `-cpu host`, QEMU emula una CPU generica con menos features.

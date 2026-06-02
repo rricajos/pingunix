@@ -417,3 +417,18 @@ En `/etc/fstab`:
 9. **VFAT/FAT32** se usa para la particion EFI (ESP).
 
 10. Las particiones logicas siempre empiezan en **5** (sda5, sda6...) independientemente de cuantas primarias haya.
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`parted` aplica cambios inmediatamente; `fdisk`/`gdisk` no** — En `fdisk` y `gdisk`, los cambios solo se escriben al ejecutar `w`. En `parted`, cada operacion se ejecuta al instante sin confirmacion. El examen puede preguntar cual herramienta requiere precaucion extra.
+- **Particiones logicas SIEMPRE empiezan en 5** — Aunque solo haya 1 primaria y 1 extendida, la primera logica es sda5. Las numeros 1-4 estan reservados para primarias/extendida. El examen puede ofrecer sda2 como primera logica.
+- **`mkfs` formatea; NO particiona** — `mkfs.ext4 /dev/sda1` crea el sistema de archivos en una particion existente. NO crea la particion. Para particionar se usa `fdisk`, `gdisk` o `parted`. El examen puede confundir ambos pasos.
+- **ext2 vs ext3 vs ext4: la diferencia principal es el journaling** — ext2 NO tiene journaling; ext3 anade journaling; ext4 anade extents y tamanos mas grandes. `tune2fs -j` convierte ext2 a ext3. El examen puede preguntar que diferencia ext2 de ext3.
+- **XFS no se puede reducir, solo ampliar** — A diferencia de ext4, un filesystem XFS no puede reducirse una vez creado. Solo se puede ampliar con `xfs_growfs`. El examen puede preguntar que limitacion tiene XFS.
+- **Codigos de tipo MBR: 82 = swap, 83 = Linux, 8e = LVM** — Estos codigos identifican el proposito de la particion. `fdisk` usa `t` para cambiar el tipo. El examen puede pedir identificar o asignar estos codigos.
+- **`/dev/nvme0n1p1` vs `/dev/sda1`** — Los discos NVMe usan nomenclatura diferente: `nvme0` es el controlador, `n1` es el primer disco, `p1` es la primera particion. El examen puede preguntar la nomenclatura correcta para discos NVMe.
+- **La ESP (EFI System Partition) DEBE ser FAT32** — Usar `mkfs.vfat` o `mkfs.fat -F 32`. Otros sistemas de archivos no son validos para la ESP. El examen puede ofrecer ext4 como opcion para la ESP.

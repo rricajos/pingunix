@@ -309,3 +309,19 @@ smbclient -L //servidor -U usuario
    guest ok = yes
    writable = no
 ```
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`read only = yes` es el valor por defecto** — Si no se especifica `writable = yes` o `read only = no`, el recurso es de solo lectura. Las preguntas presentan shares donde los usuarios no pueden escribir y la causa es este valor predeterminado.
+- **`write list` sobrescribe `read only = yes`** — Los usuarios en `write list` pueden escribir incluso si `read only = yes`. Inversamente, `read list` limita a solo lectura incluso si `writable = yes`. Entender esta jerarquia es critico.
+- **`browseable = no` NO restringe acceso** — Un share con `browseable = no` sigue siendo accesible si se conoce el nombre. Solo se oculta del listado de red. Para restringir acceso real se usan `valid users` o `hosts allow`.
+- **`create mask` (AND) vs `force create mode` (OR)** — `create mask` LIMITA permisos maximos (operacion AND). `force create mode` GARANTIZA permisos minimos (operacion OR). Primero se aplica mask, luego force. Las preguntas piden calcular los permisos resultantes.
+- **`hide files` vs `veto files`** — `hide files` solo oculta visualmente (el archivo sigue accesible si se conoce el nombre). `veto files` bloquea completamente el acceso (ni ver ni acceder). `delete veto files = yes` permite eliminar directorios con archivos vetados.
+- **`[homes]` crea shares dinamicos** — `[homes]` no es un share estatico; crea automaticamente un share por cada usuario que accede basandose en su directorio home del sistema. `valid users = %S` restringe el acceso solo al propio usuario.
+- **`guest ok = yes` vs `map to guest = Bad User`** — `guest ok` se configura por share y permite acceso anonimo a ESE recurso. `map to guest` es global y define que hacer con usuarios desconocidos. Ambos son necesarios para acceso anonimo completo.
+- **VFS `recycle:repository`** — La papelera se crea DENTRO del share (ruta relativa al path). `recycle:keeptree = yes` mantiene la estructura de directorios. `recycle:versions = yes` permite multiples versiones del mismo archivo. Las preguntas piden configurar correctamente cada opcion.
+- **Variables `%U` vs `%S` en [homes]** — En la seccion `[homes]`, `%S` se sustituye por el nombre del servicio (que coincide con el nombre del usuario). `%U` es el usuario conectado. En la mayoria de casos son iguales, pero `%S` es mas correcto en `valid users` de [homes].

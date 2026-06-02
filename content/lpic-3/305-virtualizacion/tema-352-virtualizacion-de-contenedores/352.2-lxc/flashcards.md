@@ -11,7 +11,7 @@ subtema: "352.2"
 
 # Flashcards: 352.2 - Lxc
 
-> 37 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 38 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="352.2">
 </div>
@@ -673,6 +673,24 @@ subtema: "352.2"
 <div class="flashcard-back">
 
 **R:** Ejecutan el contenedor mapeando UIDs/GIDs a rangos sin privilegios:
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="352.2">
+</div>
+
+<div class="flashcard" data-id="352.2-fc-038">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

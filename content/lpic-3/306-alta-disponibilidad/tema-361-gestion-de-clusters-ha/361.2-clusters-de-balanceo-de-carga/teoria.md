@@ -370,3 +370,20 @@ server {
 | ACLs HTTP | No | Sí | Sí (location) |
 | Integración kernel | Sí (IPVS) | No | No |
 | Healthchecks | Vía keepalived | Integrado | Limitado (Plus) |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **LVS modo DR vs NAT** — en DR, las respuestas van directamente del Real Server al cliente (no pasan por el Director); en NAT, todo el trafico pasa por el Director. Si el examen pregunta por el modo mas eficiente o por que el Director no es cuello de botella, la respuesta es DR
+- **VIP en loopback con ARP suprimido (modo DR)** — los Real Servers en modo DR necesitan la VIP configurada en la interfaz loopback con ARP deshabilitado (`arp_ignore=1`, `arp_announce=2`). Sin esto, multiples nodos responden ARP para la misma IP y se produce un conflicto
+- **ipvsadm flags: -g vs -m vs -i** — `-g` es DR (gatewaying, predeterminado), `-m` es NAT (masquerading), `-i` es TUN (tunneling). Confundir `-m` con `-g` cambia completamente el modo de reenvio
+- **wlc es el scheduler predeterminado de IPVS** — no es round-robin (`rr`). `wlc` (Weighted Least Connection) considera tanto el peso como las conexiones activas. El examen puede preguntar cual es el scheduler por defecto
+- **virtual_router_id debe ser unico en la red** — si dos instancias VRRP en la misma red comparten el mismo `virtual_router_id`, interfieren entre si. Cada servicio VRRP independiente necesita un ID diferente (0-255)
+- **HAProxy mode http vs mode tcp** — las ACLs basadas en contenido HTTP (path, headers) solo funcionan en `mode http`. En `mode tcp`, HAProxy solo ve paquetes TCP y no puede inspeccionar HTTP. El examen pregunta por que una ACL no funciona: verifica el modo
+- **VRRP usa multicast 224.0.0.18, protocolo IP 112** — no es TCP ni UDP. Si un firewall bloquea el protocolo 112, el VRRP no funciona y ambos nodos creen ser MASTER (split-brain de VRRP)
+- **keepalived: priority vs state** — `state MASTER` es solo el estado inicial. El nodo con mayor `priority` efectiva se convierte en MASTER. Si un track_script reduce la prioridad, el BACKUP puede tomar el control aunque el otro se configurara como MASTER
+- **HAProxy server backup vs server check** — un servidor marcado como `backup` solo recibe trafico si todos los servidores normales estan caidos. La keyword `check` activa health checks. Sin `check`, HAProxy no monitoriza la salud del servidor y le envia trafico aunque este muerto
+- **LVS no termina SSL ni inspecciona HTTP** — al operar en capa 4 (kernel), LVS no puede hacer terminacion SSL ni enrutamiento basado en URL. Para eso se necesita HAProxy o Nginx en capa 7

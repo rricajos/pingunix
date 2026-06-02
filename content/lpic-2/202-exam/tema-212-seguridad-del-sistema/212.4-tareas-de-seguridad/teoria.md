@@ -415,3 +415,29 @@ lynis show tests
 Lynis genera un informe con puntuación de "hardening index" y sugerencias de mejora. Los resultados se almacenan en `/var/log/lynis.log` y `/var/log/lynis-report.dat`.
 
 > **Para el examen:** Lynis es una herramienta de auditoría no intrusiva que solo analiza y reporta. No modifica la configuración del sistema automáticamente.
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **fail2ban: editar `jail.local`, NUNCA `jail.conf`** — `jail.conf` se sobreescribe con actualizaciones del paquete. `jail.local` sobreescribe los valores de `jail.conf` y persiste entre actualizaciones. El examen puede preguntar cual archivo modificar.
+
+- **`bantime` es el tiempo de bloqueo, `findtime` es la ventana de deteccion** — `maxretry=5` con `findtime=600` significa 5 intentos fallidos en 10 minutos para ser bloqueado. `bantime=3600` bloquea durante 1 hora. Confundir `findtime` con `bantime` es comun.
+
+- **AIDE y Tripwire deben inicializarse en un sistema LIMPIO** — `aide --init` o `tripwire --init` crean la base de datos de referencia. Si se ejecutan en un sistema ya comprometido, la referencia incluira los archivos maliciosos. La base de datos debe guardarse en medio externo o de solo lectura.
+
+- **`aide --check` verifica, `aide --update` actualiza la base de datos** — despues de cambios legitimos (actualizaciones del sistema), hay que ejecutar `--update` para que AIDE no genere falsos positivos en la siguiente verificacion.
+
+- **`rkhunter --propupd` despues de actualizaciones del sistema** — tras actualizar paquetes legitimamente, ejecutar `--propupd` para que rkhunter registre los nuevos hashes como validos. Sin esto, cada binario actualizado genera una alerta falsa.
+
+- **`ss -tlnp` es el reemplazo moderno de `netstat -tlnp`** — ambos muestran puertos TCP en escucha con el proceso asociado. `ss` es mas rapido y esta disponible en sistemas modernos. El examen puede preguntar por ambos comandos.
+
+- **`nmap -sS` (SYN scan) requiere privilegios de root** — el escaneo SYN es "sigiloso" porque no completa el handshake TCP. `nmap` sin opciones usa TCP connect (no requiere root). `-sV` detecta versiones de servicios.
+
+- **`visudo` SIEMPRE para editar `/etc/sudoers`** — `visudo` valida la sintaxis antes de guardar. Editar directamente con un editor puede dejar el archivo corrupto y bloquear todo acceso sudo. Tambien se pueden usar archivos modulares en `/etc/sudoers.d/`.
+
+- **`auditctl -w` para monitorizar archivos, `-a` para syscalls** — `-w /etc/passwd -p wa` monitoriza escrituras y cambios de atributos en passwd. `-a always,exit -S execve` monitoriza ejecuciones de programas. Son sintaxis diferentes para objetivos diferentes.
+
+- **`NOPASSWD` en sudoers: posicion importa** — `usuario ALL=(root) NOPASSWD: /usr/bin/tar` permite ejecutar solo tar sin contrasena. `NOPASSWD: ALL` permite TODO sin contrasena, lo cual es un riesgo de seguridad grave.

@@ -11,7 +11,7 @@ subtema: "302.3"
 
 # Flashcards: 302.3 - Gestion De Usuarios Ad
 
-> 40 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 41 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="302.3">
 </div>
@@ -727,6 +727,24 @@ subtema: "302.3"
 <div class="flashcard-back">
 
 **R:** - `samba-tool user/group` para gestión completa de usuarios y grupos AD
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="302.3">
+</div>
+
+<div class="flashcard" data-id="302.3-fc-041">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

@@ -436,3 +436,29 @@ view "externa" {
 - **Implementar rate limiting** para mitigar ataques de amplificacion
 - **Usar split DNS** para separar vistas internas y externas
 - **Mantener BIND actualizado** con los ultimos parches de seguridad
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **DNSSEC proporciona integridad y autenticacion, NO confidencialidad** — DNSSEC firma las respuestas pero NO las cifra. Las consultas y respuestas siguen siendo visibles en texto plano. Para cifrado se necesita DoT o DoH.
+
+- **KSK (flag 257) firma las claves, ZSK (flag 256) firma los datos** — la KSK firma el conjunto DNSKEY y se vincula a la zona padre mediante el registro DS. La ZSK firma los registros A, MX, NS, etc. No confundir cual firma que.
+
+- **NSEC permite zone walking, NSEC3 lo evita** — con NSEC un atacante puede enumerar todos los nombres de la zona recorriendo los registros NSEC encadenados. NSEC3 usa hashes para impedir esta enumeracion.
+
+- **TSIG es criptografia simetrica, DNSSEC es asimetrica** — TSIG usa una clave compartida (HMAC) entre dos servidores para autenticar transferencias. DNSSEC usa pares de claves publica/privada. No son el mismo mecanismo.
+
+- **`dnssec-validation auto` vs `yes`** — con `auto`, BIND usa las claves de confianza de la zona raiz incluidas en el paquete. Con `yes`, debes configurar manualmente las `trusted-keys`. El examen puede preguntar cual es la forma recomendada (auto).
+
+- **Flag `ad` en dig = respuesta validada con DNSSEC** — si la respuesta de `dig +dnssec` incluye el flag `ad` (Authenticated Data), significa que la cadena de confianza DNSSEC fue verificada correctamente.
+
+- **La opcion `-t` de named especifica el directorio chroot** — `named -t /var/named/chroot` ejecuta BIND confinado en ese directorio. Dentro del chroot, las rutas son relativas a ese directorio raiz.
+
+- **TSIG: la misma clave debe existir en ambos servidores** — si configuras TSIG para transferencias de zona, tanto maestro como esclavo deben tener exactamente la misma clave. Si difieren, la transferencia falla silenciosamente.
+
+- **Split DNS con `view`: TODAS las zonas deben estar dentro de views** — si usas la directiva `view`, no puedes tener zonas fuera de una view. La zona hint debe incluirse en cada view que necesite recursion.
+
+- **`tsig-keygen` es el comando moderno, `dnssec-keygen` con `-T KEY` es el antiguo** — el examen puede presentar ambos, pero `tsig-keygen` es la forma recomendada para generar claves TSIG en versiones recientes de BIND.

@@ -11,7 +11,7 @@ subtema: "208.4"
 
 # Flashcards: 208.4 - Nginx Web Y Proxy Inverso
 
-> 33 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 35 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="208.4">
 </div>
@@ -541,6 +541,24 @@ subtema: "208.4"
 <div class="flashcard" data-id="208.4-fc-030">
 <div class="flashcard-front">
 
+**P:** Tip de examen: Siempre ejecuta `nginx -t` antes de recargar la configuración con `nginx -s relo...
+
+</div>
+<div class="flashcard-back">
+
+**R:** Siempre ejecuta `nginx -t` antes de recargar la configuración con `nginx -s reload`. Esto evita que un error de sintaxis detenga el servicio. El comando `nginx -s reload` envía la señal SIGHUP al proceso maestro.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.4">
+</div>
+
+<div class="flashcard" data-id="208.4-fc-031">
+<div class="flashcard-front">
+
 **P:** Que hace el comando `Host`?
 
 </div>
@@ -556,7 +574,7 @@ subtema: "208.4"
 <div class="flashcard-deck" data-subtema="208.4">
 </div>
 
-<div class="flashcard" data-id="208.4-fc-031">
+<div class="flashcard" data-id="208.4-fc-032">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `X-Forwarded-For`?
@@ -574,7 +592,7 @@ subtema: "208.4"
 <div class="flashcard-deck" data-subtema="208.4">
 </div>
 
-<div class="flashcard" data-id="208.4-fc-032">
+<div class="flashcard" data-id="208.4-fc-033">
 <div class="flashcard-front">
 
 **P:** Que es/son Bloques location?
@@ -592,7 +610,7 @@ subtema: "208.4"
 <div class="flashcard-deck" data-subtema="208.4">
 </div>
 
-<div class="flashcard" data-id="208.4-fc-033">
+<div class="flashcard" data-id="208.4-fc-034">
 <div class="flashcard-front">
 
 **P:** Que es/son Directiva try_files?
@@ -601,6 +619,24 @@ subtema: "208.4"
 <div class="flashcard-back">
 
 **R:** `try_files` intenta servir archivos en un orden específico y, si ninguno existe, ejecuta una acción alternativa.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="208.4">
+</div>
+
+<div class="flashcard" data-id="208.4-fc-035">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

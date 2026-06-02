@@ -371,3 +371,19 @@ journalctl -u nfs-server
 journalctl -u gssproxy
 rpcdebug -m nfs -s all    # Activar debug NFS
 ```
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`sec=sys` vs `sec=krb5` vs `sec=krb5i` vs `sec=krb5p`** — `sys` usa UID/GID del sistema (susceptible a suplantacion, inseguro). `krb5` solo autentica. `krb5i` autentica + verifica integridad. `krb5p` autentica + cifra datos. Las preguntas piden identificar el nivel de seguridad correcto y su overhead.
+- **`Domain` en idmapd.conf DEBE coincidir en servidor y clientes** — Si el parametro `Domain` no es identico en todos los nodos NFSv4, todos los archivos aparecen como `nobody:nobody`. Es el error mas comun y mas preguntado en NFSv4. `nfsidmap -c` limpia la cache de mapeo.
+- **`gssproxy` (moderno) vs `rpc.gssd` (legacy)** — `gssproxy` es la alternativa moderna que gestiona credenciales GSS-API tanto en servidor como cliente. `rpc.gssd` es legacy para clientes. `rpc.svcgssd` es obsoleto (reemplazado por gssproxy en el servidor). Las preguntas piden identificar el servicio correcto.
+- **Keytab NFS: principal `nfs/hostname@REALM`** — El servidor NFS necesita un keytab con el principal `nfs/servidor.dominio@REALM`. Sin este keytab, la autenticacion Kerberos falla. `ipa-getkeytab` obtiene el keytab desde FreeIPA. `klist -kt` verifica el contenido.
+- **`root_squash` es el valor por defecto en /etc/exports** — `root_squash` mapea el acceso de root remoto a `nobody` (seguridad). `no_root_squash` permite acceso como root (inseguro, solo para casos especificos). `all_squash` mapea TODOS los usuarios a nobody. Confundir los tres es error frecuente.
+- **Automount en LDAP via FreeIPA** — FreeIPA almacena mapas de automount en LDAP (`ipa automountkey-add`). Los clientes consultan via SSSD (`automount: sss` en nsswitch.conf). Esto centraliza la configuracion y elimina la necesidad de mantener archivos auto.* en cada cliente.
+- **`exportfs -arv` para aplicar cambios en /etc/exports** — Despues de modificar `/etc/exports`, ejecutar `exportfs -arv` para reexportar. `showmount -e servidor` muestra las exportaciones activas desde el punto de vista del cliente. Las preguntas presentan cambios en exports que no se aplican.
+- **Multiples niveles de seguridad separados por `:`** — En `/etc/exports`, `sec=krb5:krb5i:krb5p` permite que el cliente elija cualquiera de los tres. El cliente debe usar uno de los mecanismos permitidos. Si el cliente solicita un nivel no listado, el acceso se deniega.
+- **NFSv4 usa nombres `usuario@dominio`, no UIDs** — A diferencia de NFSv3, NFSv4 transmite nombres de usuario con formato `usuario@dominio` y `idmapd` los traduce a UIDs locales. Si el mapeo falla, el archivo aparece como `nobody`. `nfsidmap -l` lista los mapeos activos.

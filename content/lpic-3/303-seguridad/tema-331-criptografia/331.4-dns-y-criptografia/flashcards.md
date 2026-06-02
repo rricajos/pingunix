@@ -11,7 +11,7 @@ subtema: "331.4"
 
 # Flashcards: 331.4 - Dns Y Criptografia
 
-> 33 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 34 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="331.4">
 </div>
@@ -601,6 +601,24 @@ subtema: "331.4"
 <div class="flashcard-back">
 
 **R:** TSIG autentica transferencias de zona y actualizaciones dinámicas DNS mediante claves simétricas compartidas.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="331.4">
+</div>
+
+<div class="flashcard" data-id="331.4-fc-034">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

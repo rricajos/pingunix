@@ -642,3 +642,19 @@ which python3     # Ahora buscara la nueva ubicacion
 ```
 
 > **Para el examen**: `hash` es un builtin de bash. La tabla hash se limpia automaticamente al iniciar un nuevo shell. Se usa `hash -r` para resetear la tabla cuando se han movido o instalado nuevos ejecutables.
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Comillas simples vs dobles vs backticks** — Las comillas simples (`'`) NO expanden variables ni comandos. Las dobles (`"`) SI expanden variables (`$VAR`) y sustituciones de comando. Los backticks (`` ` ``) ejecutan comandos (equivalente a `$()`). El examen puede preguntar que imprime `echo '$HOME'` vs `echo "$HOME"`.
+- **`~/.bash_profile` vs `~/.bashrc`** — `.bash_profile` se lee en shells de login (SSH, consola); `.bashrc` se lee en shells interactivos no-login (nueva terminal en escritorio). El examen puede preguntar donde definir un alias para que funcione en ambos contextos.
+- **Solo se lee UNO de los tres archivos de login** — Bash busca `~/.bash_profile`, `~/.bash_login`, `~/.profile` EN ESE ORDEN y lee solo el primero que encuentre. Si existe `.bash_profile`, IGNORA `.profile`. El examen puede preguntar por que cambios en `.profile` no tienen efecto.
+- **`export` vs asignacion simple** — `VAR=valor` solo afecta al shell actual; `export VAR=valor` la hace disponible para procesos hijos. El examen puede preguntar por que un script no ve una variable definida sin `export`.
+- **`type` vs `which`** — `type` es un builtin que identifica si un comando es alias, builtin, funcion o externo. `which` solo busca ejecutables en `$PATH`. El examen puede preguntar como saber si `cd` es un builtin.
+- **Expansion de llaves NO depende de archivos** — `echo {1..5}` siempre genera `1 2 3 4 5` aunque esos archivos no existan. El globbing (`*`, `?`) SI depende de archivos existentes. El examen puede confundir ambos mecanismos.
+- **`env` vs `set`** — `env` muestra solo variables de entorno (exportadas); `set` muestra TODAS las variables (locales + entorno + funciones). El examen puede preguntar cual comando muestra las variables locales.
+- **`exec` reemplaza el shell** — `exec comando` sustituye el proceso del shell por el comando. No hay retorno al shell original. El examen puede preguntar que sucede despues de ejecutar `exec ls`.
+- **`uname -r` vs `uname -a`** — `-r` muestra SOLO la version del kernel; `-a` muestra TODA la informacion (kernel, hostname, arquitectura, etc.). El examen puede pedir el comando para ver SOLO la version del kernel.

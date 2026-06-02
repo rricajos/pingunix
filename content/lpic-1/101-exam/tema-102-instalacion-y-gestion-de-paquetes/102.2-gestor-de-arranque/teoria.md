@@ -389,3 +389,18 @@ efibootmgr -n 0002
 5. GRUB2 numera particiones desde 1 (hd0,1); GRUB Legacy desde 0 (hd0,0).
 6. `GRUB_TIMEOUT`, `GRUB_DEFAULT`, y `GRUB_CMDLINE_LINUX` son las variables mas importantes.
 7. En Red Hat los comandos llevan prefijo `grub2-` (grub2-install, grub2-mkconfig).
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **NUNCA editar `/boot/grub/grub.cfg` directamente** — Se edita `/etc/default/grub` y luego se ejecuta `grub-mkconfig -o /boot/grub/grub.cfg` o `update-grub`. El examen puede preguntar cual archivo modificar para cambiar parametros de GRUB.
+- **GRUB2 numera particiones desde 1; GRUB Legacy desde 0** — En GRUB2, la primera particion del primer disco es `(hd0,1)`. En GRUB Legacy es `(hd0,0)`. El examen puede mezclar estas notaciones para confundir.
+- **`update-grub` vs `grub-mkconfig`** — `update-grub` es un wrapper de Debian/Ubuntu que equivale a `grub-mkconfig -o /boot/grub/grub.cfg`. En Red Hat se usa `grub2-mkconfig`. El examen puede preguntar la equivalencia.
+- **`grub-install` vs `grub-mkconfig`** — `grub-install` instala el bootloader en el disco (MBR o ESP); `grub-mkconfig` genera el archivo de configuracion. Son pasos diferentes. El examen puede confundir sus funciones.
+- **`grub>` vs `grub rescue>`** — `grub>` tiene todos los comandos disponibles (GRUB cargo sus modulos); `grub rescue>` tiene solo comandos basicos (GRUB no encontro sus modulos). El examen puede preguntar que prompt aparece en cada situacion.
+- **GRUB Legacy usa `menu.lst` o `grub.conf`** — `menu.lst` en Debian, `grub.conf` en Red Hat. Ambos se editan directamente (a diferencia de GRUB2). El examen puede preguntar el archivo de configuracion de GRUB Legacy.
+- **Editar en el menu de GRUB con `e` es temporal** — Los cambios hechos con `e` en el menu de arranque solo afectan ese arranque. Para cambios permanentes hay que editar `/etc/default/grub`. El examen puede preguntar como hacer cambios persistentes.
+- **En Red Hat los comandos llevan prefijo `grub2-`** — `grub2-install`, `grub2-mkconfig`, etc. El examen puede ofrecer `grub-install` como opcion correcta para CentOS/RHEL, pero el prefijo `grub2-` es el correcto en esas distribuciones.

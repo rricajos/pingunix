@@ -525,3 +525,20 @@ fi
 8. `case` termina con `esac`; cada opcion con `)`; cada bloque con `;;`
 9. `$(( ))` para aritmetica; `$( )` para sustitucion de comandos
 10. Siempre entrecomillar variables en `[ ]`: `[ "$var" = "valor" ]`
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`"$@"` vs `"$*"`** — `"$@"` preserva cada argumento como elemento separado; `"$*"` une todos los argumentos en una sola cadena. Para iterar sobre argumentos, `"$@"` es casi siempre la respuesta correcta
+- **`[ ]` vs `[[ ]]`** — `[ ]` (o `test`) es POSIX compatible y usa `-a`/`-o` para logica; `[[ ]]` es extension de bash que soporta `&&`/`||`, pattern matching y regex. El examen pregunta cual es portable
+- **Comparaciones numericas vs de cadenas** — Para numeros se usan `-eq`, `-ne`, `-gt`, `-lt`, `-ge`, `-le`. Para cadenas se usan `=`, `!=`, `-z`, `-n`. Usar `=` para comparar numeros o `-eq` para cadenas es un error clasico que el examen evalua
+- **Espacios en asignaciones de variables** — `VAR="valor"` es correcto; `VAR = "valor"` con espacios es un ERROR de sintaxis. El examen incluye scripts con esta trampa para ver si detectas el fallo
+- **`$?` contiene el codigo del ULTIMO comando** — Se sobreescribe con cada comando ejecutado. Si necesitas usar `$?` despues de un `echo`, ya habra cambiado. Guardar en una variable inmediatamente: `resultado=$?`
+- **`#!/usr/bin/env bash` vs `#!/bin/bash`** — La forma con `env` es mas portable porque busca `bash` en el PATH. El examen puede preguntar cual es la opcion portable para scripts que deben funcionar en diferentes sistemas
+- **`case` termina con `esac`, cada bloque con `;;`** — Olvidar los `;;` al final de cada bloque o confundir `esac` (case al reves) son errores que el examen evalua. El patron por defecto es `*)`
+- **`$(( ))` para aritmetica vs `$( )` para sustitucion de comandos** — Un solo par de parentesis es sustitucion de comandos; doble parentesis es aritmetica. Confundirlos genera resultados inesperados
+- **`exec` reemplaza el proceso** — Despues de `exec comando`, el script NO continua porque el proceso fue reemplazado. Pero `exec` con solo redireccion (como `exec > archivo`) SI permite que el script continue
+- **Heredoc con comillas en el delimitador** — `<< 'EOF'` (con comillas) no expande variables; `<< EOF` (sin comillas) si las expande. El examen puede preguntar por que un heredoc no sustituye variables

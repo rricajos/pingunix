@@ -342,3 +342,19 @@ ldd $(which software)
 - **Crear paquetes** con `checkinstall` en lugar de `make install` cuando sea posible
 - **Documentar** las opciones de configure utilizadas para futuras recompilaciones
 - **Verificar** con `make check` o `make test` antes de instalar
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **`--prefix=/usr/local` es el valor por defecto de `./configure`** — si no especificas `--prefix`, los binarios se instalan en `/usr/local/bin`, las librerias en `/usr/local/lib`, etc. Con `--prefix=/usr`, se mezclan con los archivos del sistema
+- **`make` sin argumentos ejecuta el primer target del Makefile** — generalmente es `all`, que compila todo. No ejecuta `install`. La instalacion siempre requiere un paso separado: `make install`
+- **`ldconfig` debe ejecutarse despues de instalar librerias compartidas** — sin ejecutar `ldconfig`, el enlazador dinamico no encontrara las nuevas librerias `.so` y los binarios fallaran con "error while loading shared libraries"
+- **`LD_LIBRARY_PATH` es temporal, `/etc/ld.so.conf.d/` es permanente** — `LD_LIBRARY_PATH` solo afecta a la sesion actual. Para que las librerias se encuentren permanentemente, agrega la ruta en `/etc/ld.so.conf.d/` y ejecuta `ldconfig`
+- **`ldd` muestra dependencias de librerias compartidas de un binario** — es la herramienta para diagnosticar "library not found". Muestra cada libreria `.so` requerida y su ruta resuelta (o "not found" si falta)
+- **`configure.ac` genera `configure`, `Makefile.am` genera `Makefile.in`** — `autoreconf -i` regenera todo. El usuario final ejecuta `./configure` (que genera `Makefile` a partir de `Makefile.in`), no `autoreconf`
+- **CMake usa `CMakeLists.txt`, no `configure.ac`** — CMake y autotools son sistemas de compilacion diferentes. CMake usa `-DCMAKE_INSTALL_PREFIX` en lugar de `--prefix`. El examen puede preguntar que archivo indica que el proyecto usa CMake
+- **Los paquetes `-dev` o `-devel` son necesarios para compilar, no para ejecutar** — `libssl-dev` (Debian) o `openssl-devel` (RHEL) contienen los headers `.h` necesarios para compilacion. Sin ellos, `./configure` falla al buscar dependencias
+- **`pkg-config` y `PKG_CONFIG_PATH`** — `pkg-config --libs openssl` devuelve los flags de enlazado necesarios. Si una libreria se instalo en un directorio no estandar, hay que agregar su ruta de archivos `.pc` a `PKG_CONFIG_PATH`

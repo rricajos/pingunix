@@ -331,3 +331,20 @@ kubectl create secret docker-registry mi-registry-secret \
 | `kubectl apply -f` | Aplicar configuración declarativa |
 | `kubectl get/describe` | Consultar estado de recursos |
 | Registries | Almacenes de imágenes (Docker Hub, Harbor, etc.) |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Docker Swarm `docker service` vs `docker run`** — `docker run` ejecuta un contenedor individual. `docker service create` crea un servicio replicado gestionado por Swarm con autorecuperacion y escalado. El examen puede preguntar que comando se usa para desplegar en un cluster Swarm (respuesta: `docker service create`, NO `docker run`).
+- **Pod no es un contenedor** — Un Pod en Kubernetes es la unidad minima de despliegue que puede contener uno o MAS contenedores que comparten red y almacenamiento. Todos los contenedores de un Pod comparten la misma IP. El examen puede preguntar como se comunican contenedores dentro del mismo Pod (respuesta: via `localhost`).
+- **Service types: ClusterIP vs NodePort vs LoadBalancer** — `ClusterIP` (por defecto) solo es accesible DENTRO del cluster. `NodePort` expone el servicio en un puerto (30000-32767) de TODOS los nodos. `LoadBalancer` provisiona un balanceador externo en cloud. El examen preguntara que tipo usar para acceso externo sin cloud (respuesta: NodePort).
+- **`kubectl apply` vs `kubectl create`** — `apply` es declarativo e idempotente: si el recurso existe, lo actualiza; si no, lo crea. `create` es imperativo y falla si el recurso ya existe. Para gestion declarativa (IaC) siempre se usa `apply -f`. El examen puede preguntar cual comando usar en un pipeline CI/CD.
+- **Secrets en Kubernetes solo estan codificados en base64, NO cifrados** — Los Secrets almacenan datos en base64, que es una codificacion reversible, NO cifrado. Cualquier persona con acceso al cluster puede decodificarlos. Para cifrado real se necesita encryption at rest o herramientas como Vault. El examen puede preguntar si los Secrets son seguros por defecto.
+- **`kubectl rollout undo` vs `kubectl delete`** — `rollout undo` revierte un Deployment a la version anterior manteniendo el servicio activo. `delete` elimina completamente el recurso. No son equivalentes. El examen puede presentar un escenario de rollback y preguntar el comando correcto.
+- **Swarm managers: numero impar** — Se recomienda un numero impar de managers (3, 5, 7) para el consenso Raft. Con 3 managers se tolera 1 fallo, con 5 se toleran 2. Un numero par no mejora la tolerancia a fallos. El examen puede preguntar cuantos managers se necesitan para tolerar N fallos.
+- **`docker stack deploy` vs `docker compose up`** — `docker stack deploy` despliega en modo Swarm usando un compose file. `docker compose up` despliega localmente en un solo host. No son intercambiables. Algunas opciones del compose file (como `build:`) no se soportan en stacks.
+- **Namespace de Kubernetes vs namespace del kernel** — Los namespaces de Kubernetes son divisiones logicas dentro del cluster para organizar recursos. Los namespaces del kernel Linux (pid, net, mnt) son mecanismos de aislamiento de procesos. Son conceptos completamente diferentes que comparten nombre.
+- **etcd es el almacen de estado de Kubernetes** — Toda la configuracion y estado del cluster se almacena en etcd. Si etcd se pierde sin backup, se pierde todo el cluster. El examen puede preguntar donde se almacena el estado de los Deployments y Services (respuesta: etcd, no en los nodos worker).

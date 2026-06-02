@@ -257,3 +257,18 @@ samba-tool domain info 192.168.1.100    # Info del dominio
 samba-tool drs showrepl                 # Replicación
 samba-tool dns query ...                # Consultas DNS
 ```
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **DNS es la causa #1 de fallos al unir Windows al dominio** — El cliente Windows DEBE usar el DC Samba como servidor DNS. Si apunta a otro DNS que no conoce los registros SRV de AD, la union falla. Las preguntas presentan este escenario como el mas frecuente.
+- **Sincronizacion de tiempo (NTP): tolerancia de 5 minutos** — Kerberos requiere que la diferencia de tiempo entre el cliente y el DC sea menor a 5 minutos. Sin NTP, la autenticacion Kerberos falla con errores criticos. Las preguntas presentan fallos de autenticacion cuya causa es el reloj.
+- **`net use /persistent:yes` vs `/persistent:no`** — `persistent:yes` reconecta la unidad automaticamente en cada inicio de sesion. `persistent:no` es solo para la sesion actual. Las preguntas piden la opcion correcta segun el requerimiento de persistencia.
+- **ADMX en PolicyDefinitions dentro de SYSVOL** — Las plantillas ADMX se copian a `sysvol/dominio/Policies/PolicyDefinitions/`. Los archivos ADML (traducciones) van en subdirectorios de idioma (`es-ES/`). Sin las plantillas, las GPOs no muestran las opciones de configuracion.
+- **GPOs: edicion requiere RSAT, creacion puede hacerse con samba-tool** — `samba-tool gpo create` crea GPOs vacias y `samba-tool gpo setlink` las vincula a OUs. Pero la edicion del contenido (registro, scripts, preferencias) requiere GPMC desde Windows via RSAT.
+- **`gpresult /r` vs `gpupdate /force`** — `gpresult /r` muestra las GPOs actualmente aplicadas (diagnostico). `gpupdate /force` fuerza la actualizacion inmediata de GPOs. Confundir ambos comandos lleva a diagnosticos incorrectos.
+- **`nltest /dsgetdc:dominio` para localizar DC** — Este comando desde Windows localiza el DC del dominio. Si falla, indica problemas de DNS o red. `nltest /sc_query:dominio` verifica el canal seguro entre el cliente y el DC.
+- **Scripts de login en SYSVOL** — Los scripts de inicio de sesion se ubican en `sysvol/dominio/scripts/`. Se asignan via GPO o propiedades del usuario. Usan rutas UNC (`\\dominio\netlogon\script.bat`). Las preguntas piden la ubicacion correcta del script.

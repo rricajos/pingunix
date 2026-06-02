@@ -11,7 +11,7 @@ subtema: "305.2"
 
 # Flashcards: 305.2 - Freeipa Gestion De Entidades
 
-> 41 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 43 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="305.2">
 </div>
@@ -613,6 +613,24 @@ subtema: "305.2"
 <div class="flashcard" data-id="305.2-fc-034">
 <div class="flashcard-front">
 
+**P:** Tip de examen: `ipa-getkeytab` extrae keytabs Kerberos del servidor FreeIPA. Los keytabs permit...
+
+</div>
+<div class="flashcard-back">
+
+**R:** `ipa-getkeytab` extrae keytabs Kerberos del servidor FreeIPA. Los keytabs permiten a servicios autenticarse sin contraseña interactiva. Cada servicio necesita su propio keytab.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="305.2">
+</div>
+
+<div class="flashcard" data-id="305.2-fc-035">
+<div class="flashcard-front">
+
 **P:** Que hace el comando `ipa hbacrule-add-user`?
 
 </div>
@@ -628,7 +646,7 @@ subtema: "305.2"
 <div class="flashcard-deck" data-subtema="305.2">
 </div>
 
-<div class="flashcard" data-id="305.2-fc-035">
+<div class="flashcard" data-id="305.2-fc-036">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `--minlife`?
@@ -646,7 +664,7 @@ subtema: "305.2"
 <div class="flashcard-deck" data-subtema="305.2">
 </div>
 
-<div class="flashcard" data-id="305.2-fc-036">
+<div class="flashcard" data-id="305.2-fc-037">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `--maxlife`?
@@ -664,7 +682,7 @@ subtema: "305.2"
 <div class="flashcard-deck" data-subtema="305.2">
 </div>
 
-<div class="flashcard" data-id="305.2-fc-037">
+<div class="flashcard" data-id="305.2-fc-038">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `--history`?
@@ -682,7 +700,7 @@ subtema: "305.2"
 <div class="flashcard-deck" data-subtema="305.2">
 </div>
 
-<div class="flashcard" data-id="305.2-fc-038">
+<div class="flashcard" data-id="305.2-fc-039">
 <div class="flashcard-front">
 
 **P:** Que hace el comando `--minclasses`?
@@ -700,7 +718,7 @@ subtema: "305.2"
 <div class="flashcard-deck" data-subtema="305.2">
 </div>
 
-<div class="flashcard" data-id="305.2-fc-039">
+<div class="flashcard" data-id="305.2-fc-040">
 <div class="flashcard-front">
 
 **P:** Que es/son Reglas de automember?
@@ -718,7 +736,7 @@ subtema: "305.2"
 <div class="flashcard-deck" data-subtema="305.2">
 </div>
 
-<div class="flashcard" data-id="305.2-fc-040">
+<div class="flashcard" data-id="305.2-fc-041">
 <div class="flashcard-front">
 
 **P:** Que es/son ID Views?
@@ -736,7 +754,7 @@ subtema: "305.2"
 <div class="flashcard-deck" data-subtema="305.2">
 </div>
 
-<div class="flashcard" data-id="305.2-fc-041">
+<div class="flashcard" data-id="305.2-fc-042">
 <div class="flashcard-front">
 
 **P:** Que es/son ipa-getkeytab?
@@ -745,6 +763,24 @@ subtema: "305.2"
 <div class="flashcard-back">
 
 **R:** Gestiona keytabs Kerberos para servicios:
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="305.2">
+</div>
+
+<div class="flashcard" data-id="305.2-fc-043">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

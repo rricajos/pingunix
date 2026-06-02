@@ -11,7 +11,7 @@ subtema: "202.2"
 
 # Flashcards: 202.2 - Recuperacion Del Sistema
 
-> 39 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 40 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="202.2">
 </div>
@@ -709,6 +709,24 @@ subtema: "202.2"
 <div class="flashcard-back">
 
 **R:** | Recurso | Funcion en recuperacion |
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="202.2">
+</div>
+
+<div class="flashcard" data-id="202.2-fc-040">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

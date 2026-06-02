@@ -363,3 +363,18 @@ Resumen del flujo de trabajo tipico de recuperacion:
 | `dd if= of= bs=` | Copiar/respaldar sectores de disco |
 | `mount -o remount,rw /` | Remontar raiz en lectura/escritura |
 | `blkid` | Identificar particiones y UUIDs |
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Con `init=/bin/bash` el sistema raiz esta en solo lectura** — es obligatorio ejecutar `mount -o remount,rw /` antes de poder hacer cualquier cambio. Olvidar esto es un error muy comun que hace que las modificaciones (como cambiar la contrasena de root) no se guarden
+- **Restaurar MBR completo (512 bytes) vs solo bootloader (446 bytes)** — restaurar los 512 bytes incluye la tabla de particiones, lo que destruira la tabla actual si el disco ha cambiado. Para restaurar solo el bootloader sin tocar particiones, usa `bs=446 count=1`
+- **`fsck` NUNCA en un sistema de archivos montado en lectura/escritura** — ejecutar `fsck` en un FS montado rw causa corrupcion severa. Debe estar desmontado o montado en solo lectura. Esta regla es una pregunta clasica del examen
+- **Montar `/dev`, `/proc` y `/sys` antes de `chroot`** — sin estos sistemas de archivos virtuales, comandos como `grub-install`, `update-initramfs` o `passwd` fallan dentro del entorno chroot. Es un paso que el examen pregunta frecuentemente
+- **`emergency.target` no monta fstab, `rescue.target` si** — si el problema esta en `/etc/fstab` (linea incorrecta o dispositivo inexistente), arrancar en `rescue.target` fallara porque intentara montar todo. `emergency.target` es la opcion segura en ese caso
+- **`dd` no pide confirmacion** — a diferencia de `cp` o `mv`, `dd` ejecuta la copia inmediatamente sin preguntar. Invertir `if=` y `of=` destruye los datos del disco de origen. Es la herramienta mas peligrosa si se usa incorrectamente
+- **`touch /forcefsck` vs `fsck.mode=force`** — ambos fuerzan una verificacion en el proximo arranque, pero `touch /forcefsck` crea un archivo indicador que se elimina tras el chequeo, mientras que `fsck.mode=force` es un parametro del kernel que se pasa desde GRUB
+- **El orden de recuperacion importa** — primero intentar modo rescate, luego emergencia, luego `init=/bin/bash`, y como ultimo recurso Live CD. El examen puede presentar un escenario y preguntar cual es la opcion mas adecuada

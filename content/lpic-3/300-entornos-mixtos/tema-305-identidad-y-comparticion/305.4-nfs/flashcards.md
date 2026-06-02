@@ -11,7 +11,7 @@ subtema: "305.4"
 
 # Flashcards: 305.4 - Nfs
 
-> 36 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 37 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="305.4">
 </div>
@@ -655,6 +655,24 @@ subtema: "305.4"
 <div class="flashcard-back">
 
 **R:** NFSv4 es la versión moderna del protocolo NFS (Network File System) que incluye soporte nativo para autenticación Kerberos, mapeo de identidades y ACLs. En entornos mixtos con FreeIPA, NFS se integra c
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="305.4">
+</div>
+
+<div class="flashcard" data-id="305.4-fc-037">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

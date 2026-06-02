@@ -11,7 +11,7 @@ subtema: "352.1"
 
 # Flashcards: 352.1 - Conceptos De Contenedores
 
-> 38 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 39 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="352.1">
 </div>
@@ -691,6 +691,24 @@ subtema: "352.1"
 <div class="flashcard-back">
 
 **R:** Ejecutan el container engine y los contenedores sin privilegios de root en el host:
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="352.1">
+</div>
+
+<div class="flashcard" data-id="352.1-fc-039">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>

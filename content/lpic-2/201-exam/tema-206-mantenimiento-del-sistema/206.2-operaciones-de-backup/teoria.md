@@ -321,3 +321,18 @@ lvremove /dev/vg0/snap_home
 ```
 
 > **Para el examen:** Los snapshots LVM permiten realizar backups consistentes de un sistema en funcionamiento. El snapshot se crea instantaneamente y captura el estado del volumen en ese momento.
+
+---
+
+## Trampas del examen
+
+> Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+
+- **Incremental vs diferencial** — incremental copia cambios desde el ultimo backup de CUALQUIER tipo (full o incremental anterior); diferencial copia siempre desde el ultimo backup COMPLETO. La restauracion incremental necesita el full + todos los incrementales en orden; la diferencial solo necesita el full + el ultimo diferencial
+- **La barra final en rsync cambia el comportamiento** — `rsync -av /home/usuario/ /backup/` copia el CONTENIDO de usuario; `rsync -av /home/usuario /backup/` copia el DIRECTORIO usuario (creando `/backup/usuario/`). Olvidar o agregar la barra cambia completamente el resultado
+- **`rsync --delete` elimina archivos en el destino** — si un archivo se borro en el origen, `--delete` lo eliminara tambien en el destino. Sin `--delete`, los archivos eliminados en el origen persisten en el backup. Usar `--dry-run` (-n) antes de `--delete` es una buena practica
+- **`tar --listed-incremental` al restaurar usa `/dev/null`** — al crear el backup se usa el archivo snapshot real (`.snar`); al restaurar se usa `--listed-incremental=/dev/null` para indicar que es una operacion de restauracion, no de backup
+- **`dd` copia bit a bit, incluyendo espacio vacio** — una imagen de un disco de 500 GB con solo 10 GB de datos ocupara 500 GB. Para imagenes mas eficientes, comprime con `gzip` o usa herramientas como `partclone` que solo copian sectores usados
+- **`cpio` lee nombres de archivo desde stdin** — a diferencia de `tar` que acepta rutas como argumentos, `cpio -o` espera los nombres por stdin (tipicamente desde `find`). Los modos son: `-o` (crear), `-i` (extraer), `-p` (copiar directo entre directorios)
+- **`dd bs=512 count=1` copia exactamente el MBR (512 bytes)** — el MBR contiene 446 bytes de bootloader + 64 bytes de tabla de particiones + 2 bytes de firma. Para restaurar solo el bootloader sin tocar la tabla de particiones: `bs=446 count=1`
+- **Amanda, Bacula y BURP son soluciones de backup empresarial** — no necesitas saber configurarlas en detalle, pero si que Amanda usa tar/dump como backend, Bacula tiene arquitectura modular (Director + Storage + File daemons), y BURP ofrece deduplicacion

@@ -11,7 +11,7 @@ subtema: "109.3"
 
 # Flashcards: 109.3 - Resolucion De Problemas De Red
 
-> 35 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 36 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
 <div class="flashcard-deck" data-subtema="109.3">
 </div>
@@ -637,6 +637,24 @@ subtema: "109.3"
 <div class="flashcard-back">
 
 **R:** 1. Metodologia de troubleshooting: **de abajo a arriba** (enlace -> IP -> gateway -> DNS -> servicio)
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtema="109.3">
+</div>
+
+<div class="flashcard" data-id="109.3-fc-036">
+<div class="flashcard-front">
+
+**P:** Que es/son Trampas del examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
 
 </div>
 </div>
