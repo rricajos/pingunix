@@ -1,12 +1,14 @@
 /**
- * Genera archivos flashcards.md para cada subtema LPIC-1, LPIC-2 y LPIC-3
- * extrayendo preguntas de ejercicios.md y conceptos clave de teoria.md
+ * Genera flashcards-all.json con todas las tarjetas para la PWA pingunix-cards.
+ * Reutiliza la misma lógica de extracción que generate-flashcards.mjs.
  */
 
 import { readdirSync, statSync, readFileSync, writeFileSync, existsSync } from 'fs'
-import { join, dirname, basename } from 'path'
+import { join, basename } from 'path'
 
 const CONTENT = join(process.cwd(), 'content')
+const OUTPUT = join(process.cwd(), 'quartz', 'static', 'flashcards-all.json')
+
 const CERTS = [
   { name: 'lpic-1', dir: join(CONTENT, 'lpic-1'), tag: 'lpic-1' },
   { name: 'lpic-2', dir: join(CONTENT, 'lpic-2'), tag: 'lpic-2' },
@@ -19,7 +21,6 @@ function findSubtopicDirs(dir) {
   for (const entry of readdirSync(dir)) {
     const full = join(dir, entry)
     if (!statSync(full).isDirectory()) continue
-    // Subtopic dirs match pattern like "101.1-..."
     if (/^\d+\.\d+/.test(entry)) {
       results.push(full)
     } else {
@@ -35,28 +36,23 @@ function extractFromExercises(filepath) {
   const content = readFileSync(filepath, 'utf-8').replace(/\r\n/g, '\n').replace(/\r/g, '\n')
   const cards = []
 
-  // Match pattern: ### Pregunta N\n question \n options \n <details>..answer..</details>
   const questionRegex = /### Pregunta \d+\n([\s\S]*?)<details>\s*(?:\n\s*)?<summary>Respuesta<\/summary>\s*\n([\s\S]*?)<\/details>/g
   let match
   while ((match = questionRegex.exec(content)) !== null) {
     const questionBlock = match[1].trim()
     const answerBlock = match[2].trim()
 
-    // Extract just the question text (first line before options)
     const lines = questionBlock.split('\n').filter(l => l.trim())
     let question = ''
-    const optionLines = []
     for (const line of lines) {
-      if (/^[a-d]\)/.test(line.trim())) {
-        optionLines.push(line.trim())
-      } else if (question === '') {
+      if (/^[a-d]\)/.test(line.trim())) continue
+      if (question === '') {
         question = line.trim()
       } else if (!question.endsWith('?')) {
         question += ' ' + line.trim()
       }
     }
 
-    // Extract the correct answer and explanation
     const boldMatch = answerBlock.match(/\*\*(.+?)\*\*/)
     const correctAnswer = boldMatch ? boldMatch[1] : ''
     const explanation = answerBlock.replace(/\*\*(.+?)\*\*\s*\n?/, '').trim()
@@ -71,7 +67,7 @@ function extractFromExercises(filepath) {
   return cards
 }
 
-// ── Headings that produce useless "Que es/son X?" flashcards ──
+// ── Headings that produce useless flashcards ──
 const GENERIC_HEADINGS = new Set([
   'introduccion', 'resumen', 'resumen para el examen', 'objetivos',
   'requisitos', 'conclusion', 'conclusiones', 'indice', 'contenido',
@@ -82,7 +78,6 @@ const GENERIC_HEADINGS = new Set([
   'trampas del examen',
 ])
 
-// ── Words that indicate a truncated answer when at the end ──
 const TRUNCATION_ENDINGS = /\s+(de|del|en|el|la|los|las|un|una|al|con|por|para|que|y|o|e|a|su|sus|se|lo|como|entre|sobre|desde|hasta|sin|hacia|ante|bajo|contra|mediante|segun|tras|durante)\s*\.?$/i
 
 // ── Extract key concepts from teoria.md ──
@@ -91,7 +86,6 @@ function extractFromTheory(filepath) {
   const content = readFileSync(filepath, 'utf-8').replace(/\r\n/g, '\n').replace(/\r/g, '\n')
   const cards = []
 
-  // Extract "Para el examen" blockquotes
   const examTipRegex = />\s*\*\*Para el examen:?\*\*:?\s*([\s\S]*?)(?=\n\n|\n>|\n#)/g
   let match
   while ((match = examTipRegex.exec(content)) !== null) {
@@ -104,14 +98,11 @@ function extractFromTheory(filepath) {
     }
   }
 
-  // Extract command definitions from tables
-  // Pattern: | `command` | Description |
   const tableRowRegex = /\|\s*`([^`]+)`\s*\|\s*([^|]+)\|/g
   const commandCards = []
   while ((match = tableRowRegex.exec(content)) !== null) {
     const cmd = match[1].trim()
     const desc = match[2].trim()
-    // Skip header rows, separators, and rows where "description" is another command (starts with `)
     if (cmd && desc && desc.length >= 30
         && desc !== 'Descripcion' && desc !== 'Comando'
         && !desc.startsWith('---') && !desc.startsWith('`')
@@ -119,16 +110,13 @@ function extractFromTheory(filepath) {
       commandCards.push({ question: `Que hace el comando \`${cmd}\`?`, answer: desc })
     }
   }
-  // Only take up to 5 command cards per file to avoid flooding
   cards.push(...commandCards.slice(0, 5))
 
-  // Extract definitions after ## headers
   const sectionRegex = /^## (.+)\n\n([^#\n].{30,200})/gm
   while ((match = sectionRegex.exec(content)) !== null) {
     const heading = match[1].trim()
     const text = match[2].trim()
     const answer = text.split('\n')[0]
-    // Skip generic headings and short/truncated answers
     if (!GENERIC_HEADINGS.has(heading.toLowerCase())
         && answer.length >= 30
         && !TRUNCATION_ENDINGS.test(answer)) {
@@ -142,67 +130,24 @@ function extractFromTheory(filepath) {
   return cards
 }
 
-// ── Generate flashcard markdown ──
-function generateFlashcardMd(subtemaNum, title, cards, certTag) {
-  let md = `---
-title: "${subtemaNum} - Flashcards"
-tags:
-  - ${certTag}
-  - flashcards
-  - repaso
-tipo: flashcards
-certificacion: ${certTag}
-subtema: "${subtemaNum}"
----
-
-# Flashcards: ${subtemaNum} - ${title}
-
-> ${cards.length} tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
-
-`
-
-  for (let i = 0; i < cards.length; i++) {
-    const card = cards[i]
-    // Clean up markdown formatting for card content
-    const q = card.question.replace(/\n/g, ' ').trim()
-    const a = card.answer.replace(/\n/g, ' ').trim()
-
-    md += `<div class="flashcard-deck" data-subtema="${subtemaNum}">
-</div>
-
-<div class="flashcard" data-id="${subtemaNum}-fc-${String(i + 1).padStart(3, '0')}">
-<div class="flashcard-front">
-
-**P:** ${q}
-
-</div>
-<div class="flashcard-back">
-
-**R:** ${a}
-
-</div>
-</div>
-
----
-
-`
-  }
-
-  return md
+// ── Strip markdown formatting for plain text display ──
+function stripMarkdown(text) {
+  return text
+    .replace(/\*\*(.+?)\*\*/g, '$1')       // bold
+    .replace(/\*(.+?)\*/g, '$1')            // italic
+    .replace(/`([^`]+)`/g, '$1')            // inline code
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // links
+    .replace(/\n/g, ' ')
+    .trim()
 }
 
 // ── Main ──
-let grandTotal = 0
+const allCards = []
 
 for (const cert of CERTS) {
-  if (!existsSync(cert.dir)) {
-    console.log(`\n⏭ ${cert.name.toUpperCase()} - directorio no encontrado, saltando`)
-    continue
-  }
-  console.log(`\n=== Generando flashcards para ${cert.name.toUpperCase()} ===\n`)
+  if (!existsSync(cert.dir)) continue
 
   const subtopicDirs = findSubtopicDirs(cert.dir)
-  let certTotal = 0
 
   for (const dir of subtopicDirs) {
     const dirName = basename(dir)
@@ -210,8 +155,6 @@ for (const cert of CERTS) {
     if (!subtemaMatch) continue
 
     const subtemaNum = subtemaMatch[1]
-    const subtemaSlug = subtemaMatch[2]
-    const title = subtemaSlug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
 
     const ejerciciosPath = join(dir, 'ejercicios.md')
     const teoriaPath = join(dir, 'teoria.md')
@@ -219,31 +162,36 @@ for (const cert of CERTS) {
     const exerciseCards = extractFromExercises(ejerciciosPath)
     const theoryCards = extractFromTheory(teoriaPath)
 
-    // Deduplicate by checking similar questions
-    const allCards = [...exerciseCards]
+    // Deduplicate
+    const cards = [...exerciseCards]
     for (const tc of theoryCards) {
-      const isDup = allCards.some(ec =>
+      const isDup = cards.some(ec =>
         ec.question.toLowerCase().includes(tc.question.toLowerCase().substring(0, 30)) ||
         tc.question.toLowerCase().includes(ec.question.toLowerCase().substring(0, 30))
       )
-      if (!isDup) allCards.push(tc)
+      if (!isDup) cards.push(tc)
     }
 
-    if (allCards.length === 0) {
-      console.log(`  SKIP: ${subtemaNum} - sin contenido para flashcards`)
-      continue
+    for (let i = 0; i < cards.length; i++) {
+      allCards.push({
+        id: `${subtemaNum}-fc-${String(i + 1).padStart(3, '0')}`,
+        q: stripMarkdown(cards[i].question),
+        a: stripMarkdown(cards[i].answer),
+        cert: cert.tag,
+        subtema: subtemaNum,
+      })
     }
-
-    const flashcardMd = generateFlashcardMd(subtemaNum, title, allCards, cert.tag)
-    const outputPath = join(dir, 'flashcards.md')
-    writeFileSync(outputPath, flashcardMd, 'utf-8')
-
-    console.log(`  ${subtemaNum}: ${allCards.length} tarjetas (${exerciseCards.length} ejercicios + ${allCards.length - exerciseCards.length} teoria)`)
-    certTotal += allCards.length
   }
-
-  console.log(`\n  Subtotal ${cert.name.toUpperCase()}: ${certTotal} flashcards`)
-  grandTotal += certTotal
 }
 
-console.log(`\n=== TOTAL GLOBAL: ${grandTotal} flashcards generadas ===`)
+writeFileSync(OUTPUT, JSON.stringify(allCards), 'utf-8')
+
+const byC = {}
+for (const c of allCards) {
+  byC[c.cert] = (byC[c.cert] || 0) + 1
+}
+console.log(`flashcards-all.json: ${allCards.length} tarjetas`)
+for (const [cert, count] of Object.entries(byC)) {
+  console.log(`  ${cert}: ${count}`)
+}
+console.log(`Output: ${OUTPUT}`)

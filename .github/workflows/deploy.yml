@@ -46,6 +46,9 @@ jobs:
       - name: Generate Anki decks
         run: node scripts/generate-anki.mjs
 
+      - name: Generate flashcard JSON for PWA
+        run: node scripts/generate-flashcards-json.mjs
+
       - name: Install Quartz plugins
         run: npm run quartz -- plugin install
 
