@@ -14,6 +14,6 @@ tema: "362"
 ## Subtemas
 | Subtema | Estado |
 |---------|--------|
-| [362.1 - DRBD](362.1-drbd/) | Pendiente |
-| [362.2 - Acceso a almacenamiento cluster](362.2-acceso-a-almacenamiento-cluster/) | Pendiente |
-| [362.3 - Sistemas de archivos cluster](362.3-sistemas-de-archivos-cluster/) | Pendiente |
+| [362.1 - DRBD](362.1-drbd/) | Completado |
+| [362.2 - Acceso a almacenamiento cluster](362.2-acceso-a-almacenamiento-cluster/) | Completado |
+| [362.3 - Sistemas de archivos cluster](362.3-sistemas-de-archivos-cluster/) | Completado |

@@ -14,5 +14,5 @@ tema: "363"
 ## Subtemas
 | Subtema | Estado |
 |---------|--------|
-| [363.1 - GlusterFS](363.1-glusterfs/) | Pendiente |
-| [363.2 - Ceph](363.2-ceph/) | Pendiente |
+| [363.1 - GlusterFS](363.1-glusterfs/) | Completado |
+| [363.2 - Ceph](363.2-ceph/) | Completado |

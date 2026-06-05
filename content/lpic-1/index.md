@@ -18,8 +18,8 @@ Primera certificacion del Linux Professional Institute. Valida conocimientos bas
 ## Examenes
 | Examen | Codigo | Temas | Estado |
 |--------|--------|-------|--------|
-| [Examen 101](101-exam/) | 101-500 | Arquitectura, paquetes, comandos, filesystems | Pendiente |
-| [Examen 102](102-exam/) | 102-500 | Shells, escritorios, admin, servicios, red, seguridad | Pendiente |
+| [Examen 101](101-exam/) | 101-500 | Arquitectura, paquetes, comandos, filesystems | Completado |
+| [Examen 102](102-exam/) | 102-500 | Shells, escritorios, admin, servicios, red, seguridad | Completado |
 
 ## Progreso general
 Completado: 0/42 subtemas

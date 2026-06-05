@@ -16,5 +16,5 @@ tema: "105"
 ## Subtemas
 | Subtema | Peso | Estado |
 |---------|------|--------|
-| [105.1 - Personalizar y usar el entorno del shell](105.1-entorno-del-shell/) | 4 | Pendiente |
-| [105.2 - Personalizar o escribir scripts simples](105.2-scripts-simples/) | 4 | Pendiente |
+| [105.1 - Personalizar y usar el entorno del shell](105.1-entorno-del-shell/) | 4 | Completado |
+| [105.2 - Personalizar o escribir scripts simples](105.2-scripts-simples/) | 4 | Completado |

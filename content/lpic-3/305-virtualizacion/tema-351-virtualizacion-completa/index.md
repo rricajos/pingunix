@@ -14,8 +14,8 @@ tema: "351"
 ## Subtemas
 | Subtema | Estado |
 |---------|--------|
-| [351.1 - Conceptos y teoria](351.1-conceptos-y-teoria/) | Pendiente |
-| [351.2 - Xen](351.2-xen/) | Pendiente |
-| [351.3 - QEMU](351.3-qemu/) | Pendiente |
-| [351.4 - Libvirt](351.4-libvirt/) | Pendiente |
-| [351.5 - Imagenes de disco VM](351.5-imagenes-de-disco-vm/) | Pendiente |
+| [351.1 - Conceptos y teoria](351.1-conceptos-y-teoria/) | Completado |
+| [351.2 - Xen](351.2-xen/) | Completado |
+| [351.3 - QEMU](351.3-qemu/) | Completado |
+| [351.4 - Libvirt](351.4-libvirt/) | Completado |
+| [351.5 - Imagenes de disco VM](351.5-imagenes-de-disco-vm/) | Completado |

@@ -14,7 +14,7 @@ tema: "301"
 ## Subtemas
 | Subtema | Estado |
 |---------|--------|
-| [301.1 - Conceptos y arquitectura](301.1-conceptos-y-arquitectura/) | Pendiente |
-| [301.2 - Configuracion Samba](301.2-configuracion-samba/) | Pendiente |
-| [301.3 - Mantenimiento regular](301.3-mantenimiento-regular/) | Pendiente |
-| [301.4 - Resolucion de problemas](301.4-resolucion-de-problemas/) | Pendiente |
+| [301.1 - Conceptos y arquitectura](301.1-conceptos-y-arquitectura/) | Completado |
+| [301.2 - Configuracion Samba](301.2-configuracion-samba/) | Completado |
+| [301.3 - Mantenimiento regular](301.3-mantenimiento-regular/) | Completado |
+| [301.4 - Resolucion de problemas](301.4-resolucion-de-problemas/) | Completado |

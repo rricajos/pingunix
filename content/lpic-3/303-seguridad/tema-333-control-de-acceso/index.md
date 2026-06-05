@@ -14,5 +14,5 @@ tema: "333"
 ## Subtemas
 | Subtema | Estado |
 |---------|--------|
-| [333.1 - Control de acceso discrecional](333.1-control-de-acceso-discrecional/) | Pendiente |
-| [333.2 - Control de acceso obligatorio](333.2-control-de-acceso-obligatorio/) | Pendiente |
+| [333.1 - Control de acceso discrecional](333.1-control-de-acceso-discrecional/) | Completado |
+| [333.2 - Control de acceso obligatorio](333.2-control-de-acceso-obligatorio/) | Completado |
