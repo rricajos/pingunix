@@ -439,6 +439,271 @@ Que comando se utiliza para descargar un modulo del kernel sin gestionar depende
 
 ---
 
+### Pregunta 26
+
+Cual es la diferencia principal entre BIOS y UEFI respecto al tamano maximo de disco soportado?
+
+a) BIOS soporta hasta 4 TB, UEFI hasta 8 TB
+b) BIOS soporta hasta 2 TB (MBR), UEFI soporta discos mayores de 2 TB (GPT)
+c) No hay diferencia, ambos soportan cualquier tamano
+d) UEFI esta limitado a 1 TB por particion
+
+<details>
+<summary>Respuesta</summary>
+
+**BIOS soporta hasta 2 TB (MBR), UEFI soporta discos mayores de 2 TB (GPT)**
+
+BIOS utiliza la tabla de particiones MBR que esta limitada a discos de 2 TB y maximo 4 particiones primarias. UEFI utiliza GPT que soporta discos de mas de 2 TB y hasta 128 particiones. Ademas, UEFI ofrece Secure Boot, interfaz grafica y tiempos de arranque mas rapidos.
+
+</details>
+
+---
+
+### Pregunta 27
+
+Que es la ESP (EFI System Partition) y que sistema de archivos debe utilizar?
+
+<details>
+<summary>Respuesta</summary>
+
+**ESP es la particion donde UEFI almacena los cargadores de arranque**
+
+La ESP (EFI System Partition) es una particion obligatoria en sistemas UEFI que contiene los archivos `.efi` de los cargadores de arranque. Debe estar formateada con FAT32 (vfat) y se monta normalmente en `/boot/efi`. Sin esta particion, un sistema UEFI no puede arrancar.
+
+</details>
+
+---
+
+### Pregunta 28
+
+Que dispositivo especial de /dev descarta toda la informacion que se escribe en el?
+
+a) /dev/zero
+b) /dev/null
+c) /dev/random
+d) /dev/discard
+
+<details>
+<summary>Respuesta</summary>
+
+**/dev/null**
+
+`/dev/null` descarta toda la informacion que se escribe en el y devuelve EOF al leer. Se usa habitualmente para redirigir salida que no interesa: `comando > /dev/null 2>&1`. `/dev/zero` genera bytes nulos al leerlo, `/dev/random` genera numeros aleatorios bloqueantes y `/dev/urandom` genera numeros aleatorios no bloqueantes.
+
+</details>
+
+---
+
+### Pregunta 29
+
+Que comando muestra los dispositivos de bloque del sistema en formato de arbol, incluyendo el sistema de archivos?
+
+a) fdisk -l
+b) lsblk -f
+c) blkid
+d) mount -l
+
+<details>
+<summary>Respuesta</summary>
+
+**lsblk -f**
+
+`lsblk` lista los dispositivos de bloque (discos, particiones) en formato de arbol. La opcion `-f` anade informacion del sistema de archivos, UUID y punto de montaje. Tambien se puede usar `-o NAME,SIZE,TYPE,MOUNTPOINT` para seleccionar columnas especificas. `blkid` muestra UUIDs pero no en formato arbol. `fdisk -l` muestra la tabla de particiones.
+
+</details>
+
+---
+
+### Pregunta 30
+
+Que comando muestra informacion detallada de un modulo del kernel, como su descripcion, autor, licencia y parametros?
+
+a) lsmod info
+b) modprobe -i
+c) modinfo
+d) cat /sys/module/
+
+<details>
+<summary>Respuesta</summary>
+
+**modinfo**
+
+`modinfo` muestra informacion detallada de un modulo del kernel: descripcion, autor, licencia, dependencias y parametros configurables. Por ejemplo, `modinfo ext4` muestra toda la info del modulo ext4. Con `-p` muestra solo los parametros. No es necesario que el modulo este cargado para consultarlo.
+
+</details>
+
+---
+
+### Pregunta 31
+
+Cual es el formato basico de una regla de udev y donde se guardan las reglas personalizadas?
+
+<details>
+<summary>Respuesta</summary>
+
+**Las reglas udev usan pares CLAVE==valor para emparejar y CLAVE+=valor para asignar**
+
+El formato basico es: `KERNEL=="sdb", SUBSYSTEM=="block", SYMLINK+="mi_disco"`. Las reglas personalizadas se guardan en `/etc/udev/rules.d/` con extension `.rules`. Las reglas del sistema estan en `/lib/udev/rules.d/`. Las de `/etc/` tienen prioridad. Tras modificar reglas, se aplican con `udevadm trigger` sin necesidad de reiniciar.
+
+</details>
+
+---
+
+### Pregunta 32
+
+Que es una IRQ (Interrupt Request) y donde se puede consultar la tabla de IRQs del sistema?
+
+<details>
+<summary>Respuesta</summary>
+
+**Una IRQ es una senal que un dispositivo envia al procesador para solicitar atencion**
+
+Las IRQs (Interrupt Requests) permiten a los dispositivos de hardware notificar al procesador que necesitan atencion. La tabla de IRQs se consulta en `/proc/interrupts`, que muestra el conteo de interrupciones por CPU y por dispositivo. Cada dispositivo tiene asignado un numero de IRQ unico para evitar conflictos.
+
+</details>
+
+---
+
+### Pregunta 33
+
+Que es DMA (Direct Memory Access) y que ventaja ofrece frente al acceso convencional?
+
+<details>
+<summary>Respuesta</summary>
+
+**DMA permite a los dispositivos acceder directamente a la RAM sin pasar por la CPU**
+
+DMA (Direct Memory Access) es un mecanismo que permite a dispositivos como discos o tarjetas de red transferir datos directamente a la memoria RAM sin intervencion del procesador, liberando la CPU para otras tareas. Los canales DMA asignados se consultan en `/proc/dma`. Los puertos de E/S (I/O ports) se consultan en `/proc/ioports`.
+
+</details>
+
+---
+
+### Pregunta 34
+
+Que archivo se usa en sistemas Debian para configurar que modulos del kernel se carguen automaticamente al arrancar?
+
+a) /etc/modprobe.conf
+b) /etc/modules
+c) /lib/modules/autoload
+d) /sys/module/autoload
+
+<details>
+<summary>Respuesta</summary>
+
+**/etc/modules**
+
+En sistemas Debian/Ubuntu, `/etc/modules` es un archivo de texto que lista los modulos a cargar automaticamente durante el arranque, uno por linea. En sistemas con systemd, se usa el directorio `/etc/modules-load.d/` con archivos `.conf`. Atencion: `/etc/modprobe.d/` solo configura opciones, aliases y blacklists, pero NO carga modulos.
+
+</details>
+
+---
+
+### Pregunta 35
+
+Que diferencia hay entre /dev/random y /dev/urandom?
+
+a) /dev/random es mas rapido
+b) /dev/random bloquea si no hay suficiente entropia, /dev/urandom nunca bloquea
+c) /dev/urandom genera numeros mas seguros
+d) Son identicos, solo cambia el nombre
+
+<details>
+<summary>Respuesta</summary>
+
+**/dev/random bloquea si no hay suficiente entropia, /dev/urandom nunca bloquea**
+
+`/dev/random` genera numeros aleatorios criptograficamente seguros pero puede bloquearse si el pool de entropia del kernel esta agotado. `/dev/urandom` nunca bloquea y reutiliza el pool interno, siendo suficiente para la mayoria de usos. En kernels Linux modernos (5.6+), ambos son practicamente equivalentes en seguridad.
+
+</details>
+
+---
+
+### Pregunta 36
+
+Que muestra el comando `lsmod` y a que archivo de /proc es equivalente?
+
+<details>
+<summary>Respuesta</summary>
+
+**lsmod muestra los modulos del kernel cargados y es equivalente a leer /proc/modules**
+
+`lsmod` formatea el contenido de `/proc/modules` mostrando tres columnas: nombre del modulo, tamano en bytes y lista de modulos que dependen de el (Used by). Es una herramienta de solo lectura que no carga ni descarga modulos. Para buscar un modulo especifico se puede combinar con grep: `lsmod | grep ext4`.
+
+</details>
+
+---
+
+### Pregunta 37
+
+Que subdirectorios principales contiene /sys y como se relacionan entre si?
+
+<details>
+<summary>Respuesta</summary>
+
+**/sys contiene bus/, class/, devices/, firmware/, module/ y power/**
+
+`/sys/bus/` organiza dispositivos por tipo de bus (pci, usb, scsi). `/sys/class/` los agrupa por funcion (net, input, sound, block). `/sys/devices/` contiene el arbol fisico real de todos los dispositivos. Los directorios en `/sys/bus/` y `/sys/class/` contienen enlaces simbolicos que apuntan a `/sys/devices/`. `/sys/module/` muestra informacion de los modulos cargados. `/sys/firmware/` expone interfaces del firmware (ACPI, EFI).
+
+</details>
+
+---
+
+### Pregunta 38
+
+Que es Secure Boot y que firmware lo soporta?
+
+a) Es una funcion de BIOS que cifra el disco duro
+b) Es una funcion de UEFI que verifica la firma digital de los cargadores de arranque
+c) Es un modo de arranque seguro disponible en BIOS y UEFI
+d) Es un sistema de autenticacion de usuarios al arrancar
+
+<details>
+<summary>Respuesta</summary>
+
+**Es una funcion de UEFI que verifica la firma digital de los cargadores de arranque**
+
+Secure Boot es una caracteristica exclusiva de UEFI (no disponible en BIOS) que verifica las firmas digitales de los cargadores de arranque y drivers antes de ejecutarlos. Esto previene la ejecucion de software no autorizado durante el arranque. Algunas distribuciones Linux requieren desactivar Secure Boot si no tienen un cargador firmado.
+
+</details>
+
+---
+
+### Pregunta 39
+
+Como se identifican los discos y particiones en /dev para discos SATA/SCSI y para discos NVMe?
+
+<details>
+<summary>Respuesta</summary>
+
+**SATA/SCSI usan /dev/sdX y NVMe usan /dev/nvmeXnY**
+
+Los discos SATA y SCSI se nombran `/dev/sda`, `/dev/sdb`, etc. Sus particiones son `/dev/sda1`, `/dev/sda2`. Los discos NVMe usan el formato `/dev/nvme0n1` (controlador 0, namespace 1), con particiones `/dev/nvme0n1p1`, `/dev/nvme0n1p2`. Los lectores de CD/DVD son `/dev/sr0`. Se pueden listar todos con `lsblk`.
+
+</details>
+
+---
+
+### Pregunta 40
+
+Que diferencia hay entre /etc/modprobe.d/ y /etc/modules-load.d/ respecto a la gestion de modulos del kernel?
+
+a) Son lo mismo, solo cambia el nombre segun la distribucion
+b) /etc/modprobe.d/ configura opciones y blacklists, /etc/modules-load.d/ lista modulos a cargar al arrancar
+c) /etc/modules-load.d/ es para blacklists y /etc/modprobe.d/ carga modulos
+d) Ambos cargan modulos automaticamente al arrancar
+
+<details>
+<summary>Respuesta</summary>
+
+**/etc/modprobe.d/ configura opciones y blacklists, /etc/modules-load.d/ lista modulos a cargar al arrancar**
+
+`/etc/modprobe.d/` contiene archivos `.conf` con directivas como `blacklist modulo`, `options modulo param=valor` y `alias nombre modulo`. NO carga modulos por si solo. `/etc/modules-load.d/` (systemd) y `/etc/modules` (Debian) son los que listan modulos para cargar automaticamente durante el arranque. Esta es una trampa habitual del examen.
+
+</details>
+
+---
+
 ## Ejercicios practicos
 
 ### Ejercicio 1: Explorar hardware
