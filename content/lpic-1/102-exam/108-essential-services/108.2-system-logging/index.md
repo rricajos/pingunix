@@ -1,0 +1,48 @@
+---
+title: "108.2 Registro del sistema"
+tags:
+  - lpic-1
+  - examen-102
+  - tema-108
+  - indice-subtema
+tipo: indice-subtema
+certificacion: lpic-1
+examen: "102"
+tema: "108"
+subtema: "108.2"
+---
+
+# 108.2 Registro del sistema
+
+## Objetivo
+Configurar el demonio syslog para registrar eventos del sistema. Gestionar registros del sistema con journald y los archivos de log tradicionales.
+
+## Peso
+4
+
+## Conocimientos clave
+- Configuracion del demonio syslog (rsyslog, syslog-ng)
+- Comprension de facilities y priorities estandar
+- Configuracion de logrotate
+- Comprension de systemd journal (journald)
+- Conocimiento de rsyslog y syslog-ng como implementaciones de syslog
+
+## Archivos, terminos y utilidades
+- `/etc/rsyslog.conf`
+- `/etc/syslog-ng/syslog-ng.conf`
+- `/var/log/`
+- `journalctl`
+- `logger`
+- `logrotate`
+- `/etc/logrotate.conf`
+- `/etc/logrotate.d/`
+- `systemd-journald`
+- `/etc/systemd/journald.conf`
+- `dmesg`
+
+## Contenido
+
+- [[theory|Teoria]] — Conceptos y explicaciones detalladas
+- [[key-commands|Comandos clave]] — Referencia rapida de comandos
+- [[exercises|Ejercicios]] — Preguntas de practica
+- [[flashcards|Flashcards]] — Tarjetas de repaso espaciado

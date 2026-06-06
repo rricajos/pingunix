@@ -69,9 +69,9 @@ function determineTipo(filename, relPath) {
     if (relPath.includes('recursos')) return 'indice-recursos'
     return 'indice'
   }
-  if (filename === 'teoria.md') return 'teoria'
-  if (filename === 'comandos-clave.md') return 'comandos'
-  if (filename === 'ejercicios.md') return 'ejercicios'
+  if (filename === 'theory.md') return 'teoria'
+  if (filename === 'key-commands.md') return 'comandos'
+  if (filename === 'exercises.md') return 'ejercicios'
   if (filename === 'flashcards.md') return 'flashcards'
   return 'contenido'
 }
@@ -178,10 +178,10 @@ for (const dir of DIRS_TO_MIGRATE) {
     // Only process .md files
     if (!srcFile.endsWith('.md')) continue
 
-    // Flatten: notas/teoria.md → teoria.md
-    destRel = destRel.replace(/notas[/\\]teoria\.md$/, 'teoria.md')
-    destRel = destRel.replace(/notas[/\\]comandos-clave\.md$/, 'comandos-clave.md')
-    destRel = destRel.replace(/ejercicios[/\\]ejercicios\.md$/, 'ejercicios.md')
+    // Flatten: notas/theory.md → theory.md
+    destRel = destRel.replace(/notas[/\\]theory\.md$/, 'theory.md')
+    destRel = destRel.replace(/notas[/\\]key-commands\.md$/, 'key-commands.md')
+    destRel = destRel.replace(/ejercicios[/\\]exercises\.md$/, 'exercises.md')
 
     // Rename README.md → index.md
     destRel = destRel.replace(/README\.md$/, 'index.md')

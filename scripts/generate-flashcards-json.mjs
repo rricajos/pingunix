@@ -30,7 +30,7 @@ function findSubtopicDirs(dir) {
   return results
 }
 
-// ── Extract Q&A from ejercicios.md ──
+// ── Extract Q&A from exercises.md ──
 function extractFromExercises(filepath) {
   if (!existsSync(filepath)) return []
   const content = readFileSync(filepath, 'utf-8').replace(/\r\n/g, '\n').replace(/\r/g, '\n')
@@ -82,7 +82,7 @@ const GENERIC_HEADINGS = new Set([
 
 const TRUNCATION_ENDINGS = /\s+(de|del|en|el|la|los|las|un|una|al|con|por|para|que|y|o|e|a|su|sus|se|lo|como|entre|sobre|desde|hasta|sin|hacia|ante|bajo|contra|mediante|segun|tras|durante)\s*\.?$/i
 
-// ── Extract key concepts from teoria.md ──
+// ── Extract key concepts from theory.md ──
 function extractFromTheory(filepath) {
   if (!existsSync(filepath)) return []
   const content = readFileSync(filepath, 'utf-8').replace(/\r\n/g, '\n').replace(/\r/g, '\n')
@@ -176,8 +176,8 @@ for (const cert of CERTS) {
 
     const subtemaNum = subtemaMatch[1]
 
-    const ejerciciosPath = join(dir, 'ejercicios.md')
-    const teoriaPath = join(dir, 'teoria.md')
+    const ejerciciosPath = join(dir, 'exercises.md')
+    const teoriaPath = join(dir, 'theory.md')
 
     const exerciseCards = extractFromExercises(ejerciciosPath)
     const theoryCards = extractFromTheory(teoriaPath)

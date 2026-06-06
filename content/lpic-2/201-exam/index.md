@@ -14,10 +14,10 @@ examen: "201"
 ## Temas
 | Tema | Subtemas | Estado |
 |------|----------|--------|
-| [200 - Planificacion de Capacidad](tema-200-planificacion-de-capacidad/) | 200.1-200.2 | Completado |
-| [201 - Kernel Linux](tema-201-kernel-linux/) | 201.1-201.3 | Completado |
-| [202 - Arranque del Sistema](tema-202-arranque-del-sistema/) | 202.1-202.3 | Completado |
-| [203 - Sistemas de Archivos y Dispositivos](tema-203-sistemas-de-archivos-y-dispositivos/) | 203.1-203.3 | Completado |
-| [204 - Almacenamiento Avanzado](tema-204-almacenamiento-avanzado/) | 204.1-204.3 | Completado |
-| [205 - Configuracion de Red](tema-205-configuracion-de-red/) | 205.1-205.3 | Completado |
-| [206 - Mantenimiento del Sistema](tema-206-mantenimiento-del-sistema/) | 206.1-206.3 | Completado |
+| [200 - Planificacion de Capacidad](200-capacity-planning/) | 200.1-200.2 | Completado |
+| [201 - Kernel Linux](201-linux-kernel/) | 201.1-201.3 | Completado |
+| [202 - Arranque del Sistema](202-system-boot/) | 202.1-202.3 | Completado |
+| [203 - Sistemas de Archivos y Dispositivos](203-filesystems-and-devices/) | 203.1-203.3 | Completado |
+| [204 - Almacenamiento Avanzado](204-advanced-storage/) | 204.1-204.3 | Completado |
+| [205 - Configuracion de Red](205-network-config/) | 205.1-205.3 | Completado |
+| [206 - Mantenimiento del Sistema](206-system-maintenance/) | 206.1-206.3 | Completado |

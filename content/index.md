@@ -21,9 +21,9 @@ Examenes 101-500 y 102-500 — 42 subtemas
 Examenes 201-450 y 202-450 — 41 subtemas
 
 ### [[lpic-3/index|LPIC-3: Profesional Linux Enterprise]]
-4 especializaciones: [[lpic-3/300-entornos-mixtos/index|300]], [[lpic-3/303-seguridad/index|303]], [[lpic-3/305-virtualizacion/index|305]], [[lpic-3/306-alta-disponibilidad/index|306]]
+4 especializaciones: [[lpic-3/300-mixed-environments/index|300]], [[lpic-3/303-security/index|303]], [[lpic-3/305-virtualization/index|305]], [[lpic-3/306-high-availability/index|306]]
 
-## [[simulacros/index|Simulacros de Examen]]
+## [[mock-exams/index|Simulacros de Examen]]
 
 Practica con condiciones reales: 60 preguntas, 90 minutos, correccion automatica. Dos simulacros por examen (A y B).
 
@@ -33,30 +33,30 @@ Practica con condiciones reales: 60 preguntas, 90 minutos, correccion automatica
 | 102-500 | LPIC-1 | [[lpic-1/102-exam/simulacro-102|102-A]] | [[lpic-1/102-exam/simulacro-102-b|102-B]] |
 | 201-450 | LPIC-2 | [[lpic-2/201-exam/simulacro-201|201-A]] | [[lpic-2/201-exam/simulacro-201-b|201-B]] |
 | 202-450 | LPIC-2 | [[lpic-2/202-exam/simulacro-202|202-A]] | [[lpic-2/202-exam/simulacro-202-b|202-B]] |
-| 300 | LPIC-3 | [[lpic-3/300-entornos-mixtos/simulacro-300|300-A]] | [[lpic-3/300-entornos-mixtos/simulacro-300-b|300-B]] |
-| 303 | LPIC-3 | [[lpic-3/303-seguridad/simulacro-303|303-A]] | [[lpic-3/303-seguridad/simulacro-303-b|303-B]] |
-| 305 | LPIC-3 | [[lpic-3/305-virtualizacion/simulacro-305|305-A]] | [[lpic-3/305-virtualizacion/simulacro-305-b|305-B]] |
-| 306 | LPIC-3 | [[lpic-3/306-alta-disponibilidad/simulacro-306|306-A]] | [[lpic-3/306-alta-disponibilidad/simulacro-306-b|306-B]] |
+| 300 | LPIC-3 | [[lpic-3/300-mixed-environments/simulacro-300|300-A]] | [[lpic-3/300-mixed-environments/simulacro-300-b|300-B]] |
+| 303 | LPIC-3 | [[lpic-3/303-security/simulacro-303|303-A]] | [[lpic-3/303-security/simulacro-303-b|303-B]] |
+| 305 | LPIC-3 | [[lpic-3/305-virtualization/simulacro-305|305-A]] | [[lpic-3/305-virtualization/simulacro-305-b|305-B]] |
+| 306 | LPIC-3 | [[lpic-3/306-high-availability/simulacro-306|306-A]] | [[lpic-3/306-high-availability/simulacro-306-b|306-B]] |
 
 ## [[hacking-vault/index|Hacking Vault]]
 
 Base de conocimientos de seguridad ofensiva y defensiva.
 
-- [[hacking-vault/ofensivo/reconocimiento/index|Reconocimiento]] — OSINT, Nmap, subdominios
-- [[hacking-vault/ofensivo/explotacion/index|Explotacion]] — OWASP Top 10, Metasploit, privesc
-- [[hacking-vault/defensivo/hardening/index|Hardening]] — CIS, SSH, kernel, auditd
-- [[hacking-vault/defensivo/blue-team/index|Blue Team]] — IR, SIEM, forense
-- [[hacking-vault/laboratorios/index|Laboratorios]] — 4 escenarios practicos
+- [[hacking-vault/offensive/reconnaissance/index|Reconocimiento]] — OSINT, Nmap, subdominios
+- [[hacking-vault/offensive/exploitation/index|Explotacion]] — OWASP Top 10, Metasploit, privesc
+- [[hacking-vault/defensive/hardening/index|Hardening]] — CIS, SSH, kernel, auditd
+- [[hacking-vault/defensive/blue-team/index|Blue Team]] — IR, SIEM, forense
+- [[hacking-vault/labs/index|Laboratorios]] — 4 escenarios practicos
 
-## [[recursos/index|Recursos]]
+## [[resources/index|Recursos]]
 
-- [[recursos/glosario|Glosario de terminos]]
-- [[recursos/comandos-rapidos/comandos-lpic1|Comandos rapidos LPIC-1]]
-- [[recursos/comandos-rapidos/comandos-lpic2|Comandos rapidos LPIC-2]]
-- [[recursos/comandos-rapidos/comandos-lpic3|Comandos rapidos LPIC-3]]
-- [[recursos/comandos-rapidos/comandos-hacking|Comandos rapidos Hacking]]
-- [[recursos/enlaces-utiles|Enlaces utiles]]
-- [[recursos/libros-recomendados|Libros recomendados]]
+- [[resources/glossary|Glosario de terminos]]
+- [[resources/quick-commands/comandos-lpic1|Comandos rapidos LPIC-1]]
+- [[resources/quick-commands/comandos-lpic2|Comandos rapidos LPIC-2]]
+- [[resources/quick-commands/comandos-lpic3|Comandos rapidos LPIC-3]]
+- [[resources/quick-commands/comandos-hacking|Comandos rapidos Hacking]]
+- [[resources/useful-links|Enlaces utiles]]
+- [[resources/recommended-books|Libros recomendados]]
 
 ## Estadisticas del proyecto
 

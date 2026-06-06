@@ -18,7 +18,7 @@ Certificacion de nivel mas alto del LPI. Se divide en especializaciones independ
 ## Especializaciones
 | Especializacion | Codigo | Tema | Estado |
 |-----------------|--------|------|--------|
-| [300 - Entornos Mixtos](300-entornos-mixtos/) | 300-100 | Samba, AD, FreeIPA | Completado |
-| [303 - Seguridad](303-seguridad/) | 303-300 | Criptografia, control acceso, seguridad red | Completado |
-| [305 - Virtualizacion y Contenedores](305-virtualizacion/) | 305-300 | VMs, Docker, Kubernetes, cloud | Completado |
-| [306 - Alta Disponibilidad](306-alta-disponibilidad/) | 306-300 | Clusters, DRBD, Ceph, GlusterFS | Completado |
+| [300 - Entornos Mixtos](300-mixed-environments/) | 300-100 | Samba, AD, FreeIPA | Completado |
+| [303 - Seguridad](303-security/) | 303-300 | Criptografia, control acceso, seguridad red | Completado |
+| [305 - Virtualizacion y Contenedores](305-virtualization/) | 305-300 | VMs, Docker, Kubernetes, cloud | Completado |
+| [306 - Alta Disponibilidad](306-high-availability/) | 306-300 | Clusters, DRBD, Ceph, GlusterFS | Completado |

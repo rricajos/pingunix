@@ -4,7 +4,7 @@
  * Dashboard, and Data Portability features.
  *
  * Activates based on page content / frontmatter "tipo" field:
- *   - ejercicios  → Quiz Runner
+ *   - exercises   → Quiz Runner
  *   - flashcards  → Flashcard Viewer with SM-2 spaced repetition
  *   - dashboard   → Dashboard + Data Portability
  */
@@ -22,10 +22,10 @@
   // Utility helpers
   // ---------------------------------------------------------------------------
 
-  /** Extract a subtema identifier from the current page URL / slug. */
-  function getSubtema() {
+  /** Extract a subtopic identifier from the current page URL / slug. */
+  function getSubtopic() {
     const slug = document.body.getAttribute("data-slug") || ""
-    // Typically something like "lpic-1/tema-101/101-1/ejercicios"
+    // Typically something like "lpic-1/101-exam/101-system-architecture/101.1-hardware-config/exercises"
     // We want a stable key, so use the slug with slashes replaced
     return slug.replace(/\//g, "_").replace(/^_|_$/g, "")
   }
@@ -247,7 +247,7 @@
     articleEl.appendChild(container)
 
     // State
-    var mode = "practica" // "practica" or "examen"
+    var mode = "practice" // "practice" or "exam"
     var currentIdx = 0
     var answers = new Array(questions.length).fill(null) // user selected letter
     var checked = new Array(questions.length).fill(false)
@@ -260,20 +260,20 @@
     var modeToggle = el("div", "st-quiz-mode-toggle")
     header.appendChild(modeToggle)
 
-    var btnPractica = el("button", "st-btn st-btn-mode st-active", "Modo Practica")
-    var btnExamen = el("button", "st-btn st-btn-mode", "Modo Examen")
-    modeToggle.appendChild(btnPractica)
-    modeToggle.appendChild(btnExamen)
+    var btnPractice = el("button", "st-btn st-btn-mode st-active", "Modo Practica")
+    var btnExam = el("button", "st-btn st-btn-mode", "Modo Examen")
+    modeToggle.appendChild(btnPractice)
+    modeToggle.appendChild(btnExam)
 
-    btnPractica.addEventListener("click", function () {
-      mode = "practica"
-      btnPractica.classList.add("st-active")
-      btnExamen.classList.remove("st-active")
+    btnPractice.addEventListener("click", function () {
+      mode = "practice"
+      btnPractice.classList.add("st-active")
+      btnExam.classList.remove("st-active")
     })
-    btnExamen.addEventListener("click", function () {
-      mode = "examen"
-      btnExamen.classList.add("st-active")
-      btnPractica.classList.remove("st-active")
+    btnExam.addEventListener("click", function () {
+      mode = "exam"
+      btnExam.classList.add("st-active")
+      btnPractice.classList.remove("st-active")
     })
 
     var progressText = el("div", "st-quiz-progress")
@@ -413,10 +413,10 @@
       }
 
       // Show explanation if already checked
-      if (checked[currentIdx] && mode === "practica") {
+      if (checked[currentIdx] && mode === "practice") {
         showExplanation(card, q)
       }
-      if (checked[currentIdx] && mode === "examen") {
+      if (checked[currentIdx] && mode === "exam") {
         showExplanation(card, q)
       }
 
@@ -488,7 +488,7 @@
         return
       }
 
-      if (mode === "practica") {
+      if (mode === "practice") {
         checked[currentIdx] = true
         renderQuestion()
       } else {
@@ -519,7 +519,7 @@
 
     function finishQuiz() {
       // In examen mode, reveal all answers now
-      if (mode === "examen") {
+      if (mode === "exam") {
         for (var i = 0; i < questions.length; i++) {
           if (answers[i] !== null) {
             checked[i] = true
@@ -542,8 +542,8 @@
       var pct = totalAnswered > 0 ? Math.round((score / totalAnswered) * 100) : 0
 
       // Save best score
-      var subtema = getSubtema()
-      var key = QUIZ_PREFIX + subtema
+      var subtopic = getSubtopic()
+      var key = QUIZ_PREFIX + subtopic
       var prev = lsGet(key)
       var entry = {
         score: score,
@@ -649,7 +649,7 @@
       })
       resActions.appendChild(btnRetry)
 
-      if (mode === "examen") {
+      if (mode === "exam") {
         var btnReview = el("button", "st-btn st-btn-secondary", "Revisar respuestas")
         btnReview.addEventListener("click", function () {
           currentIdx = 0
@@ -732,7 +732,7 @@
 
         if (questionParts.length > 0 && answerParts.length > 0) {
           cards.push({
-            id: getSubtema() + "_fc_" + idx,
+            id: getSubtopic() + "_fc_" + idx,
             front: questionParts.join(""),
             back: answerParts.join(""),
           })
@@ -1088,7 +1088,7 @@
         var data = lsGet(key)
         if (data) {
           data._key = key
-          data._subtema = key.slice(QUIZ_PREFIX.length)
+          data._subtopic = key.slice(QUIZ_PREFIX.length)
           quizEntries.push(data)
         }
       } else if (key.startsWith(FC_PREFIX)) {
@@ -1149,7 +1149,7 @@
 
     lpicLevels.forEach(function (level) {
       var levelQuizzes = quizEntries.filter(function (q) {
-        return q._subtema.toLowerCase().includes(level.key)
+        return q._subtopic.toLowerCase().includes(level.key)
       })
       var count = levelQuizzes.length
       var avgPct = 0
@@ -1196,13 +1196,13 @@
 
       sorted.slice(0, 10).forEach(function (q) {
         var item = el("div", "st-dash-recent-item")
-        var subtemaLabel = q._subtema.replace(/_/g, "/")
+        var subtopicLabel = q._subtopic.replace(/_/g, "/")
         var dateStr = q.date ? new Date(q.date).toLocaleDateString("es-ES") : "—"
         var pct = q.percentage || 0
 
         item.innerHTML =
           '<div class="st-dash-recent-name">' +
-          subtemaLabel +
+          subtopicLabel +
           '</div><div class="st-dash-recent-meta">' +
           '<span class="st-dash-recent-score ' +
           (pct >= 70 ? "st-text-green" : pct >= 50 ? "st-text-orange" : "st-text-red") +
@@ -1213,7 +1213,7 @@
           dateStr +
           "</span>" +
           '<span class="st-dash-recent-mode">' +
-          (q.mode === "examen" ? "Examen" : "Practica") +
+          (q.mode === "exam" ? "Examen" : "Practica") +
           "</span>" +
           "</div>"
         recentList.appendChild(item)
@@ -1471,7 +1471,7 @@
   function detectAndInit() {
     // Detect page type by inspecting DOM content
 
-    // 1. Check for quiz (ejercicios) pages: h3 elements starting with "Pregunta"
+    // 1. Check for quiz (exercises) pages: h3 elements starting with "Pregunta"
     var articleEl =
       document.querySelector("article.popover-hint") ||
       document.querySelector("article") ||
@@ -1609,11 +1609,11 @@
     var questions = simEl.querySelectorAll(".exam-question")
     var correct = 0
     var total = questions.length
-    var subtemaStats = {}
+    var subtopicStats = {}
 
     questions.forEach(function (q) {
       var correctLetter = (q.getAttribute("data-correct") || "").trim().toLowerCase()
-      var subtema = q.getAttribute("data-subtema") || "?"
+      var subtopic = q.getAttribute("data-subtopic") || "?"
       var selected = q.querySelector("li.exam-selected")
       var userLetter = ""
 
@@ -1644,10 +1644,10 @@
 
       if (isCorrect) correct++
 
-      // Track per-subtema
-      if (!subtemaStats[subtema]) subtemaStats[subtema] = { correct: 0, total: 0 }
-      subtemaStats[subtema].total++
-      if (isCorrect) subtemaStats[subtema].correct++
+      // Track per-subtopic
+      if (!subtopicStats[subtopic]) subtopicStats[subtopic] = { correct: 0, total: 0 }
+      subtopicStats[subtopic].total++
+      if (isCorrect) subtopicStats[subtopic].correct++
     })
 
     // Show results
@@ -1669,8 +1669,8 @@
       var breakdownDiv = resultsDiv.querySelector(".exam-breakdown")
       if (breakdownDiv) {
         var html = "<h4>Desglose por subtema:</h4><table><tr><th>Subtema</th><th>Aciertos</th><th>%</th></tr>"
-        Object.keys(subtemaStats).sort().forEach(function (st) {
-          var s = subtemaStats[st]
+        Object.keys(subtopicStats).sort().forEach(function (st) {
+          var s = subtopicStats[st]
           var stPct = Math.round((s.correct / s.total) * 100)
           html += "<tr><td>" + st + "</td><td>" + s.correct + "/" + s.total +
             "</td><td>" + stPct + "%</td></tr>"
@@ -1696,7 +1696,7 @@
       score: pct,
       correct: correct,
       total: total,
-      breakdown: subtemaStats
+      breakdown: subtopicStats
     })
   }
 

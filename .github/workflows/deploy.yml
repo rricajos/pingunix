@@ -55,6 +55,9 @@ jobs:
       - name: Build Quartz site
         run: npm run quartz -- build
 
+      - name: Add CNAME for custom domain
+        run: echo "pingunix.com" > public/CNAME
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

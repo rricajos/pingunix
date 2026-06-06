@@ -1,0 +1,21 @@
+---
+title: "Tema 203: Sistemas de Archivos y Dispositivos"
+tags:
+  - lpic-2
+  - examen-201
+  - tema-203
+  - indice-tema
+tipo: indice-tema
+certificacion: lpic-2
+examen: "201"
+tema: "203"
+---
+
+# Tema 203: Sistemas de Archivos y Dispositivos
+
+## Subtemas
+| Subtema | Peso | Estado |
+|---------|------|--------|
+| [203.1 - Operacion del sistema de archivos](203.1-filesystem-ops/) | 4 | Completado |
+| [203.2 - Mantenimiento del sistema de archivos](203.2-filesystem-maintenance/) | 3 | Completado |
+| [203.3 - Opciones de sistemas de archivos](203.3-filesystem-options/) | 2 | Completado |

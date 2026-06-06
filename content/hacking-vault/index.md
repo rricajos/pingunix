@@ -16,30 +16,30 @@ Base de conocimientos de seguridad ofensiva y defensiva. Complemento practico a 
 
 | Area | Descripcion | Temas LPIC relacionados |
 |------|-------------|------------------------|
-| [Reconocimiento](ofensivo/reconocimiento/) | Recopilacion de informacion pasiva y activa | LPIC-1: 109 (Fundamentos de red) |
-| [Enumeracion](ofensivo/enumeracion/) | Descubrimiento de servicios y vulnerabilidades | LPIC-2: 207-210 (Servicios de red) |
-| [Explotacion](ofensivo/explotacion/) | Tecnicas de explotacion de vulnerabilidades | LPIC-3 303: 335 (Amenazas y vulnerabilidades) |
-| [Post-Explotacion](ofensivo/post-explotacion/) | Persistencia, movimiento lateral, exfiltracion | LPIC-3 303: 332 (Seguridad del host) |
-| [CTF](ofensivo/ctf/) | Writeups y metodologias para CTFs | Transversal |
-| [Ingenieria Social](ofensivo/ingenieria-social/) | Tecnicas de manipulacion y phishing | - |
+| [Reconocimiento](offensive/reconnaissance/) | Recopilacion de informacion pasiva y activa | LPIC-1: 109 (Fundamentos de red) |
+| [Enumeracion](offensive/enumeration/) | Descubrimiento de servicios y vulnerabilidades | LPIC-2: 207-210 (Servicios de red) |
+| [Explotacion](offensive/exploitation/) | Tecnicas de explotacion de vulnerabilidades | LPIC-3 303: 335 (Amenazas y vulnerabilidades) |
+| [Post-Explotacion](offensive/post-exploitation/) | Persistencia, movimiento lateral, exfiltracion | LPIC-3 303: 332 (Seguridad del host) |
+| [CTF](offensive/ctf/) | Writeups y metodologias para CTFs | Transversal |
+| [Ingenieria Social](offensive/social-engineering/) | Tecnicas de manipulacion y phishing | - |
 
 ### Defensivo (Blue Team)
 
 | Area | Descripcion | Temas LPIC relacionados |
 |------|-------------|------------------------|
-| [Hardening](defensivo/hardening/) | Securizacion de sistemas y servicios | LPIC-3 303: 332 (Seguridad del host) |
-| [Blue Team](defensivo/blue-team/) | Deteccion, respuesta a incidentes, forense | LPIC-1: 110, LPIC-2: 212, LPIC-3 303 |
-| [Firewalls y Filtrado](defensivo/firewalls-y-filtrado/) | iptables, nftables, firewalld | LPIC-3 303: 334.3 (Filtrado de paquetes) |
-| [Criptografia Aplicada](defensivo/criptografia-aplicada/) | GPG, SSL/TLS, LUKS | LPIC-1: 110.3, LPIC-3 303: 331 |
+| [Hardening](defensive/hardening/) | Securizacion de sistemas y servicios | LPIC-3 303: 332 (Seguridad del host) |
+| [Blue Team](defensive/blue-team/) | Deteccion, respuesta a incidentes, forense | LPIC-1: 110, LPIC-2: 212, LPIC-3 303 |
+| [Firewalls y Filtrado](defensive/firewalls-and-filtering/) | iptables, nftables, firewalld | LPIC-3 303: 334.3 (Filtrado de paquetes) |
+| [Criptografia Aplicada](defensive/applied-cryptography/) | GPG, SSL/TLS, LUKS | LPIC-1: 110.3, LPIC-3 303: 331 |
 
 ### Laboratorios
 
 | Lab | Descripcion |
 |-----|-------------|
-| [Lab 01 - Reconocimiento](laboratorios/escenarios/lab-01-reconocimiento/) | Escaneo y enumeracion de redes |
-| [Lab 02 - Explotacion Web](laboratorios/escenarios/lab-02-explotacion-web/) | OWASP Top 10 en practica |
-| [Lab 03 - Escalada de Privilegios](laboratorios/escenarios/lab-03-escalada-privilegios/) | Privesc en Linux |
-| [Lab 04 - Hardening de Servidor](laboratorios/escenarios/lab-04-hardening-servidor/) | Securizar un servidor desde cero |
+| [Lab 01 - Reconocimiento](labs/escenarios/lab-01-reconnaissance/) | Escaneo y enumeracion de redes |
+| [Lab 02 - Explotacion Web](labs/escenarios/lab-02-exploitation-web/) | OWASP Top 10 en practica |
+| [Lab 03 - Escalada de Privilegios](labs/escenarios/lab-03-escalada-privilegios/) | Privesc en Linux |
+| [Lab 04 - Hardening de Servidor](labs/escenarios/lab-04-hardening-servidor/) | Securizar un servidor desde cero |
 
 ## Como usar este vault
 

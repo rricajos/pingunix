@@ -14,9 +14,9 @@ examen: "102"
 ## Temas
 | Tema | Subtemas | Estado |
 |------|----------|--------|
-| [105 - Shells y Scripting](tema-105-shells-y-scripting/) | 105.1-105.2 | Completado |
-| [106 - Interfaces y Escritorios](tema-106-interfaces-y-escritorios/) | 106.1-106.3 | Completado |
-| [107 - Tareas Administrativas](tema-107-tareas-administrativas/) | 107.1-107.3 | Completado |
-| [108 - Servicios Esenciales](tema-108-servicios-esenciales/) | 108.1-108.4 | Completado |
-| [109 - Fundamentos de Red](tema-109-fundamentos-de-red/) | 109.1-109.4 | Completado |
-| [110 - Seguridad](tema-110-seguridad/) | 110.1-110.3 | Completado |
+| [105 - Shells y Scripting](105-shells-and-scripting/) | 105.1-105.2 | Completado |
+| [106 - Interfaces y Escritorios](106-interfaces-and-desktops/) | 106.1-106.3 | Completado |
+| [107 - Tareas Administrativas](107-admin-tasks/) | 107.1-107.3 | Completado |
+| [108 - Servicios Esenciales](108-essential-services/) | 108.1-108.4 | Completado |
+| [109 - Fundamentos de Red](109-networking/) | 109.1-109.4 | Completado |
+| [110 - Seguridad](110-security/) | 110.1-110.3 | Completado |
