@@ -541,12 +541,12 @@ subtema: "108.1"
 <div class="flashcard" data-id="108.1-fc-030">
 <div class="flashcard-front">
 
-**P:** Que es/son Conceptos fundamentales: Dos relojes en Linux?
+**P:** Un servidor Linux se reinicia tras un corte de electricidad prolongado. Al arrancar, el reloj del sistema marca una hora 3 minutos atrasada respecto a la hora real. Por que ocurre esto y como se corrige de forma permanente?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Un sistema Linux mantiene **dos relojes** independientes:
+**R:** Ocurre porque al arrancar, el kernel inicializa el reloj del sistema a partir del reloj hardware (RTC), que es un chip fisico en la placa base alimentado por una pila CR2032. El RTC es menos preciso que un reloj atomico y puede desviarse varios segundos al dia (drift). Tras un corte prolongado, esa desviacion se acumula. Para corregirlo: 1) Sincronizar el reloj del sistema con NTP (`timedatectl set-ntp true` o configurar chrony/ntpd), 2) Copiar la hora corregida al RTC con `hwclock --systohc`. La diferencia clave es que el RTC funciona con el equipo apagado pero es impreciso, mientras que el reloj del sistema (mantenido por el kernel en RAM) puede sincronizarse con NTP pero se pierde al apagar.
 
 </div>
 </div>
@@ -559,12 +559,12 @@ subtema: "108.1"
 <div class="flashcard" data-id="108.1-fc-031">
 <div class="flashcard-front">
 
-**P:** Que es/son Comando `date`?
+**P:** Escribe el comando `date` para establecer la fecha y hora del sistema al 25 de diciembre de 2025 a las 14:30:00. <input type="text" class="fill-blank" data-answer="date -s '2025-12-25 14:30:00'" data-alt="date --set='2025-12-25 14:30:00',date --set '2025-12-25 14:30:00'" placeholder="$ escribe aqui...">
 
 </div>
 <div class="flashcard-back">
 
-**R:** El comando `date` muestra y establece la fecha y hora del sistema.
+**R:** `date -s '2025-12-25 14:30:00'` (o `date --set='2025-12-25 14:30:00'`). El comando `date` con la opcion `-s` o `--set` permite establecer manualmente la fecha y hora del reloj del sistema. Requiere privilegios de root. Formatos aceptados: `date -s "25 Dec 2025 14:30:00"`, `date -s "2025-12-25 14:30:00"`. Importante: este comando solo cambia el reloj del sistema, no el RTC. Para persistir el cambio tras un reinicio, ejecutar despues `hwclock --systohc`. Tambien se puede usar el formato MMDDhhmmAAAA.ss: `date 122514302025.00`.
 
 </div>
 </div>
@@ -577,12 +577,12 @@ subtema: "108.1"
 <div class="flashcard" data-id="108.1-fc-032">
 <div class="flashcard-front">
 
-**P:** Que es/son Comando `hwclock`?
+**P:** Despues de sincronizar el reloj del sistema con un servidor NTP, un administrador quiere que el reloj hardware (RTC) tambien refleje la hora correcta. Que comando debe ejecutar y por que es importante hacerlo?
 
 </div>
 <div class="flashcard-back">
 
-**R:** El comando `hwclock` gestiona el reloj hardware (RTC).
+**R:** Debe ejecutar `hwclock --systohc` (System TO Hardware Clock). Este comando copia la hora actual del reloj del sistema al RTC. Es importante porque al reiniciar, el kernel inicializa el reloj del sistema a partir del RTC. Si el RTC no se actualiza, el sistema arrancara con la hora incorrecta hasta que NTP lo sincronice de nuevo. Opciones clave de `hwclock`: `--hctosys` (copiar RTC al sistema), `--systohc` (copiar sistema al RTC), `-r` o `--show` (mostrar hora del RTC), `--set --date "2025-12-25 14:30"` (establecer hora directamente en el RTC), `--utc` (interpretar RTC como UTC), `--localtime` (interpretar RTC como hora local). La configuracion UTC/LOCAL se almacena en `/etc/adjtime`.
 
 </div>
 </div>
@@ -595,12 +595,12 @@ subtema: "108.1"
 <div class="flashcard" data-id="108.1-fc-033">
 <div class="flashcard-front">
 
-**P:** Que es/son Comando `timedatectl` (systemd)?
+**P:** Un administrador necesita cambiar la zona horaria de un servidor con systemd a `America/Mexico_City`. Escribe el comando para listar las zonas horarias disponibles y el comando para establecer la nueva zona. <input type="text" class="fill-blank" data-answer="timedatectl list-timezones" data-alt="" placeholder="Listar zonas: $ ..."> <input type="text" class="fill-blank" data-answer="timedatectl set-timezone America/Mexico_City" data-alt="" placeholder="Establecer zona: $ ...">
 
 </div>
 <div class="flashcard-back">
 
-**R:** Herramienta moderna de systemd para gestionar fecha, hora y zona horaria.
+**R:** `timedatectl list-timezones` lista todas las zonas horarias disponibles (se puede filtrar con `grep`). `timedatectl set-timezone America/Mexico_City` establece la zona horaria. Este comando crea automaticamente el enlace simbolico `/etc/localtime` apuntando al archivo de zona correspondiente en `/usr/share/zoneinfo/`. Otros subcomandos utiles de `timedatectl`: `status` (muestra hora, zona, estado NTP), `set-time "AAAA-MM-DD HH:MM:SS"` (establece fecha/hora manualmente, requiere NTP desactivado), `set-ntp true/false` (activa/desactiva sincronizacion NTP). Sin argumentos, `timedatectl` muestra un resumen completo del estado de tiempo del sistema.
 
 </div>
 </div>
@@ -613,12 +613,12 @@ subtema: "108.1"
 <div class="flashcard" data-id="108.1-fc-034">
 <div class="flashcard-front">
 
-**P:** Que es/son SNTP vs NTP?
+**P:** Un administrador debate si usar NTP completo o SNTP en un servidor de base de datos en produccion que requiere alta precision de tiempo. Cual deberia elegir y por que? Que diferencias tecnicas justifican la decision?
 
 </div>
 <div class="flashcard-back">
 
-**R:** | Caracteristica | NTP (completo) | SNTP (Simple NTP) |
+**R:** Deberia elegir **NTP completo** (ntpd o chronyd). Las diferencias clave son: **NTP completo**: usa multiples servidores para calcular la hora mas precisa (algoritmo de interseccion), mantiene un `driftfile` para compensar la desviacion del reloj local, realiza ajustes graduales (slew), alcanza precision de microsegundos y puede actuar como servidor y cliente. **SNTP** (Simple NTP): version simplificada del protocolo, solo consulta un servidor a la vez, no calcula drift, no mantiene driftfile, precision de milisegundos, y solo puede actuar como cliente. `systemd-timesyncd` es un ejemplo de cliente SNTP. Para servidores en produccion con requisitos de precision (bases de datos, logs centralizados, Kerberos), siempre se recomienda NTP completo. SNTP es adecuado para estaciones de trabajo y sistemas donde la precision de milisegundos es suficiente.
 
 </div>
 </div>
@@ -631,12 +631,26 @@ subtema: "108.1"
 <div class="flashcard" data-id="108.1-fc-035">
 <div class="flashcard-front">
 
-**P:** Que es/son Resumen comparativo de soluciones NTP?
+**P:** Completa la tabla: para cada solucion NTP en Linux, indica si puede actuar como servidor NTP, cual es su archivo de configuracion y cual es el comando para ver sus fuentes de tiempo.
+
+| Solucion | Actua como servidor? | Archivo de configuracion | Comando para ver fuentes |
+|----------|---------------------|--------------------------|--------------------------|
+| ntpd     | ?                   | ?                        | ?                        |
+| chronyd  | ?                   | ?                        | ?                        |
+| systemd-timesyncd | ?          | ?                        | ?                        |
 
 </div>
 <div class="flashcard-back">
 
-**R:** | Caracteristica | ntpd | chrony | systemd-timesyncd |
+**R:**
+
+| Solucion | Actua como servidor? | Archivo de configuracion | Comando para ver fuentes |
+|----------|---------------------|--------------------------|--------------------------|
+| ntpd     | Si                  | `/etc/ntp.conf`          | `ntpq -p`               |
+| chronyd  | Si                  | `/etc/chrony.conf`       | `chronyc sources`        |
+| systemd-timesyncd | No (solo cliente SNTP) | `/etc/systemd/timesyncd.conf` | `timedatectl timesync-status` |
+
+Diferencias adicionales para el examen: **ntpd** es el demonio NTP clasico, mas lento en sincronizar inicialmente pero muy preciso a largo plazo. **chronyd** sincroniza mas rapido, mejor para equipos que se suspenden o tienen conexion intermitente (portatiles, VMs), y es el predeterminado en RHEL/CentOS. **systemd-timesyncd** es el mas ligero, integrado en systemd, solo actua como cliente SNTP, ideal para estaciones de trabajo. Los tres usan el puerto UDP 123.
 
 </div>
 </div>
@@ -649,12 +663,12 @@ subtema: "108.1"
 <div class="flashcard" data-id="108.1-fc-036">
 <div class="flashcard-front">
 
-**P:** Que es/son Puntos clave para el examen?
+**P:** En un examen LPIC-1, te preguntan: "Que archivo almacena la informacion de deriva (drift) del reloj en un sistema con ntpd, y cual es su proposito?" Cual es la respuesta correcta?
 
 </div>
 <div class="flashcard-back">
 
-**R:** 1. **Dos relojes**: hardware (RTC/CMOS) y sistema (kernel)
+**R:** El archivo es `/var/lib/ntp/ntp.drift` (o `/var/lib/ntp/drift` segun la distribucion), definido con la directiva `driftfile` en `/etc/ntp.conf`. Contiene un valor numerico (en PPM - partes por millon) que representa la tasa de desviacion del reloj local. NTP usa este valor para compensar proactivamente la tendencia del reloj a adelantarse o atrasarse, logrando mejor precision entre consultas al servidor. En chrony, el equivalente es `/var/lib/chrony/drift` (configurado con `driftfile` en `/etc/chrony.conf`). **systemd-timesyncd NO mantiene driftfile** porque usa SNTP simplificado. Puntos clave para el examen: el driftfile sobrevive reinicios, se actualiza automaticamente, y si se borra, NTP necesita varias horas para recalcular la tasa de drift.
 
 </div>
 </div>
@@ -667,12 +681,12 @@ subtema: "108.1"
 <div class="flashcard" data-id="108.1-fc-037">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** TRAMPA DEL EXAMEN: Un administrador ejecuta `timedatectl set-ntp true` en un servidor donde necesita chrony como solucion NTP. Que servicio se activa realmente y por que esto podria ser un problema?
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** `timedatectl set-ntp true` activa **systemd-timesyncd**, NO chrony ni ntpd. Esta es una trampa clasica del examen LPIC-1. El problema es que systemd-timesyncd es solo un cliente SNTP ligero: no puede actuar como servidor NTP, no mantiene driftfile y tiene menor precision. Ademas, systemd-timesyncd puede entrar en conflicto con chronyd o ntpd si ambos estan activos. Otras trampas frecuentes en el examen 108.1: 1) Confundir `--hctosys` con `--systohc` (recordar: la direccion va en el nombre, HCtoSYS = Hardware Clock TO System). 2) Confundir `%s` (epoch Unix) con `%S` (segundos 00-59) en el comando `date`. 3) Creer que `ntpdate` es la forma moderna de sincronizar (esta deprecado, usar `chronyd -q` o `ntpd -gq`). 4) Pensar que el RTC debe estar en hora local (se recomienda UTC, especialmente en dual-boot con Linux).
 
 </div>
 </div>

@@ -577,12 +577,12 @@ subtema: "102.2"
 <div class="flashcard" data-id="102.2-fc-032">
 <div class="flashcard-front">
 
-**P:** Que es/son 7. GRUB Legacy (version 0.97)?
+**P:** Un administrador esta migrando un servidor antiguo de GRUB Legacy (0.97) a GRUB2. En GRUB Legacy, la tercera particion del segundo disco se referenciaba como `(hd1,2)`. Como debe reescribir esa referencia en GRUB2, y que otros cambios clave debe considerar en la migracion?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Aunque GRUB Legacy esta obsoleto, el examen puede incluir preguntas sobre sus diferencias con GRUB2.
+**R:** En GRUB2 la referencia seria `(hd1,3)` porque las particiones se numeran desde 1 (no desde 0 como en GRUB Legacy). Cambios clave de la migracion: 1) El archivo de configuracion pasa de `/boot/grub/menu.lst` (o `grub.conf`) a `/boot/grub/grub.cfg`, que ya no se edita directamente. 2) Los parametros se definen en `/etc/default/grub` y se regeneran con `grub-mkconfig` o `update-grub`. 3) La directiva `kernel` de GRUB Legacy se reemplaza por `linux` en GRUB2. 4) La directiva `root` cambia de formato: en Legacy era `root (hd0,0)`, en GRUB2 es `set root=(hd0,1)`. 5) GRUB2 soporta scripts, condicionales y submenus, mientras que GRUB Legacy usaba un formato plano de configuracion. 6) GRUB Legacy no tiene equivalente a `grub-mkconfig` ni al directorio `/etc/grub.d/`.
 
 </div>
 </div>
@@ -595,12 +595,12 @@ subtema: "102.2"
 <div class="flashcard" data-id="102.2-fc-033">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** Un candidato LPIC-1 responde que `grub-install` regenera la configuracion de GRUB2 y que `GRUB_CMDLINE_LINUX_DEFAULT` aplica parametros a todas las entradas del menu, incluidas las de recuperacion. Identifica los errores y explica las respuestas correctas.
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** Ambas respuestas son incorrectas y representan trampas clasicas del examen: 1) `grub-install` instala el cargador de arranque GRUB en el disco (MBR o ESP), pero NO regenera la configuracion. Para regenerar `grub.cfg` se usa `grub-mkconfig -o /boot/grub/grub.cfg` o su wrapper `update-grub`. 2) `GRUB_CMDLINE_LINUX_DEFAULT` solo aplica parametros a la entrada de arranque por defecto (normal), NO a las entradas de recuperacion. Para aplicar parametros a TODAS las entradas (incluida recovery) se usa `GRUB_CMDLINE_LINUX`. Otras trampas frecuentes: confundir la numeracion de particiones entre GRUB Legacy `(hd0,0)` y GRUB2 `(hd0,1)`, creer que se puede editar directamente `grub.cfg` de forma permanente, confundir `Shift` (BIOS) con `Esc` (UEFI) para mostrar el menu oculto, y olvidar que en Red Hat los comandos llevan prefijo `grub2-` y la ruta es `/boot/grub2/grub.cfg`.
 
 </div>
 </div>

@@ -595,12 +595,12 @@ subtema: "104.2"
 <div class="flashcard" data-id="104.2-fc-033">
 <div class="flashcard-front">
 
-**P:** Que es/son 6. Puntos clave para el examen?
+**P:** Un administrador junior ejecuta `fsck /dev/sda2` mientras la particion esta montada en modo lectura-escritura y el sistema se corrompe. Explica por que ocurrio esto y describe los 5 pasos correctos que deberia haber seguido para verificar el sistema de archivos de forma segura.
 
 </div>
 <div class="flashcard-back">
 
-**R:** 1. **`fsck` solo en FS desmontado** o montado como solo lectura. NUNCA en FS montado en lectura-escritura.
+**R:** La corrupcion ocurrio porque `fsck` y el kernel estaban modificando simultaneamente las estructuras del sistema de archivos (superbloque, tabla de inodos, bloques de datos), generando escrituras incompatibles. Los 5 pasos correctos son: **(1)** Verificar que el FS esta montado con `mount | grep sda2` o `findmnt /dev/sda2`. **(2)** Desmontar el sistema de archivos con `umount /dev/sda2`; si es la particion raiz, remontarla como solo lectura con `mount -o remount,ro /`. **(3)** Ejecutar `fsck -y /dev/sda2` (o `e2fsck -y` para ext, `xfs_repair` para XFS). **(4)** Verificar la salida de `fsck`: codigo de retorno 0 = limpio, 1 = errores corregidos, 2 = requiere reinicio. **(5)** Montar de nuevo el sistema de archivos con `mount /dev/sda2 /punto_montaje`. Regla de oro del examen LPIC-1: **NUNCA ejecutar `fsck` en un sistema de archivos montado en modo lectura-escritura**.
 
 </div>
 </div>
@@ -613,12 +613,12 @@ subtema: "104.2"
 <div class="flashcard" data-id="104.2-fc-034">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** En un examen LPIC-1 aparecen estas opciones para reparar un sistema XFS danado: a) `fsck.xfs /dev/sdb1`, b) `e2fsck /dev/sdb1`, c) `xfs_repair /dev/sdb1`, d) `xfs_fsr /dev/sdb1`. Cual es correcta y por que cada una de las otras es incorrecta? Menciona al menos 3 trampas clasicas del examen en el tema 104.2.
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** La respuesta correcta es **c) `xfs_repair /dev/sdb1`**. Las demas son trampas clasicas: **a)** `fsck.xfs` existe en el sistema pero es un placeholder vacio que no repara nada; solo existe para que scripts genericos no fallen. **b)** `e2fsck` es exclusivo para sistemas ext2/ext3/ext4 y no funciona con XFS. **d)** `xfs_fsr` es la herramienta de desfragmentacion de XFS, no de reparacion. Otras trampas frecuentes del examen 104.2: **(1)** Confundir `df -h` (espacio en bloques) con `df -i` (uso de inodos) cuando un disco tiene espacio pero no puede crear archivos. **(2)** Creer que `dumpe2fs -h` muestra formato "human readable" cuando en realidad `-h` significa "header" y muestra solo informacion del superbloque. **(3)** No saber que `tune2fs -j` convierte ext2 a ext3 sin destruir datos, mientras que `mkfs.ext3` destruye todo. **(4)** Olvidar que `xfs_fsr` funciona en FS montados, pero `xfs_repair` requiere FS desmontado.
 
 </div>
 </div>

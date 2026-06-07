@@ -577,12 +577,12 @@ subtema: "103.5"
 <div class="flashcard" data-id="103.5-fc-032">
 <div class="flashcard-front">
 
-**P:** Que es/son 4. htop?
+**P:** Un administrador junior abre `htop` y observa barras de colores en la parte superior y teclas de funcion en la parte inferior. Necesita filtrar la lista para ver solo los procesos del usuario `www-data` y luego matar uno de ellos. Que teclas de funcion debe usar y en que se diferencia `htop` de `top` para estas tareas?
 
 </div>
 <div class="flashcard-back">
 
-**R:** `htop` es una version mejorada e interactiva de `top` con interfaz en colores, barras graficas y soporte de raton.
+**R:** En `htop`, se usa **F4** para filtrar por texto (o **u** para filtrar por usuario) y **F9** para enviar una senal (kill) al proceso seleccionado, pudiendo elegir la senal de una lista visual. Las diferencias clave con `top`: `htop` permite **desplazarse vertical y horizontalmente** con las flechas, soporta **raton** para seleccionar procesos, muestra **barras graficas de colores** para CPU, memoria y swap en la cabecera, permite **matar procesos sin conocer el PID** (basta seleccionarlos) y soporta **modo arbol** con F5. En `top`, la tecla equivalente para matar es `k` (pide el PID manualmente) y para filtrar por usuario es `u`. `htop` **no esta instalado por defecto** en la mayoria de distribuciones y **no forma parte del temario obligatorio LPIC-1**, pero aparece como herramienta complementaria.
 
 </div>
 </div>
@@ -595,12 +595,12 @@ subtema: "103.5"
 <div class="flashcard" data-id="103.5-fc-033">
 <div class="flashcard-front">
 
-**P:** Que es/son 5. Buscar procesos con `pgrep`?
+**P:** Un administrador sospecha que hay multiples instancias del servicio `sshd` ejecutandose en el sistema. Necesita obtener los PIDs de todas ellas mostrando tambien la linea de comandos completa de cada una, y ademas quiere saber cuantas instancias hay en total. Que comandos `pgrep` debe usar?
 
 </div>
 <div class="flashcard-back">
 
-**R:** `pgrep` busca procesos por nombre u otros atributos y devuelve sus PIDs.
+**R:** Para listar los PIDs con la linea de comandos completa: **`pgrep -a sshd`**. Para contar el numero total de instancias: **`pgrep -c sshd`**. Opciones clave de `pgrep`: `-l` muestra PID + nombre del proceso, `-a` muestra PID + linea de comandos completa, `-c` solo cuenta coincidencias, `-u usuario` filtra por usuario efectivo, `-U usuario` filtra por usuario real, `-x` exige coincidencia exacta del nombre (sin `-x`, `pgrep ssh` tambien encontraria procesos como `ssh-agent`), `-f` busca en toda la linea de comandos (no solo en el nombre del proceso), `-n` devuelve solo el PID mas reciente, `-o` devuelve solo el PID mas antiguo. La diferencia con `pidof` es que `pidof` requiere el nombre exacto y no soporta patrones ni opciones de filtrado avanzadas.
 
 </div>
 </div>
@@ -613,12 +613,12 @@ subtema: "103.5"
 <div class="flashcard" data-id="103.5-fc-034">
 <div class="flashcard-front">
 
-**P:** Que es/son 8. `nohup` - Inmunidad a SIGHUP?
+**P:** Un administrador ejecuta `nohup ./migrar_db.sh &` y luego cierra la sesion SSH. Al dia siguiente, descubre que el archivo `nohup.out` esta vacio y el script no produjo resultados. Que ocurrio probablemente y como deberia haber ejecutado el comando para capturar toda la salida correctamente?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Cuando cierras una terminal o sesion SSH, el shell envia **SIGHUP** a todos sus procesos hijos, lo que normalmente los termina. `nohup` hace que un proceso ignore la senal SIGHUP.
+**R:** El problema mas probable es que el script escribia su salida a **stderr** y la redireccion no lo capturo correctamente, o que el script necesitaba variables de entorno de la sesion que no estaban disponibles. La forma correcta es: **`nohup ./migrar_db.sh > /var/log/migracion.log 2>&1 &`**. Esto redirige stdout al archivo de log y `2>&1` redirige stderr al mismo destino. Puntos criticos sobre `nohup`: sin redireccion explicita, `nohup` envia stdout a `nohup.out` en el directorio actual (o en `$HOME` si no tiene permisos de escritura). `nohup` **solo protege contra SIGHUP**, el proceso sigue siendo vulnerable a SIGTERM y SIGKILL. `nohup` **no convierte el proceso en daemon** (no desvincula del grupo de procesos ni cierra descriptores). Para sesiones interactivas persistentes, `screen` o `tmux` son alternativas superiores porque permiten reconectar y ver la salida en tiempo real.
 
 </div>
 </div>
@@ -631,12 +631,12 @@ subtema: "103.5"
 <div class="flashcard" data-id="103.5-fc-035">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** En el examen LPIC-1, un candidato ve esta pregunta: "Un proceso no responde a `kill 5678`. Ejecutas `kill -9 5678` pero el proceso sigue apareciendo en `ps aux` con estado `Z`. Por que no desaparece y que debes hacer?" Cual es la respuesta correcta y que otras trampas comunes hay en el subtema 103.5?
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** El proceso esta en estado **zombie (Z)**: ya termino su ejecucion pero su proceso padre no ha recogido su codigo de salida con `wait()`. Un zombie **no puede ser matado** con ninguna senal (ni siquiera SIGKILL) porque tecnicamente ya esta muerto. La solucion es **matar al proceso padre** para que init/systemd adopte al zombie y lo limpie. **Otras trampas frecuentes del examen 103.5:** (1) `kill PID` envia SIGTERM (15), **no** SIGKILL (9) -- muchos candidatos confunden la senal por defecto. (2) `Ctrl+Z` envia SIGTSTP (que **puede** ser capturada), mientras que SIGSTOP **no puede** ser capturada -- no son la misma senal. (3) `nohup` protege contra SIGHUP pero **no** contra SIGTERM ni SIGKILL, y **no** convierte un proceso en daemon. (4) `ps aux` (formato BSD, sin guion) vs `ps -ef` (formato UNIX, con guion) -- `ps -ef` muestra PPID, `ps aux` no. (5) `killall` necesita nombre **exacto**, `pkill` acepta **patrones parciales**. (6) En `top`, `M` ordena por memoria y `P` por CPU (ambas mayusculas), mientras que `r` (minuscula) cambia prioridad y `k` (minuscula) mata procesos.
 
 </div>
 </div>

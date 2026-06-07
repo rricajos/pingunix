@@ -559,12 +559,12 @@ subtema: "107.2"
 <div class="flashcard" data-id="107.2-fc-031">
 <div class="flashcard-front">
 
-**P:** Que es/son 7. `systemd-run` - Tareas unicas con systemd?
+**P:** Un administrador necesita ejecutar `/opt/cleanup.sh` como tarea unica dentro de 2 horas, pero el servicio `atd` no esta instalado en el servidor. Que comando de systemd puede usar como alternativa y que ventaja tiene sobre `at` en cuanto a registro de logs?
 
 </div>
 <div class="flashcard-back">
 
-**R:** `systemd-run` permite ejecutar un comando como una unidad transitoria de systemd, incluyendo la posibilidad de programar su ejecucion para un momento futuro. Es una alternativa moderna a `at` integrada
+**R:** Debe usar `systemd-run --on-active=2h /opt/cleanup.sh`. Este comando crea una **unidad transitoria** (transient unit) de systemd que se ejecutara una sola vez dentro de 2 horas. La ventaja principal sobre `at` es que toda la salida se registra automaticamente en el **journal de systemd**, consultable con `journalctl`. Otras opciones utiles de `systemd-run`: `--on-calendar="2026-12-31 14:00"` (momento especifico, similar a `at 14:00 2026-12-31`), `--on-boot=5m` (5 minutos despues del arranque), `--unit=nombre` (asignar un nombre a la unidad). A diferencia de `at`, no requiere archivos `at.allow`/`at.deny` para control de acceso, y permite usar todas las funcionalidades de systemd como dependencias entre unidades y control de recursos con cgroups.
 
 </div>
 </div>
@@ -577,12 +577,12 @@ subtema: "107.2"
 <div class="flashcard" data-id="107.2-fc-032">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** Un administrador configura la entrada `30 3 1,15 * 5 /opt/informe.sh` en su crontab. Espera que se ejecute los dias 1 y 15 de cada mes, pero solo si caen en viernes. Es correcto su razonamiento? Que ocurrira realmente?
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** Su razonamiento es **incorrecto**. En cron, cuando AMBOS campos dia_mes y dia_semana tienen valores especificos (no `*`), la tarea se ejecuta cuando se cumple **CUALQUIERA** de las dos condiciones (operacion OR, no AND). Por tanto, el script se ejecutara a las 3:30 AM los dias 1 y 15 de cada mes **Y TAMBIEN** todos los viernes. Esta es una de las **trampas clasicas del examen LPIC-1**. Otras trampas frecuentes en 107.2: (1) confundir el orden de campos minuto/hora (es `min hora`, no `hora min`); (2) olvidar que `/etc/cron.allow` anula completamente a `/etc/cron.deny` cuando ambos existen; (3) confundir `/etc/cron.d/` (formato crontab con campo usuario) con `/etc/cron.daily/` (scripts ejecutables sin formato crontab); (4) creer que anacron puede programar tareas con precision de minutos (solo trabaja en dias); (5) olvidar que el crontab del sistema (`/etc/crontab`) tiene un campo extra de usuario que el crontab personal no tiene.
 
 </div>
 </div>

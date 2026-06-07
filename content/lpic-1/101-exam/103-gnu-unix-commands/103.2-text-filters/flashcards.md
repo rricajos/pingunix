@@ -595,12 +595,12 @@ subtema: "103.2"
 <div class="flashcard" data-id="103.2-fc-033">
 <div class="flashcard-front">
 
-**P:** Que es/son 2b. Paginadores: less y more?
+**P:** Estas dentro de `less` visualizando un archivo de 5000 lineas. Necesitas buscar la palabra "CRITICAL" hacia atras desde tu posicion actual, ir a la linea 200 y luego salir. Que secuencia de teclas usas?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Los **paginadores** permiten visualizar archivos largos pagina por pagina, sin cargar todo el contenido a la vez.
+**R:** 1) `?CRITICAL` para buscar hacia atras (mientras que `/CRITICAL` busca hacia adelante). 2) `200g` o `200G` para ir directamente a la linea 200. 3) `q` para salir. Diferencias clave con `more`: `more` no permite buscar hacia atras (`?`) ni retroceder paginas con `b` en todos los sistemas. `less` carga el archivo de forma lazy (no necesita leer todo el archivo para empezar), mientras que `more` en algunos sistemas lo carga completo. Las paginas `man` usan `less` como paginador por defecto.
 
 </div>
 </div>
@@ -613,12 +613,14 @@ subtema: "103.2"
 <div class="flashcard" data-id="103.2-fc-034">
 <div class="flashcard-front">
 
-**P:** Que es/son 3. sort?
+**P:** Escribe el comando para ordenar el archivo `datos.csv` numericamente por el tercer campo, usando coma como delimitador, y en orden inverso (de mayor a menor):
+
+<input type="text" class="fill-blank" data-answer="sort -t ',' -k 3 -n -r datos.csv" data-alt="sort -t, -k3 -nr datos.csv,sort -t ',' -k3 -nr datos.csv,sort -rn -t ',' -k 3 datos.csv" placeholder="$ escribe aqui...">
 
 </div>
 <div class="flashcard-back">
 
-**R:** `sort` ordena las lineas de un archivo o flujo de texto.
+**R:** `sort -t ',' -k 3 -n -r datos.csv`. Opciones clave de `sort`: `-t` define el delimitador (por defecto espacios/tabs). `-k 3` ordena por el tercer campo. `-n` ordena numericamente (sin esto, "9" iria despues de "80" en orden alfabetico). `-r` invierte el orden (descendente). Otras opciones importantes: `-u` elimina duplicados (como `sort | uniq`), `-f` ignora mayusculas/minusculas, `-h` ordena por tamanhos legibles (1K, 2M, 3G). Se pueden combinar multiples claves: `sort -k1,1 -k2,2n` ordena por campo 1 alfabeticamente y luego por campo 2 numericamente.
 
 </div>
 </div>
@@ -631,12 +633,12 @@ subtema: "103.2"
 <div class="flashcard" data-id="103.2-fc-035">
 <div class="flashcard-front">
 
-**P:** Que es/son 4. uniq?
+**P:** Un archivo `accesos.log` tiene lineas duplicadas tanto consecutivas como no consecutivas. Quieres obtener solo las lineas que aparecen exactamente una vez (no duplicadas). Que combinacion de comandos usas?
 
 </div>
 <div class="flashcard-back">
 
-**R:** `uniq` filtra lineas **adyacentes** duplicadas. **Requiere que la entrada este ordenada** para eliminar todos los duplicados (o se usa en combinacion con `sort`).
+**R:** `sort accesos.log | uniq -u`. Primero `sort` ordena las lineas para que las duplicadas queden adyacentes (requisito de `uniq`). Luego `uniq -u` muestra solo las lineas que aparecen **una unica vez** (las unicas, no las duplicadas). Opciones clave de `uniq`: `-d` muestra solo lineas duplicadas (lo contrario de `-u`). `-c` antepone el conteo de ocurrencias a cada linea. `-i` ignora mayusculas/minusculas al comparar. `-f N` salta los primeros N campos al comparar. `-s N` salta los primeros N caracteres. Trampa del examen: `uniq` sin `sort` previo solo detecta duplicados **adyacentes** -- si las lineas repetidas no estan juntas, `uniq` no las eliminara.
 
 </div>
 </div>
@@ -649,12 +651,14 @@ subtema: "103.2"
 <div class="flashcard" data-id="103.2-fc-036">
 <div class="flashcard-front">
 
-**P:** Que es/son 5. wc (word count)?
+**P:** Quieres saber cuantos usuarios tienen `/bin/bash` como shell en el sistema. Escribe el comando usando `grep` y `wc`:
+
+<input type="text" class="fill-blank" data-answer="grep '/bin/bash' /etc/passwd | wc -l" data-alt="grep /bin/bash /etc/passwd | wc -l,grep -c '/bin/bash' /etc/passwd,grep -c /bin/bash /etc/passwd" placeholder="$ escribe aqui...">
 
 </div>
 <div class="flashcard-back">
 
-**R:** `wc` cuenta lineas, palabras y bytes de un archivo.
+**R:** `grep '/bin/bash' /etc/passwd | wc -l` o directamente `grep -c '/bin/bash' /etc/passwd`. `wc -l` cuenta lineas. Sin opciones, `wc` muestra tres valores: lineas, palabras y bytes. Opciones importantes: `-l` lineas, `-w` palabras, `-c` bytes, `-m` caracteres (diferente de bytes en UTF-8), `-L` longitud de la linea mas larga. Usos frecuentes en pipes: `ls /etc | wc -l` cuenta archivos en `/etc`. `wc -l < archivo.txt` muestra solo el numero sin el nombre del archivo.
 
 </div>
 </div>
@@ -667,12 +671,14 @@ subtema: "103.2"
 <div class="flashcard" data-id="103.2-fc-037">
 <div class="flashcard-front">
 
-**P:** Que es/son 6. cut?
+**P:** Del archivo `/etc/passwd`, necesitas extraer solo el nombre de usuario (campo 1) y el directorio home (campo 6). Escribe el comando con `cut`:
+
+<input type="text" class="fill-blank" data-answer="cut -d ':' -f 1,6 /etc/passwd" data-alt="cut -d: -f1,6 /etc/passwd,cut -d ':' -f1,6 /etc/passwd,cut -f 1,6 -d ':' /etc/passwd" placeholder="$ escribe aqui...">
 
 </div>
 <div class="flashcard-back">
 
-**R:** `cut` extrae secciones (columnas o campos) de cada linea de un archivo.
+**R:** `cut -d ':' -f 1,6 /etc/passwd`. La opcion `-d ':'` define los dos puntos como delimitador (por defecto es TAB). `-f 1,6` selecciona los campos 1 y 6. Se pueden seleccionar rangos: `-f 1-3` (campos 1 a 3), `-f 3-` (del campo 3 al final). Otra opcion es `-c` para seleccionar por posicion de caracteres: `cut -c 1-5` extrae los primeros 5 caracteres de cada linea. Diferencia clave: `-f` trabaja con campos delimitados, `-c` trabaja con posiciones de caracteres. `cut` no soporta expresiones regulares como delimitador -- para eso se usa `awk`.
 
 </div>
 </div>
@@ -685,12 +691,12 @@ subtema: "103.2"
 <div class="flashcard" data-id="103.2-fc-038">
 <div class="flashcard-front">
 
-**P:** Que es/son 7. paste?
+**P:** Tienes dos archivos: `nombres.txt` (con nombres) y `emails.txt` (con emails), uno por linea. Necesitas generar un archivo CSV combinando ambos con coma como separador. Que comando usas?
 
 </div>
 <div class="flashcard-back">
 
-**R:** `paste` une lineas de multiples archivos lado a lado (por columnas), usando un delimitador (TAB por defecto).
+**R:** `paste -d ',' nombres.txt emails.txt > resultado.csv`. `paste` une lineas de multiples archivos lado a lado (en columnas). `-d ','` define la coma como delimitador (por defecto es TAB). Sin `-d`, la salida usaria tabuladores. La opcion `-s` (serial) cambia el comportamiento: en lugar de unir archivos en columnas, une todas las lineas de cada archivo en una sola linea. Ejemplo: `paste -s -d '+' numeros.txt` une todas las lineas con `+` (util para crear expresiones que luego se pasan a `bc`). `paste` puede recibir entrada de stdin con `-`: `cat archivo.txt | paste - -` muestra la entrada en dos columnas.
 
 </div>
 </div>
@@ -703,12 +709,12 @@ subtema: "103.2"
 <div class="flashcard" data-id="103.2-fc-039">
 <div class="flashcard-front">
 
-**P:** Que es/son 8. join?
+**P:** Tienes `empleados.txt` (ID y nombre) y `salarios.txt` (ID y salario), ambos ordenados por ID. Quieres unirlos por el campo ID comun. Que comando usas y cual es el requisito previo obligatorio?
 
 </div>
 <div class="flashcard-back">
 
-**R:** `join` une lineas de dos archivos que comparten un **campo comun** (similar a un JOIN en SQL). Los archivos deben estar **ordenados** por el campo de union.
+**R:** `join empleados.txt salarios.txt`. `join` une lineas de dos archivos que comparten un campo comun (similar a un JOIN en SQL). **Requisito obligatorio**: ambos archivos deben estar **ordenados** por el campo de union; si no lo estan, `join` producira resultados incorrectos o errores. Por defecto une por el primer campo usando espacio como delimitador. Opciones clave: `-t ':'` cambia el delimitador, `-1 2 -2 3` une el campo 2 del archivo 1 con el campo 3 del archivo 2, `-a 1` muestra tambien las lineas del archivo 1 sin pareja (como LEFT JOIN en SQL), `-o '1.1,1.2,2.2'` controla los campos de salida. Diferencia con `paste`: `paste` une por posicion de linea, `join` une por valor de campo comun.
 
 </div>
 </div>
@@ -721,12 +727,14 @@ subtema: "103.2"
 <div class="flashcard" data-id="103.2-fc-040">
 <div class="flashcard-front">
 
-**P:** Que es/son 9. tr (translate)?
+**P:** Necesitas eliminar todos los digitos de un archivo y ademas comprimir los espacios multiples en uno solo. Escribe el comando con `tr` (recuerda: `tr` no acepta archivos como argumento):
+
+<input type="text" class="fill-blank" data-answer="tr -d '0-9' < archivo.txt | tr -s ' '" data-alt="tr -d '[:digit:]' < archivo.txt | tr -s ' ',tr -d '[0-9]' < archivo.txt | tr -s ' '" placeholder="$ escribe aqui...">
 
 </div>
 <div class="flashcard-back">
 
-**R:** `tr` traduce, elimina o comprime caracteres. **Solo lee de la entrada estandar** (no acepta archivos como argumento).
+**R:** `tr -d '0-9' < archivo.txt | tr -s ' '`. `tr` solo lee de stdin (nunca acepta nombres de archivo como argumento). Opciones clave: `-d` elimina caracteres del conjunto especificado. `-s` (squeeze) comprime caracteres repetidos consecutivos en uno solo. `-c` complementa el conjunto (todos los caracteres que NO estan en el conjunto). Clases POSIX soportadas: `[:digit:]`, `[:alpha:]`, `[:lower:]`, `[:upper:]`, `[:space:]`, `[:alnum:]`. Ejemplos frecuentes en examen: `tr 'a-z' 'A-Z'` convierte minusculas a mayusculas, `tr -d '\r'` elimina retornos de carro de Windows, `tr -s '\n'` elimina lineas vacias consecutivas.
 
 </div>
 </div>
@@ -739,12 +747,12 @@ subtema: "103.2"
 <div class="flashcard" data-id="103.2-fc-041">
 <div class="flashcard-front">
 
-**P:** Que es/son 11. fmt?
+**P:** Tienes un archivo `readme.txt` con lineas de longitud irregular (algunas de 200 caracteres, otras de 10). Quieres reformatearlo para que todas las lineas tengan un maximo de 50 caracteres y con espaciado uniforme. Que comando usas?
 
 </div>
 <div class="flashcard-back">
 
-**R:** `fmt` reformatea texto ajustando el ancho de las lineas:
+**R:** `fmt -w 50 -u readme.txt`. `fmt` reformatea texto ajustando el ancho de las lineas. `-w 50` establece el ancho maximo en 50 caracteres (por defecto es 75). `-u` aplica espaciado uniforme: un espacio entre palabras y dos despues de punto final. `fmt` respeta los parrafos (lineas vacias separan parrafos) e intenta mantener las palabras completas sin cortarlas. Diferencia con `fold`: `fold -w 50` corta las lineas exactamente en 50 caracteres, incluso partiendo palabras a la mitad, mientras que `fmt` inteligentemente ajusta los saltos de linea en los espacios entre palabras. `fmt` es mas adecuado para texto legible; `fold` para datos en bruto.
 
 </div>
 </div>
@@ -757,12 +765,12 @@ subtema: "103.2"
 <div class="flashcard" data-id="103.2-fc-042">
 <div class="flashcard-front">
 
-**P:** Que es/son 12. pr?
+**P:** Necesitas preparar un archivo de texto para impresion con cabecera personalizada "Informe Mensual", en formato de 2 columnas. Que comando `pr` usarias?
 
 </div>
 <div class="flashcard-back">
 
-**R:** `pr` prepara archivos de texto para impresion, anadiendo cabeceras con fecha, nombre del archivo y numero de pagina.
+**R:** `pr -h "Informe Mensual" -2 archivo.txt`. `pr` prepara archivos de texto para impresion. Por defecto anade una cabecera con fecha, nombre del archivo y numero de pagina en cada pagina (66 lineas por pagina). Opciones clave: `-h "titulo"` define una cabecera personalizada. `-2` o `--columns=2` formatea en 2 columnas. `-l N` establece el largo de pagina en N lineas. `-d` doble espacio entre lineas. `-t` suprime la cabecera y el pie de pagina. `-o N` anade un margen izquierdo de N espacios. `-w N` establece el ancho de pagina. Ejemplo combinado: `pr -t -2 -w 80 datos.txt` formatea en 2 columnas de 80 caracteres sin cabecera.
 
 </div>
 </div>
@@ -775,12 +783,12 @@ subtema: "103.2"
 <div class="flashcard" data-id="103.2-fc-043">
 <div class="flashcard-front">
 
-**P:** Que es/son 13. nl (numerar lineas)?
+**P:** Cual es la diferencia entre `nl archivo.txt`, `nl -b a archivo.txt` y `cat -n archivo.txt` cuando el archivo contiene lineas vacias?
 
 </div>
 <div class="flashcard-back">
 
-**R:** `nl` numera las lineas de un archivo con mas opciones que `cat -n`:
+**R:** `nl` (sin opciones) y `cat -b` numeran solo las lineas con contenido, saltando las vacias. `nl -b a` y `cat -n` numeran **todas** las lineas, incluyendo las vacias. La opcion `-b` de `nl` controla el estilo de numeracion del cuerpo: `t` (text, por defecto) numera solo lineas no vacias, `a` (all) numera todas, `n` (none) no numera ninguna, `pPATRON` numera solo lineas que coincidan con el patron. Opciones adicionales de `nl`: `-s '. '` define el separador despues del numero (por defecto es TAB), `-w 3` define el ancho del numero (por defecto 6), `-n rz` alinea a la derecha con ceros (001, 002...), `-n ln` alinea a la izquierda.
 
 </div>
 </div>
@@ -793,12 +801,14 @@ subtema: "103.2"
 <div class="flashcard" data-id="103.2-fc-044">
 <div class="flashcard-front">
 
-**P:** Que es/son 15. split?
+**P:** Tienes un archivo de log de 2 millones de lineas. Quieres dividirlo en archivos de 10000 lineas cada uno con el prefijo `log_parte_` y sufijos numericos (00, 01, 02...). Escribe el comando:
+
+<input type="text" class="fill-blank" data-answer="split -l 10000 -d archivo.log log_parte_" data-alt="split -l 10000 --numeric-suffixes archivo.log log_parte_,split -d -l 10000 archivo.log log_parte_" placeholder="$ escribe aqui...">
 
 </div>
 <div class="flashcard-back">
 
-**R:** `split` divide un archivo grande en archivos mas pequenos:
+**R:** `split -l 10000 -d archivo.log log_parte_`. `-l 10000` divide por numero de lineas (10000 por archivo). `-d` usa sufijos numericos (00, 01, 02...) en lugar de los alfabeticos por defecto (aa, ab, ac...). El ultimo argumento es el prefijo para los archivos resultantes. Otras opciones: `-b 100M` divide por tamanho (100 MB por archivo), `-n 5` divide en exactamente 5 partes iguales, `-a 3` usa sufijos de 3 caracteres (000, 001...). Para reconstruir el archivo original: `cat log_parte_* > archivo_completo.log`. Los archivos se generan en orden alfabetico/numerico, por lo que `cat *` los une correctamente.
 
 </div>
 </div>
@@ -811,12 +821,14 @@ subtema: "103.2"
 <div class="flashcard" data-id="103.2-fc-045">
 <div class="flashcard-front">
 
-**P:** Que es/son 16. sed (stream editor)?
+**P:** Escribe un comando `sed` que: 1) elimine las lineas 1 a 5 del archivo, 2) reemplace todas las ocurrencias de "http" por "https" en las lineas restantes, y 3) modifique el archivo directamente con backup `.bak`:
+
+<input type="text" class="fill-blank" data-answer="sed -i.bak '1,5d; s/http/https/g' archivo.txt" data-alt="sed -i.bak -e '1,5d' -e 's/http/https/g' archivo.txt" placeholder="$ escribe aqui...">
 
 </div>
 <div class="flashcard-back">
 
-**R:** `sed` es un editor de flujos que transforma texto linea por linea. Es extremadamente poderoso y solo se cubren los basicos en este objetivo.
+**R:** `sed -i.bak '1,5d; s/http/https/g' archivo.txt`. Desglose: `-i.bak` modifica in-place y guarda backup con extension `.bak`. `1,5d` elimina las lineas 1 a 5. `s/http/https/g` sustituye globalmente en cada linea. Se pueden encadenar con `;` o con multiples `-e`. Resumen de operaciones de `sed` para el examen: `d` elimina lineas, `s/viejo/nuevo/g` sustituye (sin `g` solo la primera ocurrencia por linea), `p` imprime (con `-n`), `a\texto` anade linea despues, `i\texto` inserta linea antes, `y/abc/ABC/` transliterar caracteres (como `tr`). Direccionamiento: `'3d'` linea 3, `'2,5d'` rango, `'/patron/d'` por patron.
 
 </div>
 </div>
@@ -829,12 +841,12 @@ subtema: "103.2"
 <div class="flashcard" data-id="103.2-fc-046">
 <div class="flashcard-front">
 
-**P:** Que es/son 17. Checksums (sumas de verificacion)?
+**P:** Has descargado una ISO de Linux y tienes un archivo `ubuntu.sha256` con el hash esperado. Que comando verifica automaticamente que el hash de la ISO coincida con el del archivo sin comparar visualmente?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Los checksums se usan para verificar la integridad de archivos. Generan un hash unico basado en el contenido.
+**R:** `sha256sum -c ubuntu.sha256`. La opcion `-c` (check) lee los hashes del archivo y los compara automaticamente con los archivos referenciados, mostrando "OK" o "FAILED" para cada uno. El archivo de verificacion debe tener el formato: `hash  nombre_archivo`. Comandos de checksum en Linux: `md5sum` (MD5, 128 bits -- inseguro para criptografia pero valido para integridad basica), `sha1sum` (SHA-1, 160 bits -- tambien considerado debil), `sha256sum` (SHA-256, 256 bits -- recomendado), `sha512sum` (SHA-512, 512 bits). Todos siguen la misma sintaxis: `comando archivo` para generar, `comando -c archivo.sum` para verificar. Trampa del examen: no confundir `md5sum` con `md5` (este ultimo es de BSD, no existe en Linux por defecto).
 
 </div>
 </div>
@@ -847,12 +859,15 @@ subtema: "103.2"
 <div class="flashcard" data-id="103.2-fc-047">
 <div class="flashcard-front">
 
-**P:** Que es/son 18. Lectores de archivos comprimidos?
+**P:** Completa la tabla: para ver el contenido de un archivo comprimido **sin descomprimirlo en disco**, que comando usas segun el formato de compresion?
+- `.gz` (gzip) ->
+- `.bz2` (bzip2) ->
+- `.xz` (xz) ->
 
 </div>
 <div class="flashcard-back">
 
-**R:** Estos comandos permiten ver el contenido de archivos comprimidos sin descomprimirlos:
+**R:** `.gz` -> `zcat` (equivalente a `gunzip -c`). `.bz2` -> `bzcat` (equivalente a `bunzip2 -c`). `.xz` -> `xzcat` (equivalente a `unxz -c`). Tambien existen versiones de otros comandos para archivos comprimidos: `zless`/`bzless`/`xzless` para paginar, `zgrep`/`bzgrep`/`xzgrep` para buscar patrones, `zdiff`/`bzdiff`/`xzdiff` para comparar. La opcion `-c` en los descompresores (`gunzip -c`, `bunzip2 -c`, `unxz -c`) envia la salida a stdout en lugar de descomprimir el archivo en disco. Trampa del examen: `cat archivo.gz` mostraria basura binaria, no el contenido legible -- siempre hay que usar `zcat`.
 
 </div>
 </div>
@@ -865,12 +880,16 @@ subtema: "103.2"
 <div class="flashcard" data-id="103.2-fc-048">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** Marca como VERDADERO o FALSO cada afirmacion (trampas clasicas del examen LPIC-1 103.2):
+1) `uniq` elimina todos los duplicados de un archivo sin necesidad de ordenar primero.
+2) `tr` puede recibir un nombre de archivo como argumento.
+3) `cut -d ':' -f1` y `awk -F':' '{print $1}'` producen el mismo resultado.
+4) `sed 's/foo/bar/'` reemplaza todas las ocurrencias de "foo" en cada linea.
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** 1) **FALSO** -- `uniq` solo elimina duplicados **adyacentes**. Para eliminar todos, primero hay que ordenar: `sort | uniq`. 2) **FALSO** -- `tr` solo lee de stdin. Se usa con redireccion: `tr 'a' 'b' < archivo.txt`. Pasar un archivo como argumento causa error. 3) **VERDADERO** -- ambos extraen el primer campo usando `:` como delimitador. Pero `awk` es mas flexible (soporta regex como delimitador, multiples acciones). 4) **FALSO** -- sin la flag `g` al final, `sed 's/foo/bar/'` solo reemplaza la **primera** ocurrencia en cada linea. Para todas: `sed 's/foo/bar/g'`. Estas cuatro trampas son de las mas frecuentes en el examen real.
 
 </div>
 </div>

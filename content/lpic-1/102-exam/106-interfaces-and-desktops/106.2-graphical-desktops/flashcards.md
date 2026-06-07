@@ -541,12 +541,12 @@ subtema: "106.2"
 <div class="flashcard" data-id="106.2-fc-030">
 <div class="flashcard-front">
 
-**P:** Que es/son 2. Toolkit Libraries (Bibliotecas de interfaz grafica)?
+**P:** Un desarrollador necesita crear una aplicacion grafica en C que funcione nativamente en GNOME. Que toolkit deberia utilizar y en que lenguaje esta escrito? <input type="text" class="fill-blank" data-answer="GTK+" data-alt="GTK,gtk+,gtk" placeholder="Toolkit: escribe aqui...">
 
 </div>
 <div class="flashcard-back">
 
-**R:** Las toolkit libraries son frameworks que proporcionan los widgets (botones, menus, cuadros de texto) para construir interfaces graficas.
+**R:** GTK+ (escrito en C). Las toolkit libraries son frameworks que proporcionan los widgets (botones, menus, cuadros de texto, barras de desplazamiento) para construir interfaces graficas. Los dos toolkits principales en Linux son: **GTK+** (GIMP Toolkit), escrito en C, base de GNOME, Xfce, MATE, Cinnamon y LXDE; y **Qt**, escrito en C++, base de KDE Plasma y LXQt. GTK+ tiene bindings para Python (PyGTK/PyGObject), JavaScript (GJS) y otros lenguajes. Qt ofrece bindings como PyQt y PySide. Para el examen LPIC-1 es fundamental saber que toolkit usa cada entorno de escritorio.
 
 </div>
 </div>
@@ -559,12 +559,12 @@ subtema: "106.2"
 <div class="flashcard" data-id="106.2-fc-031">
 <div class="flashcard-front">
 
-**P:** Que es/son 4. Resumen de entornos y toolkits?
+**P:** Relaciona cada entorno de escritorio con su toolkit y gestor de ventanas: GNOME usa ___ y ___; KDE Plasma usa ___ y ___; Xfce usa ___ y ___.
 
 </div>
 <div class="flashcard-back">
 
-**R:** | Entorno | Toolkit | WM | Peso (recursos) |
+**R:** GNOME usa **GTK+** y **Mutter**; KDE Plasma usa **Qt** y **KWin**; Xfce usa **GTK+** y **Xfwm4**. Tabla completa de entornos, toolkits y gestores de ventanas para el examen: GNOME = GTK+ / Mutter / pesado; KDE Plasma = Qt / KWin / pesado; Xfce = GTK+ / Xfwm4 / medio; MATE = GTK+ / Marco / medio; Cinnamon = GTK+ / Muffin / medio; LXDE = GTK+ / Openbox / ligero; LXQt = Qt / Openbox / ligero. Regla mnemotecnica: solo KDE y LXQt usan Qt (los que tienen K o Q en el nombre); todos los demas usan GTK+. Los entornos mas pesados son GNOME y KDE; los mas ligeros son LXDE y LXQt.
 
 </div>
 </div>
@@ -577,12 +577,12 @@ subtema: "106.2"
 <div class="flashcard" data-id="106.2-fc-032">
 <div class="flashcard-front">
 
-**P:** Que es/son 5. Gestores de ventanas independientes?
+**P:** Un usuario avanzado quiere un entorno minimalista sin escritorio completo, donde las ventanas se organicen automaticamente en mosaico ocupando toda la pantalla y se controlen solo con teclado. Que gestor de ventanas independiente deberia elegir y de que tipo es?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Estos WM se pueden usar sin entorno de escritorio completo:
+**R:** **i3**, un gestor de ventanas de tipo **tiling**. Los gestores de ventanas independientes se pueden usar sin entorno de escritorio completo. Se clasifican en dos tipos: **Tiling** (mosaico): las ventanas se organizan automaticamente sin solaparse, se controlan con atajos de teclado. Ejemplos: i3 (X11), Sway (Wayland, compatible con i3), dwm. **Stacking** (apilamiento): las ventanas se superponen como papeles en un escritorio, se controlan con raton. Ejemplos: Openbox (usado en LXDE/LXQt), Fluxbox, IceWM. Tambien existen WM **compositing** que combinan gestion de ventanas con efectos graficos, como Compiz. Para el examen, es clave distinguir tiling vs stacking y saber que estos WM pueden funcionar sin escritorio completo.
 
 </div>
 </div>
@@ -595,12 +595,12 @@ subtema: "106.2"
 <div class="flashcard" data-id="106.2-fc-033">
 <div class="flashcard-front">
 
-**P:** Que es/son 7. xdg-utils: Herramientas de escritorio estandar?
+**P:** Escribe el comando xdg-utils para establecer Firefox como navegador web predeterminado del sistema. <input type="text" class="fill-blank" data-answer="xdg-settings set default-web-browser firefox.desktop" data-alt="" placeholder="$ escribe aqui...">
 
 </div>
 <div class="flashcard-back">
 
-**R:** **xdg-utils** es un conjunto de herramientas de linea de comandos que proporcionan funciones de integracion con el escritorio de forma independiente del entorno (GNOME, KDE, Xfce, etc.). Forman parte d
+**R:** xdg-settings set default-web-browser firefox.desktop. **xdg-utils** es un conjunto de herramientas de linea de comandos del estandar freedesktop.org que proporcionan integracion con el escritorio de forma independiente del entorno. Herramientas principales: `xdg-open` (abre archivos/URLs con la app predeterminada), `xdg-mime` (consulta/configura asociaciones de tipos MIME), `xdg-settings` (consulta/configura parametros del escritorio como navegador predeterminado), `xdg-desktop-menu` (instala/desinstala entradas del menu), `xdg-desktop-icon` (gestiona iconos del escritorio), `xdg-screensaver` (controla el salvapantallas). Todas funcionan en GNOME, KDE, Xfce y cualquier entorno compatible con freedesktop.org.
 
 </div>
 </div>
@@ -613,12 +613,12 @@ subtema: "106.2"
 <div class="flashcard" data-id="106.2-fc-034">
 <div class="flashcard-front">
 
-**P:** Que es/son 8. Comparativa de protocolos de acceso remoto?
+**P:** Un administrador necesita acceso remoto grafico a un servidor Linux. Ordena los protocolos VNC, RDP (xrdp), XDMCP y SPICE segun su nivel de seguridad, indicando puerto y si cifran por defecto.
 
 </div>
 <div class="flashcard-back">
 
-**R:** | Protocolo | Puerto | Cifrado | Uso tipico |
+**R:** De mas seguro a menos seguro: **RDP (xrdp)** - puerto 3389, cifrado nativo TLS, ideal para clientes Windows con mstsc.exe. **SPICE** - puerto 5900+, cifrado TLS nativo, optimizado para virtualizacion QEMU/KVM con audio, video y USB compartido. **VNC** - puerto 5900 + numero de display, NO cifra por defecto (requiere tunel SSH), transmite framebuffer simple. **XDMCP** - puerto 177/UDP, NO cifra, protocolo obsoleto de X11 para thin clients. Datos clave para el examen: VNC y XDMCP no cifran por defecto; XDMCP es el unico que usa UDP; RDP es el unico con cliente nativo en Windows; SPICE es el unico optimizado para virtualizacion. Para securizar VNC siempre usar tunel SSH: `ssh -L 5901:localhost:5901 servidor`.
 
 </div>
 </div>
@@ -631,12 +631,12 @@ subtema: "106.2"
 <div class="flashcard" data-id="106.2-fc-035">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** En el examen LPIC-1, un candidato responde que MATE usa Qt porque es moderno, que VNC cifra el trafico por defecto y que Xfce usa KWin como gestor de ventanas. Cuantos errores ha cometido y cuales son las respuestas correctas?
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** Ha cometido **3 errores**. Correcciones: 1) MATE usa **GTK+**, no Qt. MATE es un fork de GNOME 2 y hereda su toolkit GTK+. Solo KDE Plasma y LXQt usan Qt. 2) VNC **NO cifra** el trafico por defecto, las pulsaciones de teclado y la imagen de pantalla se envian sin proteccion. Se debe usar un tunel SSH para cifrar. 3) Xfce usa **Xfwm4**, no KWin. KWin es el gestor de ventanas de KDE Plasma. Otras trampas frecuentes del examen: confundir LXDE (GTK+) con LXQt (Qt); creer que XDMCP es seguro (no cifra nada y usa UDP 177); confundir Mutter (GNOME) con Muffin (Cinnamon, fork de Mutter); pensar que SPICE es para acceso remoto general cuando esta optimizado para virtualizacion.
 
 </div>
 </div>

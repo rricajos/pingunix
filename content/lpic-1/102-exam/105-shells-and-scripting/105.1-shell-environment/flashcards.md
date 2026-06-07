@@ -541,12 +541,12 @@ subtema: "105.1"
 <div class="flashcard" data-id="105.1-fc-030">
 <div class="flashcard-front">
 
-**P:** Que es/son 3. Ejecutar comandos con entorno limpio: `env -i`?
+**P:** Un administrador necesita ejecutar el script `/opt/app/start.sh` sin heredar ninguna variable de entorno del shell actual, pero proporcionando solo `PATH=/usr/bin` y `HOME=/tmp`. Escribe el comando completo. <input type="text" class="fill-blank" data-answer="env -i PATH=/usr/bin HOME=/tmp /opt/app/start.sh" data-alt="env -i HOME=/tmp PATH=/usr/bin /opt/app/start.sh" placeholder="$ escribe aqui...">
 
 </div>
 <div class="flashcard-back">
 
-**R:** El comando `env -i` permite ejecutar un comando con un entorno completamente vacio (sin ninguna variable de entorno heredada).
+**R:** `env -i PATH=/usr/bin HOME=/tmp /opt/app/start.sh`. El flag `-i` (o `--ignore-environment`) de `env` ejecuta el comando con un entorno completamente vacio, sin ninguna variable heredada del shell padre. Despues de `-i` se pueden especificar las variables necesarias en formato `VAR=valor` antes del comando. Esto es util para depuracion (verificar que un script no depende de variables del usuario), seguridad (evitar inyeccion de variables) y testing. Sin `-i`, `env VAR=valor comando` anade o modifica variables pero mantiene las demas del entorno. Para verificar el entorno vacio: `env -i env` muestra que no hay variables definidas.
 
 </div>
 </div>
@@ -559,12 +559,12 @@ subtema: "105.1"
 <div class="flashcard" data-id="105.1-fc-031">
 <div class="flashcard-front">
 
-**P:** Que es/son 4. Opciones del shell: `set -o` / `set +o`?
+**P:** Un administrador ejecuta `set -o` en su shell y ve que la opcion `noclobber` esta en `off`. Luego ejecuta `set -o noclobber`. Que ocurre cuando intenta ejecutar `echo "datos" > archivo_existente.txt` y como puede forzar la sobrescritura?
 
 </div>
 <div class="flashcard-back">
 
-**R:** El comando `set` permite activar y desactivar opciones de comportamiento del shell.
+**R:** El shell mostrara un error similar a `cannot overwrite existing file` y no sobrescribira el archivo. Para forzar la sobrescritura con `noclobber` activo, se usa el operador `>|`: `echo "datos" >| archivo_existente.txt`. La logica de `set` es contra-intuitiva en el examen: `set -o opcion` **activa** la opcion (el guion significa "on"), mientras que `set +o opcion` la **desactiva** (el mas significa "off"). Para listar todas las opciones y su estado: `set -o` (formato legible) o `set +o` (formato reutilizable como comandos). Opciones clave para el examen: `noclobber` (protege archivos), `nounset`/`-u` (error en variables no definidas), `errexit`/`-e` (salir ante errores), `xtrace`/`-x` (depuracion).
 
 </div>
 </div>
@@ -577,12 +577,12 @@ subtema: "105.1"
 <div class="flashcard" data-id="105.1-fc-032">
 <div class="flashcard-front">
 
-**P:** Que es/son 6. Modificacion del PATH?
+**P:** Un usuario tiene `PATH=/usr/local/bin:/usr/bin:/bin` y quiere que los scripts de `$HOME/scripts` se encuentren **antes** que los comandos del sistema. Escribe el comando correcto. <input type="text" class="fill-blank" data-answer="export PATH=$HOME/scripts:$PATH" data-alt="export PATH=\"$HOME/scripts:$PATH\",PATH=$HOME/scripts:$PATH && export PATH" placeholder="$ escribe aqui...">
 
 </div>
 <div class="flashcard-back">
 
-**R:** El `PATH` es una lista de directorios separados por `:` donde el shell busca ejecutables.
+**R:** `export PATH=$HOME/scripts:$PATH`. Para que un directorio tenga **prioridad** sobre los demas, se anade al **inicio** del PATH: `export PATH=$HOME/scripts:$PATH`. Si se anadiera al final (`export PATH=$PATH:$HOME/scripts`), los comandos del sistema se encontrarian primero. Puntos criticos para el examen: (1) siempre incluir `$PATH` en la asignacion para no perder los directorios existentes, (2) el separador es `:` (dos puntos), (3) el shell busca en orden de izquierda a derecha y usa el primer ejecutable encontrado, (4) para que el cambio sea permanente debe anadirse a `~/.bashrc` o `~/.profile`, (5) un PATH que incluya `.` (directorio actual) es un riesgo de seguridad.
 
 </div>
 </div>
@@ -595,12 +595,12 @@ subtema: "105.1"
 <div class="flashcard" data-id="105.1-fc-033">
 <div class="flashcard-front">
 
-**P:** Que es/son 7. Personalizacion del prompt (PS1)?
+**P:** Un administrador quiere configurar su prompt para que muestre `[usuario@hostname directorio]$ ` (por ejemplo `[root@servidor /etc]# `). Escribe el valor correcto de PS1. <input type="text" class="fill-blank" data-answer="[\u@\h \W]\$ " data-alt="[\u@\h \W]\$,'[\u@\h \W]\$ '" placeholder="PS1=...">
 
 </div>
 <div class="flashcard-back">
 
-**R:** El prompt se personaliza mediante la variable `PS1`. Secuencias de escape comunes:
+**R:** `PS1='[\u@\h \W]\$ '`. Las secuencias de escape de PS1 son: `\u` = nombre de usuario, `\h` = hostname (hasta el primer punto), `\H` = hostname completo, `\w` = directorio de trabajo completo (ruta absoluta), `\W` = solo el nombre del directorio actual (sin la ruta), `\$` = muestra `#` si UID es 0 (root) o `$` para usuarios normales, `\d` = fecha, `\t` = hora 24h (HH:MM:SS), `\T` = hora 12h, `\n` = salto de linea, `\!` = numero del historial. Se recomienda usar comillas simples al asignar PS1 para evitar que las secuencias se expandan prematuramente. PS2 es el prompt de continuacion (por defecto `> `).
 
 </div>
 </div>
@@ -613,12 +613,12 @@ subtema: "105.1"
 <div class="flashcard" data-id="105.1-fc-034">
 <div class="flashcard-front">
 
-**P:** Que es/son 8. Alias?
+**P:** Un usuario define `alias rm='rm -i'` en su terminal. Que ocurre cuando ejecuta un script que contiene el comando `rm archivo.txt`? Se le pedira confirmacion?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Los alias son atajos para comandos largos o frecuentes.
+**R:** **No**, no se le pedira confirmacion. Los alias definidos en el shell interactivo **no se heredan** a los scripts. Los scripts se ejecutan en un subshell no interactivo donde los alias no estan disponibles por defecto (bash no expande alias en shells no interactivos a menos que se active `shopt -s expand_aliases`). Para definir un alias: `alias nombre='comando'`. Para listar todos: `alias` sin argumentos. Para eliminar uno: `unalias nombre`. Para eliminar todos: `unalias -a`. Para ejecutar el comando original ignorando el alias: `\rm archivo.txt` o `command rm archivo.txt`. Los alias se definen en `~/.bashrc` para que sean persistentes entre sesiones. Los alias no aceptan argumentos posicionales (para eso se usan funciones).
 
 </div>
 </div>
@@ -631,12 +631,12 @@ subtema: "105.1"
 <div class="flashcard" data-id="105.1-fc-035">
 <div class="flashcard-front">
 
-**P:** Que es/son 9. Funciones del shell?
+**P:** Cual es la diferencia principal entre un alias y una funcion del shell? Da un ejemplo de algo que una funcion puede hacer pero un alias no.
 
 </div>
 <div class="flashcard-back">
 
-**R:** Las funciones permiten agrupar comandos reutilizables. Son mas poderosas que los alias.
+**R:** La diferencia principal es que las **funciones aceptan argumentos posicionales** (`$1`, `$2`, etc.) y pueden contener logica compleja (condicionales, bucles, variables locales), mientras que los **alias solo realizan sustitucion de texto** simple. Ejemplo: un alias no puede recibir un argumento en medio del comando, pero una funcion si: `buscar() { find / -name "$1" -type f 2>/dev/null; }` permite ejecutar `buscar archivo.txt`. Las funciones se definen con `nombre() { comandos; }` o `function nombre { comandos; }`. Tienen precedencia sobre comandos externos pero no sobre builtins. Se pueden listar con `declare -f` (con codigo) o `declare -F` (solo nombres). Para eliminar una funcion: `unset -f nombre`. Las funciones se ejecutan en el shell actual (no en un subshell), por lo que pueden modificar variables y el directorio de trabajo.
 
 </div>
 </div>
@@ -649,12 +649,12 @@ subtema: "105.1"
 <div class="flashcard" data-id="105.1-fc-036">
 <div class="flashcard-front">
 
-**P:** Que es/son 10. source vs . (dot command)?
+**P:** Un usuario define `export MI_VAR="hola"` dentro de `config.sh`. Luego ejecuta `./config.sh` y despues `echo $MI_VAR`. El resultado esta vacio. Que comando deberia haber usado en lugar de `./config.sh` para que la variable este disponible? <input type="text" class="fill-blank" data-answer="source config.sh" data-alt=". config.sh,source ./config.sh,. ./config.sh" placeholder="$ escribe aqui...">
 
 </div>
 <div class="flashcard-back">
 
-**R:** Ambos comandos ejecutan un script en el contexto del shell actual (no crean un subshell).
+**R:** `source config.sh` (o equivalentemente `. config.sh`). La diferencia clave: `./config.sh` ejecuta el script en un **subshell** (proceso hijo), por lo que las variables exportadas, alias y funciones definidas dentro del script se pierden al terminar el subshell. `source config.sh` (o `. config.sh`) ejecuta el script en el **shell actual**, por lo que todos los cambios persisten en la sesion. El comando `.` (dot) es el equivalente POSIX de `source` (que es un bashismo). Ambos requieren que el archivo exista y sea legible, pero **no necesitan permisos de ejecucion** (a diferencia de `./script.sh`). Caso de uso tipico: recargar `~/.bashrc` tras modificarlo con `source ~/.bashrc`.
 
 </div>
 </div>
@@ -667,12 +667,12 @@ subtema: "105.1"
 <div class="flashcard" data-id="105.1-fc-037">
 <div class="flashcard-front">
 
-**P:** Que es/son 11. Directorio /etc/skel/ (skeleton)?
+**P:** Un administrador ejecuta `useradd -m nuevousuario`. Que archivos se copian automaticamente al directorio `/home/nuevousuario/` y desde que directorio provienen?
 
 </div>
 <div class="flashcard-back">
 
-**R:** El directorio `/etc/skel/` contiene los archivos plantilla que se copian al directorio home de cada nuevo usuario creado con `useradd -m`.
+**R:** Los archivos se copian desde `/etc/skel/` (skeleton directory). Tipicamente contiene archivos como `.bashrc`, `.bash_profile`, `.profile` y `.bash_logout`, que son las plantillas de configuracion del shell para nuevos usuarios. Todo archivo o directorio colocado en `/etc/skel/` sera copiado al home de cada nuevo usuario creado con `useradd -m` (el flag `-m` es necesario para crear el directorio home). El flag `-k` permite especificar un directorio skeleton alternativo: `useradd -m -k /etc/skel_custom nuevousuario`. Es importante notar que los cambios en `/etc/skel/` solo afectan a usuarios creados **despues** del cambio, no a los existentes. Los permisos de los archivos copiados se ajustan segun `umask`. Sin `-m`, el directorio home no se crea y los archivos de `/etc/skel/` no se copian.
 
 </div>
 </div>
@@ -685,12 +685,12 @@ subtema: "105.1"
 <div class="flashcard" data-id="105.1-fc-038">
 <div class="flashcard-front">
 
-**P:** Que es/son 12. /etc/environment?
+**P:** Un administrador anade la linea `PATH=$PATH:/opt/custom/bin` al archivo `/etc/environment`. Funcionara como espera? Por que?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Este archivo es diferente a los demas: **NO es un script de shell**. Es un archivo simple de pares `VARIABLE=valor` leido por el modulo PAM (`pam_env`).
+**R:** **No funcionara** como espera. `/etc/environment` **no es un script de shell** sino un archivo simple de pares `VARIABLE=valor` leido por el modulo PAM (`pam_env`). No soporta expansion de variables (`$PATH` se interpretara literalmente como el texto `$PATH`, no como su valor), ni comandos, ni comentarios con `#` en todas las implementaciones, ni logica condicional. La linea correcta seria especificar la ruta completa: `PATH=/usr/local/bin:/usr/bin:/bin:/opt/custom/bin`. Diferencias clave con otros archivos de configuracion: (1) se aplica a **todas** las sesiones (graficas, SSH, cron), no solo a shells interactivos, (2) es leido por PAM, no por bash, (3) no requiere `export`, (4) es especifico de sistemas con PAM (Debian/Ubuntu principalmente).
 
 </div>
 </div>
@@ -703,12 +703,12 @@ subtema: "105.1"
 <div class="flashcard" data-id="105.1-fc-039">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** En el examen LPIC-1, cual de estas afirmaciones es FALSA? (a) `~/.bash_profile` se ejecuta en login shells, (b) `~/.bashrc` se ejecuta automaticamente en login shells, (c) `/etc/profile` se ejecuta antes que `~/.bash_profile`, (d) `source` y `.` son equivalentes.
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** La afirmacion **FALSA es (b)**. `~/.bashrc` **NO se ejecuta automaticamente** en login shells. Solo se ejecuta en shells interactivos no-login (como terminales graficas). Si esta disponible en login shells es porque `~/.bash_profile` lo invoca explicitamente con `source ~/.bashrc` o `. ~/.bashrc`. Trampas frecuentes del examen LPIC-1 en este subtema: (1) Confundir el orden: bash solo ejecuta el **primero** de `~/.bash_profile`, `~/.bash_login`, `~/.profile` que encuentre. (2) Creer que `/etc/environment` es un script (no lo es, es leido por PAM). (3) Confundir `set` con `env`: `set` muestra todo (variables locales + entorno + funciones), `env` solo muestra variables de entorno. (4) Olvidar que `set -o` activa y `set +o` desactiva (logica invertida). (5) Pensar que los alias funcionan en scripts no interactivos.
 
 </div>
 </div>

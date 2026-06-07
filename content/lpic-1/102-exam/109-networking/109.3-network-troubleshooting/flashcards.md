@@ -505,12 +505,12 @@ subtema: "109.3"
 <div class="flashcard" data-id="109.3-fc-028">
 <div class="flashcard-front">
 
-**P:** Que es/son Metodologia de troubleshooting de red?
+**P:** Un servidor web no responde. El administrador verifica que la interfaz esta activa, la IP es correcta, puede hacer ping al gateway y a IPs externas, y `dig` resuelve el dominio correctamente. Segun la metodologia de troubleshooting de abajo hacia arriba, en que capa se encuentra el problema?
 
 </div>
 <div class="flashcard-back">
 
-**R:** La resolucion de problemas de red se realiza de **abajo hacia arriba**, siguiendo las capas del modelo TCP/IP:
+**R:** En la capa de **servicio** (la ultima capa del modelo). La metodologia de troubleshooting de red sigue el orden: 1) Enlace fisico (`ip link show`), 2) Direccion IP (`ip addr show`), 3) Gateway (`ping gateway`), 4) DNS (`dig dominio`), 5) Servicio (`nc -zv host puerto`, `curl`). Como todas las capas anteriores funcionan, el problema esta en el servicio: el servidor web puede estar detenido, el puerto bloqueado por firewall, o el proceso no esta escuchando. Siguiente paso: `ss -tlnp | grep :80` para verificar si el servicio escucha.
 
 </div>
 </div>
@@ -523,12 +523,12 @@ subtema: "109.3"
 <div class="flashcard" data-id="109.3-fc-029">
 <div class="flashcard-front">
 
-**P:** Que es/son ping / ping6?
+**P:** Un administrador ejecuta `ping -c 4 -s 1400 192.168.1.1` y recibe la respuesta `Frag needed and DF set (mtu = 1300)`. Que indica esta salida y que opcion de ping se uso para provocarla?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Usa ICMP Echo Request/Reply para verificar conectividad.
+**R:** La opcion `-s 1400` establece el tamano del payload ICMP a 1400 bytes. El mensaje indica que el paquete es demasiado grande para el MTU de la ruta (1300 bytes) y tiene el flag "Don't Fragment" activado. Opciones clave de `ping`: `-c N` (enviar N paquetes), `-s SIZE` (tamano del payload), `-i SECS` (intervalo entre pings), `-w SECS` (timeout total), `-W SECS` (timeout por respuesta), `-f` (flood ping, requiere root), `-I interfaz` (usar interfaz especifica). Para IPv6 se usa `ping6` o `ping -6`. Ambos usan ICMPv6 Echo Request/Reply.
 
 </div>
 </div>
@@ -541,12 +541,12 @@ subtema: "109.3"
 <div class="flashcard" data-id="109.3-fc-030">
 <div class="flashcard-front">
 
-**P:** Que es/son traceroute / tracepath?
+**P:** La salida de `traceroute` muestra `* * *` en los saltos 5, 6 y 7, pero el salto 8 muestra el destino final con respuesta normal. Que se puede concluir y por que `tracepath` no habria necesitado root para esta prueba?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Muestran la ruta que siguen los paquetes hasta el destino.
+**R:** Los `* * *` indican que los routers intermedios (saltos 5-7) no respondieron, probablemente porque tienen ICMP deshabilitado o filtrado por firewall. **No significa que haya un problema de conectividad**, ya que el destino final si responde. Diferencias clave: `traceroute` usa UDP por defecto (puede cambiar con `-I` para ICMP o `-T` para TCP) y puede requerir root segun el metodo. `tracepath` **no requiere root**, usa UDP pero tiene menos opciones. `tracepath` ademas detecta automaticamente el MTU de la ruta. Versiones IPv6: `traceroute6` y `tracepath6`.
 
 </div>
 </div>
@@ -559,12 +559,12 @@ subtema: "109.3"
 <div class="flashcard" data-id="109.3-fc-031">
 <div class="flashcard-front">
 
-**P:** Que es/son mtr?
+**P:** Un usuario reporta lentitud intermitente al acceder a un servidor remoto. Necesitas monitorizar continuamente la latencia y perdida de paquetes en cada salto de la ruta. Que comando usarias y como generar un reporte no interactivo para enviarlo por correo?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Combina `ping` y `traceroute` en una herramienta interactiva en tiempo real.
+**R:** Usar `mtr host` para monitoreo interactivo en tiempo real. `mtr` combina las funcionalidades de `ping` (latencia continua) y `traceroute` (ruta por saltos) en una sola herramienta. Para generar un reporte no interactivo: `mtr -r -c 100 host` (report mode con 100 ciclos). Columnas clave de la salida: `Loss%` (perdida de paquetes), `Avg` (latencia promedio), `Best/Wrst` (mejor/peor latencia), `StDev` (desviacion estandar, valores altos indican inestabilidad). Si un salto intermedio muestra alta perdida pero el destino final no, es probable que el router simplemente limite las respuestas ICMP.
 
 </div>
 </div>
@@ -577,12 +577,16 @@ subtema: "109.3"
 <div class="flashcard" data-id="109.3-fc-032">
 <div class="flashcard-front">
 
-**P:** Que es/son ss (socket statistics)?
+**P:** Completa el comando `ss` que muestra solo las conexiones TCP en estado ESTABLISHED cuyo puerto destino sea 443:
+
+`ss -t state __________ dport = __________`
+
+<input type="text" class="fill-blank" data-answer="established :443" placeholder="estado puerto">
 
 </div>
 <div class="flashcard-back">
 
-**R:** Reemplazo moderno de `netstat`, mas rapido y con mas funcionalidades.
+**R:** `ss -t state established dport = :443`. El comando `ss` permite filtrar por estado (`state established`, `state listening`, `state time-wait`, etc.) y por puerto (`dport` = destino, `sport` = origen). El prefijo `:` antes del puerto es obligatorio. `ss` pertenece al paquete **iproute2** y reemplaza a `netstat` (paquete net-tools, deprecado). Ventajas de `ss`: mas rapido al leer directamente de `/proc/net/`, soporta filtros avanzados por estado y puerto que `netstat` no tiene.
 
 </div>
 </div>
@@ -595,12 +599,12 @@ subtema: "109.3"
 <div class="flashcard" data-id="109.3-fc-033">
 <div class="flashcard-front">
 
-**P:** Que es/son netcat / nc?
+**P:** Necesitas crear un servidor TCP simple que escuche en el puerto 8080 para probar la conectividad desde otra maquina. Que comando usas con `netcat` y como se conectaria el cliente?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Herramienta versatil para conexiones de red (la "navaja suiza" de las redes).
+**R:** Servidor: `nc -l 8080` (o `nc -l -p 8080` segun la version). Cliente: `nc servidor 8080`. Una vez conectados, todo lo que se escriba en un extremo aparece en el otro (chat basico). Otros usos de `nc`: escaneo de puertos `nc -zv host 20-25` (rango), transferencia de archivos (receptor: `nc -l 9000 > archivo`, emisor: `nc host 9000 < archivo`), prueba HTTP manual: `echo "GET / HTTP/1.0\n\n" | nc host 80`. La opcion `-u` usa UDP en lugar de TCP. `netcat` es conocido como la "navaja suiza" de las redes por esta versatilidad.
 
 </div>
 </div>
@@ -613,12 +617,16 @@ subtema: "109.3"
 <div class="flashcard" data-id="109.3-fc-034">
 <div class="flashcard-front">
 
-**P:** Que es/son tcpdump?
+**P:** Escribe el comando `tcpdump` que captura solo trafico ICMP dirigido al host 10.0.0.5 en la interfaz ens33, sin resolver nombres DNS, limitado a 50 paquetes:
+
+`tcpdump -i ens33 __________ __________ __________ __________`
+
+<input type="text" class="fill-blank" data-answer="-n -c 50 icmp host 10.0.0.5" placeholder="opciones y filtros">
 
 </div>
 <div class="flashcard-back">
 
-**R:** Captura y analiza trafico de red (requiere root).
+**R:** `tcpdump -i ens33 -n -c 50 icmp and host 10.0.0.5`. Desglose: `-i ens33` (interfaz), `-n` (no resolver DNS, acelera la captura), `-c 50` (limitar a 50 paquetes). Los **filtros BPF** van al final: `icmp` (solo protocolo ICMP), `host 10.0.0.5` (origen o destino), `and` combina filtros. Otros filtros comunes: `port 80`, `src host IP`, `dst port 443`, `tcp`, `udp`. Para guardar: `-w archivo.pcap`. Para leer: `tcpdump -r archivo.pcap`. **Importante para LPIC-1**: se espera conocimiento basico de `tcpdump`, no filtros avanzados.
 
 </div>
 </div>
@@ -631,12 +639,12 @@ subtema: "109.3"
 <div class="flashcard" data-id="109.3-fc-035">
 <div class="flashcard-front">
 
-**P:** Que es/son Puntos clave para el examen?
+**P:** En el examen LPIC-1, que herramienta del paquete **iproute2** reemplaza a cada una de las siguientes del paquete **net-tools** deprecado: `ifconfig`, `route`, `netstat`, `arp`?
 
 </div>
 <div class="flashcard-back">
 
-**R:** 1. Metodologia de troubleshooting: **de abajo a arriba** (enlace -> IP -> gateway -> DNS -> servicio)
+**R:** `ifconfig` -> `ip addr` / `ip link`, `route` -> `ip route`, `netstat` -> `ss`, `arp` -> `ip neigh`. Todas las herramientas modernas pertenecen al paquete **iproute2**. Punto clave para el examen: LPIC-1 evalua **ambos** conjuntos de herramientas (net-tools e iproute2), pero se espera que sepas que net-tools esta deprecado. Otros puntos criticos del 109.3: la metodologia de troubleshooting es siempre **de abajo hacia arriba** (enlace fisico -> IP -> gateway -> DNS -> servicio), `mtr` combina ping+traceroute, y `tcpdump` requiere root.
 
 </div>
 </div>
@@ -649,12 +657,12 @@ subtema: "109.3"
 <div class="flashcard" data-id="109.3-fc-036">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** Trampa clasica del examen: Un administrador ejecuta `netstat -tulnp` y obtiene `command not found`. `ss -tulnp` funciona perfectamente. El sistema tiene `ip` disponible. Que paquete falta y por que es importante esta distincion en el examen LPIC-1?
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** Falta el paquete **net-tools** (que incluye `netstat`, `ifconfig`, `route`, `arp`). El sistema tiene instalado **iproute2** (que incluye `ss`, `ip`). **Trampas del examen 109.3**: 1) Confundir `ss` (reemplaza `netstat`) con `ip` (reemplaza `ifconfig`/`route`). 2) Pensar que `tracepath` requiere root (NO, solo `traceroute` puede requerirlo). 3) Creer que `* * *` en `traceroute` significa que la ruta esta caida (puede ser solo ICMP filtrado). 4) Olvidar que `tcpdump` requiere root pero `ping` basico no. 5) Confundir `-c` de `ping` (count) con `-c` de `tcpdump` (count): ambos limitan cantidad pero en herramientas distintas.
 
 </div>
 </div>

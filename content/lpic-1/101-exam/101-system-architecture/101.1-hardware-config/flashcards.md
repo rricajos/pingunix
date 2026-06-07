@@ -11,9 +11,9 @@ subtema: "101.1"
 
 # Flashcards: 101.1 - Configuracion De Hardware
 
-> 31 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 41 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
-<div class="flashcard-deck" data-subtema="101.1">
+<div class="flashcard-deck" data-subtopic="101.1">
 </div>
 
 <div class="flashcard" data-id="101.1-fc-001">
@@ -31,7 +31,7 @@ subtema: "101.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="101.1">
+<div class="flashcard-deck" data-subtopic="101.1">
 </div>
 
 <div class="flashcard" data-id="101.1-fc-002">
@@ -49,7 +49,7 @@ subtema: "101.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="101.1">
+<div class="flashcard-deck" data-subtopic="101.1">
 </div>
 
 <div class="flashcard" data-id="101.1-fc-003">
@@ -67,7 +67,7 @@ subtema: "101.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="101.1">
+<div class="flashcard-deck" data-subtopic="101.1">
 </div>
 
 <div class="flashcard" data-id="101.1-fc-004">
@@ -85,7 +85,7 @@ subtema: "101.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="101.1">
+<div class="flashcard-deck" data-subtopic="101.1">
 </div>
 
 <div class="flashcard" data-id="101.1-fc-005">
@@ -103,7 +103,7 @@ subtema: "101.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="101.1">
+<div class="flashcard-deck" data-subtopic="101.1">
 </div>
 
 <div class="flashcard" data-id="101.1-fc-006">
@@ -121,7 +121,7 @@ subtema: "101.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="101.1">
+<div class="flashcard-deck" data-subtopic="101.1">
 </div>
 
 <div class="flashcard" data-id="101.1-fc-007">
@@ -139,7 +139,7 @@ subtema: "101.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="101.1">
+<div class="flashcard-deck" data-subtopic="101.1">
 </div>
 
 <div class="flashcard" data-id="101.1-fc-008">
@@ -157,7 +157,7 @@ subtema: "101.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="101.1">
+<div class="flashcard-deck" data-subtopic="101.1">
 </div>
 
 <div class="flashcard" data-id="101.1-fc-009">
@@ -175,7 +175,7 @@ subtema: "101.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="101.1">
+<div class="flashcard-deck" data-subtopic="101.1">
 </div>
 
 <div class="flashcard" data-id="101.1-fc-010">
@@ -193,7 +193,7 @@ subtema: "101.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="101.1">
+<div class="flashcard-deck" data-subtopic="101.1">
 </div>
 
 <div class="flashcard" data-id="101.1-fc-011">
@@ -211,7 +211,7 @@ subtema: "101.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="101.1">
+<div class="flashcard-deck" data-subtopic="101.1">
 </div>
 
 <div class="flashcard" data-id="101.1-fc-012">
@@ -229,7 +229,7 @@ subtema: "101.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="101.1">
+<div class="flashcard-deck" data-subtopic="101.1">
 </div>
 
 <div class="flashcard" data-id="101.1-fc-013">
@@ -247,7 +247,7 @@ subtema: "101.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="101.1">
+<div class="flashcard-deck" data-subtopic="101.1">
 </div>
 
 <div class="flashcard" data-id="101.1-fc-014">
@@ -265,7 +265,7 @@ subtema: "101.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="101.1">
+<div class="flashcard-deck" data-subtopic="101.1">
 </div>
 
 <div class="flashcard" data-id="101.1-fc-015">
@@ -283,7 +283,7 @@ subtema: "101.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="101.1">
+<div class="flashcard-deck" data-subtopic="101.1">
 </div>
 
 <div class="flashcard" data-id="101.1-fc-016">
@@ -301,7 +301,7 @@ subtema: "101.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="101.1">
+<div class="flashcard-deck" data-subtopic="101.1">
 </div>
 
 <div class="flashcard" data-id="101.1-fc-017">
@@ -319,7 +319,7 @@ subtema: "101.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="101.1">
+<div class="flashcard-deck" data-subtopic="101.1">
 </div>
 
 <div class="flashcard" data-id="101.1-fc-018">
@@ -337,7 +337,7 @@ subtema: "101.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="101.1">
+<div class="flashcard-deck" data-subtopic="101.1">
 </div>
 
 <div class="flashcard" data-id="101.1-fc-019">
@@ -355,7 +355,7 @@ subtema: "101.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="101.1">
+<div class="flashcard-deck" data-subtopic="101.1">
 </div>
 
 <div class="flashcard" data-id="101.1-fc-020">
@@ -373,7 +373,7 @@ subtema: "101.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="101.1">
+<div class="flashcard-deck" data-subtopic="101.1">
 </div>
 
 <div class="flashcard" data-id="101.1-fc-021">
@@ -391,7 +391,7 @@ subtema: "101.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="101.1">
+<div class="flashcard-deck" data-subtopic="101.1">
 </div>
 
 <div class="flashcard" data-id="101.1-fc-022">
@@ -409,7 +409,7 @@ subtema: "101.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="101.1">
+<div class="flashcard-deck" data-subtopic="101.1">
 </div>
 
 <div class="flashcard" data-id="101.1-fc-023">
@@ -427,7 +427,7 @@ subtema: "101.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="101.1">
+<div class="flashcard-deck" data-subtopic="101.1">
 </div>
 
 <div class="flashcard" data-id="101.1-fc-024">
@@ -445,7 +445,7 @@ subtema: "101.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="101.1">
+<div class="flashcard-deck" data-subtopic="101.1">
 </div>
 
 <div class="flashcard" data-id="101.1-fc-025">
@@ -463,7 +463,7 @@ subtema: "101.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="101.1">
+<div class="flashcard-deck" data-subtopic="101.1">
 </div>
 
 <div class="flashcard" data-id="101.1-fc-026">
@@ -481,7 +481,7 @@ subtema: "101.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="101.1">
+<div class="flashcard-deck" data-subtopic="101.1">
 </div>
 
 <div class="flashcard" data-id="101.1-fc-027">
@@ -499,7 +499,7 @@ subtema: "101.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="101.1">
+<div class="flashcard-deck" data-subtopic="101.1">
 </div>
 
 <div class="flashcard" data-id="101.1-fc-028">
@@ -517,54 +517,234 @@ subtema: "101.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="101.1">
+<div class="flashcard-deck" data-subtopic="101.1">
 </div>
 
 <div class="flashcard" data-id="101.1-fc-029">
 <div class="flashcard-front">
 
-**P:** Que hace el comando `/sys/`?
+**P:** Que diferencia hay entre `/sys/bus/`, `/sys/class/` y `/sys/devices/` en sysfs?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Informacion de dispositivos (sysfs)
+**R:** `/sys/devices/` contiene el arbol fisico real de todos los dispositivos del sistema, organizados segun su conexion hardware (plataforma, PCI, USB, etc.). `/sys/bus/` organiza los dispositivos por tipo de bus (pci, usb, scsi, i2c) y contiene enlaces simbolicos a `/sys/devices/`. `/sys/class/` organiza por funcion logica del dispositivo (net, block, input, tty, sound) con enlaces simbolicos a `/sys/devices/`. Ejemplo: una tarjeta de red aparece en `/sys/devices/pci0000:00/...`, en `/sys/bus/pci/devices/` y en `/sys/class/net/eth0`. El examen pregunta frecuentemente sobre estas tres vistas complementarias.
 
 </div>
 </div>
 
 ---
 
-<div class="flashcard-deck" data-subtema="101.1">
+<div class="flashcard-deck" data-subtopic="101.1">
 </div>
 
 <div class="flashcard" data-id="101.1-fc-030">
 <div class="flashcard-front">
 
-**P:** Que es/son Archivos clave para el examen?
+**P:** Que archivo en `/proc` muestra la linea de comandos con la que se inicio el kernel?
 
 </div>
 <div class="flashcard-back">
 
-**R:** | Archivo/Directorio | Proposito |
+**R:** `/proc/cmdline`. Este archivo muestra los parametros que se pasaron al kernel durante el arranque, como `root=/dev/sda1 quiet splash`. Es muy util para diagnosticar problemas de arranque, verificar que parametros de kernel estan activos y comprobar configuraciones como `nomodeset`, `acpi=off` o `init=/bin/bash`. Se puede leer con `cat /proc/cmdline`. Los parametros de kernel se configuran en el gestor de arranque (GRUB2) en la variable `GRUB_CMDLINE_LINUX` de `/etc/default/grub`.
 
 </div>
 </div>
 
 ---
 
-<div class="flashcard-deck" data-subtema="101.1">
+<div class="flashcard-deck" data-subtopic="101.1">
 </div>
 
 <div class="flashcard" data-id="101.1-fc-031">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** Que diferencia hay entre `lspci`, `lsusb` y `lsblk`?
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** `lspci` lista los dispositivos conectados al bus PCI/PCIe (tarjetas graficas, red, sonido, controladores SATA/NVMe). Con `-v` muestra detalles y con `-k` los modulos del kernel que los gestionan. `lsusb` lista los dispositivos USB conectados (pendrives, teclados, ratones, webcams). Con `-t` muestra el arbol de hubs USB. `lsblk` lista los dispositivos de bloque (discos, particiones, LVM, RAID) en formato de arbol. Con `-f` muestra el sistema de archivos. Los tres obtienen su informacion de `/sys` (sysfs) y son herramientas fundamentales para diagnosticar problemas de hardware en el examen LPIC-1.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtopic="101.1">
+</div>
+
+<div class="flashcard" data-id="101.1-fc-032">
+<div class="flashcard-front">
+
+**P:** Que contiene el archivo `/proc/interrupts` y para que sirve?
+
+</div>
+<div class="flashcard-back">
+
+**R:** `/proc/interrupts` muestra una tabla con todas las interrupciones (IRQ) del sistema, indicando cuantas se han producido por cada CPU y que dispositivo las genera. Cada linea muestra: numero de IRQ, conteo por CPU, controlador de interrupciones, y nombre del dispositivo. Es util para: diagnosticar conflictos de IRQ, verificar que un dispositivo esta generando interrupciones (y por tanto funcionando), e identificar desequilibrios de interrupciones entre CPUs. IRQ tipicas: 0=timer, 1=teclado, 14/15=IDE. En sistemas modernos la mayoria de IRQs son MSI/MSI-X (Message Signaled Interrupts) para dispositivos PCIe.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtopic="101.1">
+</div>
+
+<div class="flashcard" data-id="101.1-fc-033">
+<div class="flashcard-front">
+
+**P:** Que comando permite cargar un modulo del kernel manualmente y cual es la diferencia entre `modprobe` e `insmod`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** `modprobe` carga un modulo del kernel Y sus dependencias automaticamente. `insmod` carga un modulo individual SIN resolver dependencias (requiere la ruta completa al archivo .ko). `modprobe` es la herramienta recomendada porque consulta la base de datos de dependencias generada por `depmod`. Ejemplo: `modprobe snd_hda_intel` carga el modulo de audio Intel HD y todas sus dependencias. `insmod /lib/modules/.../snd_hda_intel.ko` fallaria si faltan dependencias. Para descargar modulos: `modprobe -r` (con dependencias) o `rmmod` (sin). Para listar modulos cargados: `lsmod`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtopic="101.1">
+</div>
+
+<div class="flashcard" data-id="101.1-fc-034">
+<div class="flashcard-front">
+
+**P:** Que contiene `/proc/cpuinfo` y que informacion clave proporciona?
+
+</div>
+<div class="flashcard-back">
+
+**R:** `/proc/cpuinfo` contiene informacion detallada sobre cada CPU/core del sistema: modelo del procesador (`model name`), velocidad (`cpu MHz`), tamano de cache (`cache size`), numero de cores (`cpu cores`), flags de capacidades (sse, avx, vmx/svm para virtualizacion), y el `processor` que identifica cada core logico. Es util para: verificar cuantos cores tiene el sistema, comprobar si soporta virtualizacion por hardware (flags `vmx` para Intel VT-x o `svm` para AMD-V), y diagnosticar problemas de rendimiento. Alternativas: `lscpu` ofrece un resumen mas legible.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtopic="101.1">
+</div>
+
+<div class="flashcard" data-id="101.1-fc-035">
+<div class="flashcard-front">
+
+**P:** Escribe el comando para listar todos los modulos del kernel actualmente cargados. <input type="text" class="fill-blank" data-answer="lsmod" data-alt="" placeholder="$ escribe aqui...">
+
+</div>
+<div class="flashcard-back">
+
+**R:** lsmod. El comando `lsmod` muestra los modulos del kernel actualmente cargados, formateando la informacion de `/proc/modules`. La salida tiene tres columnas: Module (nombre), Size (tamano en bytes), y Used by (modulos que dependen de el y conteo de uso). Un modulo con conteo 0 no esta siendo usado y puede descargarse con `modprobe -r`. Para obtener informacion detallada de un modulo especifico se usa `modinfo nombre_modulo`, que muestra su ruta, autor, descripcion, parametros y dependencias.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtopic="101.1">
+</div>
+
+<div class="flashcard" data-id="101.1-fc-036">
+<div class="flashcard-front">
+
+**P:** Que archivo en `/proc` muestra la cantidad de memoria RAM total, libre y disponible?
+
+</div>
+<div class="flashcard-back">
+
+**R:** `/proc/meminfo`. Este archivo contiene informacion detallada sobre el uso de memoria del sistema: `MemTotal` (RAM total), `MemFree` (RAM completamente libre), `MemAvailable` (RAM disponible incluyendo caches recuperables), `Buffers` y `Cached` (memoria usada como cache de disco), `SwapTotal` y `SwapFree` (swap). El comando `free -h` ofrece un resumen mas legible de la misma informacion. Trampa del examen: `MemFree` suele ser muy bajo en Linux porque el kernel usa la RAM libre como cache de disco; `MemAvailable` es el valor real de memoria disponible para aplicaciones.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtopic="101.1">
+</div>
+
+<div class="flashcard" data-id="101.1-fc-037">
+<div class="flashcard-front">
+
+**P:** Que es D-Bus y que relacion tiene con `udev` en la gestion de dispositivos?
+
+</div>
+<div class="flashcard-back">
+
+**R:** D-Bus es un sistema de comunicacion entre procesos (IPC) que permite a las aplicaciones intercambiar mensajes. `udev` es el gestor de dispositivos del kernel que detecta hardware nuevo, crea nodos en `/dev/` y aplica reglas. La relacion: cuando `udev` detecta un nuevo dispositivo (ej: USB conectado), envia una senal a traves de D-Bus que las aplicaciones de escritorio pueden escuchar para reaccionar automaticamente (ej: montar un pendrive, abrir el gestor de archivos). El comando `udevadm monitor` permite ver los eventos de dispositivos en tiempo real. Las reglas de udev se configuran en `/etc/udev/rules.d/`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtopic="101.1">
+</div>
+
+<div class="flashcard" data-id="101.1-fc-038">
+<div class="flashcard-front">
+
+**P:** Que diferencia hay entre `/dev/sda`, `/dev/nvme0n1` y `/dev/vda`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** `/dev/sda` es un disco SCSI, SATA o USB (gestionado por el subsistema SCSI). Las particiones son `sda1`, `sda2`, etc. `/dev/nvme0n1` es un disco NVMe (SSD conectado por PCIe). `nvme0` es el controlador, `n1` el namespace (disco). Las particiones son `nvme0n1p1`, `nvme0n1p2`. `/dev/vda` es un disco virtual (virtio) en maquinas virtuales KVM/QEMU. Las particiones son `vda1`, `vda2`. Otros: `/dev/xvda` para Xen, `/dev/hda` para discos IDE legacy (obsoleto). El examen puede preguntar que tipo de dispositivo corresponde a cada nomenclatura.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtopic="101.1">
+</div>
+
+<div class="flashcard" data-id="101.1-fc-039">
+<div class="flashcard-front">
+
+**P:** Escribe el comando para ver que modulo del kernel gestiona cada dispositivo PCI. <input type="text" class="fill-blank" data-answer="lspci -k" data-alt="lspci -v" placeholder="$ escribe aqui...">
+
+</div>
+<div class="flashcard-back">
+
+**R:** lspci -k. La opcion `-k` (kernel) de `lspci` muestra, para cada dispositivo PCI, el modulo del kernel que lo gestiona (`Kernel driver in use:`) y los modulos disponibles (`Kernel modules:`). Esto es esencial para diagnosticar cuando un dispositivo no funciona: si no tiene "driver in use", falta cargar el modulo correspondiente con `modprobe`. Ejemplo de salida: `00:02.0 VGA ... Kernel driver in use: i915 / Kernel modules: i915`. La opcion `-v` tambien muestra esta informacion junto con otros detalles (regiones de memoria, capacidades, IRQ).
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtopic="101.1">
+</div>
+
+<div class="flashcard" data-id="101.1-fc-040">
+<div class="flashcard-front">
+
+**P:** Que son `/proc/ioports` y `/proc/dma` y cuando son relevantes para el examen?
+
+</div>
+<div class="flashcard-back">
+
+**R:** `/proc/ioports` muestra los rangos de puertos de E/S (I/O ports) asignados a cada dispositivo, usados para comunicacion CPU-dispositivo en arquitecturas x86. Ejemplo: `0060-0060 : keyboard`. `/proc/dma` muestra los canales DMA (Direct Memory Access) en uso, que permiten a dispositivos transferir datos directamente a memoria sin pasar por la CPU. Ambos son legado de ISA pero siguen existiendo. Para el examen, lo clave es saber que existen y su ubicacion en `/proc`. En hardware moderno, PCI/PCIe usa MMIO (Memory-Mapped I/O) y bus-mastering DMA, reemplazando los mecanismos legacy.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtopic="101.1">
+</div>
+
+<div class="flashcard" data-id="101.1-fc-041">
+<div class="flashcard-front">
+
+**P:** Trampa del examen: cual es la diferencia entre `/proc` y `/sys`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** Ambos son sistemas de archivos virtuales (no ocupan espacio en disco). `/proc` (procfs) originalmente solo contenia informacion de procesos (un directorio numerado por PID), pero se fue extendiendo con informacion del sistema (`cpuinfo`, `meminfo`, `interrupts`, etc.). `/sys` (sysfs) se creo despues para organizar la informacion de dispositivos y drivers de forma estructurada en un arbol jerarquico (bus, class, devices). La regla general: `/proc` para informacion de procesos y estado del kernel, `/sys` para informacion de dispositivos y hardware. El examen puede pedir identificar en cual de los dos se encuentra cierta informacion.
 
 </div>
 </div>

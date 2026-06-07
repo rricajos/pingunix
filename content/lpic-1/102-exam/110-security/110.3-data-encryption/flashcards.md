@@ -469,12 +469,19 @@ subtema: "110.3"
 <div class="flashcard" data-id="110.3-fc-026">
 <div class="flashcard-front">
 
-**P:** Que es/son `ssh-agent` y `ssh-add`?
+**P:** Un administrador tiene una clave SSH protegida con passphrase y necesita ejecutar varios comandos `scp` en un script sin introducir la passphrase cada vez. Que secuencia de comandos debe usar para lograrlo?
 
 </div>
 <div class="flashcard-back">
 
-**R:** El agente SSH almacena las claves privadas descifradas en memoria, evitando tener que introducir la passphrase repetidamente.
+**R:** Debe iniciar `ssh-agent` y luego agregar la clave con `ssh-add`:
+
+```bash
+eval $(ssh-agent)      # Inicia el agente y exporta las variables de entorno
+ssh-add ~/.ssh/id_ed25519  # Agrega la clave al agente (pide passphrase una vez)
+```
+
+`ssh-agent` es un demonio que almacena las claves privadas descifradas en memoria durante la sesion. `ssh-add` agrega claves al agente. Comandos utiles: `ssh-add -l` lista las claves cargadas, `ssh-add -D` elimina todas las claves del agente, `ssh-add -t 3600` establece un tiempo de vida de 1 hora. El agente se comunica con los clientes SSH a traves de un socket Unix definido en la variable `SSH_AUTH_SOCK`.
 
 </div>
 </div>
@@ -487,12 +494,12 @@ subtema: "110.3"
 <div class="flashcard" data-id="110.3-fc-027">
 <div class="flashcard-front">
 
-**P:** Que es/son `~/.ssh/known_hosts`?
+**P:** Un usuario intenta conectarse por SSH a un servidor y recibe el mensaje: `WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED! ... Host key verification failed.` Que ha ocurrido y como debe proceder?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Almacena las **claves de host** de los servidores a los que te has conectado. Protege contra ataques man-in-the-middle.
+**R:** La clave de host del servidor almacenada en `~/.ssh/known_hosts` no coincide con la clave actual del servidor. Esto puede indicar: 1) El servidor fue reinstalado o se regeneraron sus claves (causa legitima). 2) Un ataque man-in-the-middle (alguien suplanta al servidor). El usuario debe verificar con el administrador si la clave cambio legitimamente. Si es asi, eliminar la entrada antigua con `ssh-keygen -R servidor` y reconectarse. En la primera conexion a un servidor nuevo, SSH muestra el fingerprint de la clave de host y pregunta si se acepta; al aceptar, la clave se guarda en `~/.ssh/known_hosts`. La opcion `StrictHostKeyChecking` en `~/.ssh/config` controla este comportamiento (`yes` = rechazar claves desconocidas, `no` = aceptar automaticamente, `ask` = preguntar al usuario).
 
 </div>
 </div>
@@ -505,12 +512,12 @@ subtema: "110.3"
 <div class="flashcard" data-id="110.3-fc-028">
 <div class="flashcard-front">
 
-**P:** Que es/son Archivos de clave de host del servidor: `/etc/ssh/`?
+**P:** Completa: Las claves de host del servidor SSH se almacenan en el directorio <input type="text" placeholder="ruta..."/>. Para el algoritmo Ed25519, la clave privada del host se llama <input type="text" placeholder="archivo..."/> y la clave publica <input type="text" placeholder="archivo..."/>.
 
 </div>
 <div class="flashcard-back">
 
-**R:** El servidor SSH tiene sus propias claves (host keys) que identifican al servidor de forma unica. Se almacenan en `/etc/ssh/`:
+**R:** Directorio: `/etc/ssh/`. Clave privada: `ssh_host_ed25519_key`. Clave publica: `ssh_host_ed25519_key.pub`. El servidor SSH genera automaticamente varios pares de claves de host durante la instalacion, una por cada algoritmo soportado: `ssh_host_rsa_key` (RSA), `ssh_host_ecdsa_key` (ECDSA), `ssh_host_ed25519_key` (Ed25519). Cada uno tiene su correspondiente `.pub`. Las claves privadas del host tienen permisos 600 y son propiedad de root. Estas claves identifican de forma unica al servidor ante los clientes. Si se reinstala el servidor, se generan claves nuevas y los clientes recibiran la advertencia de cambio de clave de host.
 
 </div>
 </div>
@@ -523,12 +530,22 @@ subtema: "110.3"
 <div class="flashcard" data-id="110.3-fc-029">
 <div class="flashcard-front">
 
-**P:** Que es/son `~/.ssh/config`?
+**P:** Un administrador se conecta frecuentemente a un servidor con `ssh -p 2222 -i ~/.ssh/clave_trabajo admin@192.168.1.50`. Que bloque debe agregar a `~/.ssh/config` para poder conectarse simplemente con `ssh trabajo`?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Archivo de configuracion del cliente SSH para simplificar conexiones.
+**R:** Debe agregar este bloque al archivo `~/.ssh/config`:
+
+```bash
+Host trabajo
+    HostName 192.168.1.50
+    User admin
+    Port 2222
+    IdentityFile ~/.ssh/clave_trabajo
+```
+
+El archivo `~/.ssh/config` permite definir alias para conexiones SSH con parametros preconfigurados. Directivas comunes: `Host` (alias o patron), `HostName` (IP o dominio real), `User` (usuario remoto), `Port` (puerto), `IdentityFile` (clave privada a usar), `ForwardAgent yes` (reenviar el agente SSH), `ProxyJump bastion` (saltar a traves de un host intermedio). Se pueden usar comodines: `Host *.empresa.com` aplica configuracion a todos los hosts de ese dominio. Este archivo es del cliente, no confundir con `/etc/ssh/sshd_config` que es del servidor.
 
 </div>
 </div>
@@ -541,12 +558,12 @@ subtema: "110.3"
 <div class="flashcard" data-id="110.3-fc-030">
 <div class="flashcard-front">
 
-**P:** Que es/son `/etc/ssh/sshd_config`?
+**P:** Completa las directivas de `/etc/ssh/sshd_config` para un servidor seguro: Para deshabilitar el login de root: <input type="text" placeholder="directiva..."/>. Para deshabilitar la autenticacion por contrasena: <input type="text" placeholder="directiva..."/>. Para cambiar el puerto SSH: <input type="text" placeholder="directiva..."/>.
 
 </div>
 <div class="flashcard-back">
 
-**R:** Configuracion del **servidor** SSH (demonio sshd).
+**R:** `PermitRootLogin no`, `PasswordAuthentication no`, `Port 2222` (u otro puerto). El archivo `/etc/ssh/sshd_config` es la configuracion del demonio del servidor SSH (`sshd`). Directivas importantes: `PermitRootLogin` (valores: `yes`, `no`, `prohibit-password`, `forced-commands-only`), `PasswordAuthentication` (`yes`/`no`), `PubkeyAuthentication yes`, `Port` (por defecto 22), `ListenAddress` (IP donde escuchar), `MaxAuthTries` (intentos maximos), `X11Forwarding` (`yes`/`no`), `AllowUsers`/`AllowGroups`. No confundir con `~/.ssh/config` (configuracion del cliente) ni con `/etc/ssh/ssh_config` (configuracion global del cliente). Tras cualquier cambio: `systemctl restart sshd`.
 
 </div>
 </div>
@@ -559,12 +576,12 @@ subtema: "110.3"
 <div class="flashcard" data-id="110.3-fc-031">
 <div class="flashcard-front">
 
-**P:** Que es/son Puntos clave para el examen?
+**P:** En el examen LPIC-1, cual es la diferencia entre los archivos `/etc/ssh/ssh_config`, `/etc/ssh/sshd_config` y `~/.ssh/config`? Cual se usa para configurar el servidor y cual para el cliente?
 
 </div>
 <div class="flashcard-back">
 
-**R:** 1. **ssh-keygen**: `-t` tipo (rsa, ecdsa, ed25519), `-b` bits. Ed25519 es el recomendado
+**R:** Son tres archivos distintos que el examen pregunta frecuentemente: 1) `/etc/ssh/sshd_config` - Configuracion del **servidor** SSH (demonio `sshd`). Contiene directivas como `PermitRootLogin`, `PasswordAuthentication`, `Port`. 2) `/etc/ssh/ssh_config` - Configuracion **global del cliente** SSH, aplica a todos los usuarios del sistema. 3) `~/.ssh/config` - Configuracion **personal del cliente** SSH, aplica solo al usuario actual y tiene prioridad sobre `/etc/ssh/ssh_config`. Regla mnemotecnica: la "d" en `sshd_config` es de "daemon" (servidor). Sin la "d", es del cliente. El examen suele presentar opciones mezclando estos archivos para confundir.
 
 </div>
 </div>
@@ -577,12 +594,12 @@ subtema: "110.3"
 <div class="flashcard" data-id="110.3-fc-032">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** Un usuario ejecuta `gpg --import clave.asc` y luego intenta cifrar un archivo con `gpg --encrypt --recipient usuario@correo.com archivo.txt`, pero GPG muestra un error de confianza. Que paso ha olvidado y por que es una trampa comun del examen?
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** Ha olvidado firmar o establecer la confianza de la clave importada. Importar una clave publica con `gpg --import` no la hace automaticamente confiable. Se debe firmar con `gpg --sign-key ID_CLAVE` o editar la confianza con `gpg --edit-key ID_CLAVE` y usar el comando `trust`. Trampas comunes SSH/GPG en el examen: 1) Confundir `~/.ssh/authorized_keys` (claves publicas autorizadas en el servidor) con `~/.ssh/known_hosts` (claves de host conocidas en el cliente). 2) Confundir `--encrypt` (cifrar con clave publica) con `--symmetric` (cifrar con contrasena). 3) Confundir `-L` (tunel local) con `-R` (tunel remoto). 4) Creer que `ssh-copy-id` copia la clave privada (copia la publica). 5) Olvidar que la clave privada nunca sale del equipo donde se genero.
 
 </div>
 </div>

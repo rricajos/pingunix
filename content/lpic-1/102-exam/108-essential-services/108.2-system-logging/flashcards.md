@@ -469,12 +469,12 @@ subtema: "108.2"
 <div class="flashcard" data-id="108.2-fc-026">
 <div class="flashcard-front">
 
-**P:** Que hace el comando `syslog`?
+**P:** Un administrador configura rsyslog con la regla `local3.* /var/log/app_custom.log` pero no aparecen mensajes. El desarrollador confirma que la aplicacion envia logs con facility `syslog`. Cual es el problema?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Mensajes internos del propio syslog
+**R:** La aplicacion esta enviando mensajes con la facility `syslog` (mensajes internos del propio sistema de logging), pero la regla filtra por `local3`. Para capturar esos mensajes, la regla deberia ser `syslog.* /var/log/app_custom.log`, o bien el desarrollador debe reconfigurar la aplicacion para usar `local3` como facility. Las facilities `local0` a `local7` estan reservadas para uso personalizado y son las recomendadas para aplicaciones propias. La facility `syslog` esta reservada para mensajes generados internamente por el propio demonio syslog.
 
 </div>
 </div>
@@ -487,12 +487,12 @@ subtema: "108.2"
 <div class="flashcard" data-id="108.2-fc-027">
 <div class="flashcard-front">
 
-**P:** Que hace el comando `ForwardToSyslog=yes`?
+**P:** Un servidor usa systemd-journald y rsyslog simultaneamente, pero rsyslog no recibe los mensajes del journal. Que directiva debe configurarse en `/etc/systemd/journald.conf` para solucionar esto?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Reenvia mensajes al syslog tradicional (rsyslog/syslog-ng)
+**R:** Debe configurarse `ForwardToSyslog=yes` en la seccion `[Journal]` de `/etc/systemd/journald.conf`. Esta directiva indica a journald que reenvie los mensajes al syslog tradicional (rsyslog o syslog-ng) a traves del socket `/dev/log`. Otras directivas de reenvio disponibles son: `ForwardToKMsg` (reenviar al buffer del kernel), `ForwardToConsole` (reenviar a la consola), y `ForwardToWall` (enviar mensajes criticos a todos los terminales). Tras modificar la configuracion, se debe reiniciar el servicio con `systemctl restart systemd-journald`.
 
 </div>
 </div>
@@ -505,12 +505,12 @@ subtema: "108.2"
 <div class="flashcard" data-id="108.2-fc-028">
 <div class="flashcard-front">
 
-**P:** Que es/son Introduccion al registro del sistema?
+**P:** Un servidor Linux tiene instalado tanto rsyslog como systemd-journald. Un junior pregunta cual es la diferencia fundamental entre ambos sistemas de logging. Cual es la respuesta correcta?
 
 </div>
 <div class="flashcard-back">
 
-**R:** El registro (logging) del sistema es fundamental para la administracion, seguridad y resolucion de problemas. Linux dispone de dos sistemas principales de logging:
+**R:** rsyslog es un demonio de logging tradicional basado en el protocolo syslog que almacena logs en archivos de texto plano en `/var/log/`. systemd-journald es el sistema de logging nativo de systemd que almacena logs en formato binario estructurado consultable con `journalctl`. Las diferencias clave son: rsyslog usa archivos de texto (legibles con `cat`, `grep`, `less`), journald usa formato binario (solo legible con `journalctl`). rsyslog se configura en `/etc/rsyslog.conf`, journald en `/etc/systemd/journald.conf`. Ambos pueden coexistir: journald captura los logs y los reenvia a rsyslog con `ForwardToSyslog=yes`.
 
 </div>
 </div>
@@ -523,12 +523,12 @@ subtema: "108.2"
 <div class="flashcard" data-id="108.2-fc-029">
 <div class="flashcard-front">
 
-**P:** Que es/son Comando `logger`?
+**P:** Escribe el comando `logger` para enviar el mensaje "Error en disco" con facility `local5`, prioridad `err`, y etiqueta `monitor-disco`. <input type="text" class="fill-blank" data-answer="logger -p local5.err -t monitor-disco &quot;Error en disco&quot;" data-alt="logger -t monitor-disco -p local5.err &quot;Error en disco&quot;" placeholder="$ escribe aqui...">
 
 </div>
 <div class="flashcard-back">
 
-**R:** Genera mensajes syslog desde la linea de comandos o scripts.
+**R:** `logger -p local5.err -t monitor-disco "Error en disco"`. La opcion `-p` especifica facility y prioridad en formato `facility.priority`. La opcion `-t` define la etiqueta (tag) que aparecera en el log para identificar el origen del mensaje. El texto del mensaje se pasa como argumento entre comillas. El comando `logger` es esencial en scripts de administracion para registrar eventos en syslog. Otros usos: `logger -s` envia tambien a stderr, y `logger -i` incluye el PID del proceso en el mensaje.
 
 </div>
 </div>
@@ -541,12 +541,12 @@ subtema: "108.2"
 <div class="flashcard" data-id="108.2-fc-030">
 <div class="flashcard-front">
 
-**P:** Que es/son Comando `dmesg`?
+**P:** Despues de conectar un disco USB a un servidor, necesitas verificar si el kernel lo detecto correctamente. Que comando usarias y por que?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Muestra los mensajes del buffer del anillo del kernel.
+**R:** `dmesg` o `dmesg -T` para ver los mensajes del buffer del anillo del kernel con marcas de tiempo legibles. El kernel registra en su ring buffer todos los eventos de hardware, como la deteccion de nuevos dispositivos, errores de disco o problemas de memoria. Opciones utiles: `-T` muestra timestamps legibles, `-l err` filtra por nivel de severidad, `-w` sigue los mensajes en tiempo real (similar a `tail -f`), y `-c` muestra y limpia el buffer (requiere root). Tambien se puede usar `journalctl -k` para acceder a los mismos mensajes del kernel a traves de journald.
 
 </div>
 </div>
@@ -559,12 +559,12 @@ subtema: "108.2"
 <div class="flashcard" data-id="108.2-fc-031">
 <div class="flashcard-front">
 
-**P:** Que es/son Puntos clave para el examen?
+**P:** En el examen LPIC-1 aparece la regla `cron.warning /var/log/cron.warn`. Que mensajes se registraran: solo los de prioridad `warning`, o tambien los de prioridades superiores como `err`, `crit` y `emerg`?
 
 </div>
 <div class="flashcard-back">
 
-**R:** 1. **Facilities** definen el origen del mensaje, **priorities** la severidad
+**R:** Se registraran los mensajes de prioridad `warning` Y todas las superiores (`err`, `crit`, `alert`, `emerg`). En syslog, una regla sin operador especial como `cron.warning` captura la prioridad indicada y todas las de mayor severidad. Esta es una distincion critica en el examen: sin operador = esa prioridad y superiores; con `=` (por ejemplo `cron.=warning`) = solo esa prioridad exacta; con `!` (por ejemplo `cron.!warning`) = excepto esa prioridad y superiores. El examen suele preguntar esta diferencia para confundir a los candidatos.
 
 </div>
 </div>
@@ -577,12 +577,12 @@ subtema: "108.2"
 <div class="flashcard" data-id="108.2-fc-032">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** En el examen LPIC-1 te preguntan: "Que comando muestra los intentos de login fallidos?" y las opciones son `last`, `lastb`, `lastlog` y `who`. Cual es la respuesta correcta y por que las demas son incorrectas?
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** La respuesta correcta es `lastb`. El comando `lastb` lee `/var/log/btmp` y muestra los intentos de login fallidos (requiere root). Las trampas del examen: `last` lee `/var/log/wtmp` y muestra los logins exitosos, no los fallidos. `lastlog` lee `/var/log/lastlog` y muestra la fecha del ultimo login de cada usuario, no los intentos fallidos. `who` lee `/var/run/utmp` y muestra los usuarios actualmente conectados. Los archivos `wtmp`, `btmp` y `lastlog` son binarios y no se pueden leer con `cat` o `less`, solo con sus comandos especificos.
 
 </div>
 </div>

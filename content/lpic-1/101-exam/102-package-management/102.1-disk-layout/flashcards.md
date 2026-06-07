@@ -11,9 +11,9 @@ subtema: "102.1"
 
 # Flashcards: 102.1 - Diseno De Disco
 
-> 27 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 33 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
-<div class="flashcard-deck" data-subtema="102.1">
+<div class="flashcard-deck" data-subtopic="102.1">
 </div>
 
 <div class="flashcard" data-id="102.1-fc-001">
@@ -31,7 +31,7 @@ subtema: "102.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="102.1">
+<div class="flashcard-deck" data-subtopic="102.1">
 </div>
 
 <div class="flashcard" data-id="102.1-fc-002">
@@ -49,7 +49,7 @@ subtema: "102.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="102.1">
+<div class="flashcard-deck" data-subtopic="102.1">
 </div>
 
 <div class="flashcard" data-id="102.1-fc-003">
@@ -67,7 +67,7 @@ subtema: "102.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="102.1">
+<div class="flashcard-deck" data-subtopic="102.1">
 </div>
 
 <div class="flashcard" data-id="102.1-fc-004">
@@ -85,7 +85,7 @@ subtema: "102.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="102.1">
+<div class="flashcard-deck" data-subtopic="102.1">
 </div>
 
 <div class="flashcard" data-id="102.1-fc-005">
@@ -103,7 +103,7 @@ subtema: "102.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="102.1">
+<div class="flashcard-deck" data-subtopic="102.1">
 </div>
 
 <div class="flashcard" data-id="102.1-fc-006">
@@ -121,7 +121,7 @@ subtema: "102.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="102.1">
+<div class="flashcard-deck" data-subtopic="102.1">
 </div>
 
 <div class="flashcard" data-id="102.1-fc-007">
@@ -139,7 +139,7 @@ subtema: "102.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="102.1">
+<div class="flashcard-deck" data-subtopic="102.1">
 </div>
 
 <div class="flashcard" data-id="102.1-fc-008">
@@ -157,7 +157,7 @@ subtema: "102.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="102.1">
+<div class="flashcard-deck" data-subtopic="102.1">
 </div>
 
 <div class="flashcard" data-id="102.1-fc-009">
@@ -175,7 +175,7 @@ subtema: "102.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="102.1">
+<div class="flashcard-deck" data-subtopic="102.1">
 </div>
 
 <div class="flashcard" data-id="102.1-fc-010">
@@ -193,7 +193,7 @@ subtema: "102.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="102.1">
+<div class="flashcard-deck" data-subtopic="102.1">
 </div>
 
 <div class="flashcard" data-id="102.1-fc-011">
@@ -211,7 +211,7 @@ subtema: "102.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="102.1">
+<div class="flashcard-deck" data-subtopic="102.1">
 </div>
 
 <div class="flashcard" data-id="102.1-fc-012">
@@ -229,7 +229,7 @@ subtema: "102.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="102.1">
+<div class="flashcard-deck" data-subtopic="102.1">
 </div>
 
 <div class="flashcard" data-id="102.1-fc-013">
@@ -247,7 +247,7 @@ subtema: "102.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="102.1">
+<div class="flashcard-deck" data-subtopic="102.1">
 </div>
 
 <div class="flashcard" data-id="102.1-fc-014">
@@ -265,7 +265,7 @@ subtema: "102.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="102.1">
+<div class="flashcard-deck" data-subtopic="102.1">
 </div>
 
 <div class="flashcard" data-id="102.1-fc-015">
@@ -283,7 +283,7 @@ subtema: "102.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="102.1">
+<div class="flashcard-deck" data-subtopic="102.1">
 </div>
 
 <div class="flashcard" data-id="102.1-fc-016">
@@ -301,7 +301,7 @@ subtema: "102.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="102.1">
+<div class="flashcard-deck" data-subtopic="102.1">
 </div>
 
 <div class="flashcard" data-id="102.1-fc-017">
@@ -319,7 +319,7 @@ subtema: "102.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="102.1">
+<div class="flashcard-deck" data-subtopic="102.1">
 </div>
 
 <div class="flashcard" data-id="102.1-fc-018">
@@ -337,7 +337,7 @@ subtema: "102.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="102.1">
+<div class="flashcard-deck" data-subtopic="102.1">
 </div>
 
 <div class="flashcard" data-id="102.1-fc-019">
@@ -355,7 +355,7 @@ subtema: "102.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="102.1">
+<div class="flashcard-deck" data-subtopic="102.1">
 </div>
 
 <div class="flashcard" data-id="102.1-fc-020">
@@ -373,7 +373,7 @@ subtema: "102.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="102.1">
+<div class="flashcard-deck" data-subtopic="102.1">
 </div>
 
 <div class="flashcard" data-id="102.1-fc-021">
@@ -391,7 +391,7 @@ subtema: "102.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="102.1">
+<div class="flashcard-deck" data-subtopic="102.1">
 </div>
 
 <div class="flashcard" data-id="102.1-fc-022">
@@ -409,7 +409,7 @@ subtema: "102.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="102.1">
+<div class="flashcard-deck" data-subtopic="102.1">
 </div>
 
 <div class="flashcard" data-id="102.1-fc-023">
@@ -427,7 +427,7 @@ subtema: "102.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="102.1">
+<div class="flashcard-deck" data-subtopic="102.1">
 </div>
 
 <div class="flashcard" data-id="102.1-fc-024">
@@ -445,7 +445,7 @@ subtema: "102.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="102.1">
+<div class="flashcard-deck" data-subtopic="102.1">
 </div>
 
 <div class="flashcard" data-id="102.1-fc-025">
@@ -463,36 +463,144 @@ subtema: "102.1"
 
 ---
 
-<div class="flashcard-deck" data-subtema="102.1">
+<div class="flashcard-deck" data-subtopic="102.1">
 </div>
 
 <div class="flashcard" data-id="102.1-fc-026">
 <div class="flashcard-front">
 
-**P:** Que es/son 8. /etc/fstab?
+**P:** Cuales son los 6 campos de una linea en `/etc/fstab` y que significa cada uno?
 
 </div>
 <div class="flashcard-back">
 
-**R:** El archivo `/etc/fstab` define como se montan las particiones automaticamente al arrancar el sistema.
+**R:** Los 6 campos son: **1) dispositivo** (UUID=, LABEL=, /dev/sdX), **2) punto de montaje** (/home, /var, none para swap), **3) tipo de sistema de archivos** (ext4, xfs, swap, vfat), **4) opciones de montaje** (defaults, noexec, nosuid, nodev, ro), **5) dump** (0 = no hacer backup con dump, 1 = si), **6) pass/fsck** (0 = no verificar, 1 = raiz, 2 = resto). Ejemplo completo: `UUID=a1b2c3d4 /home ext4 defaults,nosuid 0 2`. El campo mas preguntado en el examen es el sexto (pass): siempre 1 para `/`, 2 para otras particiones, 0 para swap y particiones de solo lectura.
 
 </div>
 </div>
 
 ---
 
-<div class="flashcard-deck" data-subtema="102.1">
+<div class="flashcard-deck" data-subtopic="102.1">
 </div>
 
 <div class="flashcard" data-id="102.1-fc-027">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** Escribe la secuencia completa de comandos LVM para crear un volumen logico de 20 GB llamado `lv_data` en un grupo de volumenes `vg_main` usando la particion `/dev/sdb1`. <input type="text" class="fill-blank" data-answer="pvcreate /dev/sdb1 && vgcreate vg_main /dev/sdb1 && lvcreate -L 20G -n lv_data vg_main" data-alt="pvcreate /dev/sdb1; vgcreate vg_main /dev/sdb1; lvcreate -L 20G -n lv_data vg_main" placeholder="$ escribe aqui...">
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** `pvcreate /dev/sdb1 && vgcreate vg_main /dev/sdb1 && lvcreate -L 20G -n lv_data vg_main`. El flujo LVM siempre sigue el orden PV → VG → LV: primero `pvcreate` prepara la particion como volumen fisico, luego `vgcreate` crea el grupo de volumenes agrupando los PVs, y finalmente `lvcreate` crea el volumen logico dentro del VG. La opcion `-L 20G` especifica el tamano y `-n lv_data` el nombre. El dispositivo resultante sera `/dev/vg_main/lv_data` (o `/dev/mapper/vg_main-lv_data`). Despues se debe crear un sistema de archivos con `mkfs.ext4 /dev/vg_main/lv_data`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtopic="102.1">
+</div>
+
+<div class="flashcard" data-id="102.1-fc-028">
+<div class="flashcard-front">
+
+**P:** Que es un snapshot en LVM y para que se utiliza?
+
+</div>
+<div class="flashcard-back">
+
+**R:** Un **snapshot LVM** es una copia instantanea del estado de un volumen logico en un momento determinado. Se crea con `lvcreate -s -L 5G -n snap_data /dev/vg_main/lv_data`. El snapshot no duplica todos los datos: usa la tecnica copy-on-write (COW), almacenando solo los bloques que cambian despues de la creacion. Se utiliza para: **backups consistentes** (montar el snapshot de solo lectura y copiar datos sin detener servicios), **pruebas seguras** (hacer cambios y revertir fusionando el snapshot con `lvconvert --merge`), y **actualizaciones** (crear snapshot antes de actualizar y revertir si falla). El tamano del snapshot debe ser suficiente para almacenar los cambios durante su vida util.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtopic="102.1">
+</div>
+
+<div class="flashcard" data-id="102.1-fc-029">
+<div class="flashcard-front">
+
+**P:** Tras ampliar un volumen logico ext4 con `lvextend`, que paso adicional es obligatorio y que comando se usa?
+
+</div>
+<div class="flashcard-back">
+
+**R:** Despues de `lvextend`, es obligatorio **redimensionar el sistema de archivos** para que ocupe el espacio anadido. Para ext4 se usa `resize2fs /dev/vg_main/lv_data` (sin argumentos adicionales, extiende al maximo disponible). Para XFS se usa `xfs_growfs /punto_de_montaje`. Alternativamente, `lvextend -r` (o `--resizefs`) ejecuta ambos pasos en uno solo. Esta es una trampa clasica del examen: ampliar el LV sin redimensionar el sistema de archivos no hace visible el nuevo espacio. El sistema de archivos seguira reportando el tamano original hasta que se ejecute `resize2fs` o equivalente.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtopic="102.1">
+</div>
+
+<div class="flashcard" data-id="102.1-fc-030">
+<div class="flashcard-front">
+
+**P:** Que diferencia hay entre usar UUID y nombre de dispositivo (/dev/sdX) en `/etc/fstab`, y por que es importante?
+
+</div>
+<div class="flashcard-back">
+
+**R:** Los nombres de dispositivo `/dev/sdX` pueden cambiar entre reinicios si se anaden, quitan o reordenan discos (por ejemplo, `/dev/sdb` pasa a ser `/dev/sdc`). El **UUID** (Universally Unique Identifier) es un identificador unico y permanente del sistema de archivos que nunca cambia. Por eso, usar `UUID=` en `/etc/fstab` es la practica recomendada y el metodo por defecto en las distribuciones modernas. Se obtiene con `blkid` o `lsblk -f`. Tambien se puede usar `LABEL=` si se ha asignado una etiqueta al sistema de archivos. En el examen, si una pregunta menciona que un disco "no monta tras anadir un disco nuevo", la causa probable es usar `/dev/sdX` en lugar de UUID.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtopic="102.1">
+</div>
+
+<div class="flashcard" data-id="102.1-fc-031">
+<div class="flashcard-front">
+
+**P:** En un sistema UEFI con GPT, que particion especial es necesaria ademas de la ESP cuando se usa GRUB como cargador de arranque en un disco GPT sin UEFI (BIOS legacy + GPT)?
+
+</div>
+<div class="flashcard-back">
+
+**R:** La **BIOS Boot Partition** (tipo `EF02` en GPT, tamano ~1 MB). Cuando se usa BIOS legacy (no UEFI) con un disco GPT, GRUB necesita una pequena particion sin sistema de archivos para almacenar su codigo de etapa 1.5, ya que el espacio entre el MBR y la primera particion (donde GRUB normalmente se instala en MBR) no esta disponible en GPT. Esta particion no se monta ni se formatea. No debe confundirse con la ESP (`EF00`, FAT32, `/boot/efi`), que es para sistemas UEFI. La combinacion BIOS + GPT es poco comun pero puede aparecer en el examen.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtopic="102.1">
+</div>
+
+<div class="flashcard" data-id="102.1-fc-032">
+<div class="flashcard-front">
+
+**P:** Que comando muestra el UUID de todas las particiones del sistema?
+
+</div>
+<div class="flashcard-back">
+
+**R:** `blkid`. El comando `blkid` muestra el UUID, tipo de sistema de archivos y etiqueta de todas las particiones detectadas. Ejemplo de salida: `/dev/sda1: UUID="a1b2-c3d4" TYPE="vfat" PARTUUID="..."`. Alternativas: `lsblk -f` muestra UUIDs junto con puntos de montaje en formato arbol, y `ls -l /dev/disk/by-uuid/` muestra los enlaces simbolicos UUID→dispositivo. Para usarlo en `/etc/fstab`: copiar el UUID de la salida de `blkid` y escribir `UUID=a1b2-c3d4` en el primer campo.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtopic="102.1">
+</div>
+
+<div class="flashcard" data-id="102.1-fc-033">
+<div class="flashcard-front">
+
+**P:** En el examen, una pregunta dice: "Un servidor tiene 16 GB de RAM y no necesita hibernacion. Cual es el tamano recomendado de swap?" Cual es la respuesta y por que?
+
+</div>
+<div class="flashcard-back">
+
+**R:** Con 16 GB de RAM y sin hibernacion, el swap recomendado es **4-8 GB** (la mitad de la RAM o un minimo de 4 GB). Las reglas clasicas son: RAM < 2 GB → swap = 2x RAM; RAM 2-8 GB → swap = RAM; RAM > 8 GB → swap = mitad de la RAM o minimo 4 GB. Si se necesitara hibernacion, el swap deberia ser al menos 16 GB (igual a la RAM). Trampa del examen: no confundir "recomendado" con "obligatorio". Linux puede funcionar sin swap, pero se recomienda para evitar el OOM killer cuando la RAM se agota. Tambien se puede usar un archivo de swap (`fallocate -l 4G /swapfile && mkswap /swapfile && swapon /swapfile`) en lugar de una particion dedicada.
 
 </div>
 </div>

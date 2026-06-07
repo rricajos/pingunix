@@ -559,12 +559,12 @@ subtema: "107.1"
 <div class="flashcard" data-id="107.1-fc-031">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** Un administrador quiere agregar al usuario `sandra` al grupo `docker` y ejecuta `usermod -G docker sandra`. Despues, sandra reporta que ya no puede usar `sudo`. Que ocurrio y cual es la trampa del examen aqui?
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** La trampa es la diferencia entre `-G` y `-aG` en `usermod`. Al ejecutar `usermod -G docker sandra` **sin la opcion `-a`**, se REEMPLAZAN todos los grupos secundarios de sandra por solo `docker`, eliminando su pertenencia a `sudo` y cualquier otro grupo previo. El comando correcto era `usermod -aG docker sandra` (con `-a` de append), que AGREGA el grupo sin perder los existentes. Esta es una de las trampas mas frecuentes del examen LPIC-1 en el subtema 107.1. Otras trampas criticas: (1) confundir `passwd -l` (bloquea solo contrasena, permite SSH) con `chage -E 0` (bloquea toda la cuenta); (2) confundir `userdel` (deja archivos huerfanos) con `userdel -r` (elimina home y mail spool); (3) confundir `-e` (fecha de expiracion de la cuenta) con `-d` (directorio home) en `useradd`; (4) olvidar que `chage -d 0` fuerza cambio de contrasena, no la elimina; (5) no saber que el campo 4 de `/etc/group` solo lista miembros secundarios, no los que tienen ese grupo como primario.
 
 </div>
 </div>

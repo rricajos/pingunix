@@ -595,12 +595,12 @@ subtema: "104.7"
 <div class="flashcard" data-id="104.7-fc-033">
 <div class="flashcard-front">
 
-**P:** Que es/son 1. FHS - Filesystem Hierarchy Standard?
+**P:** Una empresa migra aplicaciones entre Debian, Fedora y SUSE. El equipo necesita que los scripts de despliegue funcionen en todas las distribuciones sin modificar las rutas de instalacion. Que estandar garantiza que la estructura de directorios sea coherente entre distribuciones, y cual es su version vigente? <input type="text" class="fill-blank" data-answer="FHS" data-alt="Filesystem Hierarchy Standard,FHS 3.0" placeholder="$ escribe aqui...">
 
 </div>
 <div class="flashcard-back">
 
-**R:** El **FHS** (Filesystem Hierarchy Standard) es un estandar que define la estructura de directorios y su contenido en sistemas Linux/Unix. Su objetivo es garantizar la interoperabilidad entre distribucio
+**R:** El **FHS** (Filesystem Hierarchy Standard), actualmente en su version **3.0** (junio 2015). El FHS define la estructura de directorios y su contenido en sistemas Linux/Unix, garantizando la interoperabilidad entre distribuciones. Clasifica los directorios en dos ejes: **estatico vs. variable** (si el contenido cambia durante la operacion normal) y **compartible vs. no compartible** (si puede compartirse via red). Por ejemplo, `/usr` es estatico y compartible, `/etc` es estatico y no compartible, `/var` es variable y parcialmente compartible, y `/run` es variable y no compartible. El FHS es mantenido por la Linux Foundation y es un requisito para la certificacion LSB (Linux Standard Base). Conocer esta clasificacion es fundamental para planificar esquemas de particionado y montajes NFS en el examen LPIC-1.
 
 </div>
 </div>
@@ -613,12 +613,12 @@ subtema: "104.7"
 <div class="flashcard" data-id="104.7-fc-034">
 <div class="flashcard-front">
 
-**P:** Que es/son 4. Puntos clave para el examen?
+**P:** En un servidor Debian 12, un administrador ejecuta `ls -la /bin` y observa que es un enlace simbolico a `/usr/bin`. Sin embargo, scripts antiguos siguen usando rutas como `/bin/bash` y `/sbin/ifconfig`. Que mecanismo permite esta compatibilidad y cuales son los cuatro directorios raiz afectados?
 
 </div>
 <div class="flashcard-back">
 
-**R:** 1. **`/bin` y `/sbin`** contienen binarios esenciales. En distros modernas con **UsrMerge**, son enlaces simbolicos a `/usr/bin` y `/usr/sbin`.
+**R:** El mecanismo es **UsrMerge**. Los cuatro directorios raiz afectados son `/bin`, `/sbin`, `/lib` y `/lib64`, que se convierten en enlaces simbolicos a `/usr/bin`, `/usr/sbin`, `/usr/lib` y `/usr/lib64` respectivamente. Esto garantiza compatibilidad hacia atras: las rutas antiguas como `/bin/bash` siguen funcionando porque el enlace simbolico redirige transparentemente a `/usr/bin/bash`. Puntos clave para el examen: (1) `/bin` y `/sbin` contenian historicamente binarios esenciales para el arranque, pero con UsrMerge esta distincion desaparece. (2) `/usr/local` sigue siendo independiente y no se ve afectado por UsrMerge; es para software instalado manualmente. (3) `/opt` tampoco se ve afectado; es para software de terceros autocontenido. (4) Distribuciones que implementan UsrMerge: Fedora, Debian 12+, Ubuntu 22.04+, Arch Linux. (5) En el examen, si preguntan donde estan los binarios esenciales, la respuesta clasica sigue siendo `/bin` y `/sbin`.
 
 </div>
 </div>
@@ -631,12 +631,12 @@ subtema: "104.7"
 <div class="flashcard" data-id="104.7-fc-035">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** Un administrador necesita encontrar el binario de `iptables`, su pagina de manual y verificar si `echo` es un programa externo o un builtin. Ademas, un archivo creado hace 2 minutos no aparece con `locate`. Que comandos debe usar en cada caso y por que falla `locate`?
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** Estas son las trampas clasicas del examen LPIC-1 en el subtema 104.7: (1) Para encontrar binario + manual + fuentes de `iptables`: usar `whereis iptables` (NO `which`, que solo muestra el binario en `$PATH`). (2) Para verificar si `echo` es builtin: usar `type echo` (mostrara "echo is a shell builtin"). `which echo` devolveria `/usr/bin/echo` (la version externa), lo cual es enganoso porque el shell usa el builtin por defecto. (3) `locate` falla porque su base de datos no esta actualizada; solucion: `sudo updatedb`. Trampa: `locate` NO busca en tiempo real, usa una base de datos creada por `updatedb` (normalmente via cron diario). (4) Otras trampas frecuentes: confundir `/tmp` (se borra al reiniciar) con `/var/tmp` (persiste entre reinicios); confundir `/mnt` (montaje manual del admin) con `/media` (montaje automatico de medios extraibles); confundir `/usr/local` (software compilado por el admin) con `/opt` (software de terceros autocontenido); creer que `find -perm 4000` busca SUID cuando lo correcto es `find -perm -4000` (con guion, significa "al menos estos bits").
 
 </div>
 </div>

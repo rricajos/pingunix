@@ -559,12 +559,12 @@ subtema: "105.2"
 <div class="flashcard" data-id="105.2-fc-031">
 <div class="flashcard-front">
 
-**P:** Que es/son 9. Codigos de salida (exit codes)?
+**P:** Un script de backup termina con `exit 0` tras copiar archivos, pero si detecta un error usa `exit 1`. Un segundo script ejecuta `./backup.sh && echo "OK" || echo "FALLO"`. Si el backup falla, que se imprime y por que? Ademas, que significan los codigos 126, 127 y 128+N?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Todo comando en Linux devuelve un codigo de salida:
+**R:** Se imprime `FALLO`. Cuando `backup.sh` ejecuta `exit 1`, el codigo de salida es distinto de 0, por lo que `&&` no ejecuta `echo "OK"` (solo se ejecuta si el comando anterior devuelve 0). En cambio, `||` si se activa porque el comando anterior fallo, y ejecuta `echo "FALLO"`. Codigos estandar: `0` = exito, `1` = error generico, `2` = uso incorrecto del comando, `126` = el archivo existe pero no tiene permiso de ejecucion, `127` = comando no encontrado en el PATH, `128+N` = el proceso fue terminado por la senal N (por ejemplo, `130` = Ctrl+C que es SIGINT senal 2, `137` = SIGKILL senal 9, `143` = SIGTERM senal 15). La sentencia `exit N` en un script establece explicitamente el codigo de salida. Sin `exit`, el script devuelve el codigo del ultimo comando ejecutado. `$?` captura el codigo de salida del ultimo comando.
 
 </div>
 </div>
@@ -577,12 +577,12 @@ subtema: "105.2"
 <div class="flashcard" data-id="105.2-fc-032">
 <div class="flashcard-front">
 
-**P:** Que es/son 10. exec?
+**P:** Un administrador tiene un script `wrapper.sh` que configura variables de entorno y luego necesita ejecutar `/usr/sbin/nginx` de forma que nginx reemplace completamente al shell del script (sin dejar un proceso padre). Que comando debe usar? Ademas, si en otro script necesita redirigir toda la salida estandar al archivo `/var/log/mi_script.log` sin reemplazar el shell, como lo hace con `exec`?
 
 </div>
 <div class="flashcard-back">
 
-**R:** `exec` reemplaza el shell actual con el comando especificado (no crea un nuevo proceso):
+**R:** Para reemplazar el shell: `exec /usr/sbin/nginx`. El comando `exec` sin redirecciones reemplaza el proceso del shell actual por el comando indicado mediante la llamada al sistema `execve()`. No se crea un subproceso: el PID se mantiene, el shell deja de existir y ninguna linea posterior del script se ejecutara. Esto es comun en scripts wrapper y contenedores Docker para que la senal SIGTERM llegue directamente al proceso principal. Para redirigir sin reemplazar: `exec > /var/log/mi_script.log`. Cuando `exec` se usa solo con redirecciones (sin comando), modifica permanentemente los file descriptors del shell actual sin reemplazarlo; el script continua ejecutandose. Otros usos: `exec 2>&1` redirige stderr a stdout, `exec 3< /etc/passwd` abre el file descriptor 3 para lectura, `exec 3>&-` cierra el file descriptor 3. Esta distincion entre `exec` con comando y `exec` solo con redirecciones es un punto frecuente en el examen LPIC-1.
 
 </div>
 </div>
@@ -595,12 +595,12 @@ subtema: "105.2"
 <div class="flashcard" data-id="105.2-fc-033">
 <div class="flashcard-front">
 
-**P:** Que es/son 11. Here Documents (heredoc)?
+**P:** Un script necesita generar un archivo de configuracion `/etc/app.conf` que contiene literalmente la linea `DB_HOST=$DBSERVER` sin que la variable se expanda. Ademas, el heredoc esta dentro de una funcion indentada con tabulaciones y no se quiere que las tabulaciones aparezcan en el archivo generado. Que sintaxis de heredoc debe usarse?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Permite pasar bloques de texto como entrada estandar a un comando:
+**R:** Se debe usar `<<- 'EOF'` (guion y delimitador entre comillas simples). La combinacion `<<-` (con guion) suprime las tabulaciones iniciales de cada linea del heredoc, permitiendo indentar el bloque dentro de funciones o bucles sin que las tabulaciones aparezcan en la salida (importante: solo suprime tabulaciones, NO espacios). Las comillas simples en el delimitador `'EOF'` desactivan toda expansion de variables y sustitucion de comandos, por lo que `$DBSERVER` aparecera literalmente en el archivo generado. Ejemplo completo: `cat <<- 'EOF' > /etc/app.conf` seguido del contenido y cerrado con `EOF` sin indentacion. Comparativa de variantes: `<< EOF` permite expansion de variables y mantiene tabulaciones, `<< 'EOF'` desactiva expansion pero mantiene tabulaciones, `<<- EOF` suprime tabulaciones pero permite expansion, `<<- 'EOF'` suprime tabulaciones y desactiva expansion. Esta combinacion de opciones es un tema clasico del examen LPIC-1.
 
 </div>
 </div>
@@ -613,12 +613,12 @@ subtema: "105.2"
 <div class="flashcard" data-id="105.2-fc-034">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** En el examen LPIC-1, un script usa `[ $var = "hola" ]` y falla cuando `$var` esta vacia. Otro script usa `echo $((10/3))` y espera obtener `3.33`. Un tercer script usa `#!/bin/bash` en FreeBSD y no funciona. Explica por que falla cada caso y cual es la correccion correcta.
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** Caso 1: Cuando `$var` esta vacia, `[ $var = "hola" ]` se convierte en `[ = "hola" ]`, lo que causa un error de sintaxis `unary operator expected`. La solucion es entrecomillar siempre las variables: `[ "$var" = "hola" ]` o usar `[[ $var = "hola" ]]` (bash). Caso 2: `$((10/3))` devuelve `3`, no `3.33`, porque la aritmetica de bash solo trabaja con enteros. Para decimales se necesita `echo "scale=2; 10/3" | bc` o `awk 'BEGIN {printf "%.2f", 10/3}'`. Caso 3: En FreeBSD, bash suele estar en `/usr/local/bin/bash`, no en `/bin/bash`. La solucion portable es `#!/usr/bin/env bash`. Otras trampas frecuentes: `[ -f archivo ]` no sigue enlaces simbolicos rotos (usar `-e` o `-L`), `$*` vs `$@` sin comillas se comportan igual (la diferencia solo existe con comillas dobles), `read` sin `-r` interpreta `\` como caracter de escape, y `case` requiere `;;` (doble punto y coma) al final de cada bloque, no `;`.
 
 </div>
 </div>

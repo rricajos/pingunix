@@ -11,9 +11,9 @@ subtema: "104.6"
 
 # Flashcards: 104.6 - Enlaces Duros Y Simbolicos
 
-> 29 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 39 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
-<div class="flashcard-deck" data-subtema="104.6">
+<div class="flashcard-deck" data-subtopic="104.6">
 </div>
 
 <div class="flashcard" data-id="104.6-fc-001">
@@ -31,7 +31,7 @@ subtema: "104.6"
 
 ---
 
-<div class="flashcard-deck" data-subtema="104.6">
+<div class="flashcard-deck" data-subtopic="104.6">
 </div>
 
 <div class="flashcard" data-id="104.6-fc-002">
@@ -49,7 +49,7 @@ subtema: "104.6"
 
 ---
 
-<div class="flashcard-deck" data-subtema="104.6">
+<div class="flashcard-deck" data-subtopic="104.6">
 </div>
 
 <div class="flashcard" data-id="104.6-fc-003">
@@ -67,7 +67,7 @@ subtema: "104.6"
 
 ---
 
-<div class="flashcard-deck" data-subtema="104.6">
+<div class="flashcard-deck" data-subtopic="104.6">
 </div>
 
 <div class="flashcard" data-id="104.6-fc-004">
@@ -85,7 +85,7 @@ subtema: "104.6"
 
 ---
 
-<div class="flashcard-deck" data-subtema="104.6">
+<div class="flashcard-deck" data-subtopic="104.6">
 </div>
 
 <div class="flashcard" data-id="104.6-fc-005">
@@ -103,7 +103,7 @@ subtema: "104.6"
 
 ---
 
-<div class="flashcard-deck" data-subtema="104.6">
+<div class="flashcard-deck" data-subtopic="104.6">
 </div>
 
 <div class="flashcard" data-id="104.6-fc-006">
@@ -121,7 +121,7 @@ subtema: "104.6"
 
 ---
 
-<div class="flashcard-deck" data-subtema="104.6">
+<div class="flashcard-deck" data-subtopic="104.6">
 </div>
 
 <div class="flashcard" data-id="104.6-fc-007">
@@ -139,7 +139,7 @@ subtema: "104.6"
 
 ---
 
-<div class="flashcard-deck" data-subtema="104.6">
+<div class="flashcard-deck" data-subtopic="104.6">
 </div>
 
 <div class="flashcard" data-id="104.6-fc-008">
@@ -157,7 +157,7 @@ subtema: "104.6"
 
 ---
 
-<div class="flashcard-deck" data-subtema="104.6">
+<div class="flashcard-deck" data-subtopic="104.6">
 </div>
 
 <div class="flashcard" data-id="104.6-fc-009">
@@ -175,7 +175,7 @@ subtema: "104.6"
 
 ---
 
-<div class="flashcard-deck" data-subtema="104.6">
+<div class="flashcard-deck" data-subtopic="104.6">
 </div>
 
 <div class="flashcard" data-id="104.6-fc-010">
@@ -193,7 +193,7 @@ subtema: "104.6"
 
 ---
 
-<div class="flashcard-deck" data-subtema="104.6">
+<div class="flashcard-deck" data-subtopic="104.6">
 </div>
 
 <div class="flashcard" data-id="104.6-fc-011">
@@ -211,7 +211,7 @@ subtema: "104.6"
 
 ---
 
-<div class="flashcard-deck" data-subtema="104.6">
+<div class="flashcard-deck" data-subtopic="104.6">
 </div>
 
 <div class="flashcard" data-id="104.6-fc-012">
@@ -229,7 +229,7 @@ subtema: "104.6"
 
 ---
 
-<div class="flashcard-deck" data-subtema="104.6">
+<div class="flashcard-deck" data-subtopic="104.6">
 </div>
 
 <div class="flashcard" data-id="104.6-fc-013">
@@ -247,7 +247,7 @@ subtema: "104.6"
 
 ---
 
-<div class="flashcard-deck" data-subtema="104.6">
+<div class="flashcard-deck" data-subtopic="104.6">
 </div>
 
 <div class="flashcard" data-id="104.6-fc-014">
@@ -265,7 +265,7 @@ subtema: "104.6"
 
 ---
 
-<div class="flashcard-deck" data-subtema="104.6">
+<div class="flashcard-deck" data-subtopic="104.6">
 </div>
 
 <div class="flashcard" data-id="104.6-fc-015">
@@ -283,7 +283,7 @@ subtema: "104.6"
 
 ---
 
-<div class="flashcard-deck" data-subtema="104.6">
+<div class="flashcard-deck" data-subtopic="104.6">
 </div>
 
 <div class="flashcard" data-id="104.6-fc-016">
@@ -301,7 +301,7 @@ subtema: "104.6"
 
 ---
 
-<div class="flashcard-deck" data-subtema="104.6">
+<div class="flashcard-deck" data-subtopic="104.6">
 </div>
 
 <div class="flashcard" data-id="104.6-fc-017">
@@ -319,7 +319,7 @@ subtema: "104.6"
 
 ---
 
-<div class="flashcard-deck" data-subtema="104.6">
+<div class="flashcard-deck" data-subtopic="104.6">
 </div>
 
 <div class="flashcard" data-id="104.6-fc-018">
@@ -337,7 +337,7 @@ subtema: "104.6"
 
 ---
 
-<div class="flashcard-deck" data-subtema="104.6">
+<div class="flashcard-deck" data-subtopic="104.6">
 </div>
 
 <div class="flashcard" data-id="104.6-fc-019">
@@ -355,7 +355,7 @@ subtema: "104.6"
 
 ---
 
-<div class="flashcard-deck" data-subtema="104.6">
+<div class="flashcard-deck" data-subtopic="104.6">
 </div>
 
 <div class="flashcard" data-id="104.6-fc-020">
@@ -373,7 +373,7 @@ subtema: "104.6"
 
 ---
 
-<div class="flashcard-deck" data-subtema="104.6">
+<div class="flashcard-deck" data-subtopic="104.6">
 </div>
 
 <div class="flashcard" data-id="104.6-fc-021">
@@ -391,7 +391,7 @@ subtema: "104.6"
 
 ---
 
-<div class="flashcard-deck" data-subtema="104.6">
+<div class="flashcard-deck" data-subtopic="104.6">
 </div>
 
 <div class="flashcard" data-id="104.6-fc-022">
@@ -409,7 +409,7 @@ subtema: "104.6"
 
 ---
 
-<div class="flashcard-deck" data-subtema="104.6">
+<div class="flashcard-deck" data-subtopic="104.6">
 </div>
 
 <div class="flashcard" data-id="104.6-fc-023">
@@ -427,7 +427,7 @@ subtema: "104.6"
 
 ---
 
-<div class="flashcard-deck" data-subtema="104.6">
+<div class="flashcard-deck" data-subtopic="104.6">
 </div>
 
 <div class="flashcard" data-id="104.6-fc-024">
@@ -445,7 +445,7 @@ subtema: "104.6"
 
 ---
 
-<div class="flashcard-deck" data-subtema="104.6">
+<div class="flashcard-deck" data-subtopic="104.6">
 </div>
 
 <div class="flashcard" data-id="104.6-fc-025">
@@ -463,72 +463,252 @@ subtema: "104.6"
 
 ---
 
-<div class="flashcard-deck" data-subtema="104.6">
+<div class="flashcard-deck" data-subtopic="104.6">
 </div>
 
 <div class="flashcard" data-id="104.6-fc-026">
 <div class="flashcard-front">
 
-**P:** Que es/son 1. Conceptos fundamentales: Inodos?
+**P:** Que ocurre con el espacio en disco cuando se crea un enlace duro vs un enlace simbolico vs una copia con `cp`?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Para entender los enlaces, primero hay que entender los **inodos**.
+**R:** Un enlace duro NO consume espacio adicional de datos; solo anade una entrada de directorio (unos pocos bytes). Los datos en disco se comparten a traves del mismo inodo. Un enlace simbolico consume un espacio minimo: su propio inodo y la cadena de texto con la ruta destino (tamaño = longitud de la ruta). Una copia con `cp` duplica completamente los datos, consumiendo el mismo espacio que el archivo original. Por eso los enlaces duros son ideales para "copias de seguridad" dentro del mismo filesystem: multiples nombres para los mismos datos sin duplicar espacio. `cp -l` crea enlaces duros en lugar de copiar, combinando la sintaxis de cp con la eficiencia de ln.
 
 </div>
 </div>
 
 ---
 
-<div class="flashcard-deck" data-subtema="104.6">
+<div class="flashcard-deck" data-subtopic="104.6">
 </div>
 
 <div class="flashcard" data-id="104.6-fc-027">
 <div class="flashcard-front">
 
-**P:** Que es/son 4. Tabla comparativa: enlaces duros vs simbolicos?
+**P:** Que sucede si ejecutas `cp -s origen.txt destino.txt`? Y `cp -l origen.txt destino.txt`?
 
 </div>
 <div class="flashcard-back">
 
-**R:** | Caracteristica | Enlace duro | Enlace simbolico |
+**R:** `cp -s` crea un enlace simbolico en lugar de copiar (equivalente a `ln -s origen.txt destino.txt`). `cp -l` crea un enlace duro en lugar de copiar (equivalente a `ln origen.txt destino.txt`). Ambas opciones evitan duplicar datos en disco. La opcion `-l` es especialmente util con `cp -al directorio/ backup/` para crear un "snapshot" de un directorio completo usando enlaces duros, donde solo los archivos que cambien despues ocuparan espacio adicional. Esta tecnica es la base de herramientas como `rsync --link-dest` para backups incrementales eficientes.
 
 </div>
 </div>
 
 ---
 
-<div class="flashcard-deck" data-subtema="104.6">
+<div class="flashcard-deck" data-subtopic="104.6">
 </div>
 
 <div class="flashcard" data-id="104.6-fc-028">
 <div class="flashcard-front">
 
-**P:** Que es/son 7. Puntos clave para el examen?
+**P:** Trampa del examen: si haces `ln -s archivo.txt enlace.txt` y luego `mv archivo.txt archivo_renombrado.txt`, que pasa con el enlace?
 
 </div>
 <div class="flashcard-back">
 
-**R:** 1. **`ln`** crea enlaces duros. **`ln -s`** crea enlaces simbolicos.
+**R:** El enlace simbolico se ROMPE. `enlace.txt` sigue apuntando a la ruta `archivo.txt`, que ya no existe porque fue renombrado. Los enlaces simbolicos almacenan la ruta como texto, no el inodo. Si el destino se mueve o renombra, el enlace queda roto (dangling). En cambio, un enlace duro NO se romperia porque apunta directamente al inodo, no al nombre. El `mv` solo cambia la entrada de directorio pero el inodo permanece igual. Esta es una diferencia critica para el examen: mover/renombrar el destino rompe los enlaces simbolicos pero no afecta a los enlaces duros (dentro del mismo filesystem).
 
 </div>
 </div>
 
 ---
 
-<div class="flashcard-deck" data-subtema="104.6">
+<div class="flashcard-deck" data-subtopic="104.6">
 </div>
 
 <div class="flashcard" data-id="104.6-fc-029">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** Que comando muestra el conteo de enlaces duros, el inodo y la informacion completa de un archivo?
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** `stat archivo`. El comando `stat` muestra informacion detallada del inodo: numero de inodo (Inode), tamaño, bloques, tipo de archivo, permisos, UID/GID, timestamps (Access, Modify, Change) y el conteo de enlaces (Links). El conteo de enlaces indica cuantas entradas de directorio apuntan al mismo inodo. Un archivo regular sin enlaces duros adicionales tiene Links: 1. Con `ls -li` se puede ver el inodo (opcion `-i`) y el conteo de enlaces (segundo campo de `ls -l`). El timestamp Change (ctime) se actualiza cuando cambian los metadatos del inodo (permisos, propietario, conteo de enlaces), no el contenido.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtopic="104.6">
+</div>
+
+<div class="flashcard" data-id="104.6-fc-030">
+<div class="flashcard-front">
+
+**P:** Por que Linux no permite a los usuarios crear enlaces duros a directorios?
+
+</div>
+<div class="flashcard-back">
+
+**R:** Porque crearia ciclos en el arbol de directorios, causando bucles infinitos en herramientas como `find`, `du` y `rm -r`. Si un directorio tuviera un enlace duro a un ancestro, el sistema de archivos dejaria de ser un arbol y se convertiria en un grafo con ciclos. Las unicas excepciones son `.` y `..`, que el kernel gestiona internamente de forma segura. Los enlaces simbolicos a directorios SI estan permitidos porque las herramientas pueden detectarlos (tipo `l` en el inodo) y decidir si seguirlos o no (`find -L` sigue enlaces, `find` sin `-L` no los sigue). El error que se obtiene al intentar `ln directorio enlace` es: "hard link not allowed for directory".
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtopic="104.6">
+</div>
+
+<div class="flashcard" data-id="104.6-fc-031">
+<div class="flashcard-front">
+
+**P:** Que diferencia hay entre `rm archivo.txt` y `unlink archivo.txt`?
+
+</div>
+<div class="flashcard-back">
+
+**R:** Funcionalmente son casi identicos: ambos eliminan una entrada de directorio, decrementando el conteo de enlaces del inodo. Los datos se liberan solo cuando el conteo llega a 0 y ningun proceso tiene el archivo abierto. La diferencia es que `unlink` es mas simple: solo acepta un archivo (no directorios, no opciones como `-r` o `-f`). `rm` es mas versatil: acepta multiples archivos, opciones recursivas (`-r`), forzar (`-f`), interactivo (`-i`), etc. El nombre `unlink` refleja mejor lo que realmente ocurre: no se "borran" datos, se elimina un enlace (nombre) al inodo. El termino "borrar" es una simplificacion.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtopic="104.6">
+</div>
+
+<div class="flashcard" data-id="104.6-fc-032">
+<div class="flashcard-front">
+
+**P:** Un proceso tiene abierto un archivo con `fd` (file descriptor). Se ejecuta `rm archivo.txt` y el conteo de enlaces llega a 0. Se liberan los datos del disco?
+
+</div>
+<div class="flashcard-back">
+
+**R:** NO. Los datos persisten en disco mientras algun proceso tenga el archivo abierto (tenga un file descriptor activo). El kernel mantiene el inodo "vivo" hasta que se cierra el ultimo file descriptor. Este comportamiento es util: un programa puede seguir leyendo/escribiendo un archivo "borrado". Los datos se liberan solo cuando el conteo de enlaces es 0 Y no hay ningun proceso con el archivo abierto. Se pueden encontrar estos archivos "borrados pero abiertos" con `lsof +L1` (archivos con link count < 1). Este caso es una fuente comun de espacio en disco que no se recupera hasta reiniciar el proceso.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtopic="104.6">
+</div>
+
+<div class="flashcard" data-id="104.6-fc-033">
+<div class="flashcard-front">
+
+**P:** Escribe el comando para crear un enlace simbolico relativo llamado `current` que apunte a `v2.1` dentro del mismo directorio. <input type="text" class="fill-blank" data-answer="ln -s v2.1 current" data-alt="ln -sr v2.1 current" placeholder="$ escribe aqui...">
+
+</div>
+<div class="flashcard-back">
+
+**R:** ln -s v2.1 current. Cuando el destino y el enlace estan en el mismo directorio, una ruta relativa simple funciona correctamente. Este patron es muy comun en Linux: `/usr/bin/python -> python3.11`, `/etc/alternatives/editor -> /usr/bin/vim`. Para cambiar la version, se elimina el enlace y se crea uno nuevo: `rm current && ln -s v2.2 current`, o con `ln -sf v2.2 current` (la opcion `-f` sobreescribe el enlace existente). La opcion `-r` de GNU ln calcula automaticamente la ruta relativa correcta incluso si los directorios son diferentes.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtopic="104.6">
+</div>
+
+<div class="flashcard" data-id="104.6-fc-034">
+<div class="flashcard-front">
+
+**P:** Que opcion de `ln` permite sobreescribir un enlace simbolico existente sin tener que borrarlo primero?
+
+</div>
+<div class="flashcard-back">
+
+**R:** `ln -sf destino enlace`. La opcion `-f` (force) elimina automaticamente el enlace existente antes de crear el nuevo. Esto es util para actualizar enlaces simbolicos de forma atomica, como cambiar la version activa de un programa: `ln -sf /opt/app-v2.0 /opt/app-current`. Sin `-f`, si el enlace ya existe, `ln` fallaria con "File exists". Tambien existe la opcion `-n` que trata al enlace existente como archivo normal (no sigue el enlace), util cuando el destino es un directorio para evitar crear el enlace DENTRO del directorio en lugar de reemplazarlo.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtopic="104.6">
+</div>
+
+<div class="flashcard" data-id="104.6-fc-035">
+<div class="flashcard-front">
+
+**P:** Trampa del examen: un enlace simbolico muestra permisos `lrwxrwxrwx`. Significa esto que cualquier usuario puede modificar el archivo destino?
+
+</div>
+<div class="flashcard-back">
+
+**R:** NO. Los permisos del enlace simbolico (`lrwxrwxrwx`) son irrelevantes y no afectan al acceso. Linux ignora los permisos del propio enlace simbolico; lo que importa son los permisos del archivo DESTINO al que apunta. Cuando se accede a traves de un enlace simbolico, el kernel sigue el enlace y aplica los permisos del archivo real. Por eso `chmod` aplicado a un enlace simbolico modifica los permisos del destino, no del enlace. Los permisos `777` en el enlace son solo cosmeticos y no se pueden cambiar (no tienen sentido). Esta distincion es una trampa frecuente del examen LPIC-1.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtopic="104.6">
+</div>
+
+<div class="flashcard" data-id="104.6-fc-036">
+<div class="flashcard-front">
+
+**P:** Escribe el comando para encontrar todos los archivos que son enlaces duros al mismo inodo que `archivo.txt`. <input type="text" class="fill-blank" data-answer="find / -samefile archivo.txt" data-alt="find / -inum $(stat -c %i archivo.txt)" placeholder="$ escribe aqui...">
+
+</div>
+<div class="flashcard-back">
+
+**R:** find / -samefile archivo.txt. La opcion `-samefile` de `find` busca todos los archivos que comparten el mismo inodo que el archivo especificado, es decir, todos los enlaces duros. Alternativa: `find / -inum $(stat -c %i archivo.txt)` que primero obtiene el numero de inodo con `stat` y luego busca con `-inum`. Ambos metodos encuentran TODOS los nombres (entradas de directorio) que apuntan al mismo inodo en el filesystem. Nota: la busqueda solo encontrara enlaces duros dentro del mismo sistema de archivos, ya que los inodos son unicos por filesystem.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtopic="104.6">
+</div>
+
+<div class="flashcard" data-id="104.6-fc-037">
+<div class="flashcard-front">
+
+**P:** Que diferencia hay entre `find -L /dir -type f` y `find /dir -type f` cuando hay enlaces simbolicos?
+
+</div>
+<div class="flashcard-back">
+
+**R:** Sin `-L`, `find` NO sigue enlaces simbolicos: un enlace a un archivo se reporta como tipo `l` (enlace), no como `f` (archivo), y un enlace a un directorio no se recorre. Con `-L`, `find` sigue todos los enlaces simbolicos: evalua el tipo del destino en lugar del enlace, y recorre directorios enlazados. Ejemplo: si `/dir/enlace -> /otro/archivo.txt`, sin `-L` no apareceria con `-type f` (es tipo `l`); con `-L` si apareceria (el destino es tipo `f`). Cuidado: `-L` puede causar bucles infinitos si hay enlaces circulares. Existe tambien `-H` que solo sigue enlaces en los argumentos de la linea de comandos.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtopic="104.6">
+</div>
+
+<div class="flashcard" data-id="104.6-fc-038">
+<div class="flashcard-front">
+
+**P:** Cual es la diferencia entre el ctime (change time) y el mtime (modification time) de un inodo, y como se relaciona con los enlaces?
+
+</div>
+<div class="flashcard-back">
+
+**R:** `mtime` se actualiza cuando cambia el CONTENIDO del archivo (escritura de datos). `ctime` se actualiza cuando cambian los METADATOS del inodo: permisos, propietario, conteo de enlaces, etc. Crear un enlace duro actualiza el `ctime` (cambia el conteo de enlaces en el inodo) pero NO el `mtime` (los datos no cambian). `chmod` actualiza `ctime` pero no `mtime`. Editar el archivo actualiza ambos. El `ctime` no se puede modificar manualmente con `touch` (a diferencia del `mtime` y `atime`). Se consultan con `stat archivo`. En el examen pueden preguntar cual timestamp se modifica al crear un enlace duro: la respuesta es `ctime`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtopic="104.6">
+</div>
+
+<div class="flashcard" data-id="104.6-fc-039">
+<div class="flashcard-front">
+
+**P:** Escribe el comando para actualizar un enlace simbolico existente `/opt/app` para que apunte a `/opt/app-v3` sin borrarlo manualmente primero. <input type="text" class="fill-blank" data-answer="ln -sf /opt/app-v3 /opt/app" data-alt="ln -snf /opt/app-v3 /opt/app" placeholder="$ escribe aqui...">
+
+</div>
+<div class="flashcard-back">
+
+**R:** ln -sf /opt/app-v3 /opt/app. La opcion `-f` (force) elimina el enlace existente antes de crear el nuevo. Si el destino es un directorio, se recomienda usar `-snf`: la `-n` evita que ln entre en el directorio enlazado y cree el enlace DENTRO en lugar de reemplazarlo. Este patron es estandar para gestionar versiones de aplicaciones en Linux: `/opt/app -> /opt/app-v2` se actualiza a `/opt/app -> /opt/app-v3` de forma atomica. Otros ejemplos comunes: `/usr/bin/python -> python3`, `/etc/alternatives/*`.
 
 </div>
 </div>

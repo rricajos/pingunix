@@ -613,12 +613,12 @@ subtema: "103.1"
 <div class="flashcard" data-id="103.1-fc-034">
 <div class="flashcard-front">
 
-**P:** Que es/son 8. Paginas info?
+**P:** Un administrador necesita consultar la documentacion completa del comando `coreutils` con navegacion por nodos e hiperenlaces. Las paginas `man` son demasiado breves. Que comando debe usar y como se navega entre nodos?
 
 </div>
 <div class="flashcard-back">
 
-**R:** El sistema **info** proporciona documentacion mas detallada que man, organizada en nodos con hiperenlaces (estilo hipertexto).
+**R:** Debe usar `info coreutils`. El sistema **info** (GNU Texinfo) proporciona documentacion mas detallada que `man`, organizada en **nodos** con hiperenlaces. Navegacion clave: `n` (siguiente nodo), `p` (nodo anterior), `u` (subir un nivel), `Enter` (seguir enlace), `l` (volver al nodo anterior visitado), `q` (salir). A diferencia de `man`, que muestra una sola pagina lineal, `info` estructura la documentacion como un arbol de nodos interconectados. Si no existe una pagina info para un comando, `info` muestra la pagina man como alternativa. En el examen LPIC-1, preguntan la diferencia entre `man`, `info` y `help`.
 
 </div>
 </div>
@@ -631,12 +631,12 @@ subtema: "103.1"
 <div class="flashcard" data-id="103.1-fc-035">
 <div class="flashcard-front">
 
-**P:** Que es/son 9. Alias?
+**P:** Un usuario quiere crear un alias permanente llamado `ll` que ejecute `ls -la --color=auto` y que funcione en todas las sesiones de bash. Donde debe definirlo y como evitarlo temporalmente cuando necesite ejecutar el comando original?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Los alias permiten crear atajos para comandos largos o frecuentes.
+**R:** Debe definir `alias ll='ls -la --color=auto'` en el archivo `~/.bashrc` (para shells interactivos no-login) o en `~/.bash_profile` (para shells de login, que normalmente hace `source ~/.bashrc`). Para **evitar el alias temporalmente** y ejecutar el comando original, hay tres formas: `\ls` (barra invertida), `command ls` o usar la ruta completa `/usr/bin/ls`. El comando `alias` sin argumentos muestra todos los alias activos. `alias nombre='comando'` crea un alias en la sesion actual. `unalias nombre` lo elimina de la sesion. Los alias definidos solo en la terminal se pierden al cerrar la sesion.
 
 </div>
 </div>
@@ -649,12 +649,12 @@ subtema: "103.1"
 <div class="flashcard" data-id="103.1-fc-036">
 <div class="flashcard-front">
 
-**P:** Que es/son 10. Expansion de llaves?
+**P:** Que resultado produce el comando `echo file{1..5}.txt` y en que se diferencia de `echo file{1,3,5}.txt`? <input type="text" class="fill-blank" data-answer="file1.txt file2.txt file3.txt file4.txt file5.txt" data-alt="" placeholder="$ escribe aqui...">
 
 </div>
 <div class="flashcard-back">
 
-**R:** La expansion de llaves genera cadenas arbitrarias. **No depende de la existencia de archivos** (a diferencia del globbing).
+**R:** `echo file{1..5}.txt` produce `file1.txt file2.txt file3.txt file4.txt file5.txt` (secuencia numerica del 1 al 5). `echo file{1,3,5}.txt` produce `file1.txt file3.txt file5.txt` (solo los elementos listados). La expansion de llaves tiene dos formas: **listas** `{a,b,c}` y **rangos** `{1..10}` o `{a..z}`. Tambien admite incremento: `{0..20..5}` genera `0 5 10 15 20`. La clave para el examen: la expansion de llaves **no depende de archivos existentes** (genera cadenas puras), mientras que el globbing (`*`, `?`, `[]`) solo coincide con archivos que existan en el directorio.
 
 </div>
 </div>
@@ -667,12 +667,12 @@ subtema: "103.1"
 <div class="flashcard" data-id="103.1-fc-037">
 <div class="flashcard-front">
 
-**P:** Que es/son 11. Globbing (comodines de archivos)?
+**P:** En un directorio existen los archivos: `nota1.txt`, `nota2.txt`, `nota10.txt`, `notas.txt`, `imagen.png`. Que archivos devuelve el patron `nota?.txt` y por que `nota10.txt` no coincide?
 
 </div>
 <div class="flashcard-back">
 
-**R:** El globbing permite hacer coincidir nombres de archivo usando patrones. **A diferencia de la expansion de llaves, el globbing depende de los archivos que existan**.
+**R:** `nota?.txt` devuelve solo `nota1.txt` y `nota2.txt`. El comodin `?` coincide con **exactamente un caracter**, por lo que `nota10.txt` no coincide (tiene dos caracteres `10` donde `?` espera uno solo). Comodines de globbing: `*` coincide con cero o mas caracteres (`nota*.txt` devolveria los cuatro .txt). `?` coincide con exactamente un caracter. `[abc]` coincide con un caracter de la lista. `[0-9]` coincide con un digito. `[!a-z]` o `[^a-z]` coincide con cualquier caracter que **no** este en el rango. A diferencia de la expansion de llaves, el globbing **solo devuelve archivos que existan** en el sistema de archivos.
 
 </div>
 </div>
@@ -685,12 +685,12 @@ subtema: "103.1"
 <div class="flashcard" data-id="103.1-fc-038">
 <div class="flashcard-front">
 
-**P:** Que es/son 12. El comando exec?
+**P:** Un script de bash necesita redirigir **toda** su salida estandar a un archivo `salida.log` sin modificar cada comando individualmente. Ademas, al final del script se quiere lanzar `/usr/bin/app` sin dejar el shell en memoria. Que dos usos de `exec` resuelven estas situaciones?
 
 </div>
 <div class="flashcard-back">
 
-**R:** `exec` reemplaza el shell actual con el comando especificado. **El shell deja de existir** y es sustituido por el nuevo proceso. No se crea proceso hijo.
+**R:** **Uso 1 - Redireccion global:** `exec > salida.log` redirige toda la salida estandar (stdout) del shell al archivo para el resto del script. Se puede combinar: `exec > salida.log 2>&1` para redirigir tambien stderr. No reemplaza el shell, solo modifica los descriptores de archivo. **Uso 2 - Reemplazo del proceso:** `exec /usr/bin/app` reemplaza el shell actual por `/usr/bin/app`. El shell deja de existir, no se crea proceso hijo y al terminar la app el terminal se cierra. Esto ahorra memoria porque no queda un shell padre esperando. En el examen preguntan ambos usos de `exec`.
 
 </div>
 </div>
@@ -703,12 +703,12 @@ subtema: "103.1"
 <div class="flashcard" data-id="103.1-fc-039">
 <div class="flashcard-front">
 
-**P:** Que es/son 13. El comando uname?
+**P:** Escribe el comando para ver informacion detallada del kernel incluyendo arquitectura, nombre del host y version del sistema operativo, todo en una sola linea. <input type="text" class="fill-blank" data-answer="uname -a" data-alt="uname --all" placeholder="$ escribe aqui...">
 
 </div>
 <div class="flashcard-back">
 
-**R:** Muestra informacion del sistema:
+**R:** `uname -a` (equivalente a `uname --all`). Muestra toda la informacion del sistema en una linea: nombre del kernel, hostname, version del kernel, fecha de compilacion, arquitectura del procesador y sistema operativo. Opciones individuales mas importantes: `-s` nombre del kernel (Linux), `-n` nombre del host, `-r` version del kernel (ej: `5.15.0-52-generic`), `-m` arquitectura del hardware (ej: `x86_64`), `-o` sistema operativo (ej: `GNU/Linux`). Para el examen: `uname -r` es el mas preguntado (version del kernel) y `uname -m` para la arquitectura.
 
 </div>
 </div>
@@ -721,12 +721,12 @@ subtema: "103.1"
 <div class="flashcard" data-id="103.1-fc-040">
 <div class="flashcard-front">
 
-**P:** Que es/son 15. El comando `hash`?
+**P:** Un administrador instala una nueva version de `python3` en `/usr/local/bin/python3`, pero al ejecutar `python3` el shell sigue usando la version antigua en `/usr/bin/python3`. Que esta ocurriendo y como se soluciona? <input type="text" class="fill-blank" data-answer="hash -r" data-alt="hash -d python3" placeholder="$ escribe aqui...">
 
 </div>
 <div class="flashcard-back">
 
-**R:** El shell bash mantiene una **tabla hash interna** que almacena las rutas de los comandos externos ya ejecutados. Esto evita que el shell tenga que buscar en todos los directorios de `$PATH` cada vez qu
+**R:** El shell bash mantiene una **tabla hash interna** que cachea las rutas de los comandos externos ya ejecutados. Como `python3` ya fue usado, bash recuerda su ruta antigua (`/usr/bin/python3`) y no vuelve a buscar en `$PATH`. Solucion: `hash -r` (limpia toda la tabla hash) o `hash -d python3` (elimina solo la entrada de python3). Comandos utiles: `hash` sin opciones muestra la tabla actual con el numero de veces que se uso cada comando. `hash -t python3` muestra la ruta almacenada. La tabla hash se limpia automaticamente al iniciar un nuevo shell.
 
 </div>
 </div>
@@ -739,12 +739,12 @@ subtema: "103.1"
 <div class="flashcard" data-id="103.1-fc-041">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** TRAMPAS DEL EXAMEN 103.1: Un usuario ejecuta `echo ~root` y `echo '~root'`. Obtiene resultados diferentes. Ademas, confunde `source script.sh` con `./script.sh`. Explica ambas trampas.
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** **Trampa 1 - Expansion de tilde:** `echo ~root` expande a `/root` (directorio home del usuario root), pero `echo '~root'` muestra literalmente `~root` porque las comillas simples impiden toda expansion. Las comillas dobles tambien evitan la expansion de `~`. **Trampa 2 - source vs ejecucion:** `source script.sh` (o `. script.sh`) ejecuta el script **en el shell actual** (las variables y cambios de directorio persisten). `./script.sh` ejecuta el script en un **subshell** (los cambios no afectan al shell padre). Otras trampas frecuentes: confundir `env` (solo variables exportadas) con `set` (todas las variables); confundir `type` (identifica builtins) con `which` (solo busca en PATH); olvidar que `&&` depende del exit code 0 mientras `;` ejecuta siempre.
 
 </div>
 </div>

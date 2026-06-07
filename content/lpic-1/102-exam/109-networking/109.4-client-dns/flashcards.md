@@ -541,12 +541,12 @@ subtema: "109.4"
 <div class="flashcard" data-id="109.4-fc-030">
 <div class="flashcard-front">
 
-**P:** Que es/son Puntos clave para el examen?
+**P:** Un administrador configura `/etc/resolv.conf` con 5 lineas `nameserver` y ambas directivas `domain` y `search`. Al ejecutar `dig ejemplo.com`, la resolucion falla de forma intermitente. Cuales son los dos problemas de configuracion?
 
 </div>
 <div class="flashcard-back">
 
-**R:** 1. **`/etc/resolv.conf`**: Maximo 3 `nameserver`; `domain` y `search` son mutuamente excluyentes
+**R:** Hay dos errores criticos. Primero, `/etc/resolv.conf` solo admite un maximo de 3 directivas `nameserver`; las lineas adicionales (4 y 5) se ignoran silenciosamente, lo que puede causar fallos si los tres primeros servidores no estan disponibles. Segundo, las directivas `domain` y `search` son mutuamente excluyentes: cuando ambas estan presentes, solo se aplica la ultima definida en el archivo, lo que puede provocar que los nombres cortos no se resuelvan con el dominio esperado. La solucion es eliminar los `nameserver` sobrantes y usar solo una de las dos directivas (`search` es mas flexible porque acepta multiples dominios de busqueda).
 
 </div>
 </div>
@@ -559,12 +559,12 @@ subtema: "109.4"
 <div class="flashcard" data-id="109.4-fc-031">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** Un tecnico ejecuta `dig ejemplo.com` y obtiene la IP correcta, pero `ping ejemplo.com` resuelve a una IP diferente definida en `/etc/hosts`. Cual es la explicacion y que herramienta deberia usar para verificar la resolucion real del sistema?
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** La diferencia se debe a que `dig` consulta directamente al servidor DNS sin pasar por `/etc/nsswitch.conf` ni `/etc/hosts`, mientras que `ping` usa el mecanismo completo de NSS. Si `/etc/nsswitch.conf` tiene `hosts: files dns`, el sistema busca primero en `/etc/hosts` antes de consultar DNS, y esa es la IP que `ping` usa. Para verificar como el sistema realmente resuelve un nombre (igual que lo haria cualquier aplicacion), se debe usar `getent hosts ejemplo.com`, que sigue el orden de nsswitch. Esta es una trampa clasica del examen LPIC-1: confundir la consulta DNS directa (`dig`, `host`, `nslookup`) con la resolucion real del sistema (`getent`). Otra trampa frecuente es confundir `systemd-resolve` (comando antiguo) con `resolvectl` (comando actual), y olvidar que systemd-resolved escucha en `127.0.0.53`, no en `127.0.0.1`.
 
 </div>
 </div>

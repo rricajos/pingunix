@@ -559,12 +559,12 @@ subtema: "103.7"
 <div class="flashcard" data-id="103.7-fc-031">
 <div class="flashcard-front">
 
-**P:** Que es/son 1. Que son las expresiones regulares?
+**P:** Un script necesita validar que el campo "usuario" de un CSV solo contenga letras minusculas y guiones bajos (sin espacios ni caracteres especiales). Cual de las siguientes herramientas usarias y por que?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Las **expresiones regulares** (regex o regexp) son patrones de texto que describen un conjunto de cadenas posibles. Permiten buscar, comparar y manipular texto de forma flexible y potente.
+**R:** `grep -E "^[a-z_]+$" usuarios.csv` o su equivalente con `sed`/`awk`. Las expresiones regulares permiten definir patrones que describen conjuntos de cadenas validas. El patron `^[a-z_]+$` verifica que toda la linea (de `^` a `$`) contenga solo letras minusculas y guiones bajos (`[a-z_]`), con al menos un caracter (`+`). Herramientas como `grep`, `sed` y `awk` usan expresiones regulares para buscar, filtrar y transformar texto. Sin regex, esta validacion requeriria logica de programacion mucho mas compleja.
 
 </div>
 </div>
@@ -577,12 +577,12 @@ subtema: "103.7"
 <div class="flashcard" data-id="103.7-fc-032">
 <div class="flashcard-front">
 
-**P:** Que es/son 7. Clases de caracteres POSIX?
+**P:** Un administrador necesita buscar lineas que contengan letras con acentos y caracteres especiales del espanol (como n) en un archivo de configuracion. El comando `grep "[a-zA-Z]" config.txt` no los detecta. Cual es la solucion correcta?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Las clases POSIX funcionan dentro de corchetes `[[:clase:]]`:
+**R:** Usar la clase POSIX `[[:alpha:]]` en lugar de `[a-zA-Z]`. Las clases de caracteres POSIX son conscientes de la configuracion locale del sistema y capturan caracteres acentuados y especificos del idioma. `[a-zA-Z]` solo cubre las 26 letras ASCII basicas. Las clases POSIX mas importantes son: `[[:alpha:]]` = letras (incluyendo acentuadas), `[[:digit:]]` = digitos (equivale a `[0-9]`), `[[:alnum:]]` = letras y digitos, `[[:space:]]` = espacios en blanco (espacio, tab, newline), `[[:upper:]]` / `[[:lower:]]` = mayusculas/minusculas, `[[:punct:]]` = signos de puntuacion. Requieren dobles corchetes: los externos son la clase de caracteres y los internos la clase POSIX.
 
 </div>
 </div>
@@ -595,12 +595,12 @@ subtema: "103.7"
 <div class="flashcard" data-id="103.7-fc-033">
 <div class="flashcard-front">
 
-**P:** Que es/son 8. Secuencias de escape comunes?
+**P:** Un colega escribe `grep "\d+" datos.txt` para buscar numeros pero no obtiene resultados en un sistema con grep antiguo. Tu ejecutas `grep "[0-9]\+" datos.txt` y funciona correctamente. Que explica la diferencia?
 
 </div>
 <div class="flashcard-back">
 
-**R:** | Secuencia | Significado | Equivalente |
+**R:** `\d` es una secuencia de escape que no forma parte del estandar POSIX BRE/ERE; es una extension de Perl (PCRE) que puede no funcionar en todas las versiones de GNU grep. Las secuencias de escape comunes en grep son: `\b` = limite de palabra (funciona en GNU grep), `\w` = caracter de palabra `[a-zA-Z0-9_]` (funciona en GNU grep), `\s` = espacio en blanco (solo en grep -P). En el examen LPIC-1, es mas seguro usar las equivalencias POSIX: `[0-9]` o `[[:digit:]]` en lugar de `\d`, `[[:space:]]` en lugar de `\s`, y `[[:alnum:]_]` en lugar de `\w`. El `\+` en BRE es necesario porque `+` es literal en BRE.
 
 </div>
 </div>
@@ -613,12 +613,12 @@ subtema: "103.7"
 <div class="flashcard" data-id="103.7-fc-034">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** En el examen LPIC-1, un candidato ejecuta `grep "192.168.1.1" access.log` y obtiene coincidencias inesperadas como "192x168y1z1". Cual es el error y como se corrige?
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** El error es que el `.` en regex significa "cualquier caracter", no un punto literal. Para buscar un punto literal se debe escapar con `\`: `grep "192\.168\.1\.1" access.log`. Esta es una de las trampas clasicas del examen LPIC-1 en el subtema 103.7. Otras trampas frecuentes: 1) Confundir `*` de regex (cero o mas del caracter anterior) con `*` del shell (globbing). 2) Olvidar que `grep "a*"` coincide con TODO porque "cero o mas a" incluye la cadena vacia. 3) Usar `+` o `{n}` sin `-E` en grep (en BRE son literales, necesitan `\+` y `\{n\}`). 4) Confundir `[^abc]` (negacion en regex) con `^` como ancla de inicio de linea. 5) No saber que `grep -F` trata todo como texto literal (ideal para buscar caracteres especiales sin escaparlos).
 
 </div>
 </div>

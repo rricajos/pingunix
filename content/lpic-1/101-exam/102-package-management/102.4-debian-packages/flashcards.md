@@ -595,12 +595,12 @@ subtema: "102.4"
 <div class="flashcard" data-id="102.4-fc-033">
 <div class="flashcard-front">
 
-**P:** Que es/son 5. apt-file - Buscar archivos en paquetes?
+**P:** Necesitas encontrar que paquete proporciona el archivo `/usr/bin/convert`, pero ese paquete no esta instalado en tu sistema. `dpkg -S` no devuelve resultados. Que secuencia de comandos ejecutarias para encontrar el paquete correcto e instalarlo?
 
 </div>
 <div class="flashcard-back">
 
-**R:** `apt-file` permite buscar que paquete contiene un archivo especifico, **incluso si el paquete no esta instalado**.
+**R:** Primero `apt-file update` para descargar la base de datos de archivos de todos los repositorios, luego `apt-file search /usr/bin/convert` para buscar el paquete que contiene ese archivo (devolveria `imagemagick`), y finalmente `apt install imagemagick`. `apt-file search` busca en **todos los paquetes de los repositorios**, incluso los no instalados, a diferencia de `dpkg -S` que solo busca entre paquetes instalados. Tambien se puede usar `apt-file list paquete` para ver todos los archivos que proporciona un paquete sin instalarlo. Es necesario ejecutar `apt-file update` periodicamente para mantener su base de datos actualizada.
 
 </div>
 </div>
@@ -613,12 +613,12 @@ subtema: "102.4"
 <div class="flashcard" data-id="102.4-fc-034">
 <div class="flashcard-front">
 
-**P:** Que es/son 6. dpkg-reconfigure?
+**P:** Un servidor Debian muestra la hora en UTC pero deberia estar en Europe/Madrid. El paquete `tzdata` ya esta instalado. Completa el comando para cambiar la zona horaria: `dpkg-________ tzdata`
 
 </div>
 <div class="flashcard-back">
 
-**R:** Permite reconfigurar un paquete ya instalado ejecutando sus scripts de configuracion post-instalacion.
+**R:** `dpkg-reconfigure tzdata`. El comando `dpkg-reconfigure` re-ejecuta los scripts de configuracion post-instalacion de un paquete ya instalado, presentando de nuevo las opciones interactivas de configuracion. Usos frecuentes en el examen: `dpkg-reconfigure tzdata` (zona horaria), `dpkg-reconfigure locales` (idiomas del sistema), `dpkg-reconfigure keyboard-configuration` (distribucion del teclado). No confundir con `dpkg --configure -a`, que completa la configuracion de paquetes que quedaron en estado parcialmente configurado tras un fallo. `dpkg-reconfigure` solo funciona con paquetes que ya estan completamente instalados.
 
 </div>
 </div>
@@ -631,12 +631,12 @@ subtema: "102.4"
 <div class="flashcard" data-id="102.4-fc-035">
 <div class="flashcard-front">
 
-**P:** Que es/son 7. Gestion de claves GPG de repositorios?
+**P:** Al ejecutar `apt update` recibes el error `NO_PUBKEY 3B4FE6ACC0B21F32` para un repositorio de terceros que acabas de anadir. Que comando importa la clave GPG faltante y donde debe almacenarse en sistemas modernos?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Los repositorios se firman con claves GPG para verificar la autenticidad de los paquetes.
+**R:** En sistemas modernos se descarga la clave y se almacena en `/usr/share/keyrings/`: `curl -fsSL https://ejemplo.com/clave.gpg | gpg --dearmor -o /usr/share/keyrings/repo-nombre.gpg`. Luego en el archivo `.list` se referencia con `[signed-by=/usr/share/keyrings/repo-nombre.gpg]`. El metodo antiguo `apt-key add` anade la clave a un llavero global (`/etc/apt/trusted.gpg`) donde la clave confia en **todos** los repositorios, lo cual es inseguro. `apt-key` esta obsoleto desde Debian 11 / Ubuntu 22.04. Sin claves GPG validas, APT rechaza instalar paquetes del repositorio para evitar paquetes manipulados o no autenticados. El directorio `/etc/apt/trusted.gpg.d/` tambien acepta claves pero sin el aislamiento por repositorio que ofrece `signed-by`.
 
 </div>
 </div>
@@ -649,12 +649,12 @@ subtema: "102.4"
 <div class="flashcard" data-id="102.4-fc-036">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** En el examen LPIC-1, cual de estas afirmaciones es la trampa mas comun sobre gestion de paquetes Debian? a) `dpkg -S` y `apt-file search` hacen lo mismo b) `apt remove` elimina los archivos de configuracion c) `apt-get dist-upgrade` actualiza a la siguiente version de la distribucion d) `dpkg --configure -a` y `dpkg-reconfigure` son equivalentes
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** Todas son trampas clasicas del examen. a) FALSO: `dpkg -S` solo busca en paquetes instalados; `apt-file search` busca en todos los repositorios. b) FALSO: `apt remove` conserva la configuracion (estado `rc`); para eliminarla se usa `apt purge`. c) FALSO: `apt-get dist-upgrade` (equivalente a `apt full-upgrade`) solo hace actualizaciones mas agresivas permitiendo eliminar/instalar paquetes; no cambia la version de la distribucion. d) FALSO: `dpkg --configure -a` completa la configuracion de paquetes en estado pendiente; `dpkg-reconfigure` re-ejecuta la configuracion de paquetes ya instalados correctamente. Otras trampas frecuentes: confundir `dpkg -I` (info de un .deb no instalado) con `dpkg -i` (instalar), y olvidar el `./` en `apt install ./paquete.deb`.
 
 </div>
 </div>

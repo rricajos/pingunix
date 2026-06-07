@@ -559,12 +559,12 @@ subtema: "110.2"
 <div class="flashcard" data-id="110.2-fc-031">
 <div class="flashcard-front">
 
-**P:** Que es/son `/usr/sbin/nologin` vs `/etc/nologin` (DISTINCION CRITICA)?
+**P:** Un administrador necesita que la cuenta `www-data` no pueda iniciar sesion interactiva pero si ejecutar su servicio web. Paralelamente, necesita bloquear el login de todos los usuarios normales durante un mantenimiento nocturno. Que dos mecanismos diferentes debe usar para cada caso?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Es fundamental distinguir entre estos dos elementos con nombre similar pero funcion completamente diferente:
+**R:** Para `www-data` debe asignar `/usr/sbin/nologin` como shell en `/etc/passwd` (afecta solo a esa cuenta de forma permanente). Para el mantenimiento debe crear el archivo `/etc/nologin` (bloquea temporalmente el login de todos los usuarios excepto root). La diferencia critica: `/usr/sbin/nologin` es un shell falso asignado por cuenta individual en `/etc/passwd`, mientras que `/etc/nologin` es un archivo cuya mera existencia bloquea globalmente a todos los usuarios no-root. Tras el mantenimiento se elimina `/etc/nologin` con `rm /etc/nologin` para restaurar el acceso.
 
 </div>
 </div>
@@ -577,12 +577,12 @@ subtema: "110.2"
 <div class="flashcard" data-id="110.2-fc-032">
 <div class="flashcard-front">
 
-**P:** Que es/son `/etc/securetty` - Terminales seguras para root?
+**P:** En un servidor, root puede hacer login por SSH pero no puede hacer login directo en la consola fisica (tty1). El archivo `/etc/securetty` existe y esta vacio. Es este comportamiento esperado? Por que SSH no se ve afectado?
 
 </div>
 <div class="flashcard-back">
 
-**R:** `/etc/securetty` es un archivo que lista las **terminales (TTY) desde las cuales root puede iniciar sesion directamente**. Es verificado por el modulo PAM `pam_securetty`.
+**R:** Si, es el comportamiento esperado. `/etc/securetty` lista las terminales TTY desde las cuales root puede hacer login directo, y es verificado por el modulo PAM `pam_securetty`. Si el archivo existe pero esta vacio, root no puede hacer login desde ninguna TTY fisica. SSH no se ve afectado porque el acceso SSH de root se controla con la directiva `PermitRootLogin` en `/etc/ssh/sshd_config`, no con `/etc/securetty`. Tampoco afecta a `su` ni a `sudo`, que son mecanismos de escalada de privilegios, no de login directo. Para permitir login de root solo en tty1, se anade la linea `tty1` al archivo.
 
 </div>
 </div>
@@ -595,12 +595,12 @@ subtema: "110.2"
 <div class="flashcard" data-id="110.2-fc-033">
 <div class="flashcard-front">
 
-**P:** Que es/son Puntos clave para el examen?
+**P:** Un auditor revisa un servidor y encuentra: `/etc/passwd` con permisos 644, `/etc/shadow` con permisos 644 y un servicio telnet activo gestionado por xinetd. Cuantos problemas de seguridad hay y cuales son las correcciones?
 
 </div>
 <div class="flashcard-back">
 
-**R:** 1. **Shadow passwords**: Contrasenas en `/etc/shadow` (solo root), no en `/etc/passwd` (legible por todos)
+**R:** Hay dos problemas de seguridad. Primero: `/etc/shadow` con permisos 644 es incorrecto, ya que contiene los hashes de contrasenas y debe tener permisos 640 o 000 (solo root); se corrige con `chmod 640 /etc/shadow`. Segundo: telnet transmite credenciales en texto plano y debe deshabilitarse cambiando `disable = no` a `disable = yes` en `/etc/xinetd.d/telnet` y reiniciando xinetd. El archivo `/etc/passwd` con permisos 644 es correcto y normal, ya que no contiene hashes (muestra `x` en el campo de contrasena cuando shadow passwords estan activas).
 
 </div>
 </div>
@@ -613,12 +613,12 @@ subtema: "110.2"
 <div class="flashcard" data-id="110.2-fc-034">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** Un administrador ejecuta `systemctl disable sshd` y luego otro administrador ejecuta `systemctl start sshd`. El servicio arranca correctamente. Si en cambio el primer administrador hubiera ejecutado `systemctl mask sshd`, que habria ocurrido al intentar `systemctl start sshd`?
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** Con `systemctl mask sshd`, el intento de `systemctl start sshd` habria fallado. `mask` crea un enlace simbolico del archivo de unidad hacia `/dev/null`, lo que bloquea completamente cualquier inicio del servicio: ni manual, ni automatico, ni como dependencia de otro servicio. En cambio, `disable` solo elimina los enlaces de arranque automatico pero permite el inicio manual. Esta es una trampa clasica del examen LPIC-1: confundir `disable` (evita inicio automatico, permite manual) con `mask` (bloquea todo inicio). Para revertir el enmascaramiento se usa `systemctl unmask sshd`.
 
 </div>
 </div>

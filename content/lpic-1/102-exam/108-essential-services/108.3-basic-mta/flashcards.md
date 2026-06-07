@@ -559,12 +559,12 @@ subtema: "108.3"
 <div class="flashcard" data-id="108.3-fc-031">
 <div class="flashcard-front">
 
-**P:** Que es/son Comando `mail` / `mailx`?
+**P:** Un administrador necesita enviar automaticamente el contenido de `/var/log/resumen.log` por correo al equipo de soporte cada noche. Escribe el comando completo para enviar ese archivo con asunto "Log nocturno" a `soporte@empresa.com`. <input type="text" class="fill-blank" data-answer="mail -s &quot;Log nocturno&quot; soporte@empresa.com < /var/log/resumen.log" data-alt="" placeholder="$ escribe aqui...">
 
 </div>
 <div class="flashcard-back">
 
-**R:** Utilidad de linea de comandos para enviar y leer correo.
+**R:** `mail -s "Log nocturno" soporte@empresa.com < /var/log/resumen.log`. El comando `mail` (tambien disponible como `mailx`) es la utilidad estandar de linea de comandos para enviar y leer correo. La opcion `-s` establece el asunto y la redireccion `<` envia el contenido del archivo como cuerpo del mensaje. Tambien se puede usar con pipe: `cat /var/log/resumen.log | mail -s "Log nocturno" soporte@empresa.com`. Para enviar a multiples destinatarios se separan con comas. En scripts de cron es muy habitual usar `mail` para notificaciones automaticas.
 
 </div>
 </div>
@@ -577,12 +577,12 @@ subtema: "108.3"
 <div class="flashcard" data-id="108.3-fc-032">
 <div class="flashcard-front">
 
-**P:** Que es/son Aliases de correo: `/etc/aliases`?
+**P:** Un administrador anade las siguientes lineas a `/etc/aliases`: `webmaster: ana, carlos` y `noreply: /dev/null`. Ejecuta `newaliases` y reinicia Postfix. Que ocurre cuando llega un correo a `webmaster` y que ocurre cuando llega uno a `noreply`?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Los aliases permiten redirigir correo destinado a un usuario a otro usuario, multiples usuarios o un comando.
+**R:** El correo dirigido a `webmaster` se entrega a los buzones de los usuarios `ana` y `carlos` (ambos reciben una copia). El correo dirigido a `noreply` se descarta silenciosamente al redirigirse a `/dev/null`. El archivo `/etc/aliases` permite definir aliases de correo con varias acciones: redirigir a uno o varios usuarios (separados por comas), redirigir a un archivo, descartar a `/dev/null`, o enviar a un comando con pipe (`|/ruta/script.sh`). Es imprescindible ejecutar `newaliases` (o `sendmail -bi`) despues de cada modificacion para reconstruir la base de datos `/etc/aliases.db`. Sin este paso, los cambios no tienen efecto.
 
 </div>
 </div>
@@ -595,12 +595,12 @@ subtema: "108.3"
 <div class="flashcard" data-id="108.3-fc-033">
 <div class="flashcard-front">
 
-**P:** Que es/son Redireccion personal: `~/.forward`?
+**P:** La usuaria `laura` quiere que su correo corporativo se reenvie a su cuenta personal `laura@gmail.com` y que ademas se mantenga una copia en su buzon local del servidor. No tiene acceso root. Que archivo debe crear y cual debe ser su contenido exacto?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Cada usuario puede crear un archivo `~/.forward` en su directorio home para redirigir su correo sin necesidad de permisos de root.
+**R:** Debe crear el archivo `~/.forward` en su directorio home con el contenido: `\laura, laura@gmail.com`. El archivo `~/.forward` permite la redireccion personal de correo sin necesidad de permisos de root. La barra invertida `\laura` evita la expansion recursiva del alias y garantiza la entrega local (copia en el buzon). Sin la barra invertida, el correo solo se reenviaria a Gmail sin guardar copia local. Si `laura` solo quisiera reenviar sin copia local, bastaria con escribir unicamente `laura@gmail.com` en el archivo. Los permisos del archivo deben ser 644 o mas restrictivos, y el directorio home no debe tener permisos de escritura para otros usuarios, o el MTA ignorara el archivo por seguridad.
 
 </div>
 </div>
@@ -613,12 +613,12 @@ subtema: "108.3"
 <div class="flashcard" data-id="108.3-fc-034">
 <div class="flashcard-front">
 
-**P:** Que es/son Comando `mailq`?
+**P:** Un administrador ejecuta `mailq` y ve 47 mensajes pendientes en la cola. Tras resolver un problema de DNS, quiere forzar el reenvio inmediato de todos esos mensajes. Escribe el comando usando la interfaz compatible `sendmail`. <input type="text" class="fill-blank" data-answer="sendmail -q" data-alt="postqueue -f" placeholder="$ escribe aqui...">
 
 </div>
 <div class="flashcard-back">
 
-**R:** Muestra la cola de correo pendiente de envio.
+**R:** `sendmail -q`. Primero, `mailq` (equivalente a `sendmail -bp` o `postqueue -p`) muestra la cola de correo pendiente con informacion de cada mensaje: ID, tamano, fecha, remitente y destinatario. Para forzar el procesamiento inmediato de la cola se usa `sendmail -q` (o `postqueue -f` en Postfix). Diferencia clave para el examen: `mailq` / `sendmail -bp` = **ver** la cola (solo lectura); `sendmail -q` / `postqueue -f` = **procesar** la cola (intentar enviar). No confundir `-bp` (mostrar) con `-bi` (reconstruir aliases) ni con `-q` (procesar cola).
 
 </div>
 </div>
@@ -631,12 +631,12 @@ subtema: "108.3"
 <div class="flashcard" data-id="108.3-fc-035">
 <div class="flashcard-front">
 
-**P:** Que es/son Comando `sendmail` (interfaz compatible)?
+**P:** Un script de backup usa el comando `/usr/sbin/sendmail -t < /tmp/informe.eml` para enviar notificaciones. El servidor tiene Postfix instalado, no sendmail clasico. Funcionara el script? Por que?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Todos los MTAs proporcionan un comando `sendmail` compatible en `/usr/sbin/sendmail` o `/usr/lib/sendmail`.
+**R:** Si, funcionara correctamente. Todos los MTAs modernos (Postfix, Exim, Qmail) proporcionan un binario compatible en `/usr/sbin/sendmail` (o `/usr/lib/sendmail`) que acepta las mismas opciones del sendmail clasico. Esto garantiza la compatibilidad con scripts y aplicaciones existentes. La opcion `-t` indica que los destinatarios se leen de las cabeceras del mensaje (To:, Cc:, Bcc:) en lugar de pasarlos como argumentos. Opciones clave de la interfaz compatible: `-bi` (reconstruir aliases = `newaliases`), `-bp` (mostrar cola = `mailq`), `-q` (procesar cola), `-t` (leer destinatarios de cabeceras). El comando `sendmail` suele ser un enlace simbolico al binario real del MTA instalado.
 
 </div>
 </div>
@@ -649,12 +649,12 @@ subtema: "108.3"
 <div class="flashcard" data-id="108.3-fc-036">
 <div class="flashcard-front">
 
-**P:** Que es/son Puntos clave para el examen?
+**P:** Relaciona cada componente del sistema de correo con su funcion: 1) MUA, 2) MTA, 3) MDA. Funciones: a) Entrega el correo al buzon local del usuario, b) Transfiere correo entre servidores via SMTP, c) Interfaz del usuario para leer y escribir correo.
 
 </div>
 <div class="flashcard-back">
 
-**R:** 1. **MUA** = cliente, **MTA** = transferencia, **MDA** = entrega local
+**R:** 1-c) **MUA** (Mail User Agent) = Interfaz del usuario para leer y escribir correo. Ejemplos: Thunderbird, mutt, Evolution. 2-b) **MTA** (Mail Transfer Agent) = Transfiere correo entre servidores via SMTP por el puerto 25. Ejemplos: Postfix, Exim, sendmail. 3-a) **MDA** (Mail Delivery Agent) = Entrega el correo al buzon local del usuario. Ejemplos: procmail, maildrop, dovecot-lda. Flujo completo: MUA envia -> MTA transfiere (SMTP, puerto 25) -> MDA entrega al buzon (mbox o Maildir). Punto critico para el examen: Exim es el MTA predeterminado en Debian; todos los MTAs proporcionan un binario `/usr/sbin/sendmail` compatible; `newaliases` y `mailq` deben funcionar con cualquier MTA instalado.
 
 </div>
 </div>
@@ -667,12 +667,12 @@ subtema: "108.3"
 <div class="flashcard" data-id="108.3-fc-037">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** Un candidato al examen LPIC-1 confunde `sendmail -q` con `sendmail -bp` y responde que `sendmail -bp` fuerza el envio de la cola. Otro candidato olvida ejecutar un comando despues de editar `/etc/aliases`. Identifica ambos errores y las respuestas correctas.
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** **Error 1:** `sendmail -bp` NO fuerza el envio; solo **muestra** la cola de correo (equivalente a `mailq`). El comando que **procesa** la cola es `sendmail -q` (equivalente a `postqueue -f`). **Error 2:** Despues de editar `/etc/aliases` se debe ejecutar `newaliases` (o `sendmail -bi`) para reconstruir la base de datos. Sin este paso, los cambios no tienen efecto. Otras trampas frecuentes del examen: confundir `q` (salir guardando cambios en `mail`) con `x` (salir sin guardar); olvidar que `~/.forward` no necesita permisos de root pero `/etc/aliases` si; creer que reiniciar el MTA aplica los cambios de `/etc/aliases` (no es asi, se necesita `newaliases`); confundir el puerto 25 (SMTP entre servidores) con el 587 (SMTP submission con autenticacion).
 
 </div>
 </div>

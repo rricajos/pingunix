@@ -469,12 +469,12 @@ subtema: "102.3"
 <div class="flashcard" data-id="102.3-fc-026">
 <div class="flashcard-front">
 
-**P:** Tip de examen: El soname solo incluye la version mayor (ej: `libfuse.so.2`). Esto permite actua...
+**P:** Tu servidor tiene instaladas `libssl.so.1.1.0` y `libssl.so.1.2.0`. Un programa compilado contra `libssl.so.1` falla tras actualizar. Cual es la causa mas probable?
 
 </div>
 <div class="flashcard-back">
 
-**R:** El soname solo incluye la version mayor (ej: `libfuse.so.2`). Esto permite actualizar la version menor y revision sin romper la compatibilidad con los programas que dependen de la biblioteca.
+**R:** El enlace soname (`libssl.so.1`) no apunta al archivo real actualizado. Ejecutar `sudo ldconfig` recrea los enlaces soname automaticamente, haciendo que `libssl.so.1` apunte a la version mas reciente (`libssl.so.1.2.0`). El soname solo incluye la version mayor, por lo que ambas versiones (1.1.0 y 1.2.0) son compatibles y el programa deberia funcionar tras regenerar los enlaces.
 
 </div>
 </div>
@@ -487,12 +487,12 @@ subtema: "102.3"
 <div class="flashcard" data-id="102.3-fc-027">
 <div class="flashcard-front">
 
-**P:** Tip de examen: `ldconfig -p` muestra el contenido de la cache (util para verificar si una bibli...
+**P:** Necesitas verificar si `libpq.so.5` esta registrada en la cache del sistema, y si no lo esta, diagnosticar por que. Que comandos usarias en ese orden?
 
 </div>
 <div class="flashcard-back">
 
-**R:** `ldconfig -p` muestra el contenido de la cache (util para verificar si una biblioteca esta registrada). `ldconfig -v` muestra el proceso de escaneo con detalle (util para depurar problemas de bibliotecas).
+**R:** Primero `ldconfig -p | grep libpq` para comprobar si la biblioteca aparece en la cache. Si no aparece, usar `ldconfig -v 2>&1 | grep libpq` para ejecutar un escaneo detallado y ver si `ldconfig` encuentra la biblioteca en algun directorio configurado. Si tampoco aparece, verificar que la ruta este incluida en `/etc/ld.so.conf.d/` y ejecutar `sudo ldconfig` para regenerar la cache.
 
 </div>
 </div>
@@ -505,12 +505,12 @@ subtema: "102.3"
 <div class="flashcard" data-id="102.3-fc-028">
 <div class="flashcard-front">
 
-**P:** Que hace el comando `MAYOR`?
+**P:** En el nombre `libgnutls.so.30.21.1`, la version cambia de `30` a `31`. Que implica esto para los programas que dependen de esta biblioteca?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Version mayor (cambios incompatibles)
+**R:** Un cambio en la version mayor (de 30 a 31) indica cambios incompatibles en la API/ABI. Los programas compilados contra `libgnutls.so.30` no funcionaran con `libgnutls.so.31` porque el soname cambia. Sera necesario recompilar los programas o mantener ambas versiones instaladas en paralelo. En cambio, un cambio de `30.21.1` a `30.22.0` (version menor) seria compatible y transparente.
 
 </div>
 </div>
@@ -523,12 +523,12 @@ subtema: "102.3"
 <div class="flashcard" data-id="102.3-fc-029">
 <div class="flashcard-front">
 
-**P:** Que hace el comando `MENOR`?
+**P:** Completa: En `libz.so.1.2.11`, el numero `2` representa la version <input type="text" class="fill-blank" data-answer="menor" placeholder="???"> que indica nuevas funcionalidades manteniendo compatibilidad hacia atras.
 
 </div>
 <div class="flashcard-back">
 
-**R:** Version menor (nuevas funcionalidades compatibles)
+**R:** **menor**. En la convencion `libNOMBRE.so.MAYOR.MENOR.REVISION`, la version menor indica nuevas funcionalidades que son compatibles hacia atras con la misma version mayor. El soname (`libz.so.1`) no cambia al actualizar la version menor, por lo que los programas existentes siguen funcionando sin recompilar.
 
 </div>
 </div>
@@ -541,12 +541,12 @@ subtema: "102.3"
 <div class="flashcard" data-id="102.3-fc-030">
 <div class="flashcard-front">
 
-**P:** Que hace el comando `libfuse.so`?
+**P:** Un desarrollador ejecuta `gcc -lfuse miapp.c -o miapp`. Que enlace simbolico resuelve el compilador y hacia donde apunta?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Apunta al soname. Usado durante la **compilacion**
+**R:** El compilador resuelve el enlace de desarrollo `libfuse.so` (sin numero de version), que apunta al soname (`libfuse.so.2`), que a su vez apunta al archivo real (`libfuse.so.2.9.7`). El enlace sin version existe exclusivamente para la compilacion (flag `-l`). En tiempo de ejecucion, el programa busca el soname (`libfuse.so.2`), no el enlace de desarrollo. Si `libfuse.so` no existe, la compilacion falla; normalmente se instala con el paquete `-dev` o `-devel`.
 
 </div>
 </div>
@@ -559,12 +559,12 @@ subtema: "102.3"
 <div class="flashcard" data-id="102.3-fc-031">
 <div class="flashcard-front">
 
-**P:** Que es/son 2. Convencion de nombres?
+**P:** Completa el nombre correcto de la biblioteca: lib<input type="text" class="fill-blank" data-answer="nombre" placeholder="???">.so.<input type="text" class="fill-blank" data-answer="MAYOR.MENOR.REVISION" placeholder="???">
 
 </div>
 <div class="flashcard-back">
 
-**R:** Las bibliotecas compartidas siguen una convencion de nombres estricta:
+**R:** lib**nombre**.so.**MAYOR.MENOR.REVISION**. La convencion de nombres de bibliotecas compartidas en Linux es estricta: el prefijo `lib` es obligatorio, seguido del nombre de la biblioteca, la extension `.so` (Shared Object), y tres niveles de version separados por puntos. Ejemplo: `libcrypto.so.1.1.0` donde `crypto` es el nombre, `1` la version mayor, `1` la menor y `0` la revision.
 
 </div>
 </div>
@@ -577,12 +577,12 @@ subtema: "102.3"
 <div class="flashcard" data-id="102.3-fc-032">
 <div class="flashcard-front">
 
-**P:** Que es/son 4. ldd - Listar dependencias de bibliotecas?
+**P:** Ejecutas `ldd /usr/bin/curl` y en la salida aparece `libcurl.so.4 => /usr/lib/x86_64-linux-gnu/libcurl.so.4 (0x00007f...)`. Que significan las tres columnas?
 
 </div>
 <div class="flashcard-back">
 
-**R:** El comando `ldd` muestra las bibliotecas compartidas que necesita un programa ejecutable.
+**R:** La primera columna (`libcurl.so.4`) es el soname que el programa necesita. La segunda columna tras `=>` es la ruta real donde el cargador dinamico encontro la biblioteca en el sistema. La tercera columna entre parentesis es la direccion de memoria donde se cargara la biblioteca. Si la segunda columna mostrara "not found", significaria que el sistema no puede localizar esa biblioteca y el programa no podra ejecutarse.
 
 </div>
 </div>
@@ -595,12 +595,12 @@ subtema: "102.3"
 <div class="flashcard" data-id="102.3-fc-033">
 <div class="flashcard-front">
 
-**P:** Que es/son 7. LD_LIBRARY_PATH?
+**P:** Un desarrollador sin acceso root necesita probar una version nueva de `libxml2` ubicada en `/home/dev/libs` antes de instalarla en el sistema. Que comando debe ejecutar antes de lanzar su aplicacion?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Variable de entorno que permite especificar directorios adicionales donde buscar bibliotecas **sin necesidad de ser root** ni modificar archivos del sistema.
+**R:** `export LD_LIBRARY_PATH=/home/dev/libs:$LD_LIBRARY_PATH`. Esta variable de entorno permite anadir directorios de busqueda de bibliotecas sin ser root ni modificar archivos del sistema. Tiene mayor prioridad que la cache (`/etc/ld.so.cache`), por lo que el cargador dinamico encontrara primero la version en `/home/dev/libs`. La sintaxis `:$LD_LIBRARY_PATH` al final preserva las rutas existentes. Es ideal para pruebas temporales, pero no se recomienda para produccion.
 
 </div>
 </div>
@@ -613,12 +613,12 @@ subtema: "102.3"
 <div class="flashcard" data-id="102.3-fc-034">
 <div class="flashcard-front">
 
-**P:** Que es/son 8. El cargador dinamico (Dynamic Linker)?
+**P:** Al ejecutar un binario ELF, el kernel no carga directamente las bibliotecas compartidas. Que programa se invoca automaticamente para resolver y cargar las dependencias, y donde se encuentra en un sistema de 64 bits?
 
 </div>
 <div class="flashcard-back">
 
-**R:** El programa `/lib64/ld-linux-x86-64.so.2` (en 64 bits) o `/lib/ld-linux.so.2` (en 32 bits) es el responsable de:
+**R:** El cargador dinamico (dynamic linker) `/lib64/ld-linux-x86-64.so.2`. Cuando el kernel carga un ejecutable ELF, detecta la seccion `INTERP` que apunta a este programa. El cargador dinamico se encarga de: 1) leer las dependencias del ejecutable (secciones `NEEDED`), 2) localizar las bibliotecas siguiendo el orden RPATH > LD_LIBRARY_PATH > cache > directorios por defecto, 3) cargarlas en memoria, y 4) resolver los simbolos (funciones y variables). En sistemas de 32 bits la ruta es `/lib/ld-linux.so.2`.
 
 </div>
 </div>
@@ -631,12 +631,12 @@ subtema: "102.3"
 <div class="flashcard" data-id="102.3-fc-035">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** Trampa LPIC-1: Un companero dice que `LD_LIBRARY_PATH` tiene menor prioridad que la cache `/etc/ld.so.cache` y que `ldconfig -p` actualiza la cache. Cuantos errores hay en esas afirmaciones?
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** Hay **2 errores**. Primero: `LD_LIBRARY_PATH` tiene **mayor** prioridad que la cache, no menor (orden: RPATH > LD_LIBRARY_PATH > cache > directorios por defecto). Segundo: `ldconfig -p` solo **muestra** (print) el contenido de la cache, no la actualiza; para actualizar se ejecuta `ldconfig` sin opciones (o con `-v` para modo detallado). Estas son confusiones clasicas que LPI evalua en el examen.
 
 </div>
 </div>

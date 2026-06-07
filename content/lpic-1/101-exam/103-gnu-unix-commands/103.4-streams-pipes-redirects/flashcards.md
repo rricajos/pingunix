@@ -577,12 +577,14 @@ subtema: "103.4"
 <div class="flashcard" data-id="103.4-fc-032">
 <div class="flashcard-front">
 
-**P:** Que es/son 1. Descriptores de archivo?
+**P:** Completa el comando: quieres redirigir stderr (descriptor 2) al mismo destino que stdout (descriptor 1). Escribe la sintaxis de redireccion:
+
+<input type="text" class="fill-blank" data-answer="2>&1" data-alt="2>& 1" placeholder="$ escribe aqui...">
 
 </div>
 <div class="flashcard-back">
 
-**R:** En Linux, cada proceso tiene tres flujos de datos estandar abiertos por defecto, identificados por **descriptores de archivo** (file descriptors):
+**R:** `2>&1`. Esta sintaxis significa "redirige el descriptor de archivo 2 (stderr) a donde apunte el descriptor 1 (stdout)". Los tres descriptores estandar son: **0** = stdin (entrada estandar, por defecto el teclado), **1** = stdout (salida estandar, por defecto la pantalla), **2** = stderr (error estandar, por defecto la pantalla). El operador `>&` duplica un descriptor hacia otro. El orden importa: en `comando > archivo 2>&1`, primero stdout va al archivo y luego stderr lo sigue. En `comando 2>&1 > archivo`, stderr va a la pantalla (donde apuntaba stdout antes) y solo stdout va al archivo.
 
 </div>
 </div>
@@ -595,12 +597,14 @@ subtema: "103.4"
 <div class="flashcard" data-id="103.4-fc-033">
 <div class="flashcard-front">
 
-**P:** Que es/son 6. /dev/null: el agujero negro?
+**P:** Un script genera mensajes de depuracion por stdout y errores reales por stderr. El administrador quiere descartar los mensajes de depuracion pero conservar los errores en pantalla. Escribe la redireccion correcta:
+
+<input type="text" class="fill-blank" data-answer="> /dev/null" data-alt="1> /dev/null,1>/dev/null,>/dev/null" placeholder="$ ./script.sh ...">
 
 </div>
 <div class="flashcard-back">
 
-**R:** `/dev/null` es un archivo especial que **descarta todo lo que se escribe en el**. Leer de el produce inmediatamente un fin de archivo (EOF).
+**R:** `./script.sh > /dev/null`. Al redirigir solo stdout (`>` o `1>`) a `/dev/null`, se descartan los mensajes de depuracion mientras stderr sigue mostrando los errores en pantalla. `/dev/null` es un archivo especial del kernel que descarta todo lo que se escribe en el y produce EOF inmediato al leerlo. Usos comunes: `comando > /dev/null` (descartar stdout), `comando 2> /dev/null` (descartar stderr), `comando &> /dev/null` (descartar todo). Tambien sirve para vaciar archivos: `cat /dev/null > archivo.log`. No confundir con `/dev/zero` (genera ceros al leer) ni `/dev/urandom` (genera datos aleatorios).
 
 </div>
 </div>
@@ -613,12 +617,12 @@ subtema: "103.4"
 <div class="flashcard" data-id="103.4-fc-034">
 <div class="flashcard-front">
 
-**P:** Que es/son 7. Pipes (tuberias): `|`?
+**P:** Un administrador ejecuta `cat /etc/passwd | grep root | wc -l`. Describe que flujo de datos conecta el pipe `|` entre cada comando y que descriptor de archivo usa.
 
 </div>
 <div class="flashcard-back">
 
-**R:** El pipe `|` conecta la **salida estandar** de un comando con la **entrada estandar** del siguiente comando. Es uno de los conceptos mas poderosos de Unix.
+**R:** El pipe `|` conecta la **salida estandar (stdout, descriptor 1)** del comando de la izquierda con la **entrada estandar (stdin, descriptor 0)** del comando de la derecha. En la cadena del ejemplo: 1) `cat /etc/passwd` envia el contenido del archivo por stdout; 2) el primer `|` lo pasa como stdin a `grep root`, que filtra las lineas que contienen "root" y las envia por su stdout; 3) el segundo `|` lo pasa como stdin a `wc -l`, que cuenta las lineas. **Importante**: el pipe normal `|` solo pasa stdout, NO stderr. Si `grep` genera un error, ese error apareceria en la pantalla, no pasaria a `wc`. Para pasar ambos flujos se usa `|&` (equivalente a `2>&1 |`). Cada comando en el pipeline se ejecuta en un subshell independiente.
 
 </div>
 </div>
@@ -631,12 +635,12 @@ subtema: "103.4"
 <div class="flashcard" data-id="103.4-fc-035">
 <div class="flashcard-front">
 
-**P:** Que es/son 8. tee: dividir la salida?
+**P:** Necesitas anadir una linea al archivo `/etc/hosts` (protegido por root). El comando `sudo echo "192.168.1.10 server" >> /etc/hosts` falla con "permiso denegado". Como lo solucionarias usando `tee`?
 
 </div>
 <div class="flashcard-back">
 
-**R:** `tee` lee de stdin y escribe simultaneamente en **stdout** y en uno o mas **archivos**. Es como una "T" en una tuberia de agua que divide el flujo.
+**R:** `echo "192.168.1.10 server" | sudo tee -a /etc/hosts`. El problema del comando original es que la redireccion `>>` la ejecuta el shell del usuario actual (sin privilegios), no el proceso `sudo`. La solucion es usar `tee` con `sudo`: el pipe pasa los datos al proceso `tee` que se ejecuta como root y puede escribir en el archivo protegido. La opcion `-a` (append) es crucial: sin ella, `tee` sobreescribiria todo el archivo. Si no quieres ver la salida en pantalla, anade `> /dev/null` al final: `echo "linea" | sudo tee -a /etc/hosts > /dev/null`. `tee` tambien puede escribir en multiples archivos a la vez: `comando | tee archivo1.txt archivo2.txt`.
 
 </div>
 </div>
@@ -649,12 +653,12 @@ subtema: "103.4"
 <div class="flashcard" data-id="103.4-fc-036">
 <div class="flashcard-front">
 
-**P:** Que es/son 9. xargs: construir comandos desde stdin?
+**P:** Explica por que `find /tmp -name "*.log" | rm` no funciona, y como lo solucionarias con `xargs`. Que opcion usarias si los nombres de archivo contienen espacios?
 
 </div>
 <div class="flashcard-back">
 
-**R:** `xargs` lee datos de la entrada estandar y los convierte en **argumentos** para otro comando. Es esencial cuando un comando no acepta datos por stdin pero necesita recibirlos de un pipe.
+**R:** `rm` no lee nombres de archivo desde stdin; espera recibirlos como **argumentos** en la linea de comandos. El pipe le envia datos por stdin pero `rm` los ignora. La solucion es `find /tmp -name "*.log" | xargs rm`, donde `xargs` toma cada linea de stdin y la convierte en argumentos para `rm`. Para nombres con espacios, se usa la combinacion segura: `find /tmp -name "*.log" -print0 | xargs -0 rm`. `-print0` separa resultados con el caracter null (`\0`) en vez de saltos de linea, y `-0` le dice a xargs que use null como delimitador. Otras opciones utiles: `-n 1` ejecuta el comando una vez por argumento, `-I {}` permite colocar el argumento en una posicion especifica: `xargs -I {} cp {} /backup/`.
 
 </div>
 </div>
@@ -667,12 +671,12 @@ subtema: "103.4"
 <div class="flashcard" data-id="103.4-fc-037">
 <div class="flashcard-front">
 
-**P:** Que es/son 10. Here documents: `<< EOF`?
+**P:** En un script bash, necesitas pasar un bloque de texto multilinea como stdin a `cat`, pero NO quieres que las variables como `$HOME` se expandan. Cual es la diferencia entre usar `<< EOF` y `<< 'EOF'` como delimitador?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Un **here document** permite pasar un bloque de texto como entrada estandar a un comando, sin necesidad de un archivo externo. El texto se define entre un delimitador (tipicamente `EOF`, pero puede ser
+**R:** Con `<< EOF` (sin comillas), las variables (`$HOME`), las sustituciones de comandos (`$(date)`) y las secuencias de escape (`\n`) se **expanden** dentro del bloque de texto. Con `<< 'EOF'` (con comillas simples), el texto se pasa **literalmente** sin ninguna expansion. Ejemplo con expansion: `cat << EOF` / `Tu home es $HOME` / `EOF` imprime la ruta real. Ejemplo literal: `cat << 'EOF'` / `Tu home es $HOME` / `EOF` imprime `$HOME` tal cual. El delimitador de cierre debe estar **solo en su propia linea**, sin espacios antes ni despues. Si se usa `<<- EOF`, se permiten tabuladores antes del delimitador de cierre (util para indentar en scripts). El delimitador puede ser cualquier palabra, no solo EOF.
 
 </div>
 </div>
@@ -685,12 +689,12 @@ subtema: "103.4"
 <div class="flashcard" data-id="103.4-fc-038">
 <div class="flashcard-front">
 
-**P:** Que es/son 11. Here strings: `<<<`?
+**P:** Cual es la ventaja de usar `tr 'a-z' 'A-Z' <<< "hola mundo"` en lugar de `echo "hola mundo" | tr 'a-z' 'A-Z'`? En que shell funciona el here string `<<<`?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Un **here string** es una version simplificada del here document que pasa una **sola cadena** como entrada estandar a un comando.
+**R:** La ventaja del here string (`<<<`) es que **no crea un subproceso** adicional. Con `echo ... | tr`, el shell crea un subproceso para ejecutar `echo` y un pipe entre ambos comandos. Con `<<<`, la cadena se pasa directamente como stdin a `tr` sin procesos adicionales, lo que es mas eficiente. El here string es una funcionalidad especifica de **bash** (y zsh/ksh); **no funciona en `sh` (POSIX shell)**. Las variables se expanden: `tr 'a-z' 'A-Z' <<< "$USER"` convierte el nombre de usuario a mayusculas. La diferencia con el here document (`<< EOF`) es que `<<<` solo acepta una sola linea/cadena, mientras que `<< EOF` permite bloques multilinea.
 
 </div>
 </div>
@@ -703,12 +707,12 @@ subtema: "103.4"
 <div class="flashcard" data-id="103.4-fc-039">
 <div class="flashcard-front">
 
-**P:** Que es/son 12. Sustitucion de procesos: `<()` y `>()`?
+**P:** Quieres comparar la lista de archivos en `/etc/` con la lista en `/usr/etc/` sin crear archivos temporales. Escribe el comando usando `diff` y sustitucion de procesos.
 
 </div>
 <div class="flashcard-back">
 
-**R:** La **sustitucion de procesos** (process substitution) es una funcionalidad avanzada de bash que permite usar la salida de un comando como si fuera un archivo, o enviar datos a un comando como si fuera
+**R:** `diff <(ls /etc/) <(ls /usr/etc/)`. La sustitucion de procesos `<(comando)` ejecuta el comando y presenta su salida como un archivo temporal (en `/dev/fd/XX`), permitiendo usarla donde se espera un nombre de archivo. `diff` recibe dos "archivos" que en realidad son la salida de los dos `ls`. Esto evita crear archivos temporales manualmente. Tambien existe `>(comando)` para escritura: `tee >(wc -l) > archivo.txt` escribe en el archivo y simultaneamente cuenta las lineas. **Importante para el examen**: la sustitucion de procesos es especifica de **bash** y NO funciona en `sh` (POSIX shell). Tambien es util con `while read`: `while read linea; do echo "$linea"; done < <(comando)` evita el problema de subshell que crean los pipes.
 
 </div>
 </div>
@@ -721,12 +725,12 @@ subtema: "103.4"
 <div class="flashcard" data-id="103.4-fc-040">
 <div class="flashcard-front">
 
-**P:** Que es/son 13. Named pipes (FIFOs): mkfifo?
+**P:** Un administrador ejecuta `mkfifo /tmp/canal` y luego en una terminal escribe `echo "datos" > /tmp/canal`. El comando se queda bloqueado. Por que ocurre esto y como se soluciona?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Una **named pipe** (tuberia con nombre) o **FIFO** (First In, First Out) es un archivo especial en el sistema de archivos que actua como un canal de comunicacion entre procesos. A diferencia de los pip
+**R:** La operacion se bloquea porque una named pipe (FIFO) es **bloqueante**: el escritor espera hasta que alguien abra el otro extremo para leer, y viceversa. Para desbloquear, hay que abrir otra terminal y ejecutar `cat /tmp/canal`, que lee los datos y desbloquea al escritor. Las named pipes creadas con `mkfifo` persisten en el sistema de archivos (a diferencia del pipe `|` que es temporal). Se identifican con la letra `p` en `ls -l` (ej: `prw-r--r--`). Permiten comunicacion entre procesos **no relacionados** e incluso en **sesiones de terminal diferentes**. Se eliminan con `rm /tmp/canal`. La opcion `-m` permite establecer permisos: `mkfifo -m 600 /tmp/canal`. Son utiles para IPC (inter-process communication) sin archivos temporales.
 
 </div>
 </div>
@@ -739,12 +743,12 @@ subtema: "103.4"
 <div class="flashcard" data-id="103.4-fc-041">
 <div class="flashcard-front">
 
-**P:** Que es/son 14. Resumen de redirecciones?
+**P:** Asocia cada operador de redireccion con su funcion: 1) `>` 2) `>>` 3) `<` 4) `2>` 5) `&>` 6) `2>&1` 7) `>|` 8) `|&`
 
 </div>
 <div class="flashcard-back">
 
-**R:** | Operador | Descripcion | Ejemplo |
+**R:** 1) `>` redirige stdout a archivo (**sobreescribe**). 2) `>>` redirige stdout a archivo (**anade** al final). 3) `<` redirige un archivo como stdin del comando. 4) `2>` redirige stderr a archivo (sobreescribe). 5) `&>` redirige **stdout y stderr** al mismo archivo (atajo de bash). 6) `2>&1` redirige stderr a donde apunte stdout (duplicacion de descriptores). 7) `>|` fuerza la sobreescritura cuando `noclobber` esta activado (`set -o noclobber`). 8) `|&` pipe que pasa **stdout y stderr** al siguiente comando (equivale a `2>&1 |`). Recuerda: `>` equivale a `1>`, `<` equivale a `0<`. Los operadores `>>` y `2>>` anaden; `>` y `2>` sobreescriben.
 
 </div>
 </div>
@@ -757,12 +761,12 @@ subtema: "103.4"
 <div class="flashcard" data-id="103.4-fc-042">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** Indica si las siguientes afirmaciones son VERDADERAS o FALSAS: 1) `cmd > file 2>&1` y `cmd 2>&1 > file` producen el mismo resultado. 2) El here string `<<<` funciona en POSIX sh. 3) `xargs` es necesario porque `rm`, `cp` y `chmod` no leen nombres de archivo desde stdin. 4) La sustitucion de procesos `<()` funciona en sh y en bash.
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** 1) **FALSA**. El orden importa: `cmd > file 2>&1` envia ambos flujos al archivo; `cmd 2>&1 > file` envia stderr a la pantalla y solo stdout al archivo. 2) **FALSA**. El here string `<<<` es especifico de bash/zsh/ksh, NO funciona en POSIX sh. 3) **VERDADERA**. `rm`, `cp`, `chmod` y `mv` esperan argumentos en la linea de comandos, no datos por stdin. `xargs` convierte stdin en argumentos. 4) **FALSA**. La sustitucion de procesos `<()` y `>()` es especifica de bash y NO funciona en sh. Estas son trampas clasicas del examen LPIC-1: el orden de las redirecciones, la diferencia entre bash y POSIX sh, y saber cuando se necesita `xargs`.
 
 </div>
 </div>

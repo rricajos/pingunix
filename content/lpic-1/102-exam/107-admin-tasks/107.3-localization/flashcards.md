@@ -559,12 +559,12 @@ subtema: "107.3"
 <div class="flashcard" data-id="107.3-fc-031">
 <div class="flashcard-front">
 
-**P:** Que es/son 2. Variables de locale?
+**P:** Un usuario ejecuta `locale` y ve que `LC_COLLATE`, `LC_MONETARY` y `LC_CTYPE` muestran `es_ES.UTF-8`, pero el nunca configuro esas variables individualmente. Solo tiene `LANG=es_ES.UTF-8` en su perfil. Por que aparecen esos valores en las variables `LC_*` si no las definio explicitamente?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Las variables de locale controlan diferentes aspectos de la configuracion regional.
+**R:** Porque `LANG` actua como valor por defecto para todas las categorias `LC_*` que no estan definidas explicitamente. Cuando el comando `locale` muestra los valores de cada variable, las que no tienen un valor propio heredan el de `LANG`. Por eso, si solo se define `LANG=es_ES.UTF-8`, todas las categorias (`LC_CTYPE`, `LC_NUMERIC`, `LC_TIME`, `LC_COLLATE`, `LC_MONETARY`, `LC_MESSAGES`, `LC_PAPER`, `LC_NAME`, `LC_ADDRESS`, `LC_TELEPHONE`, `LC_MEASUREMENT`) mostraran `es_ES.UTF-8`. Solo si se define una variable `LC_*` individual, esa categoria usara su propio valor en lugar del de `LANG`. Y si se define `LC_ALL`, esta sobreescribe absolutamente todo. El orden de prioridad es: `LC_ALL` > `LC_*` individuales > `LANG`.
 
 </div>
 </div>
@@ -577,12 +577,12 @@ subtema: "107.3"
 <div class="flashcard" data-id="107.3-fc-032">
 <div class="flashcard-front">
 
-**P:** Que es/son 5. iconv - Conversion entre codificaciones?
+**P:** Un administrador necesita migrar un archivo CSV legacy codificado en ISO-8859-15 a UTF-8, pero algunos registros contienen caracteres griegos que no existen en la codificacion de destino y no quiere que la conversion falle. Que comando debe usar y que opcion garantiza que los caracteres problematicos se manejen sin generar un error?
 
 </div>
 <div class="flashcard-back">
 
-**R:** `iconv` convierte texto de una codificacion a otra.
+**R:** Debe usar `iconv -f ISO-8859-15 -t UTF-8//IGNORE archivo.csv > archivo_utf8.csv`. La opcion `//IGNORE` agregada a la codificacion de destino hace que `iconv` omita silenciosamente los caracteres que no se pueden convertir, en lugar de abortar con un error. En este caso concreto, como UTF-8 soporta todos los caracteres Unicode (incluyendo griegos), la conversion de ISO-8859-15 a UTF-8 no deberia perder caracteres del conjunto ISO-8859-15. Pero si la situacion fuera inversa (de UTF-8 a ISO-8859-15), los caracteres griegos se perderian. Otra opcion es `//TRANSLIT`, que intenta reemplazar caracteres no disponibles por aproximaciones visualmente similares (por ejemplo, convierte letras acentuadas a sus equivalentes sin acento). Se pueden combinar ambas: `-t ASCII//TRANSLIT//IGNORE`. Para ver todas las codificaciones soportadas se usa `iconv -l`.
 
 </div>
 </div>
@@ -595,12 +595,12 @@ subtema: "107.3"
 <div class="flashcard" data-id="107.3-fc-033">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** En el examen LPIC-1 aparece esta pregunta: "Un administrador ejecuta `tzselect` y selecciona `America/Bogota`. Al ejecutar `date` despues, la hora sigue mostrando la zona horaria anterior. Que ocurrio?" Cual es la respuesta correcta y que otras trampas clasicas de localizacion aparecen en el examen?
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** `tzselect` es solo una herramienta interactiva de consulta que muestra el nombre de la zona horaria seleccionada pero **NO modifica la configuracion del sistema**. Para cambiar la zona horaria realmente se debe usar `timedatectl set-timezone America/Bogota` o crear el enlace simbolico `ln -sf /usr/share/zoneinfo/America/Bogota /etc/localtime`. Otras trampas clasicas del examen en 107.3: (1) Confundir `LC_ALL` con `LANG` — `LC_ALL` sobreescribe TODAS las variables de locale, mientras que `LANG` solo actua como valor por defecto para las no definidas. (2) Creer que `LC_TIME` cambia la zona horaria — `LC_TIME` solo controla el formato de presentacion de fechas (idioma), la zona horaria se controla con `TZ` o `/etc/localtime`. (3) Confundir `/etc/locale.conf` (Red Hat/systemd) con `/etc/default/locale` (Debian/Ubuntu). (4) Olvidar ejecutar `locale-gen` despues de editar `/etc/locale.gen` en Debian. (5) Pensar que `localectl` cambia la zona horaria — `localectl` configura locale y teclado; la zona horaria se gestiona con `timedatectl`.
 
 </div>
 </div>

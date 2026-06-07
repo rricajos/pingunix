@@ -469,12 +469,21 @@ subtema: "109.2"
 <div class="flashcard" data-id="109.2-fc-026">
 <div class="flashcard-front">
 
-**P:** Que hace el comando `nameserver`?
+**P:** Un servidor tiene este `/etc/resolv.conf`:
+
+```bash
+nameserver 10.0.0.1
+nameserver 10.0.0.2
+nameserver 10.0.0.3
+nameserver 10.0.0.4
+```
+
+Cuantos de estos servidores DNS seran utilizados realmente por el sistema?
 
 </div>
 <div class="flashcard-back">
 
-**R:** IP del servidor DNS (maximo 3)
+**R:** Solo los 3 primeros (`10.0.0.1`, `10.0.0.2`, `10.0.0.3`). El archivo `/etc/resolv.conf` acepta un maximo de 3 directivas `nameserver`. La cuarta linea (`10.0.0.4`) sera ignorada silenciosamente por el resolver. Si el primer servidor no responde, se intenta con el segundo y luego con el tercero, en orden secuencial.
 
 </div>
 </div>
@@ -487,12 +496,12 @@ subtema: "109.2"
 <div class="flashcard" data-id="109.2-fc-027">
 <div class="flashcard-front">
 
-**P:** Que hace el comando `search`?
+**P:** Un administrador tiene `search empresa.com test.local` en `/etc/resolv.conf`. Cuando un usuario ejecuta `ping servidor`, que nombres intentara resolver el sistema antes de intentar el nombre literal?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Lista de dominios para busqueda (se agrega automaticamente)
+**R:** Primero `servidor.empresa.com`, luego `servidor.test.local`, y finalmente `servidor` (literal). La directiva `search` agrega automaticamente cada dominio de la lista al nombre corto y los prueba en orden. Es mutuamente excluyente con la directiva `domain` (que solo acepta un dominio); si ambas aparecen en el archivo, se usa la ultima definida. Se pueden listar hasta 6 dominios en `search`, con un maximo de 256 caracteres en total.
 
 </div>
 </div>
@@ -505,12 +514,12 @@ subtema: "109.2"
 <div class="flashcard" data-id="109.2-fc-028">
 <div class="flashcard-front">
 
-**P:** Que hace el comando `options`?
+**P:** Las consultas DNS de un servidor tardan demasiado cuando el primer nameserver esta caido. Que directiva de `/etc/resolv.conf` permite reducir el tiempo de espera antes de pasar al siguiente servidor?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Opciones adicionales (timeout, intentos)
+**R:** La directiva `options timeout:N` (donde N es el numero de segundos). Se usa dentro de `/etc/resolv.conf` como `options timeout:2 attempts:3`. La opcion `timeout` define cuantos segundos esperar respuesta de cada nameserver antes de intentar el siguiente. La opcion `attempts` define cuantas veces se recorre la lista completa de nameservers. Otras opciones utiles incluyen `rotate` (distribuir consultas entre servidores en vez de siempre empezar por el primero) y `edns0` (habilitar extensiones DNS).
 
 </div>
 </div>
@@ -523,12 +532,12 @@ subtema: "109.2"
 <div class="flashcard" data-id="109.2-fc-029">
 <div class="flashcard-front">
 
-**P:** Que hace el comando `NETWORKING`?
+**P:** En un servidor RHEL, el archivo `/etc/sysconfig/network` contiene `NETWORKING=no`. Que efecto tiene esta configuracion en el siguiente arranque del sistema?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Habilitar/deshabilitar la red (yes/no)
+**R:** El sistema arrancara con la red completamente deshabilitada; ninguna interfaz de red sera configurada ni activada automaticamente. La directiva `NETWORKING=yes|no` en `/etc/sysconfig/network` es el interruptor global de red en sistemas RHEL/CentOS. Con `NETWORKING=no`, incluso las interfaces con `ONBOOT=yes` en sus archivos `ifcfg-*` no se activaran. Otras directivas de este archivo incluyen `HOSTNAME` (nombre del host) y `GATEWAY` (gateway por defecto global).
 
 </div>
 </div>
@@ -541,12 +550,12 @@ subtema: "109.2"
 <div class="flashcard" data-id="109.2-fc-030">
 <div class="flashcard-front">
 
-**P:** Que hace el comando `GATEWAY`?
+**P:** En RHEL/CentOS, se puede definir un gateway tanto en `/etc/sysconfig/network` (directiva `GATEWAY`) como en el archivo `ifcfg-eth0` de la interfaz. Si ambos definen un gateway diferente, cual tiene prioridad?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Gateway predeterminado del sistema
+**R:** El gateway definido en el archivo de la interfaz (`ifcfg-eth0`) tiene prioridad sobre el definido en `/etc/sysconfig/network`. El `GATEWAY` en `/etc/sysconfig/network` actua como gateway global por defecto y solo se usa si la interfaz no define el suyo propio. Buena practica: definir el gateway en el archivo de interfaz especifico para evitar ambiguedad, especialmente en servidores con multiples interfaces de red.
 
 </div>
 </div>
@@ -559,12 +568,12 @@ subtema: "109.2"
 <div class="flashcard" data-id="109.2-fc-031">
 <div class="flashcard-front">
 
-**P:** Que es/son `/etc/hosts`?
+**P:** Un servidor no tiene acceso a DNS pero necesita resolver el nombre `db-server` a la IP `10.0.1.50`. En que archivo y con que formato debe agregarse esta entrada manualmente?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Archivo de resolucion estatica de nombres. Se consulta **antes** que DNS (segun `/etc/nsswitch.conf`).
+**R:** En `/etc/hosts`, con el formato: `10.0.1.50  db-server`. El formato de cada linea es `IP  nombre_canonico  [alias...]`, por ejemplo: `10.0.1.50  db-server  db-server.empresa.com  db`. Este archivo proporciona resolucion estatica de nombres y se consulta antes que DNS cuando `/etc/nsswitch.conf` tiene `hosts: files dns`. Es util para redes pequenas, entornos sin DNS y para anular respuestas DNS de nombres especificos. La linea `127.0.0.1  localhost` siempre debe estar presente.
 
 </div>
 </div>
@@ -577,12 +586,12 @@ subtema: "109.2"
 <div class="flashcard" data-id="109.2-fc-032">
 <div class="flashcard-front">
 
-**P:** Que es/son `/etc/nsswitch.conf`?
+**P:** Un administrador quiere que el sistema consulte DNS antes que `/etc/hosts` para resolver nombres. Que linea debe modificar y como debe quedar en `/etc/nsswitch.conf`?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Define el **orden de busqueda** para distintas bases de datos del sistema, incluyendo la resolucion de nombres.
+**R:** Debe cambiar la linea `hosts:` para que `dns` aparezca antes de `files`: `hosts: dns files myhostname`. Por defecto, la configuracion es `hosts: files dns myhostname`, lo que da prioridad a `/etc/hosts`. El archivo `/etc/nsswitch.conf` (Name Service Switch) controla el orden de busqueda para multiples bases de datos del sistema, no solo hosts sino tambien `passwd`, `group`, `shadow`, `networks`, etc. Los valores posibles para hosts incluyen: `files` (/etc/hosts), `dns` (servidores DNS), `myhostname` (hostname local), `mdns` (multicast DNS).
 
 </div>
 </div>
@@ -595,12 +604,14 @@ subtema: "109.2"
 <div class="flashcard" data-id="109.2-fc-033">
 <div class="flashcard-front">
 
-**P:** Que es/son `/etc/resolv.conf`?
+**P:** Completa la ruta del archivo donde se configuran los servidores DNS del cliente en Linux:
+
+`/etc/` <input type="text" class="fill-blank" data-answer="resolv.conf" placeholder="???" />
 
 </div>
 <div class="flashcard-back">
 
-**R:** Configuracion de los servidores DNS del cliente.
+**R:** `/etc/resolv.conf`. Este archivo configura el resolver DNS del sistema. Sus directivas principales son: `nameserver IP` (hasta 3 servidores DNS), `search dominio1 dominio2` (dominios para nombres cortos), `domain dominio` (dominio por defecto, excluyente con search) y `options` (timeout, attempts, rotate). En sistemas con NetworkManager o systemd-resolved, este archivo puede ser un enlace simbolico gestionado automaticamente; editarlo directamente puede no ser persistente.
 
 </div>
 </div>
@@ -613,12 +624,17 @@ subtema: "109.2"
 <div class="flashcard" data-id="109.2-fc-034">
 <div class="flashcard-front">
 
-**P:** Que es/son Comando `ip` (iproute2)?
+**P:** Completa las equivalencias entre net-tools (deprecado) e iproute2 (moderno):
+
+- `ifconfig` = `ip` <input type="text" class="fill-blank" data-answer="addr" placeholder="???" />
+- `route` = `ip` <input type="text" class="fill-blank" data-answer="route" placeholder="???" />
+- `arp` = `ip` <input type="text" class="fill-blank" data-answer="neigh" placeholder="???" />
+- `netstat` = <input type="text" class="fill-blank" data-answer="ss" placeholder="???" />
 
 </div>
 <div class="flashcard-back">
 
-**R:** Herramienta moderna para configuracion de red. Reemplaza a `ifconfig`, `route`, `arp`.
+**R:** `ifconfig` = `ip addr` (o `ip addr show`), `route` = `ip route`, `arp` = `ip neigh`, `netstat` = `ss`. Todas las herramientas de net-tools (`ifconfig`, `route`, `arp`, `netstat`) estan deprecadas y han sido reemplazadas por el paquete iproute2. Ademas, `ip link` gestiona el estado de las interfaces (up/down), `ip -s link` muestra estadisticas y `ip addr add/del` agrega o elimina direcciones IP. Los cambios hechos con `ip` son siempre temporales.
 
 </div>
 </div>
@@ -631,12 +647,12 @@ subtema: "109.2"
 <div class="flashcard" data-id="109.2-fc-035">
 <div class="flashcard-front">
 
-**P:** Que es/son Puntos clave para el examen?
+**P:** Un administrador edita manualmente `/etc/hostname` y escribe `web-prod`. Al ejecutar `hostname` inmediatamente despues, el sistema sigue mostrando el nombre antiguo. Por que, y como aplicar el cambio sin reiniciar?
 
 </div>
 <div class="flashcard-back">
 
-**R:** 1. **`/etc/hostname`** contiene el hostname estatico; **`hostnamectl`** lo gestiona en systemd
+**R:** Editar `/etc/hostname` solo cambia el hostname persistente (se aplica en el proximo arranque), pero no actualiza el hostname en ejecucion (transient). Para aplicar el cambio inmediatamente sin reiniciar, debe ejecutar `hostnamectl set-hostname web-prod`, que actualiza tanto el archivo `/etc/hostname` como el hostname en memoria. Alternativa: ejecutar `hostname web-prod` para el cambio inmediato (pero temporal). En systemd existen 3 tipos de hostname: `static` (persistente en `/etc/hostname`), `transient` (temporal, en memoria) y `pretty` (descriptivo con caracteres especiales).
 
 </div>
 </div>
@@ -649,12 +665,12 @@ subtema: "109.2"
 <div class="flashcard" data-id="109.2-fc-036">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** Un candidato al examen LPIC-1 configura la IP de un servidor con `ifconfig eth0 192.168.1.100 netmask 255.255.255.0` y reinicia el sistema. Al volver, la IP ha desaparecido. Que dos errores cometio?
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** Error 1: Uso `ifconfig` (net-tools), que esta deprecado; deberia usar `ip addr add` (iproute2). Error 2: Tanto `ifconfig` como `ip` aplican cambios temporales que se pierden al reiniciar. Para configuracion persistente debe usar los archivos de la distribucion: `/etc/network/interfaces` (Debian), `/etc/sysconfig/network-scripts/ifcfg-*` (RHEL), `/etc/netplan/*.yaml` (Ubuntu moderno), `/etc/systemd/network/*.network` (systemd-networkd) o `nmcli` (NetworkManager). Trampa clasica del examen: confundir configuracion temporal (comandos) con persistente (archivos).
 
 </div>
 </div>

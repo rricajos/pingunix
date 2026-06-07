@@ -541,12 +541,12 @@ subtema: "110.1"
 <div class="flashcard" data-id="110.1-fc-030">
 <div class="flashcard-front">
 
-**P:** Que es/son `lsof` (List Open Files)?
+**P:** Un servidor web Apache deja de responder. Necesitas saber que archivos de log y sockets tiene abiertos el proceso httpd. Que comando usarias para listar todos los archivos abiertos por ese proceso especifico?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Lista archivos abiertos y los procesos que los usan.
+**R:** `lsof -c httpd` o `lsof -p <PID>`. El comando `lsof` (List Open Files) lista todos los archivos abiertos en el sistema y los procesos que los usan. La opcion `-c httpd` filtra por nombre de comando y `-p PID` filtra por PID. Tambien se puede combinar con `-i` para ver solo conexiones de red (`lsof -c httpd -i`), con `+D /var/log` para ver archivos abiertos en un directorio especifico, o con `-u usuario` para filtrar por usuario. En Linux, todo es un archivo (sockets, pipes, dispositivos), por lo que `lsof` es una herramienta fundamental de diagnostico.
 
 </div>
 </div>
@@ -559,12 +559,12 @@ subtema: "110.1"
 <div class="flashcard" data-id="110.1-fc-031">
 <div class="flashcard-front">
 
-**P:** Que es/son `fuser`?
+**P:** Necesitas desmontar `/mnt/backup` pero el sistema dice "device is busy". Que comando identifica los procesos que estan usando ese punto de montaje y los termina para poder desmontarlo?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Identifica procesos que usan archivos o sockets.
+**R:** `fuser -km /mnt/backup`. El comando `fuser` identifica procesos que estan usando archivos, directorios o sockets. La opcion `-k` envia SIGKILL a los procesos encontrados y `-m` indica que se trata de un punto de montaje (incluye todos los archivos dentro). Para ver los procesos sin matarlos, se usa `fuser -vm /mnt/backup` (modo verbose). Para puertos de red: `fuser -n tcp 80` identifica quien usa el puerto TCP 80. A diferencia de `lsof`, que muestra informacion detallada de archivos abiertos, `fuser` esta disenado para identificar y actuar sobre procesos rapidamente.
 
 </div>
 </div>
@@ -577,12 +577,12 @@ subtema: "110.1"
 <div class="flashcard" data-id="110.1-fc-032">
 <div class="flashcard-front">
 
-**P:** Que es/son Puntos clave para el examen?
+**P:** En una auditoria de seguridad debes verificar archivos con permisos especiales. Cual es la diferencia entre `find / -perm -4000` y `find / -perm -2000`, y por que es critico auditarlos?
 
 </div>
 <div class="flashcard-back">
 
-**R:** 1. **`find / -perm -4000`** busca archivos SUID; **`-perm -2000`** busca SGID
+**R:** `find / -perm -4000` busca archivos con bit SUID (se ejecutan con permisos del propietario) y `find / -perm -2000` busca archivos con bit SGID (se ejecutan con permisos del grupo). Son criticos porque un SUID de root permite ejecucion con privilegios de root. Puntos clave del examen: `-perm /6000` busca SUID **o** SGID (OR); `-perm -6000` busca SUID **y** SGID (AND); `find / -nouser` y `-nogroup` detectan archivos huerfanos. Siempre auditar: archivos SUID/SGID innecesarios, archivos world-writable (`-perm -0002`) y archivos sin propietario valido.
 
 </div>
 </div>
@@ -595,12 +595,12 @@ subtema: "110.1"
 <div class="flashcard" data-id="110.1-fc-033">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** En el examen LPIC-1 aparece: "Un admin ejecuta `passwd -l maria`. Maria ya no puede entrar con contrasena, pero sigue accediendo por SSH con clave publica." Es esto un error o es el comportamiento correcto?
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** Es el comportamiento correcto. `passwd -l` bloquea solo la autenticacion por contrasena (anade `!` al hash en `/etc/shadow`), pero NO impide el acceso por clave SSH. Para bloquear completamente el acceso, se debe usar `chage -E 0 usuario` (expira la cuenta) o `usermod -s /usr/sbin/nologin usuario` (cambia el shell). Trampas frecuentes del examen: confundir `-E` de `chage` (expira cuenta) con `-M` (max dias contrasena); confundir `su` (pide contrasena de root) con `sudo` (pide contrasena del usuario); olvidar que `visudo` valida sintaxis pero editar `/etc/sudoers` directamente no.
 
 </div>
 </div>

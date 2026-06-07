@@ -523,12 +523,12 @@ subtema: "108.4"
 <div class="flashcard" data-id="108.4-fc-029">
 <div class="flashcard-front">
 
-**P:** Que es/son Comando `lpinfo`?
+**P:** Un administrador necesita agregar una impresora nueva al sistema CUPS pero no conoce el URI del dispositivo ni el driver compatible. Que dos comandos de `lpinfo` debe ejecutar para obtener esta informacion? <input type="text" class="fill-blank" data-answer="lpinfo -v y lpinfo -m" data-alt="lpinfo -v; lpinfo -m" placeholder="$ escribe aqui...">
 
 </div>
 <div class="flashcard-back">
 
-**R:** Descubre impresoras y drivers disponibles.
+**R:** `lpinfo -v` y `lpinfo -m`. El comando `lpinfo -v` lista todos los URIs de dispositivos de impresion disponibles (detectados en USB, red, etc.), por ejemplo `usb://HP/LaserJet`, `ipp://192.168.1.50/ipp/print` o `socket://192.168.1.50:9100`. El comando `lpinfo -m` lista todos los modelos y drivers disponibles, incluyendo el driver generico `everywhere` para IPP Everywhere. Una vez obtenidos ambos datos, se puede agregar la impresora con: `lpadmin -p nombre -E -v URI -m driver`.
 
 </div>
 </div>
@@ -541,12 +541,12 @@ subtema: "108.4"
 <div class="flashcard" data-id="108.4-fc-030">
 <div class="flashcard-front">
 
-**P:** Que es/son IPP (Internet Printing Protocol)?
+**P:** En que puerto TCP escucha el protocolo IPP y cual es la URL completa para acceder a la interfaz web de CUPS en la maquina local?
 
 </div>
 <div class="flashcard-back">
 
-**R:** - Protocolo estandar para comunicacion con impresoras en red
+**R:** Puerto **631/TCP** y la URL es `http://localhost:631`. IPP (Internet Printing Protocol) es el protocolo nativo de CUPS y utiliza el puerto 631 tanto para la comunicacion con impresoras como para la interfaz web de administracion. Las URIs de impresoras IPP siguen el formato `ipp://host:631/ipp/print` o `ipp://host:631/printers/nombre`. No confundir con el puerto 515 (LPD, protocolo legacy de BSD) ni con el puerto 9100 (Socket/JetDirect). IPP funciona sobre HTTP/HTTPS, lo que permite administracion remota segura con `https://host:631`.
 
 </div>
 </div>
@@ -559,12 +559,12 @@ subtema: "108.4"
 <div class="flashcard" data-id="108.4-fc-031">
 <div class="flashcard-front">
 
-**P:** Que es/son `cupsctl`?
+**P:** Un administrador necesita permitir que otros equipos de la red accedan a la interfaz web de administracion de CUPS. Escribe el comando `cupsctl` que habilita la administracion remota. <input type="text" class="fill-blank" data-answer="cupsctl --remote-admin" data-alt="" placeholder="$ escribe aqui...">
 
 </div>
 <div class="flashcard-back">
 
-**R:** Herramienta para configurar opciones del servidor CUPS.
+**R:** `cupsctl --remote-admin`. El comando `cupsctl` modifica la configuracion del servidor CUPS (reflejada en `/etc/cups/cupsd.conf`). Opciones principales: `cupsctl --remote-admin` habilita la administracion remota, `cupsctl --no-remote-admin` la desactiva, `cupsctl --share-printers` habilita la comparticion de impresoras en red, `cupsctl --no-share-printers` la desactiva. Ejecutar `cupsctl` sin argumentos muestra la configuracion actual del servidor. Los cambios se aplican inmediatamente sin reiniciar el servicio.
 
 </div>
 </div>
@@ -577,12 +577,12 @@ subtema: "108.4"
 <div class="flashcard" data-id="108.4-fc-032">
 <div class="flashcard-front">
 
-**P:** Que es/son `lpoptions`?
+**P:** Un usuario quiere que la impresora `LaserColor` sea su impresora predeterminada personal (sin afectar a otros usuarios). Que comando debe ejecutar y en que archivo se guarda esta preferencia?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Gestiona opciones de impresion del usuario.
+**R:** `lpoptions -d LaserColor`. La preferencia se guarda en `~/.cups/lpoptions`. El comando `lpoptions` gestiona opciones de impresion a nivel de usuario. Con `-d impresora` establece la impresora predeterminada personal. Con `-o opcion=valor` configura opciones por defecto (ejemplo: `lpoptions -o media=A4 -o sides=two-sided-long-edge`). Con `-l` lista las opciones disponibles para la impresora actual. Importante: `lpoptions -d` solo afecta al usuario que lo ejecuta; para cambiar la predeterminada del sistema se usa `lpadmin -d nombre` (requiere root).
 
 </div>
 </div>
@@ -595,12 +595,12 @@ subtema: "108.4"
 <div class="flashcard" data-id="108.4-fc-033">
 <div class="flashcard-front">
 
-**P:** Que es/son Legacy: LPD (Line Printer Daemon)?
+**P:** Cual es la correspondencia correcta entre los comandos legacy BSD (LPD) y los comandos System V para imprimir, ver la cola y cancelar trabajos?
 
 </div>
 <div class="flashcard-back">
 
-**R:** - Sistema de impresion clasico de BSD
+**R:** Los pares equivalentes son: **Imprimir:** `lpr` (BSD) = `lp` (System V). **Ver cola:** `lpq` (BSD) = `lpstat` (System V). **Cancelar:** `lprm` (BSD) = `cancel` (System V). Diferencias clave de sintaxis: `lpr -P impresora` vs `lp -d impresora` para seleccionar impresora; `lpr -# 3` vs `lp -n 3` para numero de copias; `lprm 42` vs `cancel impresora-42` para cancelar un trabajo. LPD usa el puerto 515/TCP y es el protocolo legacy de BSD. CUPS soporta ambos estilos de comandos, pero internamente usa IPP (puerto 631).
 
 </div>
 </div>
@@ -613,12 +613,12 @@ subtema: "108.4"
 <div class="flashcard" data-id="108.4-fc-034">
 <div class="flashcard-front">
 
-**P:** Que es/son Puntos clave para el examen?
+**P:** En un examen LPIC-1, te preguntan que archivo de configuracion de CUPS contiene las definiciones de impresoras configuradas y por que no debe editarse manualmente. Cual es la respuesta correcta y cual es la alternativa segura?
 
 </div>
 <div class="flashcard-back">
 
-**R:** 1. **CUPS** es el sistema de impresion estandar, interfaz web en **puerto 631**
+**R:** El archivo es `/etc/cups/printers.conf`. No debe editarse manualmente mientras CUPS esta en ejecucion porque el demonio `cupsd` lo sobrescribe periodicamente, perdiendo los cambios manuales. La alternativa segura es usar `lpadmin` para agregar (`-p`), eliminar (`-x`) o modificar impresoras, o la interfaz web en `http://localhost:631`. El otro archivo clave es `/etc/cups/cupsd.conf` (configuracion del demonio: puertos, permisos, comparticion), que si puede editarse manualmente (reiniciando CUPS despues) o modificarse con `cupsctl`.
 
 </div>
 </div>
@@ -631,12 +631,12 @@ subtema: "108.4"
 <div class="flashcard" data-id="108.4-fc-035">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** Trampa clasica del examen LPIC-1: Un administrador ejecuta `cupsdisable Oficina` pero los usuarios siguen enviando trabajos a la cola. Es esto un error? Que deberia hacer si quiere impedir que se envien nuevos trabajos?
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** No es un error. `cupsdisable` solo detiene el procesamiento de trabajos (la impresora deja de imprimir), pero la cola sigue aceptando nuevos trabajos que se acumulan. Para impedir que se envien nuevos trabajos se debe ejecutar `cupsreject Oficina`. Esta es una trampa frecuente del examen: confundir `cupsdisable`/`cupsenable` (controlan si la impresora imprime) con `cupsreject`/`cupsaccept` (controlan si la cola acepta nuevos trabajos). Para un mantenimiento completo se necesitan ambos: `cupsdisable Oficina` + `cupsreject Oficina`.
 
 </div>
 </div>

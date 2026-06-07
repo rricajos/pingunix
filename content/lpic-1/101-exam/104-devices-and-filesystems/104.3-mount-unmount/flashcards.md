@@ -577,12 +577,12 @@ subtema: "104.3"
 <div class="flashcard" data-id="104.3-fc-032">
 <div class="flashcard-front">
 
-**P:** Que es/son 1. Concepto de montaje?
+**P:** Un administrador junior conecta un nuevo disco `/dev/sdc1` al servidor pero al ejecutar `ls /dev/sdc1` ve el dispositivo y aun asi no puede acceder a sus archivos. Que paso fundamental le falta y por que Linux requiere este paso?
 
 </div>
 <div class="flashcard-back">
 
-**R:** En Linux, para acceder al contenido de un sistema de archivos (particion, disco USB, imagen ISO, etc.), es necesario **montarlo** en un directorio del arbol de directorios. Este directorio se llama **p
+**R:** Le falta **montar** el sistema de archivos en un directorio del arbol de directorios. En Linux, un dispositivo de bloque existe en `/dev/` pero su contenido no es accesible hasta que se asocia a un **punto de montaje** (un directorio existente) mediante el comando `mount`. Por ejemplo: `mount /dev/sdc1 /mnt/datos`. Esto se debe a que Linux utiliza un **arbol de directorios unico** (VFS - Virtual File System) donde todos los sistemas de archivos se integran, a diferencia de Windows que usa letras de unidad. El directorio usado como punto de montaje debe existir previamente y se recomienda que este vacio, ya que cualquier contenido previo quedara oculto mientras el FS este montado. Para montaje permanente se debe agregar una entrada en `/etc/fstab`.
 
 </div>
 </div>
@@ -595,12 +595,12 @@ subtema: "104.3"
 <div class="flashcard" data-id="104.3-fc-033">
 <div class="flashcard-front">
 
-**P:** Que es/son 6. Unidades de montaje de systemd?
+**P:** Un administrador quiere que la particion `/dev/sdb1` se monte automaticamente en `/srv/webapp` solo cuando el servicio `httpd` lo necesite, en lugar de montarla siempre al arrancar. Que tipo de unidad de systemd debe crear y cual seria su nombre correcto?
 
 </div>
 <div class="flashcard-back">
 
-**R:** En sistemas con systemd, los montajes de `/etc/fstab` se traducen automaticamente a unidades `.mount`. Tambien se pueden crear unidades de montaje manualmente.
+**R:** Debe crear una unidad `.automount` llamada `srv-webapp.automount` junto con su correspondiente unidad `srv-webapp.mount`. Las unidades `.automount` de systemd montan el sistema de archivos bajo demanda cuando un proceso intenta acceder al punto de montaje. La unidad `.mount` contiene la seccion `[Mount]` con los parametros `What=/dev/sdb1`, `Where=/srv/webapp`, `Type=ext4` y `Options=defaults`. El nombre de la unidad se deriva del punto de montaje reemplazando las barras `/` por guiones `-` y omitiendo la barra inicial. Systemd traduce automaticamente las entradas de `/etc/fstab` a unidades `.mount` internas, pero las unidades `.automount` deben crearse manualmente en `/etc/systemd/system/`. Se gestionan con `systemctl enable/start srv-webapp.automount`.
 
 </div>
 </div>
@@ -613,12 +613,12 @@ subtema: "104.3"
 <div class="flashcard" data-id="104.3-fc-034">
 <div class="flashcard-front">
 
-**P:** Que es/son 7. Puntos clave para el examen?
+**P:** Despues de agregar una nueva entrada en `/etc/fstab`, un administrador ejecuta `mount -a` pero la particion no se monta. La entrada es: `UUID=abc123 /datos ext4 noauto,defaults 0 2`. Cual es la causa del problema y como deberia corregirlo?
 
 </div>
 <div class="flashcard-back">
 
-**R:** 1. **`/etc/fstab` tiene 6 campos:** dispositivo, punto de montaje, tipo, opciones, dump, pass.
+**R:** La causa es la opcion `noauto`. El comando `mount -a` monta todos los sistemas de archivos listados en `/etc/fstab` **excepto** los que tienen la opcion `noauto`. Esta opcion indica que el sistema de archivos no debe montarse automaticamente ni con `mount -a` ni durante el arranque, sino solo manualmente. Para solucionarlo, debe eliminar `noauto` de las opciones, dejando: `UUID=abc123 /datos ext4 defaults 0 2`. Alternativamente, si quiere mantener `noauto` para que no se monte al arrancar, puede montarlo manualmente con `mount /datos` (mount leera el resto de parametros de fstab). Es importante recordar que `defaults` equivale a `rw,suid,dev,exec,auto,nouser,async` y ya incluye `auto`, por lo que `noauto,defaults` es contradictorio: `noauto` sobreescribe el `auto` implicito en `defaults`.
 
 </div>
 </div>
@@ -631,12 +631,12 @@ subtema: "104.3"
 <div class="flashcard" data-id="104.3-fc-035">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** En el examen LPIC-1 aparece esta pregunta: "Cual es el comando para desmontar `/mnt/usb`?" y las opciones incluyen `unmount /mnt/usb` y `umount /mnt/usb`. Cual es correcta, y que otras trampas clasicas sobre montaje/desmontaje suele usar LPI?
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** La correcta es `umount /mnt/usb` (sin la primera 'n'). El comando es `umount`, NO `unmount`. Esta es una de las trampas mas clasicas de LPI. Otras trampas frecuentes en 104.3: **1)** Confundir `user` con `users`: con `user` solo el usuario que monto puede desmontar; con `users` cualquier usuario puede desmontar. **2)** Creer que `/etc/fstab` refleja el estado actual de montajes: la fuente autoritativa es `/proc/mounts`, no fstab. **3)** Confundir `noauto` con `nofail`: `noauto` impide el montaje automatico con `mount -a`; `nofail` evita que el arranque falle si el dispositivo no existe. **4)** Olvidar que `user` implica automaticamente `noexec,nosuid,nodev` por seguridad. **5)** Confundir los valores del campo pass: solo la raiz `/` debe tener pass=1; el resto usa 2 (verificar despues) o 0 (no verificar). **6)** Creer que `-o remount` desmonta y vuelve a montar: en realidad cambia las opciones sin desmontar.
 
 </div>
 </div>

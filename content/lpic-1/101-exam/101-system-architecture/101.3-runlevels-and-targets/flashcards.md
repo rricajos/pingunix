@@ -487,12 +487,12 @@ subtema: "101.3"
 <div class="flashcard" data-id="101.3-fc-027">
 <div class="flashcard-front">
 
-**P:** Que es/son 3. Tabla de equivalencia: runlevels y targets?
+**P:** Un administrador necesita configurar un servidor sin entorno grafico para que arranque en modo multiusuario con red. Cual es el target de systemd equivalente al runlevel 3 de SysVinit?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Esta tabla es **fundamental para el examen**:
+**R:** `multi-user.target`. La tabla de equivalencia entre runlevels y targets es fundamental para el examen: runlevel 0 = `poweroff.target`, runlevel 1 = `rescue.target`, runlevel 2 = `multi-user.target` (sin red, solo en algunas distros), runlevel 3 = `multi-user.target` (con red), runlevel 5 = `graphical.target`, runlevel 6 = `reboot.target`. Atencion: `emergency.target` no tiene equivalente directo en runlevels y proporciona un shell minimo sin montar sistemas de archivos.
 
 </div>
 </div>
@@ -505,12 +505,12 @@ subtema: "101.3"
 <div class="flashcard" data-id="101.3-fc-028">
 <div class="flashcard-front">
 
-**P:** Que es/son 4. Gestion de servicios con systemctl?
+**P:** Despues de modificar el archivo de unidad de un servicio en `/etc/systemd/system/`, el administrador ejecuta `systemctl restart servicio` pero los cambios no se aplican. Que paso falta?
 
 </div>
 <div class="flashcard-back">
 
-**R:** `systemctl` es la herramienta principal para gestionar servicios y targets en systemd.
+**R:** Ejecutar `systemctl daemon-reload` antes de reiniciar el servicio. Cuando se modifican archivos de unidad, systemd mantiene en memoria la version anterior. `daemon-reload` fuerza a systemd a releer todos los archivos de unidad del disco. Sin este paso, `restart`, `start` o `enable` seguiran usando la configuracion antigua. Este es un error muy comun en el examen: siempre que se edite un unit file, el flujo correcto es: editar el archivo, ejecutar `systemctl daemon-reload` y luego `systemctl restart servicio`.
 
 </div>
 </div>
@@ -523,12 +523,12 @@ subtema: "101.3"
 <div class="flashcard" data-id="101.3-fc-029">
 <div class="flashcard-front">
 
-**P:** Que es/son 6. El comando wall?
+**P:** Un administrador necesita avisar a todos los usuarios conectados por terminal de un reinicio programado en 30 minutos, pero sin ejecutar aun el apagado. Que comando envia el mensaje sin afectar al sistema?
 
 </div>
 <div class="flashcard-back">
 
-**R:** `wall` (write all) envia un mensaje a todos los usuarios conectados al sistema. Es util para avisar de mantenimientos, reinicios u otras acciones que afecten a los usuarios.
+**R:** `wall "El sistema se reiniciara en 30 minutos"` o bien `shutdown -k +30 "El sistema se reiniciara"`. El comando `wall` (write all) envia un mensaje a todas las terminales activas sin realizar ninguna accion sobre el sistema. La opcion `-k` de `shutdown` tambien solo envia el aviso sin apagar. La diferencia clave es que `wall` envia el mensaje inmediatamente, mientras que `shutdown -k` simula la cuenta atras completa con mensajes periodicos. Nota: `wall` solo alcanza a usuarios con terminales abiertas (TTY/PTY), no a sesiones graficas sin terminal.
 
 </div>
 </div>
@@ -541,12 +541,12 @@ subtema: "101.3"
 <div class="flashcard" data-id="101.3-fc-030">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** En el examen LPIC-1, un administrador ejecuta `systemctl disable sshd` en un servidor. Puede seguir iniciando sshd manualmente con `systemctl start sshd`?
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** Si, `systemctl disable` solo elimina los enlaces simbolicos que inician el servicio automaticamente en el arranque, pero el servicio se puede iniciar manualmente con `systemctl start`. Esta es una trampa clasica del examen. Para impedir completamente que un servicio se inicie (ni manualmente ni por dependencias), se debe usar `systemctl mask`, que crea un enlace a `/dev/null`. Otra trampa frecuente: confundir `systemctl stop` (detiene el servicio ahora, pero no impide que arranque en el proximo reinicio) con `systemctl disable` (impide el inicio automatico, pero no detiene el servicio en ejecucion). Para desactivar completamente un servicio se necesitan ambos: `systemctl stop` + `systemctl disable`.
 
 </div>
 </div>

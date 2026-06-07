@@ -469,12 +469,12 @@ subtema: "103.6"
 <div class="flashcard" data-id="103.6-fc-026">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** Un candidato en el examen LPIC-1 ve que un proceso tiene PR=15 en `top` y afirma que su valor nice es 15. Otro candidato ejecuta `nice -n -5 script.sh` como usuario normal y espera que funcione. Identifica los errores de ambos y explica por que son trampas frecuentes del examen.
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** **Error del primer candidato:** Confundir PR (prioridad del kernel) con NI (valor nice). La relacion es **PR = 20 + NI**, por lo tanto si PR = 15, el valor nice real es NI = 15 - 20 = **-5**, no 15. Esta confusion es una de las trampas mas comunes del examen. **Error del segundo candidato:** Los usuarios normales **no pueden** asignar valores nice negativos (de -20 a -1), ya que estos aumentan la prioridad del proceso. Solo **root** puede hacerlo. El comando fallara con "Permission denied". **Otras trampas frecuentes en 103.6:** (1) Confundir `nice` (inicia procesos nuevos) con `renice` (modifica procesos existentes); (2) Creer que un usuario normal puede bajar el nice de un proceso que el mismo subio previamente (no puede, solo root); (3) Olvidar que `nice` sin `-n` aplica un incremento de **10**, no de 0; (4) Confundir la tecla `r` (renice) con `k` (kill) en la interfaz interactiva de `top`.
 
 </div>
 </div>

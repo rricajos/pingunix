@@ -577,12 +577,12 @@ subtema: "102.5"
 <div class="flashcard" data-id="102.5-fc-032">
 <div class="flashcard-front">
 
-**P:** Que es/son 3. rpm2cpio - Extraer contenido sin instalar?
+**P:** Un servidor RHEL tiene un archivo `/etc/nginx/nginx.conf` corrupto. Tienes el paquete `nginx-1.20.1-1.el8.x86_64.rpm` descargado pero NO quieres reinstalar nginx porque perderia la configuracion de otros vhosts. Como extraes SOLO el archivo de configuracion original del paquete?
 
 </div>
 <div class="flashcard-back">
 
-**R:** `rpm2cpio` convierte un paquete .rpm al formato cpio, permitiendo extraer su contenido sin instalarlo.
+**R:** `rpm2cpio nginx-1.20.1-1.el8.x86_64.rpm | cpio -idmv ./etc/nginx/nginx.conf`. `rpm2cpio` convierte el paquete `.rpm` al formato cpio (un formato de archivo tipo tar). Luego se pasa por pipe a `cpio` con los flags: `-i` (extraer), `-d` (crear directorios necesarios), `-m` (mantener fechas de modificacion), `-v` (verbose). Se puede especificar la ruta del archivo concreto a extraer. Para solo listar el contenido sin extraer se usa `cpio -t` en lugar de `-idmv`. Los archivos se extraen en el directorio actual manteniendo su estructura de rutas (se crea `./etc/nginx/nginx.conf`). Si no se tiene el RPM descargado, se puede obtener con `yumdownloader nginx` o `dnf download nginx`.
 
 </div>
 </div>
@@ -595,12 +595,12 @@ subtema: "102.5"
 <div class="flashcard" data-id="102.5-fc-033">
 <div class="flashcard-front">
 
-**P:** Que es/son 5. DNF (Dandified YUM)?
+**P:** Estas migrando un servidor de CentOS 7 (yum) a RHEL 9 (dnf). Un script de aprovisionamiento usa `yum install -y httpd` y `yum repolist`. Funcionaran estos comandos en RHEL 9? Donde se almacena la configuracion principal de DNF?
 
 </div>
 <div class="flashcard-back">
 
-**R:** DNF es el sucesor de YUM, usado en Fedora y RHEL/CentOS 8+. La sintaxis es practicamente identica a YUM.
+**R:** Si, funcionaran porque en RHEL 9 (y desde RHEL/CentOS 8+), `yum` es un enlace simbolico a `dnf`, por lo que todos los comandos yum se ejecutan realmente con DNF. La configuracion principal de DNF esta en `/etc/dnf/dnf.conf`, aunque los repositorios siguen almacenandose en `/etc/yum.repos.d/` (directorio compartido con yum por compatibilidad). Las diferencias clave de DNF sobre YUM son: usa `libsolv` como resolvedor de dependencias (mas rapido y preciso), esta escrito en Python 3 (yum usaba Python 2), soporta extensiones modulares (`dnf module`), y ofrece `dnf config-manager` para gestionar repositorios desde la linea de comandos sin editar archivos manualmente.
 
 </div>
 </div>
@@ -613,12 +613,12 @@ subtema: "102.5"
 <div class="flashcard" data-id="102.5-fc-034">
 <div class="flashcard-front">
 
-**P:** Que es/son 6. Zypper (SUSE/openSUSE)?
+**P:** En un servidor openSUSE necesitas: 1) actualizar los metadatos de repositorios, 2) buscar un paquete llamado `apache2`, 3) instalarlo, y 4) actualizar todos los paquetes del sistema. Escribe los comandos de zypper equivalentes a lo que harias con `apt update`, `apt search`, `apt install` y `apt upgrade` en Debian.
 
 </div>
 <div class="flashcard-back">
 
-**R:** Zypper es el gestor de paquetes de alto nivel para distribuciones SUSE.
+**R:** 1) `zypper refresh` (o `zypper ref`) -- equivale a `apt update`. 2) `zypper search apache2` (o `zypper se apache2`) -- equivale a `apt search`. 3) `zypper install apache2` (o `zypper in apache2`) -- equivale a `apt install`. 4) `zypper update` (o `zypper up`) -- equivale a `apt upgrade`. Zypper es el gestor de alto nivel para SUSE/openSUSE y utiliza RPM como backend de bajo nivel, igual que yum/dnf en Red Hat. Otros comandos importantes: `zypper remove` (o `zypper rm`) para desinstalar, `zypper info` para ver detalles de un paquete, y `zypper addrepo URL alias` para anadir repositorios. A diferencia de yum/dnf, zypper requiere un `zypper refresh` explicito para actualizar metadatos.
 
 </div>
 </div>
@@ -631,12 +631,12 @@ subtema: "102.5"
 <div class="flashcard" data-id="102.5-fc-035">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** TRAMPAS DEL EXAMEN 102.5: Un colega dice que `rpm -e --nodeps httpd` es seguro porque solo elimina httpd. Otro afirma que `rpm -U` y `rpm -i` hacen lo mismo. Un tercero dice que `yum remove` borra configuraciones pero `yum erase` no. Quien tiene razon?
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** Ninguno tiene razon, las tres afirmaciones son falsas. 1) `rpm -e --nodeps` es PELIGROSO: elimina el paquete ignorando dependencias, lo que puede romper otros paquetes que dependan de el. Nunca debe usarse en produccion. 2) `rpm -i` y `rpm -U` NO son iguales: `-i` solo instala (da error si el paquete ya existe), mientras que `-U` instala si no existe Y actualiza si ya existe. Por eso `rpm -Uvh` es la opcion recomendada. 3) `yum remove` y `yum erase` son SINONIMOS exactos, ambos hacen lo mismo. En RPM no existe la distincion `remove`/`purge` como en Debian. Otras trampas frecuentes: confundir `rpm -V` (verificar integridad) con `rpm -K` (verificar firma GPG de un .rpm); olvidar que `rpm -qf` busca paquetes instalados mientras que `yum provides` busca en repositorios; y confundir `rpm -F` (freshen, solo actualiza existentes) con `rpm -U` (upgrade, instala o actualiza).
 
 </div>
 </div>

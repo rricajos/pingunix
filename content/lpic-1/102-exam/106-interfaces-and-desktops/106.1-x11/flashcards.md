@@ -469,12 +469,12 @@ subtema: "106.1"
 <div class="flashcard" data-id="106.1-fc-026">
 <div class="flashcard-front">
 
-**P:** Que hace el comando `host`?
+**P:** Un administrador ejecuta `export DISPLAY=:0` y luego lanza `xterm`. La aplicacion se abre en la pantalla local. Si cambia a `export DISPLAY=:1`, que ocurrira al lanzar `xterm`?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Nombre o IP del servidor X. Vacio = localhost
+**R:** `xterm` intentara conectarse al display numero 1 de la maquina local. Si no existe un servidor X escuchando en el display `:1`, la aplicacion fallara con un error como `Error: Can't open display :1`. El formato de DISPLAY es `[host]:display[.screen]`. Cuando el campo host esta vacio (antes de los dos puntos), se asume localhost y se usa un socket Unix local (`/tmp/.X11-unix/X1`). Cada instancia del servidor X escucha en un display numerado distinto: `:0` es el principal, `:1` seria un segundo servidor X. Esto es diferente de una conexion TCP, donde se especifica la IP o hostname (por ejemplo, `192.168.1.5:0`).
 
 </div>
 </div>
@@ -487,12 +487,12 @@ subtema: "106.1"
 <div class="flashcard" data-id="106.1-fc-027">
 <div class="flashcard-front">
 
-**P:** Que hace el comando `display`?
+**P:** Escribe el comando para configurar la variable DISPLAY de forma que una aplicacion grafica se muestre en el display 0, pantalla 0, del servidor con IP 10.0.0.5. <input type="text" class="fill-blank" data-answer="export DISPLAY=10.0.0.5:0.0" data-alt="DISPLAY=10.0.0.5:0.0" placeholder="$ escribe aqui...">
 
 </div>
 <div class="flashcard-back">
 
-**R:** Numero de display (generalmente 0)
+**R:** export DISPLAY=10.0.0.5:0.0. El formato completo de la variable DISPLAY es `host:display.screen`. En este caso: `10.0.0.5` es la IP del servidor X remoto donde se mostrara la ventana, `:0` indica el display numero 0 y `.0` indica la pantalla (screen) 0. Para que la conexion funcione, el servidor X en 10.0.0.5 debe permitir conexiones remotas (via `xhost` o `xauth`), y si hay un firewall, debe permitir trafico en el puerto TCP 6000 + numero de display (6000 para display 0). En produccion, es preferible usar SSH X forwarding (`ssh -X`) en lugar de conexiones X11 directas por motivos de seguridad.
 
 </div>
 </div>
@@ -505,12 +505,12 @@ subtema: "106.1"
 <div class="flashcard" data-id="106.1-fc-028">
 <div class="flashcard-front">
 
-**P:** Que hace el comando `screen`?
+**P:** Un sistema tiene dos tarjetas graficas, cada una conectada a un monitor diferente. Ambos monitores estan gestionados por un unico servidor X en el display `:0`. Como se referencia el segundo monitor en la variable DISPLAY?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Numero de pantalla (generalmente 0, opcional)
+**R:** Se referencia como `:0.1`. En la variable DISPLAY (`host:display.screen`), el tercer componente `.screen` identifica pantallas fisicas individuales dentro del mismo display. `:0.0` es la primera pantalla (por defecto) y `:0.1` es la segunda. Esto es diferente de tener dos displays separados (`:0` y `:1`), donde cada uno tendria su propio servidor X. En la practica moderna, Xinerama o XRandR gestionan multiples monitores dentro de una unica pantalla logica (screen 0), haciendo menos comun el uso de multiples screens. Sin embargo, el concepto de screen sigue apareciendo en el examen LPIC-1 como parte del formato de DISPLAY.
 
 </div>
 </div>
@@ -523,12 +523,12 @@ subtema: "106.1"
 <div class="flashcard" data-id="106.1-fc-029">
 <div class="flashcard-front">
 
-**P:** Que hace el comando `(**)`?
+**P:** Un administrador revisa `/var/log/Xorg.0.log` y encuentra la linea: `(**) NVIDIA(0): Depth 24, (==) framebuffer bpp 32`. Que indican los marcadores `(**)` y `(==)` respectivamente?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Valor de configuracion encontrado
+**R:** `(**)` indica un valor que fue encontrado en la configuracion (archivo `xorg.conf` o archivos en `xorg.conf.d/`), mientras que `(==)` indica un valor por defecto aplicado por el servidor X al no existir configuracion explicita. En este ejemplo, la profundidad de color 24 fue configurada explicitamente por el administrador, pero el valor de framebuffer bpp 32 fue asignado automaticamente. Los cinco marcadores del log de Xorg son: `(EE)` = error, `(WW)` = advertencia, `(II)` = informacion, `(**)` = valor configurado, `(==)` = valor por defecto. Conocer estos marcadores es esencial para diagnosticar problemas graficos en el examen.
 
 </div>
 </div>
@@ -541,12 +541,12 @@ subtema: "106.1"
 <div class="flashcard" data-id="106.1-fc-030">
 <div class="flashcard-front">
 
-**P:** Que es/son 2. Variable DISPLAY?
+**P:** Un usuario ejecuta `firefox` desde una terminal remota via SSH sin la opcion `-X` y obtiene `Error: no display specified`. Escribe el comando que deberia haber usado para conectarse correctamente, asumiendo que el servidor es `srv01`. <input type="text" class="fill-blank" data-answer="ssh -X srv01" data-alt="ssh -Y srv01" placeholder="$ escribe aqui...">
 
 </div>
 <div class="flashcard-back">
 
-**R:** La variable `DISPLAY` indica al cliente X donde debe enviar su salida grafica.
+**R:** ssh -X srv01. El error `no display specified` ocurre porque la variable `DISPLAY` no esta definida en la sesion remota. Sin la opcion `-X` o `-Y`, SSH no configura X forwarding y la variable DISPLAY queda vacia, por lo que las aplicaciones graficas no saben donde enviar su salida. Al usar `ssh -X srv01`, SSH automaticamente: (1) configura `DISPLAY=localhost:10.0` en el servidor remoto, (2) crea un tunel cifrado para el trafico X11, y (3) gestiona las cookies de `xauth`. La alternativa manual (sin SSH) seria configurar `export DISPLAY=ip_cliente:0` y gestionar las cookies con `xauth`, pero esto es inseguro y no recomendado.
 
 </div>
 </div>
@@ -559,12 +559,12 @@ subtema: "106.1"
 <div class="flashcard" data-id="106.1-fc-031">
 <div class="flashcard-front">
 
-**P:** Que es/son 5. Log de Xorg: `/var/log/Xorg.0.log`?
+**P:** Despues de actualizar el driver de la tarjeta grafica, el servidor X no arranca. El archivo `/var/log/Xorg.0.log` contiene la linea `(EE) Failed to load module "nvidia" (module does not exist)`. Cual es la causa probable y como se puede resolver temporalmente?
 
 </div>
 <div class="flashcard-back">
 
-**R:** El servidor X registra su actividad en archivos de log, fundamentales para la **resolucion de problemas graficos**.
+**R:** La causa es que el modulo del driver NVIDIA no se instalo correctamente o no es compatible con la version de Xorg. Para resolver temporalmente, se puede editar `/etc/X11/xorg.conf` y cambiar el driver en la seccion `Device` de `nvidia` a `nouveau` (driver libre) o `vesa` (driver generico). Tambien se puede eliminar o renombrar `xorg.conf` para que Xorg use autodeteccion: `mv /etc/X11/xorg.conf /etc/X11/xorg.conf.bak`. Otra opcion es generar una configuracion nueva con `Xorg -configure`. El log `/var/log/Xorg.0.log` registra el display `:0`; si hubiera un segundo servidor X en `:1`, su log seria `/var/log/Xorg.1.log`. Siempre se buscan errores con `grep '(EE)' /var/log/Xorg.0.log`.
 
 </div>
 </div>
@@ -577,12 +577,12 @@ subtema: "106.1"
 <div class="flashcard" data-id="106.1-fc-032">
 <div class="flashcard-front">
 
-**P:** Que es/son 7. Display Managers (gestores de inicio de sesion)?
+**P:** Un administrador necesita cambiar el Display Manager de GDM a LightDM en un sistema con systemd. Escribe los dos comandos necesarios para desactivar GDM y activar LightDM. <input type="text" class="fill-blank" data-answer="systemctl disable gdm && systemctl enable lightdm" data-alt="systemctl disable gdm; systemctl enable lightdm" placeholder="$ escribe aqui...">
 
 </div>
 <div class="flashcard-back">
 
-**R:** Un **Display Manager** (DM) proporciona la pantalla de inicio de sesion grafico (login screen). Inicia el servidor X y autentica al usuario.
+**R:** systemctl disable gdm && systemctl enable lightdm. En sistemas con systemd, cada Display Manager es un servicio que se gestiona con `systemctl`. El comando `systemctl disable gdm` elimina el enlace simbolico que inicia GDM en el arranque, y `systemctl enable lightdm` crea el enlace para iniciar LightDM. Alternativamente, se puede usar `systemctl enable --now lightdm` para activarlo e iniciarlo inmediatamente. Solo un DM puede estar activo a la vez. Asociaciones por defecto: **GDM** = GNOME, **SDDM** = KDE Plasma, **LightDM** = independiente (soporta greeters intercambiables), **XDM** = DM original de X11. En sistemas con SysVinit se usaria `update-alternatives --config display-manager` o se editaria `/etc/X11/default-display-manager`.
 
 </div>
 </div>
@@ -595,12 +595,12 @@ subtema: "106.1"
 <div class="flashcard" data-id="106.1-fc-033">
 <div class="flashcard-front">
 
-**P:** Que es/son 8. Wayland?
+**P:** Una empresa quiere migrar sus estaciones de trabajo de X11 a Wayland, pero tiene aplicaciones legacy que solo funcionan con X11. Que componente permite ejecutar estas aplicaciones en una sesion Wayland y cual es su limitacion principal?
 
 </div>
 <div class="flashcard-back">
 
-**R:** **Wayland** es un protocolo de display mas moderno que busca reemplazar a X11.
+**R:** **XWayland** permite ejecutar aplicaciones X11 legacy dentro de una sesion Wayland. XWayland es un servidor X11 que se ejecuta como cliente Wayland, traduciendo las llamadas del protocolo X11 a Wayland de forma transparente. Su limitacion principal es que las aplicaciones ejecutadas via XWayland **no se benefician del aislamiento de seguridad de Wayland**: siguen pudiendo capturar eventos de teclado y contenido de pantalla de otras ventanas XWayland (aunque no de las ventanas nativas Wayland). Otras diferencias clave entre Wayland y X11: Wayland integra el compositor en el protocolo (no necesita un compositor externo como Compiz o Mutter sobre X11), no soporta red transparente de forma nativa (a diferencia del network transparency de X11), y usa la variable `$WAYLAND_DISPLAY` en lugar de `$DISPLAY`.
 
 </div>
 </div>
@@ -613,12 +613,12 @@ subtema: "106.1"
 <div class="flashcard" data-id="106.1-fc-034">
 <div class="flashcard-front">
 
-**P:** Que es/son 9. X Forwarding con SSH?
+**P:** Un usuario se conecta con `ssh -X user@servidor` y ejecuta `gedit`, pero la aplicacion falla con errores de autorizacion. El administrador verifica que `X11Forwarding yes` esta configurado en `sshd_config`. Que directiva adicional de `sshd_config` podria estar causando el problema y que archivo del lado del cliente gestiona la autenticacion?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Permite ejecutar aplicaciones graficas en un servidor remoto y verlas en la pantalla local.
+**R:** La directiva `X11UseLocalhost` podria estar causando problemas si esta en `no` y hay restricciones de red, pero la causa mas comun es un problema con las cookies de `xauth`. El archivo `~/.Xauthority` del lado del cliente almacena las cookies MIT-MAGIC-COOKIE que SSH genera automaticamente para autenticar la conexion X11. Si este archivo tiene permisos incorrectos, esta corrupto o no es accesible, la autorizacion falla. Solucion: verificar con `xauth list` que la cookie existe, y si no, se puede regenerar eliminando `~/.Xauthority` y reconectando. Otras directivas relevantes de `sshd_config`: `X11DisplayOffset 10` define el numero de display inicial (por defecto 10), y `X11Forwarding yes` habilita el reenvio. En el cliente, `ForwardX11 yes` en `~/.ssh/config` evita tener que usar `-X` cada vez.
 
 </div>
 </div>
@@ -631,12 +631,12 @@ subtema: "106.1"
 <div class="flashcard" data-id="106.1-fc-035">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** TRAMPAS DEL EXAMEN: En X11, el "servidor" se ejecuta en la maquina local y los "clientes" son las aplicaciones. Verdadero o falso? Ademas, `xhost +` es mas seguro que `xauth` para controlar el acceso al servidor X. Verdadero o falso?
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** Primera afirmacion: **VERDADERO**. La terminologia de X11 es contraintuitiva: el **servidor X** se ejecuta en la maquina local (donde estan pantalla, teclado y raton), mientras que los **clientes X** son las aplicaciones graficas (firefox, xterm), que pueden estar en maquinas remotas. El examen intenta confundir invirtiendo estos roles. Segunda afirmacion: **FALSO**. `xhost +` es extremadamente inseguro porque desactiva toda verificacion de acceso, permitiendo que cualquier host se conecte. `xauth` con cookies MIT-MAGIC-COOKIE es el metodo seguro. Otras trampas frecuentes: (1) `/usr/share/X11/xorg.conf.d/` NO debe editarse (se sobrescribe en actualizaciones), usar `/etc/X11/xorg.conf.d/`; (2) `ssh -X` es restrictivo (seguro) y `ssh -Y` es confiable (sin restricciones), no al reves; (3) Wayland NO soporta red transparente como X11.
 
 </div>
 </div>

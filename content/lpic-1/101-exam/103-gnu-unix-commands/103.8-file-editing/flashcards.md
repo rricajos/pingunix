@@ -613,12 +613,12 @@ subtema: "103.8"
 <div class="flashcard" data-id="103.8-fc-034">
 <div class="flashcard-front">
 
-**P:** Que es/son 2. Modos de vi?
+**P:** Un administrador junior abre vi por primera vez y empieza a escribir texto inmediatamente, pero aparecen caracteres inesperados y comandos se ejecutan sin control. Que esta ocurriendo y como debe solucionarlo?
 
 </div>
 <div class="flashcard-back">
 
-**R:** vi funciona con diferentes **modos** de operacion. Este es el concepto mas importante para entender vi.
+**R:** El problema es que vi arranca en **modo normal** (tambien llamado modo comando), donde cada tecla se interpreta como un comando, no como texto. vi tiene tres modos principales: **modo normal** (navegacion y comandos, estado por defecto), **modo insercion** (para escribir texto, se entra con `i`, `a`, `o`, `I`, `A`, `O`) y **modo comando/ex** (comandos con `:`, como `:wq`, `:%s/`). Para solucionar el problema, debe presionar `Esc` para asegurarse de estar en modo normal y luego pulsar `i` para entrar en modo insercion antes de escribir. La barra inferior muestra `-- INSERT --` cuando se esta en modo insercion. Este concepto de modos es la diferencia fundamental entre vi y editores como nano, y es una de las preguntas mas frecuentes en el examen LPIC-1.
 
 </div>
 </div>
@@ -631,12 +631,12 @@ subtema: "103.8"
 <div class="flashcard" data-id="103.8-fc-035">
 <div class="flashcard-front">
 
-**P:** Que es/son 10. Ejecutar comandos externos?
+**P:** Un administrador esta editando `/etc/nginx/nginx.conf` en vi y necesita verificar que el puerto 8080 no esta en uso antes de guardarlo. No quiere perder sus cambios cerrando el editor. Que opciones tiene para ejecutar un comando del sistema desde vi?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Desde el modo comando, se pueden ejecutar comandos del shell:
+**R:** Desde el modo comando de vi, puede ejecutar comandos externos del shell sin salir del editor usando varias tecnicas: **`:!comando`** ejecuta un comando y muestra su salida (ej: `:!ss -tlnp | grep 8080` para verificar el puerto). **`:r !comando`** ejecuta el comando e **inserta su salida** directamente en el archivo en la posicion del cursor (ej: `:r !date` inserta la fecha actual). **`:!bash`** abre un shell interactivo completo; al escribir `exit` se regresa a vi con todos los cambios intactos. Tambien se puede filtrar texto del archivo a traves de un comando externo con **`:n,m !comando`** donde `n` y `m` son numeros de linea (ej: `:1,5 !sort` ordena las primeras 5 lineas). En el examen, la distincion clave es entre `:!comando` (solo muestra la salida) y `:r !comando` (inserta la salida en el archivo).
 
 </div>
 </div>
@@ -649,12 +649,12 @@ subtema: "103.8"
 <div class="flashcard" data-id="103.8-fc-036">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** En el examen LPIC-1, un candidato ve esta pregunta: "Para salir de vi descartando cambios se usa `:q!`, y para guardar y salir se usa `:wq!`". Es correcta esta afirmacion? Cuales son las trampas mas comunes de LPI sobre editores de texto?
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** La afirmacion es **parcialmente incorrecta**: `:q!` es correcto para salir sin guardar, pero `:wq!` fuerza la escritura incluso en archivos de solo lectura, que no es lo mismo que el `:wq` habitual. Las trampas mas comunes de LPI en 103.8 son: **1)** Confundir `:q!` (salir sin guardar) con `:wq` (guardar y salir) -- el `!` cambia completamente el significado. **2)** Confundir `i` (insertar antes del cursor) con `a` (insertar despues), y `o` (nueva linea abajo) con `O` (nueva linea arriba) -- las mayusculas/minusculas cambian el comportamiento. **3)** Creer que `dd` borra sin copiar al buffer -- en realidad `dd` **siempre** copia al buffer (funciona como cortar, no como eliminar). **4)** Confundir `u` (deshacer ultima accion, repetible) con `U` (restaurar toda la linea actual). **5)** Asumir que los atajos de nano son iguales a los de otros editores -- `Ctrl+W` busca en nano pero cierra en la mayoria de editores. **6)** Olvidar que `EDITOR` y `VISUAL` son las variables que definen el editor por defecto, no `SHELL`.
 
 </div>
 </div>

@@ -577,12 +577,12 @@ subtema: "104.1"
 <div class="flashcard" data-id="104.1-fc-032">
 <div class="flashcard-front">
 
-**P:** Que es/son 1. Dispositivos de bloque en Linux?
+**P:** Un servidor Linux detecta un nuevo disco SATA. El administrador ejecuta `ls /dev/sd*` y ve `/dev/sda`, `/dev/sda1`, `/dev/sda2` y `/dev/sdb`. Que representa `/dev/sdb` y por que no tiene particiones numeradas?
 
 </div>
 <div class="flashcard-back">
 
-**R:** En Linux, los discos y particiones se representan como archivos especiales de dispositivo en `/dev/`.
+**R:** `/dev/sdb` representa el segundo disco completo (dispositivo de bloque) sin particiones creadas todavia. En Linux, los discos SATA/SCSI/USB se nombran secuencialmente como `/dev/sda`, `/dev/sdb`, `/dev/sdc`, etc. El disco completo no lleva numero, mientras que sus particiones se numeran: `sdb1`, `sdb2`, etc. Si `/dev/sdb` aparece sin particiones numeradas, significa que el disco esta sin particionar o tiene una tabla de particiones vacia. Para crear particiones, el administrador usaria `fdisk /dev/sdb` (para MBR) o `gdisk /dev/sdb` (para GPT). Los dispositivos de bloque permiten acceso aleatorio a los datos, a diferencia de los dispositivos de caracter que se leen secuencialmente.
 
 </div>
 </div>
@@ -595,12 +595,12 @@ subtema: "104.1"
 <div class="flashcard" data-id="104.1-fc-033">
 <div class="flashcard-front">
 
-**P:** Que es/son 5. Gestion del espacio swap?
+**P:** Un servidor con 4 GB de RAM necesita swap. El administrador tiene una particion `/dev/sdc1` disponible. Escribe los 3 comandos necesarios para: (1) formatear la particion como swap, (2) activarla, y (3) verificar que esta activa. <input type="text" class="fill-blank" data-answer="mkswap /dev/sdc1 && swapon /dev/sdc1 && swapon --show" data-alt="mkswap /dev/sdc1; swapon /dev/sdc1; swapon --show,mkswap /dev/sdc1; swapon /dev/sdc1; cat /proc/swaps" placeholder="$ escribe aqui...">
 
 </div>
 <div class="flashcard-back">
 
-**R:** El swap es espacio en disco usado como extension de la RAM cuando esta se agota.
+**R:** `mkswap /dev/sdc1 && swapon /dev/sdc1 && swapon --show`. La secuencia es: (1) `mkswap` formatea la particion con la estructura swap (equivale a "formatear"), (2) `swapon` activa el area de swap para uso inmediato, (3) `swapon --show` o `cat /proc/swaps` muestra las areas de swap activas con su tamano y uso. Para que el swap sea persistente tras reiniciar, se debe agregar una linea en `/etc/fstab` con formato: `/dev/sdc1 none swap sw 0 0`. La particion deberia tener el tipo `82` (Linux swap) configurado previamente con `fdisk`. El swap tambien puede crearse sobre un archivo en lugar de una particion dedicada.
 
 </div>
 </div>
@@ -613,12 +613,12 @@ subtema: "104.1"
 <div class="flashcard" data-id="104.1-fc-034">
 <div class="flashcard-front">
 
-**P:** Que es/son 6. Puntos clave para el examen?
+**P:** Un administrador debe elegir entre MBR y GPT para un disco de 4 TB que necesita 6 particiones. Cual debe usar y por que? Menciona al menos 3 limitaciones de MBR que GPT supera.
 
 </div>
 <div class="flashcard-back">
 
-**R:** 1. **MBR vs GPT:** MBR soporta hasta 4 particiones primarias y discos de hasta 2 TB. GPT soporta 128+ particiones y discos enormes.
+**R:** Debe usar **GPT** obligatoriamente. MBR no puede gestionar discos mayores de 2 TB, por lo que el disco de 4 TB quedaria parcialmente inutilizable. Tres limitaciones de MBR que GPT supera: (1) **Tamano de disco:** MBR soporta hasta 2 TB (direccionamiento de 32 bits con sectores de 512 bytes); GPT soporta hasta 9.4 ZB. (2) **Numero de particiones:** MBR permite maximo 4 primarias (necesita extendida + logicas para mas); GPT permite 128 particiones directamente sin distincion de tipos. (3) **Integridad de datos:** MBR guarda la tabla de particiones en un unico sector sin respaldo; GPT incluye verificacion CRC32 y mantiene una copia de seguridad de la tabla al final del disco. Ademas, GPT requiere firmware UEFI, mientras que MBR funciona con BIOS tradicional.
 
 </div>
 </div>
@@ -631,12 +631,12 @@ subtema: "104.1"
 <div class="flashcard" data-id="104.1-fc-035">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** Un candidato LPIC-1 responde lo siguiente en el examen: "Para crear swap: primero `swapon`, luego `mkswap`. Las particiones logicas empiezan en `sda4`. `parted` permite deshacer cambios con `q`." Identifica todos los errores en estas afirmaciones.
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** Hay 3 errores criticos, que son trampas clasicas del examen LPIC-1: (1) **Orden swap invertido:** El orden correcto es primero `mkswap` (formatear) y luego `swapon` (activar). Ejecutar `swapon` antes de `mkswap` fallara porque la particion no tiene la firma swap. (2) **Numeracion de logicas:** Las particiones logicas siempre empiezan en `sda5`, nunca en `sda4`. Los numeros 1-4 estan reservados para particiones primarias y extendidas en MBR, incluso si no se usan todos. (3) **`parted` no permite deshacer:** A diferencia de `fdisk` y `gdisk` (que almacenan cambios en memoria y permiten salir sin guardar con `q`), `parted` aplica cada operacion inmediatamente al disco. No existe comando de deshacer en `parted`. Otras trampas frecuentes: confundir los codigos de tipo (`82` swap vs `83` Linux vs `8e` LVM), y olvidar que XFS no se puede reducir de tamano.
 
 </div>
 </div>

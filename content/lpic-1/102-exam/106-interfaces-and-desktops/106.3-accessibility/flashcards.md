@@ -11,9 +11,9 @@ subtema: "106.3"
 
 # Flashcards: 106.3 - Accesibilidad
 
-> 28 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
+> 33 tarjetas de repaso. Usa el sistema de repeticion espaciada para memorizar.
 
-<div class="flashcard-deck" data-subtema="106.3">
+<div class="flashcard-deck" data-subtopic="106.3">
 </div>
 
 <div class="flashcard" data-id="106.3-fc-001">
@@ -31,7 +31,7 @@ subtema: "106.3"
 
 ---
 
-<div class="flashcard-deck" data-subtema="106.3">
+<div class="flashcard-deck" data-subtopic="106.3">
 </div>
 
 <div class="flashcard" data-id="106.3-fc-002">
@@ -49,7 +49,7 @@ subtema: "106.3"
 
 ---
 
-<div class="flashcard-deck" data-subtema="106.3">
+<div class="flashcard-deck" data-subtopic="106.3">
 </div>
 
 <div class="flashcard" data-id="106.3-fc-003">
@@ -67,7 +67,7 @@ subtema: "106.3"
 
 ---
 
-<div class="flashcard-deck" data-subtema="106.3">
+<div class="flashcard-deck" data-subtopic="106.3">
 </div>
 
 <div class="flashcard" data-id="106.3-fc-004">
@@ -85,7 +85,7 @@ subtema: "106.3"
 
 ---
 
-<div class="flashcard-deck" data-subtema="106.3">
+<div class="flashcard-deck" data-subtopic="106.3">
 </div>
 
 <div class="flashcard" data-id="106.3-fc-005">
@@ -103,7 +103,7 @@ subtema: "106.3"
 
 ---
 
-<div class="flashcard-deck" data-subtema="106.3">
+<div class="flashcard-deck" data-subtopic="106.3">
 </div>
 
 <div class="flashcard" data-id="106.3-fc-006">
@@ -121,7 +121,7 @@ subtema: "106.3"
 
 ---
 
-<div class="flashcard-deck" data-subtema="106.3">
+<div class="flashcard-deck" data-subtopic="106.3">
 </div>
 
 <div class="flashcard" data-id="106.3-fc-007">
@@ -139,7 +139,7 @@ subtema: "106.3"
 
 ---
 
-<div class="flashcard-deck" data-subtema="106.3">
+<div class="flashcard-deck" data-subtopic="106.3">
 </div>
 
 <div class="flashcard" data-id="106.3-fc-008">
@@ -157,7 +157,7 @@ subtema: "106.3"
 
 ---
 
-<div class="flashcard-deck" data-subtema="106.3">
+<div class="flashcard-deck" data-subtopic="106.3">
 </div>
 
 <div class="flashcard" data-id="106.3-fc-009">
@@ -175,7 +175,7 @@ subtema: "106.3"
 
 ---
 
-<div class="flashcard-deck" data-subtema="106.3">
+<div class="flashcard-deck" data-subtopic="106.3">
 </div>
 
 <div class="flashcard" data-id="106.3-fc-010">
@@ -193,7 +193,7 @@ subtema: "106.3"
 
 ---
 
-<div class="flashcard-deck" data-subtema="106.3">
+<div class="flashcard-deck" data-subtopic="106.3">
 </div>
 
 <div class="flashcard" data-id="106.3-fc-011">
@@ -211,7 +211,7 @@ subtema: "106.3"
 
 ---
 
-<div class="flashcard-deck" data-subtema="106.3">
+<div class="flashcard-deck" data-subtopic="106.3">
 </div>
 
 <div class="flashcard" data-id="106.3-fc-012">
@@ -229,7 +229,7 @@ subtema: "106.3"
 
 ---
 
-<div class="flashcard-deck" data-subtema="106.3">
+<div class="flashcard-deck" data-subtopic="106.3">
 </div>
 
 <div class="flashcard" data-id="106.3-fc-013">
@@ -247,7 +247,7 @@ subtema: "106.3"
 
 ---
 
-<div class="flashcard-deck" data-subtema="106.3">
+<div class="flashcard-deck" data-subtopic="106.3">
 </div>
 
 <div class="flashcard" data-id="106.3-fc-014">
@@ -265,7 +265,7 @@ subtema: "106.3"
 
 ---
 
-<div class="flashcard-deck" data-subtema="106.3">
+<div class="flashcard-deck" data-subtopic="106.3">
 </div>
 
 <div class="flashcard" data-id="106.3-fc-015">
@@ -283,7 +283,7 @@ subtema: "106.3"
 
 ---
 
-<div class="flashcard-deck" data-subtema="106.3">
+<div class="flashcard-deck" data-subtopic="106.3">
 </div>
 
 <div class="flashcard" data-id="106.3-fc-016">
@@ -301,7 +301,7 @@ subtema: "106.3"
 
 ---
 
-<div class="flashcard-deck" data-subtema="106.3">
+<div class="flashcard-deck" data-subtopic="106.3">
 </div>
 
 <div class="flashcard" data-id="106.3-fc-017">
@@ -319,7 +319,7 @@ subtema: "106.3"
 
 ---
 
-<div class="flashcard-deck" data-subtema="106.3">
+<div class="flashcard-deck" data-subtopic="106.3">
 </div>
 
 <div class="flashcard" data-id="106.3-fc-018">
@@ -337,7 +337,7 @@ subtema: "106.3"
 
 ---
 
-<div class="flashcard-deck" data-subtema="106.3">
+<div class="flashcard-deck" data-subtopic="106.3">
 </div>
 
 <div class="flashcard" data-id="106.3-fc-019">
@@ -355,7 +355,7 @@ subtema: "106.3"
 
 ---
 
-<div class="flashcard-deck" data-subtema="106.3">
+<div class="flashcard-deck" data-subtopic="106.3">
 </div>
 
 <div class="flashcard" data-id="106.3-fc-020">
@@ -373,7 +373,7 @@ subtema: "106.3"
 
 ---
 
-<div class="flashcard-deck" data-subtema="106.3">
+<div class="flashcard-deck" data-subtopic="106.3">
 </div>
 
 <div class="flashcard" data-id="106.3-fc-021">
@@ -391,7 +391,7 @@ subtema: "106.3"
 
 ---
 
-<div class="flashcard-deck" data-subtema="106.3">
+<div class="flashcard-deck" data-subtopic="106.3">
 </div>
 
 <div class="flashcard" data-id="106.3-fc-022">
@@ -409,7 +409,7 @@ subtema: "106.3"
 
 ---
 
-<div class="flashcard-deck" data-subtema="106.3">
+<div class="flashcard-deck" data-subtopic="106.3">
 </div>
 
 <div class="flashcard" data-id="106.3-fc-023">
@@ -427,7 +427,7 @@ subtema: "106.3"
 
 ---
 
-<div class="flashcard-deck" data-subtema="106.3">
+<div class="flashcard-deck" data-subtopic="106.3">
 </div>
 
 <div class="flashcard" data-id="106.3-fc-024">
@@ -445,7 +445,7 @@ subtema: "106.3"
 
 ---
 
-<div class="flashcard-deck" data-subtema="106.3">
+<div class="flashcard-deck" data-subtopic="106.3">
 </div>
 
 <div class="flashcard" data-id="106.3-fc-025">
@@ -463,54 +463,144 @@ subtema: "106.3"
 
 ---
 
-<div class="flashcard-deck" data-subtema="106.3">
+<div class="flashcard-deck" data-subtopic="106.3">
 </div>
 
 <div class="flashcard" data-id="106.3-fc-026">
 <div class="flashcard-front">
 
-**P:** Que es/son 1. Introduccion a la accesibilidad en Linux?
+**P:** Que es GOK y por que herramienta ha sido reemplazado en las distribuciones modernas de GNOME?
 
 </div>
 <div class="flashcard-back">
 
-**R:** La accesibilidad (a11y - accessibility) en Linux se refiere al conjunto de tecnologias y configuraciones que permiten a personas con discapacidades utilizar el sistema operativo. Linux ofrece diversas
+**R:** **GOK** (GNOME Onscreen Keyboard) era el teclado en pantalla de GNOME para usuarios que no podian usar un teclado fisico. Permitia escribir texto haciendo clic en teclas virtuales con el raton o un dispositivo de puntero alternativo. GOK fue descontinuado y reemplazado por **Caribou** y luego por el **teclado en pantalla integrado de GNOME** (GNOME On-Screen Keyboard). Se activa desde Configuracion > Accesibilidad > Escritura > Teclado en pantalla, o con `gsettings set org.gnome.desktop.a11y.applications screen-keyboard-enabled true`. En el examen LPIC-1, GOK puede aparecer como referencia historica.
 
 </div>
 </div>
 
 ---
 
-<div class="flashcard-deck" data-subtema="106.3">
+<div class="flashcard-deck" data-subtopic="106.3">
 </div>
 
 <div class="flashcard" data-id="106.3-fc-027">
 <div class="flashcard-front">
 
-**P:** Que es/son 5. Configuraciones de accesibilidad del teclado (AccessX)?
+**P:** Que es Speech Dispatcher (speechd) y que papel juega en la arquitectura de accesibilidad de Linux?
 
 </div>
 <div class="flashcard-back">
 
-**R:** **AccessX** es el conjunto de funciones de accesibilidad del teclado implementadas en X11. Estas funciones ayudan a usuarios con dificultades motoras.
+**R:** **Speech Dispatcher** (speechd) es una capa intermedia entre las aplicaciones que necesitan salida de voz (como Orca) y los motores de sintesis de voz (como eSpeak-NG, Festival o MBROLA). Actua como servidor centralizado que gestiona las peticiones de voz: prioriza mensajes, controla volumen y velocidad, y enruta la salida al motor TTS configurado. Se puede probar con el comando `spd-say "Hola"`. Su configuracion se encuentra en `~/.config/speech-dispatcher/` o `/etc/speech-dispatcher/`. Gracias a esta arquitectura, cambiar el motor TTS no requiere modificar las aplicaciones que usan la voz.
 
 </div>
 </div>
 
 ---
 
-<div class="flashcard-deck" data-subtema="106.3">
+<div class="flashcard-deck" data-subtopic="106.3">
 </div>
 
 <div class="flashcard" data-id="106.3-fc-028">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** Que significan las siglas a11y y AT-SPI, y por que son importantes para el examen LPIC-1?
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** **a11y** es la abreviatura de "accessibility" (a + 11 letras + y), usada como termino general para la accesibilidad en informatica. **AT-SPI** (Assistive Technology Service Provider Interface) es el framework de comunicacion que conecta las tecnologias de asistencia (lectores de pantalla, teclados en pantalla) con las aplicaciones graficas. AT-SPI usa D-Bus para transportar informacion sobre los elementos de la interfaz (botones, campos de texto, menus). Las aplicaciones GTK+ y Qt implementan el soporte AT-SPI nativamente, lo que permite que Orca y otras herramientas accedan a su contenido. En el examen, es importante conocer AT-SPI como la capa que hace posible la accesibilidad en el escritorio Linux.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtopic="106.3">
+</div>
+
+<div class="flashcard" data-id="106.3-fc-029">
+<div class="flashcard-front">
+
+**P:** Un usuario necesita aumentar el tamano del texto en GNOME a 1.5x desde la linea de comandos. Escribe el comando correcto. <input type="text" class="fill-blank" data-answer="gsettings set org.gnome.desktop.interface text-scaling-factor 1.5" data-alt="" placeholder="$ escribe aqui...">
+
+</div>
+<div class="flashcard-back">
+
+**R:** `gsettings set org.gnome.desktop.interface text-scaling-factor 1.5`. Este comando ajusta el factor de escala del texto en GNOME. El valor por defecto es `1.0`. Valores utiles: `1.25` para un aumento leve, `1.5` para baja vision moderada, `2.0` para baja vision severa. Esta opcion afecta a todas las aplicaciones GTK y se aplica inmediatamente sin reiniciar la sesion. Es diferente de la lupa de pantalla (zoom), que amplifica toda la interfaz, no solo el texto.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtopic="106.3">
+</div>
+
+<div class="flashcard" data-id="106.3-fc-030">
+<div class="flashcard-front">
+
+**P:** Que herramienta de magnificacion de pantalla esta disponible en KDE Plasma para usuarios con baja vision?
+
+</div>
+<div class="flashcard-back">
+
+**R:** **KMag** (KDE Magnifier) es la herramienta de magnificacion de pantalla del escritorio KDE Plasma. Actua como una lupa que amplifica una zona de la pantalla, permitiendo ver detalles a usuarios con baja vision. Se ejecuta con el comando `kmag`. En GNOME, la funcion equivalente esta integrada en el escritorio como zoom de pantalla, activable con `Super + +/-` o desde Configuracion > Accesibilidad > Zoom. Ambas lupas son diferentes de `text-scaling-factor`, que solo cambia el tamano del texto sin amplificar graficos ni iconos.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtopic="106.3">
+</div>
+
+<div class="flashcard" data-id="106.3-fc-031">
+<div class="flashcard-front">
+
+**P:** Escribe el comando para consultar el estado actual de todas las funciones de accesibilidad del teclado (AccessX) en X11. <input type="text" class="fill-blank" data-answer="xkbset q" data-alt="xkbset query" placeholder="$ escribe aqui...">
+
+</div>
+<div class="flashcard-back">
+
+**R:** `xkbset q`. El comando `xkbset q` (query) muestra el estado actual de todas las funciones de accesibilidad del teclado AccessX: si Sticky Keys, Slow Keys, Bounce Keys, Mouse Keys y Toggle Keys estan activadas o desactivadas, y sus parametros de configuracion (tiempos de retardo, etc.). Para activar funciones individuales: `xkbset sticky -twokey`, `xkbset slowkeys 300`, `xkbset bouncekeys 300`, `xkbset mousekeys`. Para desactivar, se antepone `-`: `xkbset -slowkeys`.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtopic="106.3">
+</div>
+
+<div class="flashcard" data-id="106.3-fc-032">
+<div class="flashcard-front">
+
+**P:** En el examen LPIC-1, un escenario describe que un usuario escribe "HOLA" en lugar de "hola" sin darse cuenta. Que funcion de accesibilidad hubiera prevenido este problema, y que funcion NO lo resolveria?
+
+</div>
+<div class="flashcard-back">
+
+**R:** **Toggle Keys** hubiera prevenido este problema al emitir un sonido audible cuando el usuario activo Caps Lock accidentalmente. **Sticky Keys** NO resolveria este problema: Sticky Keys permite pulsar combinaciones de teclas una a la vez (Ctrl+C → Ctrl, luego C), pero no tiene nada que ver con la activacion accidental de Caps Lock. Es una trampa comun del examen confundir Toggle Keys (retroalimentacion audible para teclas de alternancia) con Sticky Keys (secuenciacion de teclas modificadoras). Bounce Keys tampoco seria util aqui, ya que filtra repeticiones, no activaciones accidentales.
+
+</div>
+</div>
+
+---
+
+<div class="flashcard-deck" data-subtopic="106.3">
+</div>
+
+<div class="flashcard" data-id="106.3-fc-033">
+<div class="flashcard-front">
+
+**P:** Cual es la diferencia entre usar brltty en la consola y usar brltty con Orca en el escritorio grafico?
+
+</div>
+<div class="flashcard-back">
+
+**R:** En la **consola de texto** (tty), brltty funciona de forma independiente: lee directamente el contenido de la pantalla de la consola y lo envia a la pantalla Braille fisica, sin necesidad de entorno grafico ni de Orca. En el **escritorio grafico**, brltty trabaja como backend de Orca: Orca obtiene la informacion de las aplicaciones graficas via AT-SPI y la envia a brltty para mostrarla en la pantalla Braille, ademas de la salida de voz. La configuracion de brltty (`/etc/brltty.conf`) es la misma en ambos casos, pero en el escritorio grafico es Orca quien decide que texto enviar al display Braille.
 
 </div>
 </div>

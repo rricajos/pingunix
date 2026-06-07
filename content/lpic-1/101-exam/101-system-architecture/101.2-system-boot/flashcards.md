@@ -433,12 +433,17 @@ subtema: "101.2"
 <div class="flashcard" data-id="101.2-fc-024">
 <div class="flashcard-front">
 
-**P:** Que es/son 1. La secuencia completa de arranque?
+**P:** Ordena correctamente las 4 etapas de la secuencia de arranque de un sistema Linux con BIOS:
+
+1. <input type="text" class="fill-blank" data-answer="POST" data-alt="post,Power-On Self-Test" placeholder="$ escribe aqui...">
+2. <input type="text" class="fill-blank" data-answer="MBR" data-alt="mbr,Master Boot Record,bootloader" placeholder="$ escribe aqui...">
+3. <input type="text" class="fill-blank" data-answer="Kernel" data-alt="kernel,linux" placeholder="$ escribe aqui...">
+4. <input type="text" class="fill-blank" data-answer="init" data-alt="init/systemd,systemd,PID 1" placeholder="$ escribe aqui...">
 
 </div>
 <div class="flashcard-back">
 
-**R:** El proceso de arranque de un sistema Linux sigue una secuencia bien definida. Es fundamental comprender cada etapa para el examen LPIC-1.
+**R:** La secuencia completa de arranque con BIOS es: **1) POST** — el firmware verifica la CPU, RAM y controladores de disco. **2) MBR/Bootloader** — el firmware lee los primeros 512 bytes del disco, ejecuta el codigo de arranque que carga GRUB2. **3) Kernel** — GRUB2 carga el kernel y el initramfs en memoria; el kernel inicializa el hardware y monta el sistema de archivos raiz. **4) init (PID 1)** — el kernel ejecuta `/sbin/init` (systemd o SysVinit), que inicia todos los servicios del sistema. En sistemas UEFI, la etapa 2 cambia: el firmware lee la ESP (EFI System Partition) directamente sin necesidad de MBR.
 
 </div>
 </div>
@@ -451,12 +456,12 @@ subtema: "101.2"
 <div class="flashcard" data-id="101.2-fc-025">
 <div class="flashcard-front">
 
-**P:** Que es/son 3. El cargador de arranque GRUB2?
+**P:** Un administrador necesita cambiar el tiempo de espera del menu GRUB2 a 10 segundos. Que archivo debe editar, que variable debe modificar, y que comando debe ejecutar despues para aplicar los cambios?
 
 </div>
 <div class="flashcard-back">
 
-**R:** GRUB2 (GRand Unified Bootloader version 2) es el cargador de arranque estandar en la mayoria de distribuciones Linux modernas. Ha reemplazado a GRUB Legacy (version 0.97).
+**R:** Debe editar `/etc/default/grub` y establecer `GRUB_TIMEOUT=10`. Despues debe ejecutar `update-grub` (Debian/Ubuntu) o `grub2-mkconfig -o /boot/grub2/grub.cfg` (Red Hat/CentOS). **Nunca se debe editar `/boot/grub/grub.cfg` directamente**, ya que se sobrescribe al regenerar la configuracion. Otras variables importantes en `/etc/default/grub` son: `GRUB_DEFAULT` (entrada por defecto), `GRUB_CMDLINE_LINUX` (parametros del kernel para todas las entradas) y `GRUB_CMDLINE_LINUX_DEFAULT` (parametros solo para el modo normal, no recovery). Los scripts en `/etc/grub.d/` generan las secciones del archivo `grub.cfg` final.
 
 </div>
 </div>
@@ -469,12 +474,12 @@ subtema: "101.2"
 <div class="flashcard" data-id="101.2-fc-026">
 <div class="flashcard-front">
 
-**P:** Que es/son 4. Opciones del kernel en el arranque?
+**P:** Un servidor Linux no arranca correctamente y sospechas de un problema con el disco. Necesitas arrancar en modo de solo lectura y con mensajes de depuracion detallados. Que parametros del kernel aniadirias en la linea `linux` de GRUB2?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Los parametros del kernel se pasan a traves de la linea `linux` en GRUB2. Estos parametros modifican el comportamiento del arranque.
+**R:** Se deben usar `ro` (montar el sistema de archivos raiz como solo lectura) y `debug` (activar mensajes detallados del kernel). Parametros clave del kernel para el examen LPIC-1: `root=/dev/sda1` — especifica la particion raiz. `ro` / `rw` — montar raiz como solo lectura o lectura-escritura. `single` o `1` — arrancar en modo monousuario (runlevel 1). `init=/bin/bash` — ejecutar bash como PID 1 (rescate avanzado). `quiet` — suprimir mensajes del kernel. `splash` — mostrar pantalla grafica de arranque. `debug` — activar depuracion detallada. `systemd.unit=rescue.target` — arrancar en modo rescate con systemd. Estos parametros se pueden pasar temporalmente editando la entrada de GRUB con la tecla `e`, o permanentemente en `GRUB_CMDLINE_LINUX` dentro de `/etc/default/grub`.
 
 </div>
 </div>
@@ -487,12 +492,16 @@ subtema: "101.2"
 <div class="flashcard" data-id="101.2-fc-027">
 <div class="flashcard-front">
 
-**P:** Que es/son 6. El proceso init y systemd?
+**P:** En un sistema con SysVinit, el administrador quiere que el sistema arranque en modo multiusuario con interfaz grafica. Que runlevel debe configurar? Y cual seria el target equivalente en systemd?
+
+Runlevel: <input type="text" class="fill-blank" data-answer="5" data-alt="runlevel 5" placeholder="$ escribe aqui...">
+
+Target systemd: <input type="text" class="fill-blank" data-answer="graphical.target" data-alt="graphical" placeholder="$ escribe aqui...">
 
 </div>
 <div class="flashcard-back">
 
-**R:** Una vez que el kernel ha montado el initramfs y posteriormente el sistema de archivos raiz real, ejecuta el proceso init (PID 1). Este proceso es responsable de iniciar todos los demas servicios del si
+**R:** El **runlevel 5** es el modo multiusuario con GUI en SysVinit. Su equivalente en systemd es `graphical.target`. Correspondencia completa entre runlevels y targets de systemd: **0** = `poweroff.target` (apagado). **1 / S / single** = `rescue.target` (monousuario/rescate). **2** = `multi-user.target` (multiusuario sin red en algunas distros). **3** = `multi-user.target` (multiusuario con red, sin GUI). **5** = `graphical.target` (multiusuario con GUI). **6** = `reboot.target` (reinicio). El proceso init siempre es **PID 1**. En SysVinit, el runlevel por defecto se define en `/etc/inittab`. En systemd, el target por defecto se configura con `systemctl set-default graphical.target` (crea un enlace simbolico en `/etc/systemd/system/default.target`).
 
 </div>
 </div>
@@ -505,12 +514,12 @@ subtema: "101.2"
 <div class="flashcard" data-id="101.2-fc-028">
 <div class="flashcard-front">
 
-**P:** Que es/son 7. Registros de arranque?
+**P:** Un servidor Linux se reinicio inesperadamente anoche. El administrador necesita revisar los mensajes del kernel del arranque anterior, no del actual. Que comando debe usar y que requisito previo debe cumplirse?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Los registros (logs) de arranque son fundamentales para diagnosticar problemas. Existen varios metodos para consultarlos.
+**R:** Debe usar `journalctl -k -b -1` para ver los mensajes del kernel (`-k`) del arranque anterior (`-b -1`). El requisito previo es que **los logs de journald sean persistentes**. Para ello: 1) Configurar `Storage=persistent` en `/etc/systemd/journald.conf`. 2) Crear el directorio `/var/log/journal/` si no existe. 3) Reiniciar el servicio con `systemctl restart systemd-journald`. Sin persistencia, los logs se pierden al reiniciar. Otros metodos para consultar registros de arranque: `dmesg` — muestra el kernel ring buffer (solo arranque actual, se sobrescribe con el tiempo). `journalctl -b` — todos los logs del arranque actual. `journalctl --list-boots` — lista todos los arranques registrados. `/var/log/boot.log` — algunos sistemas guardan la salida del proceso de arranque aqui.
 
 </div>
 </div>
@@ -523,12 +532,12 @@ subtema: "101.2"
 <div class="flashcard" data-id="101.2-fc-029">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** TRAMPA DE EXAMEN: Un candidato responde que `mkinitramfs` es el comando para generar initramfs en CentOS 8 y que se debe editar `/boot/grub/grub.cfg` directamente para cambiar el timeout de GRUB. Cuantos errores hay y cuales son?
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** Hay **2 errores**. 1) `mkinitramfs` y `update-initramfs` son herramientas de **Debian/Ubuntu**. En CentOS/RHEL/Fedora moderno se usa `dracut` (y `dracut --force` para regenerar). `mkinitrd` era la herramienta antigua de Red Hat, ya reemplazada. 2) **Nunca se edita `/boot/grub/grub.cfg` directamente** porque se sobrescribe al regenerar. Se edita `/etc/default/grub` y luego se ejecuta `update-grub` (Debian/Ubuntu) o `grub2-mkconfig -o /boot/grub2/grub.cfg` (Red Hat/CentOS). Otras trampas frecuentes del examen: los archivos en `/boot/` se llaman `initrd.img-*` por convencion historica aunque realmente sean initramfs. `journalctl -k` equivale a `dmesg` pero con mas opciones de filtrado. Upstart existio en Ubuntu pero fue reemplazado por systemd en Ubuntu 15.04. El ring buffer de `dmesg` es circular y los mensajes de arranque se pierden con el tiempo.
 
 </div>
 </div>

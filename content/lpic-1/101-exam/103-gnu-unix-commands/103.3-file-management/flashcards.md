@@ -559,12 +559,12 @@ subtema: "103.3"
 <div class="flashcard" data-id="103.3-fc-031">
 <div class="flashcard-front">
 
-**P:** Que es/son 1. Listar archivos: ls?
+**P:** Un administrador ejecuta `ls -la /home/user/` y observa un archivo con permisos `lrwxrwxrwx`. Que indica la letra `l` al inicio de la cadena de permisos, y que opciones de `ls` necesito para ver esta informacion?
 
 </div>
 <div class="flashcard-back">
 
-**R:** `ls` es el comando fundamental para listar el contenido de directorios.
+**R:** La letra `l` al inicio indica que el archivo es un **enlace simbolico** (symlink). Para ver esta informacion se necesita `ls -l` (formato largo), que muestra tipo de archivo, permisos, propietario, grupo, tamanho, fecha y nombre. La opcion `-a` anade los archivos ocultos (los que empiezan con `.`). Otros tipos de archivo en la primera posicion: `-` = archivo regular, `d` = directorio, `b` = dispositivo de bloque, `c` = dispositivo de caracter, `p` = pipe con nombre, `s` = socket. La combinacion `-la` es una de las mas comunes en administracion de sistemas.
 
 </div>
 </div>
@@ -577,12 +577,12 @@ subtema: "103.3"
 <div class="flashcard" data-id="103.3-fc-032">
 <div class="flashcard-front">
 
-**P:** Que es/son 3. Mover y renombrar: mv?
+**P:** Un usuario ejecuta `mv informe.txt /tmp/informe_viejo.txt`. El archivo `/tmp/informe_viejo.txt` ya existe. Que ocurre por defecto, y que opcion de `mv` evita la sobreescritura accidental?
 
 </div>
 <div class="flashcard-back">
 
-**R:** `mv` mueve archivos/directorios y tambien sirve para renombrar.
+**R:** Por defecto, `mv` **sobreescribe** el archivo destino sin pedir confirmacion. Para evitar sobreescrituras accidentales se usa `mv -i` (interactive), que pregunta antes de sobreescribir. Otra opcion es `mv -n` (no-clobber), que no sobreescribe si el destino ya existe. La opcion `-b` crea una copia de respaldo del destino antes de sobreescribir. Dato clave para el examen: `mv` no necesita `-r` para mover directorios (a diferencia de `cp` y `rm`, que si requieren `-r` para operar recursivamente sobre directorios).
 
 </div>
 </div>
@@ -595,12 +595,12 @@ subtema: "103.3"
 <div class="flashcard" data-id="103.3-fc-033">
 <div class="flashcard-front">
 
-**P:** Que es/son 6. Determinar tipo de archivo: file?
+**P:** Un colega renombra una imagen JPEG a `documento.pdf`. Al ejecutar `file documento.pdf`, que mostrara el comando y por que?
 
 </div>
 <div class="flashcard-back">
 
-**R:** `file` determina el tipo de un archivo **examinando su contenido** (no se basa en la extension):
+**R:** `file` mostrara algo como `documento.pdf: JPEG image data`, porque `file` **analiza el contenido real del archivo** (los "numeros magicos" o magic numbers en los primeros bytes), no su extension. El archivo sigue siendo una imagen JPEG independientemente de como se llame. Esta es una diferencia fundamental con Windows, donde el sistema operativo depende de la extension para determinar el tipo. La opcion `file -i` muestra el tipo MIME (por ejemplo `image/jpeg`), util para scripts. La opcion `file -L` sigue los enlaces simbolicos para analizar el archivo destino en lugar del enlace.
 
 </div>
 </div>
@@ -613,12 +613,14 @@ subtema: "103.3"
 <div class="flashcard" data-id="103.3-fc-034">
 <div class="flashcard-front">
 
-**P:** Que es/son 7. Globbing (comodines)?
+**P:** Completa el patron glob que lista todos los archivos en `/etc/` que empiezan por `host` y terminan en cualquier extension:
+
+`ls /etc/` <input type="text" class="fill-blank" data-answer="host*" data-alt="host*.*" placeholder="$ escribe aqui...">
 
 </div>
 <div class="flashcard-back">
 
-**R:** El globbing permite seleccionar archivos usando patrones. La expansion la realiza el shell antes de pasar los argumentos al comando.
+**R:** `host*`. El asterisco `*` sustituye cero o mas caracteres cualesquiera. Esto coincidiria con `hosts`, `hostname`, `hosts.allow`, `hosts.deny`, etc. Puntos clave del globbing: el **shell** (no el comando) expande los comodines antes de ejecutar el comando. Los comodines principales son: `*` (cero o mas caracteres), `?` (exactamente un caracter), `[abc]` (uno de los caracteres listados), `[!abc]` o `[^abc]` (cualquier caracter excepto los listados), `[a-z]` (un rango de caracteres). Los archivos ocultos (que empiezan con `.`) no se incluyen con `*` a menos que se escriba explicitamente `.*`.
 
 </div>
 </div>
@@ -631,12 +633,14 @@ subtema: "103.3"
 <div class="flashcard" data-id="103.3-fc-035">
 <div class="flashcard-front">
 
-**P:** Que es/son 8. Buscar archivos: find?
+**P:** Un administrador necesita encontrar todos los archivos con permisos SUID activados en todo el sistema. Escribe el comando `find` correcto:
+
+<input type="text" class="fill-blank" data-answer="find / -perm -4000" data-alt="find / -perm -u+s,find / -perm /4000" placeholder="$ escribe aqui...">
 
 </div>
 <div class="flashcard-back">
 
-**R:** `find` es un comando extremadamente potente para buscar archivos en el sistema de archivos. Busca recursivamente a partir de un directorio dado.
+**R:** `find / -perm -4000` (o `find / -perm -u+s`). La opcion `-perm -4000` busca archivos que tengan el bit SUID (4000) activado. El prefijo `-` indica que TODOS los bits especificados deben estar presentes (pueden tener otros adicionales). Con `/` en lugar de `-`, basta con que CUALQUIERA de los bits coincida. Esta busqueda es critica en auditorias de seguridad, ya que los archivos SUID se ejecutan con los privilegios del propietario. Otras busquedas por permisos frecuentes en el examen: `-perm -2000` (SGID), `-perm -1000` (sticky bit), `-perm 0644` (coincidencia exacta).
 
 </div>
 </div>
@@ -649,12 +653,12 @@ subtema: "103.3"
 <div class="flashcard" data-id="103.3-fc-036">
 <div class="flashcard-front">
 
-**P:** Que es/son 11. dd (disk dump)?
+**P:** Un administrador ejecuta `dd if=/dev/zero of=/dev/sdb bs=1M count=100`. Que efecto tiene este comando y por que es peligroso?
 
 </div>
 <div class="flashcard-back">
 
-**R:** `dd` copia y convierte datos a nivel de bloques. Es muy potente y peligroso si se usa incorrectamente.
+**R:** Escribe **100 MB de ceros** al inicio del disco `/dev/sdb`, destruyendo la tabla de particiones y los primeros 100 MB de datos de forma **irrecuperable**. `if=/dev/zero` lee un flujo infinito de bytes nulos, `of=/dev/sdb` escribe directamente al dispositivo de bloque, `bs=1M` usa bloques de 1 megabyte y `count=100` limita a 100 bloques. `dd` es peligroso porque: no pide confirmacion, opera directamente sobre dispositivos de bloque, y si se invierten `if` y `of` se puede destruir el disco de origen. Por eso se le llama informalmente "disk destroyer". Siempre verificar dos veces los parametros `if=` y `of=` antes de ejecutar.
 
 </div>
 </div>
@@ -667,12 +671,12 @@ subtema: "103.3"
 <div class="flashcard" data-id="103.3-fc-037">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** En el examen LPIC-1 aparece: `cp -r directorio/ /backup/`. Un colega dice que esto es equivalente a `cp -a directorio/ /backup/`. Tiene razon? Que diferencia critica hay entre `-r` y `-a`?
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** **No tiene razon.** `cp -r` copia recursivamente pero **no preserva** permisos, propietarios, timestamps ni enlaces simbolicos (los symlinks se copian como archivos regulares). `cp -a` equivale a `cp -dR --preserve=all`, que copia recursivamente preservando **todo**: permisos, propietarios, timestamps, enlaces simbolicos (como enlaces, no como copias), y atributos extendidos. Trampas frecuentes del examen 103.3: (1) confundir `-r` con `-a` en `cp`; (2) confundir `-z` (gzip), `-j` (bzip2) y `-J` (xz) en `tar`; (3) olvidar que `mv` no necesita `-r` para mover directorios; (4) confundir `-mtime +7` (hace MAS de 7 dias) con `-mtime -7` (hace MENOS de 7 dias) en `find`; (5) invertir `if=` y `of=` en `dd`.
 
 </div>
 </div>

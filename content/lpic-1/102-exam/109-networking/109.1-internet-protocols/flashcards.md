@@ -469,12 +469,12 @@ subtema: "109.1"
 <div class="flashcard" data-id="109.1-fc-026">
 <div class="flashcard-front">
 
-**P:** Que hace el comando `fe80::/10`?
+**P:** Un administrador ejecuta `ip -6 addr show` en un servidor Linux y observa que una interfaz tiene asignada la direccion `fe80::a1b2:c3d4:e5f6:7890/10`. El servidor no tiene configurado DHCPv6 ni direcciones estaticas. Puede esta direccion comunicarse con un host en otra subred a traves de un router?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Autoconfigurada, solo valida en el enlace local
+**R:** No. Las direcciones del rango `fe80::/10` son direcciones link-local en IPv6. Se autoconfiguran automaticamente en cada interfaz de red al activarse, sin necesidad de DHCP ni configuracion manual. Su alcance esta limitado exclusivamente al enlace local (el segmento de red directamente conectado), por lo que los routers no las reenvian a otras subredes. Son esenciales para el funcionamiento interno de IPv6: NDP (Neighbor Discovery Protocol) las utiliza para descubrimiento de vecinos, descubrimiento de routers y DAD (Duplicate Address Detection). Para comunicacion entre subredes se necesita una direccion global unicast (`2000::/3`) o unique local (`fc00::/7`).
 
 </div>
 </div>
@@ -487,12 +487,12 @@ subtema: "109.1"
 <div class="flashcard" data-id="109.1-fc-027">
 <div class="flashcard-front">
 
-**P:** Que hace el comando `::1`?
+**P:** Un tecnico necesita verificar que la pila IPv6 funciona correctamente en un servidor Linux. Ejecuta `ping6 ::1` y recibe respuestas exitosas. Que direccion es `::1`, cual es su forma completa y que demuestra esta prueba?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Equivalente a 127.0.0.1 en IPv4
+**R:** `::1` es la direccion de loopback en IPv6, equivalente a `127.0.0.1` en IPv4. Su forma completa es `0000:0000:0000:0000:0000:0000:0000:0001`. Al hacer ping exitosamente a `::1`, se demuestra que la pila de red IPv6 del kernel esta activa y funcionando correctamente en ese host. Esta prueba no verifica conectividad con la red externa, solo la funcionalidad interna del sistema. En el archivo `/etc/hosts`, la entrada `::1 localhost ip6-localhost` mapea esta direccion al nombre localhost para IPv6. Es importante no confundir `::1` (loopback) con `::` (direccion no especificada, equivalente a 0.0.0.0 en IPv4).
 
 </div>
 </div>
@@ -505,12 +505,12 @@ subtema: "109.1"
 <div class="flashcard" data-id="109.1-fc-028">
 <div class="flashcard-front">
 
-**P:** Que hace el comando `2000::/3`?
+**P:** Un servidor Linux tiene configuradas las siguientes direcciones IPv6: `2001:db8:abcd::10/64`, `fe80::1a2b:3c4d/10` y `fd00::5/48`. Cual de ellas es enrutable en Internet y a que tipo de direccion IPv6 pertenece cada una?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Direcciones publicas enrutables (como las IPv4 publicas)
+**R:** Solo `2001:db8:abcd::10/64` es enrutable en Internet. Pertenece al rango de direcciones Global Unicast (`2000::/3`), que son las direcciones IPv6 publicas equivalentes a las direcciones IPv4 publicas. La direccion `fe80::1a2b:3c4d/10` es link-local (rango `fe80::/10`), autoconfigurada y limitada al enlace local, no enrutable. La direccion `fd00::5/48` es Unique Local Address o ULA (rango `fc00::/7`, en la practica `fd00::/8`), equivalente a las direcciones privadas RFC 1918 de IPv4, usada en redes internas y no enrutable en Internet. Resumen de tipos: Global Unicast (`2000::/3`) = publica, Link-Local (`fe80::/10`) = enlace local, ULA (`fc00::/7`) = privada.
 
 </div>
 </div>
@@ -523,12 +523,12 @@ subtema: "109.1"
 <div class="flashcard" data-id="109.1-fc-029">
 <div class="flashcard-front">
 
-**P:** Que es/son Puntos clave para el examen?
+**P:** Un administrador necesita configurar un firewall en un servidor Linux. Debe permitir trafico IMAP seguro, POP3 seguro, LDAP seguro y HTTPS. Que puertos TCP debe abrir especificamente para estos cuatro servicios?
 
 </div>
 <div class="flashcard-back">
 
-**R:** 1. **TCP/IP tiene 4 capas**: Acceso a red, Internet, Transporte, Aplicacion
+**R:** Debe abrir los puertos TCP 993 (IMAPS), 995 (POP3S), 636 (LDAPS) y 443 (HTTPS). Desglose completo de puertos seguros vs. no seguros que aparecen en el examen: HTTP=80 / HTTPS=443, POP3=110 / POP3S=995, IMAP=143 / IMAPS=993, LDAP=389 / LDAPS=636, SMTP=25 / SMTPS=465 (o SMTP con STARTTLS=587). Otros puertos criticos para el examen: SSH=22, DNS=53 (TCP y UDP), DHCP=67(servidor)/68(cliente) en UDP, NTP=123 en UDP, SNMP=161/162 en UDP. Los puertos 0-1023 son well-known y requieren permisos de root.
 
 </div>
 </div>
@@ -541,12 +541,12 @@ subtema: "109.1"
 <div class="flashcard" data-id="109.1-fc-030">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** En el examen LPIC-1 aparece la pregunta: "Cual es el rango de direcciones privadas de Clase A?" con las opciones a) `10.0.0.0/16`, b) `10.0.0.0/8`, c) `172.16.0.0/8`, d) `192.168.0.0/16`. Un candidato selecciona la opcion A. Por que es incorrecta y cual es la respuesta correcta?
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** La respuesta correcta es b) `10.0.0.0/8`. La opcion A es una trampa clasica del examen: el rango de red `10.0.0.0` es correcto, pero la mascara `/16` es incorrecta (deberia ser `/8`). Trampas frecuentes en el examen LPIC-1 sobre redes: 1) Confundir la mascara correcta de cada rango privado: `10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`. 2) Confundir `169.254.0.0/16` (APIPA/link-local) con un rango privado RFC 1918 (no lo es). 3) Confundir `/etc/services` (servicio->puerto) con `/etc/protocols` (protocolo->numero). 4) Creer que IPv6 tiene broadcast (no existe, se usa multicast). 5) Usar `::` mas de una vez al simplificar IPv6 (solo se permite una vez). 6) Confundir puertos de servidor DHCP (67) y cliente DHCP (68).
 
 </div>
 </div>

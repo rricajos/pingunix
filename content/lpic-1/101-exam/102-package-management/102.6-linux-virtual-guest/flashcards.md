@@ -631,12 +631,12 @@ subtema: "102.6"
 <div class="flashcard" data-id="102.6-fc-035">
 <div class="flashcard-front">
 
-**P:** Que es/son 7. Guest Additions / Guest Tools?
+**P:** Un administrador instala una VM con VirtualBox pero no puede redimensionar la ventana, no funciona el portapapeles compartido ni las carpetas compartidas. Que debe instalar dentro del guest para resolver estos problemas y cual es el equivalente en VMware y KVM/QEMU?
 
 </div>
 <div class="flashcard-back">
 
-**R:** Son herramientas que se instalan en el sistema guest para mejorar la integracion con el hipervisor.
+**R:** Debe instalar las **Guest Additions** de VirtualBox dentro del sistema guest. Estas herramientas proporcionan controladores graficos optimizados, redimensionado automatico de ventana, portapapeles compartido, carpetas compartidas, sincronizacion del reloj y apagado limpio desde el hipervisor. En **VMware**, el equivalente son **VMware Tools** (o su version de codigo abierto **open-vm-tools**, instalable con `apt install open-vm-tools` o `yum install open-vm-tools`). En **KVM/QEMU**, se utiliza el **qemu-guest-agent** junto con los controladores **virtio** para rendimiento optimizado de disco y red. En todos los casos, estas herramientas se instalan **dentro del guest**, no en el host, y mejoran significativamente la integracion y el rendimiento de la maquina virtual.
 
 </div>
 </div>
@@ -649,12 +649,12 @@ subtema: "102.6"
 <div class="flashcard" data-id="102.6-fc-036">
 <div class="flashcard-front">
 
-**P:** Que es/son 10. cloud-init?
+**P:** Un equipo DevOps necesita desplegar 50 instancias Linux identicas en AWS, cada una con un hostname unico, un usuario administrador con clave SSH y varios paquetes preinstalados. Que herramienta deben usar para automatizar esta configuracion inicial y que formato debe tener el archivo de configuracion?
 
 </div>
 <div class="flashcard-back">
 
-**R:** **cloud-init** es la herramienta estandar de la industria para la configuracion automatica de instancias en la nube durante el **primer arranque**. Es soportada por la mayoria de proveedores cloud (AWS
+**R:** Deben usar **cloud-init**, la herramienta estandar de la industria para la configuracion automatica de instancias en la nube durante el **primer arranque**. El archivo de configuracion debe estar en formato **YAML** y obligatoriamente comenzar con la linea `#cloud-config`. Ejemplo de configuracion: se definen directivas como `hostname`, `users` (con `ssh_authorized_keys`), `packages` y `runcmd` para comandos post-instalacion. cloud-init es compatible con AWS, Azure, Google Cloud y OpenStack. Su configuracion principal reside en `/etc/cloud/cloud.cfg` y los logs se encuentran en `/var/log/cloud-init.log`. Es importante recordar que cloud-init se ejecuta **solo durante el primer arranque**; para re-ejecutarlo se debe limpiar su estado con `cloud-init clean`.
 
 </div>
 </div>
@@ -667,12 +667,12 @@ subtema: "102.6"
 <div class="flashcard" data-id="102.6-fc-037">
 <div class="flashcard-front">
 
-**P:** Que es/son Trampas del examen?
+**P:** Un candidato LPIC-1 responde que KVM es un hipervisor Tipo 2 porque se ejecuta sobre Linux, que los contenedores tienen su propio kernel, y que cloud-init se ejecuta en cada arranque del sistema. Cuantos errores ha cometido y cuales son las respuestas correctas?
 
 </div>
 <div class="flashcard-back">
 
-**R:** > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
+**R:** Ha cometido **3 errores**, todos son trampas clasicas del examen LPIC-1: **(1)** KVM es un hipervisor **Tipo 1 (Bare Metal)**, no Tipo 2. Aunque se ejecuta sobre Linux, KVM convierte al kernel Linux en un hipervisor que opera directamente sobre el hardware. Los Tipo 2 son VirtualBox y VMware Workstation. **(2)** Los contenedores **comparten el kernel** del host; no tienen kernel propio. Cada VM si tiene su propio kernel completo. Esta es la diferencia fundamental entre contenedores y VMs. **(3)** cloud-init se ejecuta **solo durante el primer arranque**, no en cada arranque. Para re-ejecutarlo hay que limpiar su estado con `cloud-init clean`. Otras trampas frecuentes: confundir `vmx` (Intel VT-x) con `svm` (AMD-V) en `/proc/cpuinfo`, olvidar regenerar `/etc/machine-id` y las claves SSH tras clonar una VM, y confundir IaaS/PaaS/SaaS.
 
 </div>
 </div>
