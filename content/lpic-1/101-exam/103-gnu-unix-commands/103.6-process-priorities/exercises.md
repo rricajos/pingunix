@@ -438,3 +438,41 @@ Escribe el comando para ejecutar el proceso `compilar.sh` con la maxima priorida
 El comando `nice -n -20` inicia un proceso con el valor nice mas bajo posible (-20), lo que le otorga la maxima prioridad. Solo root puede asignar valores nice negativos. Esto es util para procesos criticos que necesitan la mayor cantidad de tiempo de CPU posible. La prioridad del kernel (PR) resultante seria 0 (PR = 20 + NI = 20 + (-20) = 0).
 
 </details>
+
+---
+
+### Pregunta 24
+Un usuario normal tiene un proceso con nice 10 y quiere cambiarlo a nice 5. Que ocurrira?
+
+A) El cambio se realizara correctamente
+B) El comando fallara porque un usuario normal no puede bajar el valor nice
+C) El cambio requiere reiniciar el proceso
+D) El sistema ajustara automaticamente el nice al valor mas cercano permitido
+
+<details>
+<summary>Respuesta</summary>
+
+**B) El comando fallara porque un usuario normal no puede bajar el valor nice**
+
+Un usuario normal solo puede **subir** el valor nice (reducir prioridad). Una vez que un proceso tiene nice 10, un usuario normal no puede bajarlo a 5 (que seria aumentar prioridad). Solo root puede reducir el valor nice de cualquier proceso. Ademas, un usuario normal solo puede modificar el nice de sus propios procesos. Esta restriccion es de seguridad: evita que usuarios normales acaparen recursos del sistema.
+
+</details>
+
+---
+
+### Pregunta 25
+Cual comando muestra la clase de planificacion de I/O de un proceso con PID 1234?
+
+A) `nice -p 1234`
+B) `renice -p 1234`
+C) `ionice -p 1234`
+D) `chrt -p 1234`
+
+<details>
+<summary>Respuesta</summary>
+
+**C) `ionice -p 1234`**
+
+`ionice -p PID` muestra la clase y prioridad de I/O (entrada/salida de disco) de un proceso. Las clases son: realtime (1), best-effort (2) e idle (3). `nice` y `renice` gestionan la prioridad de CPU, no de I/O. `chrt -p PID` muestra la politica de planificacion de CPU en tiempo real (SCHED_FIFO, SCHED_RR, SCHED_OTHER), no de I/O. Es importante distinguir entre prioridad de CPU (nice/renice), prioridad de I/O (ionice) y politica de planificacion (chrt).
+
+</details>

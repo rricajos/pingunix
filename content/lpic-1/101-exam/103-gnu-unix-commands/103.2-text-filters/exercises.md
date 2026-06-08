@@ -429,3 +429,41 @@ Que comando usarias para mostrar solo la linea 5 de un archivo usando `sed`?
 `sed -n '5p'` muestra unicamente la linea 5 del archivo. La opcion `-n` suprime la salida por defecto de sed (que normalmente imprime todas las lineas) y `p` (print) imprime solo la linea especificada. Sin `-n`, la linea 5 apareceria duplicada. Para mostrar un rango de lineas se usa `sed -n '2,5p'` (lineas 2 a 5). Para mostrar lineas que contienen un patron: `sed -n '/patron/p'`.
 
 </details>
+
+---
+
+### Pregunta 24
+Un archivo contiene lineas duplicadas consecutivas y no consecutivas. Cual comando elimina SOLO las duplicadas consecutivas?
+
+A) `sort -u archivo.txt`
+B) `uniq archivo.txt`
+C) `uniq -d archivo.txt`
+D) `sort archivo.txt | uniq -u`
+
+<details>
+<summary>Respuesta</summary>
+
+**B) `uniq archivo.txt`**
+
+`uniq` elimina lineas duplicadas **consecutivas** sin alterar el orden del archivo. No detecta duplicados no consecutivos. `sort -u` ordena y elimina TODOS los duplicados (cambia el orden). `uniq -d` muestra SOLO las lineas que estan duplicadas (no las elimina, las lista). `sort | uniq -u` muestra SOLO las lineas unicas (elimina las que tienen algun duplicado). La diferencia entre `uniq` y `sort -u` es fundamental para el examen: `uniq` trabaja solo con lineas adyacentes.
+
+</details>
+
+---
+
+### Pregunta 25
+Un administrador necesita combinar dos archivos linea por linea, separando los campos con un tabulador. Cual comando es el mas adecuado?
+
+A) `cat archivo1.txt archivo2.txt`
+B) `join archivo1.txt archivo2.txt`
+C) `paste archivo1.txt archivo2.txt`
+D) `merge archivo1.txt archivo2.txt`
+
+<details>
+<summary>Respuesta</summary>
+
+**C) `paste archivo1.txt archivo2.txt`**
+
+`paste` combina archivos linea por linea, poniendo las lineas correspondientes de cada archivo una al lado de la otra, separadas por tabulador por defecto. `cat` concatena archivos secuencialmente (uno despues del otro). `join` combina archivos basandose en un campo comun (como un JOIN de SQL), requiere que los archivos esten ordenados por ese campo. `merge` no es un comando estandar de Linux. Se puede cambiar el delimitador de paste con `-d`: `paste -d ',' archivo1 archivo2` usa coma como separador.
+
+</details>

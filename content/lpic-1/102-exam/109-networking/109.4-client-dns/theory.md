@@ -238,6 +238,136 @@ Esto redirige todas las consultas DNS al stub resolver local de systemd-resolved
 
 ---
 
+## NetworkManager y DNS
+
+### Como NetworkManager gestiona DNS
+En distribuciones modernas, **NetworkManager** gestiona automaticamente `/etc/resolv.conf`:
+
+- Al conectarse a una red (DHCP o manual), NetworkManager recibe los servidores DNS
+- Actualiza `/etc/resolv.conf` automaticamente
+- Puede trabajar junto a systemd-resolved o gestionarlo directamente
+
+### Modos de gestion de DNS
+NetworkManager puede configurarse con diferentes backends en `/etc/NetworkManager/NetworkManager.conf`:
+
+```ini
+[main]
+dns=default          # NM escribe directamente en /etc/resolv.conf
+dns=systemd-resolved # NM envia la config a systemd-resolved
+dns=dnsmasq          # NM usa dnsmasq como cache local
+dns=none             # NM no toca /etc/resolv.conf
+```
+
+### `nmcli` para consultar y cambiar DNS
+```bash
+# Ver la configuracion DNS actual
+nmcli dev show | grep DNS
+
+# Ver detalles de una conexion
+nmcli con show "Mi Conexion" | grep dns
+
+# Establecer DNS manualmente para una conexion
+nmcli con mod "Mi Conexion" ipv4.dns "8.8.8.8 8.8.4.4"
+nmcli con mod "Mi Conexion" ipv4.ignore-auto-dns yes
+
+# Aplicar los cambios
+nmcli con up "Mi Conexion"
+```
+
+> **Para el examen**: NetworkManager puede sobreescribir `/etc/resolv.conf` cada vez que se activa una conexion. Si editas manualmente `/etc/resolv.conf` y los cambios desaparecen, es probable que NetworkManager los este reescribiendo.
+
+---
+
+## El problema de /etc/resolv.conf en sistemas modernos
+
+### Multiples gestores de DNS
+En sistemas con systemd-resolved + NetworkManager, `/etc/resolv.conf` puede ser gestionado por varios servicios simultaneamente. Esto genera confusion:
+
+```bash
+# Verificar si /etc/resolv.conf es un symlink
+ls -la /etc/resolv.conf
+```
+
+Posibles estados:
+
+| Tipo | Apunta a | Significado |
+|------|----------|-------------|
+| Symlink | `/run/systemd/resolve/stub-resolv.conf` | systemd-resolved gestiona DNS (stub 127.0.0.53) |
+| Symlink | `/run/systemd/resolve/resolv.conf` | systemd-resolved pero con DNS upstream directo |
+| Symlink | `/run/NetworkManager/resolv.conf` | NetworkManager gestiona DNS |
+| Archivo regular | — | Gestion manual (ningun servicio lo toca) |
+
+### `/run/systemd/resolve/` - Ficheros de resolved
+```bash
+# Stub resolver (el mas comun, usa 127.0.0.53)
+/run/systemd/resolve/stub-resolv.conf
+
+# DNS upstream reales (sin pasar por el stub)
+/run/systemd/resolve/resolv.conf
+```
+
+> **Para el examen**: Si necesitas saber los DNS reales que usa el sistema (no el stub 127.0.0.53), consulta `/run/systemd/resolve/resolv.conf` o usa `resolvectl status`.
+
+---
+
+## Flujo completo de resolucion DNS
+
+### Orden de resolucion paso a paso
+Cuando un programa necesita resolver un nombre:
+
+```
+1. Aplicacion llama a getaddrinfo() o gethostbyname()
+         ↓
+2. glibc consulta /etc/nsswitch.conf
+         ↓
+3. Si "files" esta primero → lee /etc/hosts
+   ¿Encontrado? → Devuelve la IP
+         ↓ (no encontrado)
+4. Si "dns" es siguiente → lee /etc/resolv.conf
+         ↓
+5. Si resolv.conf apunta a 127.0.0.53 → systemd-resolved
+   Si apunta a IP real → consulta DNS directamente
+         ↓
+6. systemd-resolved consulta su cache
+   ¿En cache? → Devuelve resultado
+         ↓ (cache miss)
+7. systemd-resolved consulta el DNS upstream
+         ↓
+8. Resultado se devuelve a la aplicacion
+```
+
+### Depuracion de problemas DNS
+```bash
+# 1. Verificar que DNS esta configurado
+cat /etc/resolv.conf
+
+# 2. Probar resolucion con nsswitch completo
+getent hosts ejemplo.com
+
+# 3. Probar DNS directo (sin nsswitch)
+dig ejemplo.com +short
+
+# 4. Probar con servidor DNS especifico
+dig @8.8.8.8 ejemplo.com +short
+
+# 5. Verificar estado de systemd-resolved
+resolvectl status
+
+# 6. Verificar cache de resolved
+resolvectl statistics
+
+# 7. Limpiar cache si hay problemas
+resolvectl flush-caches
+
+# 8. Verificar que /etc/hosts no tiene entradas incorrectas
+getent hosts ejemplo.com
+grep ejemplo.com /etc/hosts
+```
+
+> **Para el examen**: Si `getent hosts dominio` devuelve una IP pero `dig dominio` devuelve otra, probablemente haya una entrada en `/etc/hosts` que tiene prioridad sobre DNS (porque `files` esta antes que `dns` en nsswitch.conf).
+
+---
+
 ## Puntos clave para el examen
 
 1. **`/etc/resolv.conf`**: Maximo 3 `nameserver`; `domain` y `search` son mutuamente excluyentes

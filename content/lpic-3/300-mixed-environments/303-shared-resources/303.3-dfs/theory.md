@@ -167,6 +167,109 @@ smbclient //servidor/namespace -U usuario -c "ls"
 smbclient //servidor/namespace/datos -U usuario
 ```
 
+## DFS en entornos Active Directory
+
+### DFS standalone vs DFS en AD
+
+| Aspecto | DFS Standalone (Samba) | DFS en AD |
+|---------|----------------------|-----------|
+| Raiz DFS | En un servidor Samba individual | En el namespace del dominio |
+| Acceso | `\\servidor\share` | `\\dominio\dfs` |
+| Disponibilidad | Depende de un servidor | Alta disponibilidad via AD |
+| Replicacion | No incluida | DFS-R (solo Windows nativo) |
+
+En un entorno AD, DFS puede usar el namespace del dominio:
+- `\\empresa.local\dfs\documentos` → resuelve via AD independientemente del servidor
+- Si el servidor DFS cae, AD puede redirigir a otro servidor con la misma raiz
+
+### Configuracion de DFS en Samba como miembro de dominio
+
+```ini
+[global]
+   workgroup = EMPRESA
+   realm = EMPRESA.LOCAL
+   security = ADS
+   host msdfs = yes
+
+[dfs]
+   path = /srv/samba/dfs
+   msdfs root = yes
+   valid users = @"EMPRESA\Domain Users"
+```
+
+> **Para el examen:** Cuando Samba es miembro de un dominio AD, DFS funciona con autenticacion Kerberos. Los permisos pueden asignarse a grupos de dominio (`@"DOMINIO\grupo"`).
+
+## Comportamiento del cliente DFS
+
+### Como resuelve el cliente Windows un enlace DFS
+
+1. El cliente conecta al share raiz DFS (`\\servidor\namespace`)
+2. El servidor responde con un **DFS referral** (redireccion)
+3. El referral contiene la lista de destinos y sus prioridades
+4. El cliente conecta directamente al destino indicado
+5. El servidor DFS no participa en la transferencia de datos
+
+```
+Cliente → \\servidor\namespace\datos     (peticion)
+       ← Referral: \\srv1\datos, \\srv2\datos  (respuesta DFS)
+Cliente → \\srv1\datos                   (conexion directa)
+```
+
+### Cache de referrals en el cliente
+
+Los clientes Windows cachean los referrals DFS:
+- **TTL por defecto**: 300 segundos (5 minutos)
+- Se puede controlar con el parametro `msdfs referral` en Samba
+- El cache reduce la carga en el servidor DFS
+- Un TTL largo mejora rendimiento pero retrasa la deteccion de cambios
+
+```bash
+# En clientes Windows, limpiar cache DFS
+dfsutil /purgecache
+
+# Verificar referrals desde Samba
+smbclient //servidor/namespace -U usuario -c "ls"
+```
+
+## Troubleshooting de DFS
+
+### Problemas comunes y soluciones
+
+| Problema | Causa probable | Solucion |
+|----------|---------------|----------|
+| El enlace DFS no funciona | Formato incorrecto del symlink | Verificar `ls -la` y formato `msdfs:srv\share` |
+| Acceso denegado al enlace | Permisos del directorio raiz DFS | Verificar permisos Unix del directorio |
+| Referral no se resuelve | `host msdfs = no` en global | Activar `host msdfs = yes` |
+| Solo funciona un destino | Backslash incorrecto en symlink | Usar `\` no `/` en el formato DFS |
+| Cliente no sigue el referral | Cache de referral obsoleto | Esperar TTL o limpiar cache (`dfsutil /purgecache`) |
+
+### Comandos de diagnostico
+
+```bash
+# Verificar symlinks DFS
+ls -la /srv/samba/dfs/
+# Debe mostrar: enlace -> msdfs:servidor\share
+
+# Verificar configuracion DFS
+testparm -s 2>/dev/null | grep -i "msdfs\|dfs"
+
+# Probar acceso DFS con smbclient
+smbclient //servidor/namespace -U usuario%password -c "ls"
+
+# Ver referrals DFS con smbclient
+smbclient //servidor/namespace -U usuario -c "dir"
+
+# Verificar logs de Samba (nivel debug)
+# En smb.conf: log level = 3 msdfs:10
+tail -f /var/log/samba/log.smbd | grep -i dfs
+
+# Verificar desde Windows
+net use \\servidor\namespace /user:usuario password
+dir \\servidor\namespace
+```
+
+---
+
 ## Consideraciones de seguridad
 
 - Los permisos en la raíz DFS controlan quién puede ver los enlaces

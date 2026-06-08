@@ -231,6 +231,142 @@ Rango nice:      -20 ........... 0 ........... 19
 
 ---
 
+## 7. `ionice` - Prioridad de E/S (I/O Scheduling)
+
+### Concepto
+Ademas de la prioridad de CPU (nice), Linux permite controlar la **prioridad de entrada/salida** (disco) de un proceso con `ionice`. Esto es util para procesos que hacen mucho I/O (backups, copias de ficheros grandes).
+
+### Clases de planificacion de I/O
+
+| Clase | Numero | Descripcion | Prioridad interna |
+|-------|--------|-------------|-------------------|
+| **Realtime** | 1 | Acceso inmediato al disco, puede matar el rendimiento | 0-7 (0 = maxima) |
+| **Best-effort** | 2 | Clase por defecto, reparto justo | 0-7 (derivada de nice) |
+| **Idle** | 3 | Solo accede al disco cuando nadie mas lo necesita | Sin nivel |
+
+### Uso basico
+```bash
+# Ver la clase de I/O de un proceso
+ionice -p PID
+
+# Iniciar proceso con clase idle (minimo impacto en disco)
+ionice -c 3 cp /backup/grande.tar /destino/
+
+# Iniciar con clase best-effort, nivel 7 (minima prioridad de I/O)
+ionice -c 2 -n 7 tar czf backup.tar.gz /datos/
+
+# Iniciar con clase realtime, nivel 0 (maxima prioridad de I/O, solo root)
+ionice -c 1 -n 0 dd if=/dev/sda of=/backup/disco.img
+
+# Cambiar la clase de I/O de un proceso en ejecucion
+ionice -c 3 -p 1234
+```
+
+### Relacion nice ↔ ionice
+En la clase **best-effort** (por defecto), si no se especifica nivel, se calcula automaticamente a partir del nice:
+
+```
+nivel_io = (nice + 20) / 5
+```
+
+| Nice | Nivel I/O (best-effort) |
+|------|------------------------|
+| -20 | 0 (maxima prioridad I/O) |
+| 0 | 4 |
+| 19 | 7 (minima prioridad I/O) |
+
+> **Para el examen**: `ionice` controla la prioridad de disco, `nice`/`renice` controla la prioridad de CPU. Son independientes pero complementarios. Un backup tipico usaria `nice -n 19 ionice -c 3 rsync ...` para minimizar impacto en CPU y disco.
+
+---
+
+## 8. Procesos en tiempo real
+
+### Politicas de planificacion del kernel
+Linux soporta diferentes politicas de planificacion (scheduling policies):
+
+| Politica | Tipo | Descripcion |
+|----------|------|-------------|
+| `SCHED_OTHER` | Normal | Planificacion por defecto (CFS). Usa nice values |
+| `SCHED_FIFO` | Tiempo real | First In First Out. Prioridad fija, sin time-slice |
+| `SCHED_RR` | Tiempo real | Round Robin. Como FIFO pero con time-slice entre procesos de igual prioridad |
+| `SCHED_BATCH` | Normal | Optimizado para procesos batch (no interactivos) |
+| `SCHED_IDLE` | Normal | Prioridad minima absoluta |
+
+### `chrt` - Manipular politicas de planificacion en tiempo real
+```bash
+# Ver la politica actual de un proceso
+chrt -p PID
+
+# Iniciar con SCHED_FIFO prioridad 50
+chrt -f 50 ./proceso_critico
+
+# Iniciar con SCHED_RR prioridad 10
+chrt -r 10 ./proceso
+
+# Cambiar un proceso existente a SCHED_RR
+chrt -r -p 25 PID
+
+# Volver a politica normal (SCHED_OTHER)
+chrt -o -p 0 PID
+```
+
+> **Para el examen**: Los procesos en tiempo real (SCHED_FIFO, SCHED_RR) tienen prioridad absoluta sobre los procesos normales (SCHED_OTHER). En `top`, estos procesos muestran `rt` en la columna PR. Solo root puede asignar politicas de tiempo real.
+
+### Prioridades en tiempo real vs nice
+```
+Prioridades del kernel (0-139):
+  0-99:   Procesos en tiempo real (SCHED_FIFO, SCHED_RR)
+  100-139: Procesos normales (SCHED_OTHER) → nice -20 a 19
+```
+
+Los procesos de tiempo real **siempre** se ejecutan antes que los procesos normales, sin importar el valor nice.
+
+---
+
+## 9. Escenarios practicos para el examen
+
+### Escenario 1: Backup sin afectar al sistema
+```bash
+# Baja prioridad de CPU + I/O idle + en segundo plano
+nice -n 19 ionice -c 3 tar czf /backup/home.tar.gz /home/ &
+```
+
+### Escenario 2: Proceso lento que necesita mas CPU
+```bash
+# Primero localizar el PID
+ps aux | grep proceso_lento
+# Darle mas prioridad (solo root)
+renice -n -5 -p 4567
+```
+
+### Escenario 3: Compilacion que bloquea el sistema
+```bash
+# Bajar prioridad de la compilacion
+renice -n 15 -p $(pgrep make)
+# O bajar la prioridad de todos los procesos de un usuario
+renice -n 10 -u developer
+```
+
+### Escenario 4: Ver la distribucion de prioridades
+```bash
+# Listado completo ordenado por nice
+ps -eo pid,user,ni,pri,cls,%cpu,comm --sort=ni
+
+# Solo procesos con nice modificado
+ps -eo pid,user,ni,comm | awk '$3 != 0 && $3 != "-"'
+```
+
+La columna `CLS` muestra la clase de planificacion:
+| CLS | Significado |
+|-----|-------------|
+| `TS` | SCHED_OTHER (normal, Time-Sharing) |
+| `FF` | SCHED_FIFO |
+| `RR` | SCHED_RR |
+| `B` | SCHED_BATCH |
+| `IDL` | SCHED_IDLE |
+
+---
+
 ## Trampas del examen
 
 > Errores comunes y distinciones criticas que LPI suele evaluar en este subtema:
@@ -242,3 +378,6 @@ Rango nice:      -20 ........... 0 ........... 19
 - **`nice` es para procesos NUEVOS; `renice` para procesos EXISTENTES** — `nice -n 5 comando` inicia el comando con nice 5; `renice -n 5 -p PID` cambia el nice de un proceso ya en ejecucion. El examen puede confundir cuando usar cada uno.
 - **PR = 20 + NI** — La prioridad real (PR) mostrada en `top` se calcula como 20 + NI. Un nice de -20 da PR=0; un nice de 19 da PR=39. El examen puede preguntar que valor de PR corresponde a un nice dado.
 - **`renice` usa `-p` para PID, `-u` para usuario, `-g` para grupo** — `renice -n 5 -p 1234` cambia un proceso; `renice -n 5 -u sandra` cambia todos los procesos de un usuario. El examen puede mezclar estos flags.
+- **`ionice -c 3` (idle) NO tiene niveles** — Las clases realtime (1) y best-effort (2) tienen niveles de 0 a 7, pero la clase idle (3) no acepta nivel. Especificar `-n` con clase idle es un error. El examen puede incluir opciones con `-c 3 -n 4` como distractor.
+- **Procesos en tiempo real (`rt` en top) NO se controlan con nice** — Si un proceso muestra `rt` en la columna PR de top, esta bajo SCHED_FIFO o SCHED_RR. Cambiarle el nice no tiene efecto. Solo `chrt` puede modificar su prioridad. El examen puede preguntar como dar maxima prioridad y la respuesta NO es `nice -n -20` sino usar politicas de tiempo real.
+- **`SCHED_FIFO` vs `SCHED_RR`** — Ambos son tiempo real. FIFO ejecuta el proceso hasta que termine o ceda voluntariamente; RR reparte time-slices entre procesos de igual prioridad. El examen puede describir el comportamiento y pedir que identifiques la politica.

@@ -407,3 +407,41 @@ Que comando usarias para eliminar el alias `ll` previamente definido?
 `unalias ll` elimina el alias `ll` de la sesion actual. Para eliminar todos los alias de la sesion, se usa `unalias -a`. Los alias eliminados con `unalias` solo se eliminan de la sesion actual; si estan definidos en `~/.bashrc`, volveran a cargarse al iniciar un nuevo shell. Para eliminar un alias permanentemente, se debe editar el archivo donde fue definido (`~/.bashrc` o `~/.bash_profile`). Se pueden evadir alias temporalmente con `\comando`, `command comando` o usando la ruta completa.
 
 </details>
+
+---
+
+### Pregunta 24
+Un administrador ejecuta `echo $SHELL` y obtiene `/bin/bash`, pero luego ejecuta `echo $0` y obtiene `sh`. Cual es la explicacion mas probable?
+
+A) El sistema tiene un error en la configuracion del shell
+B) El usuario esta ejecutando un script con `#!/bin/sh` como interprete
+C) `$SHELL` muestra el shell actual y `$0` muestra el shell de login
+D) `$SHELL` muestra el shell de login y `$0` muestra el shell en uso actualmente
+
+<details>
+<summary>Respuesta</summary>
+
+**D) `$SHELL` muestra el shell de login y `$0` muestra el shell en uso actualmente**
+
+`$SHELL` es una variable de entorno que almacena el shell de login del usuario (definido en `/etc/passwd`) y no cambia cuando se inicia un subshell diferente. `$0` muestra el nombre del programa actual en ejecucion. Si el usuario inicio `sh` manualmente o esta en un script, `$0` reflejara `sh` mientras que `$SHELL` seguira mostrando `/bin/bash`. Esta distincion es importante para diagnosticar en que shell realmente se esta trabajando.
+
+</details>
+
+---
+
+### Pregunta 25
+Cual de las siguientes formas ejecuta un comando ignorando cualquier alias definido para ese nombre?
+
+A) `alias -i ls`
+B) `noalias ls`
+C) `\ls`
+D) `run ls`
+
+<details>
+<summary>Respuesta</summary>
+
+**C) `\ls`**
+
+Anteponer una barra invertida (`\`) antes de un comando evita la expansion de alias, forzando la ejecucion del comando real. `\ls` ejecuta `/bin/ls` directamente, ignorando cualquier alias como `alias ls='ls --color=auto'`. Otras formas equivalentes son usar `command ls` o la ruta completa `/bin/ls`. Las opciones `alias -i` y `noalias` no existen, y `run` no es un comando estandar de bash.
+
+</details>

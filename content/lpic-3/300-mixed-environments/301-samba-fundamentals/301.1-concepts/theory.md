@@ -179,6 +179,107 @@ systemctl start smbd nmbd winbindd
 | Servidor DNS | No | Sí (interno o BIND9_DLZ) |
 | GPO | Limitado | Soporte básico |
 
+## Modos de seguridad de Samba
+
+El parametro `security` en `[global]` define como Samba autentifica a los usuarios:
+
+| Modo | Valor | Descripcion |
+|------|-------|-------------|
+| **User** | `security = user` | Samba autentifica contra su propia base de datos (por defecto) |
+| **ADS** | `security = ADS` | Samba es miembro de un dominio Active Directory; usa Kerberos |
+| **Domain** | `security = domain` | Samba es miembro de un dominio NT4 (obsoleto) |
+
+> **Para el examen:** `security = user` es el modo por defecto y el mas comun para servidores standalone. `security = ADS` se usa cuando Samba es miembro de un dominio AD. El modo `security = share` fue eliminado en Samba 4.
+
+### Backends de autenticacion (passdb backend)
+
+| Backend | Descripcion | Uso tipico |
+|---------|-------------|------------|
+| `tdbsam` | Base de datos TDB local | Servidores standalone (por defecto) |
+| `ldapsam` | Usuarios almacenados en LDAP | Multiples servidores Samba con usuarios compartidos |
+| `smbpasswd` | Archivo de texto plano (obsoleto) | Compatibilidad con Samba 2/3 |
+
+```ini
+# En smb.conf
+[global]
+   passdb backend = tdbsam
+   # o
+   passdb backend = ldapsam:ldap://ldap.empresa.com
+```
+
+```bash
+# Gestionar usuarios con tdbsam
+smbpasswd -a usuario          # Anadir usuario Samba
+smbpasswd -x usuario          # Eliminar usuario Samba
+smbpasswd usuario             # Cambiar password
+pdbedit -L                    # Listar usuarios Samba
+pdbedit -Lv                   # Listar con detalle
+pdbedit -a usuario            # Anadir con pdbedit (mas opciones)
+```
+
+> **Para el examen:** `tdbsam` es el backend por defecto y almacena datos en `/var/lib/samba/private/passdb.tdb`. `smbpasswd` es obsoleto. `pdbedit` ofrece mas opciones que `smbpasswd` para gestion de cuentas.
+
+## Herramientas de diagnostico y gestion
+
+### testparm - Verificar configuracion
+```bash
+# Verificar smb.conf y mostrar errores
+testparm
+
+# Mostrar configuracion efectiva (sin valores por defecto)
+testparm -s
+
+# Verificar acceso de un host especifico
+testparm -s /etc/samba/smb.conf 192.168.1.100
+```
+
+### smbstatus - Estado del servidor
+```bash
+# Ver conexiones activas, archivos abiertos y locks
+smbstatus
+
+# Solo procesos (conexiones)
+smbstatus -p
+
+# Solo shares en uso
+smbstatus -S
+
+# Solo archivos bloqueados
+smbstatus -L
+```
+
+### smbcontrol - Control de demonios
+```bash
+# Recargar configuracion sin reiniciar
+smbcontrol all reload-config
+
+# Cerrar conexiones de un usuario
+smbcontrol smbd close-share shareN
+
+# Forzar desconexion de un usuario
+smbcontrol smbd kill-client-ip 192.168.1.100
+```
+
+### net - Herramienta multiusos
+```bash
+# Unir a dominio AD
+net ads join -U administrador
+
+# Ver info del dominio
+net ads info
+
+# Listar shares remotos
+net rpc share list -S servidor -U admin
+
+# Ver usuarios del servidor
+net rpc user list -S servidor -U admin
+
+# Sincronizar reloj con DC (necesario para Kerberos)
+net time set -S dc.empresa.local
+```
+
+> **Para el examen:** `testparm` es la primera herramienta a usar cuando Samba no funciona como se espera — valida la configuracion y muestra errores. `smbcontrol all reload-config` recarga la configuracion sin interrumpir conexiones activas.
+
 ## Archivos de configuración principales
 
 - `/etc/samba/smb.conf` - Configuración principal de Samba

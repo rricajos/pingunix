@@ -244,6 +244,128 @@ DefaultRoot ~
 
 > **Para el examen:** ProFTPD usa la directiva `DefaultRoot ~` para confinar usuarios, equivalente a `chroot_local_user=YES` en vsftpd. Su sintaxis de configuración recuerda a la de Apache.
 
+## Registro y monitorizacion de vsftpd
+
+### Configuracion de logs
+
+```bash
+# Habilitar log de transferencias (formato xferlog)
+xferlog_enable=YES
+xferlog_file=/var/log/vsftpd.log
+
+# Usar formato propio de vsftpd (mas detallado)
+log_ftp_protocol=YES
+
+# Log de vsftpd con formato dual (xferlog + vsftpd)
+xferlog_std_format=NO
+dual_log_enable=YES
+vsftpd_log_file=/var/log/vsftpd.log
+```
+
+### Formato de xferlog
+
+```
+Thu Jan 15 14:30:00 2024 1 192.168.1.100 1048576 /home/user/file.tar.gz b _ o r user ftp 0 * c
+```
+
+| Campo | Significado |
+|-------|-------------|
+| Fecha y hora | Momento de la transferencia |
+| Duracion (seg) | Tiempo que tardo la transferencia |
+| IP remota | Direccion del cliente |
+| Tamano (bytes) | Tamano del archivo transferido |
+| Ruta | Archivo transferido |
+| `a`/`b` | ASCII o Binary (modo de transferencia) |
+| `o`/`i`/`d` | Outgoing (descarga) / Incoming (subida) / Delete |
+| `r`/`a` | Usuario real / anonimo |
+
+### Monitorizar conexiones activas
+
+```bash
+# Ver conexiones FTP activas
+ss -tlnp | grep :21
+
+# Conexiones de datos (modo pasivo)
+ss -tlnp | grep -E ':3[0-9]{4}'
+
+# Procesos vsftpd activos
+ps aux | grep vsftpd
+```
+
+> **Para el examen**: `xferlog_std_format=YES` usa el formato estandar de xferlog compatible con otras herramientas. `log_ftp_protocol=YES` registra todos los comandos FTP enviados por el cliente (util para depuracion pero genera muchos logs).
+
+---
+
+## Modos de ejecucion: standalone vs xinetd
+
+### Modo standalone (por defecto)
+
+vsftpd se ejecuta como daemon independiente, escuchando permanentemente en el puerto 21:
+
+```bash
+# En /etc/vsftpd.conf
+listen=YES          # IPv4 standalone
+listen_ipv6=YES     # IPv6 standalone (mutuamente excluyente con listen)
+
+# Gestion con systemd
+systemctl start vsftpd
+systemctl enable vsftpd
+```
+
+### Modo xinetd (bajo demanda)
+
+vsftpd se inicia solo cuando llega una conexion, gestionado por xinetd:
+
+```bash
+# En /etc/vsftpd.conf
+listen=NO
+
+# En /etc/xinetd.d/vsftpd
+service ftp
+{
+  socket_type = stream
+  wait        = no
+  user        = root
+  server      = /usr/sbin/vsftpd
+  per_source  = 5
+  instances   = 200
+  no_access   = 10.0.0.0/8
+}
+```
+
+| Aspecto | Standalone | xinetd |
+|---------|-----------|--------|
+| Inicio | Siempre activo | Bajo demanda |
+| Recursos | Consume memoria permanentemente | Consume solo cuando hay conexiones |
+| Rendimiento | Mejor para servidores ocupados | Mejor para poco trafico |
+| Control de acceso | Via configuracion de vsftpd | Via xinetd (hosts, rate limiting) |
+| Gestion | systemd | xinetd |
+
+> **Para el examen**: `listen=YES` y `listen_ipv6=YES` son mutuamente excluyentes en vsftpd. No se pueden activar ambos simultaneamente. Para soportar IPv4 e IPv6, usar `listen_ipv6=YES` que escucha en ambas pilas en la mayoria de sistemas.
+
+---
+
+## vsftpd con PAM
+
+vsftpd usa PAM para autenticacion. El archivo de configuracion PAM es:
+
+```bash
+# /etc/pam.d/vsftpd
+auth    required  pam_listfile.so  item=user sense=deny file=/etc/ftpusers onerr=succeed
+auth    required  pam_unix.so
+account required  pam_unix.so
+session required  pam_unix.so
+```
+
+El flujo de autenticacion es:
+1. PAM verifica que el usuario NO este en `/etc/ftpusers` (lista negra del sistema)
+2. PAM verifica las credenciales contra `/etc/shadow`
+3. vsftpd aplica sus propias listas (`userlist_enable`, `userlist_file`)
+
+> **Para el examen**: `/etc/ftpusers` es procesado por PAM ANTES que las listas de vsftpd. Un usuario en `/etc/ftpusers` no puede conectarse aunque este en la lista blanca de vsftpd.
+
+---
+
 ## Restricciones y buenas prácticas
 
 - **Deshabilitar FTP anónimo** salvo que sea estrictamente necesario

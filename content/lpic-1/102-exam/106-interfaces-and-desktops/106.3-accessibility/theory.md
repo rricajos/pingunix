@@ -215,7 +215,114 @@ En sistemas GNOME modernos, el teclado en pantalla esta integrado en GNOME Shell
 
 ---
 
-## 6. Activacion de las funciones de accesibilidad
+## 6. Arquitectura de accesibilidad en Linux
+
+### AT-SPI2 (Assistive Technology Service Provider Interface)
+AT-SPI2 es el **framework** que conecta las aplicaciones con las tecnologias de asistencia (como Orca):
+
+```
+Aplicacion GTK/Qt/Web
+       ↓ (expone interfaz accesible)
+    AT-SPI2 (bus D-Bus)
+       ↓ (transmite eventos)
+    Orca / brltty / otro cliente
+       ↓ (produce salida)
+    Speech Dispatcher → eSpeak-NG (voz)
+    brltty → Pantalla Braille (tacto)
+```
+
+- Las aplicaciones **exponen** su contenido via AT-SPI2 (botones, texto, menus)
+- Los lectores de pantalla **consumen** esa informacion y la presentan al usuario
+- Funciona sobre **D-Bus** (session bus)
+- Es el estandar de accesibilidad para escritorios Linux modernos
+
+> **Para el examen**: AT-SPI2 es el puente entre las aplicaciones y las tecnologias de asistencia. Sin AT-SPI2, Orca no puede leer el contenido de las aplicaciones.
+
+### Speech Dispatcher
+**Speech Dispatcher** (speechd) es el intermediario entre los lectores de pantalla y los motores de sintesis de voz:
+
+```bash
+# Probar Speech Dispatcher directamente
+spd-say "Hola, esto es una prueba"
+spd-say -l es "Hola en espanol"
+
+# Listar modulos de sintesis disponibles
+spd-say -L
+
+# Listar voces disponibles
+spd-say -I
+
+# Configuracion
+/etc/speech-dispatcher/speechd.conf
+~/.config/speech-dispatcher/speechd.conf
+```
+
+Motores TTS soportados por Speech Dispatcher:
+| Motor | Descripcion |
+|-------|-------------|
+| **eSpeak-NG** | Compacto, multiidioma, el mas comun |
+| **Festival** | Motor de la Universidad de Edimburgo, voces de alta calidad |
+| **Pico TTS** | Motor de SVOX/Google, voces naturales |
+| **MBROLA** | Motor basado en difonos, requiere voces adicionales |
+
+> **Para el examen**: La cadena completa es: **Orca** → **Speech Dispatcher** → **eSpeak-NG** (u otro motor TTS). Cada componente tiene un rol distinto.
+
+---
+
+## 7. Accesibilidad en el gestor de sesiones (Display Manager)
+
+### Accesibilidad en GDM (GNOME Display Manager)
+GDM incluye soporte de accesibilidad desde la pantalla de login:
+
+- Boton de accesibilidad en la pantalla de inicio de sesion
+- Permite activar **lector de pantalla**, **zoom** y **alto contraste** antes de iniciar sesion
+- Esto es critico para usuarios ciegos que necesitan accesibilidad desde el primer momento
+
+### Accesibilidad en la consola (sin entorno grafico)
+Para usuarios que trabajan sin X11/Wayland:
+
+- **brltty**: Soporte Braille en TTY (el unico que funciona sin GUI)
+- **espeakup**: Modulo que conecta eSpeak con la consola de texto (speakup)
+- **speakup**: Lector de pantalla integrado en el kernel para consolas de texto
+
+```bash
+# Verificar si speakup esta cargado
+lsmod | grep speakup
+
+# espeakup conecta speakup con eSpeak
+systemctl status espeakup
+```
+
+> **Para el examen**: **speakup** funciona en la consola de texto (TTY) sin necesidad de X11. **Orca** requiere un escritorio grafico (GNOME/KDE). **brltty** funciona en ambos contextos.
+
+---
+
+## 8. Accesibilidad web y aplicaciones
+
+### WAI-ARIA y aplicaciones accesibles
+Las aplicaciones deben implementar correctamente las interfaces de accesibilidad para que Orca pueda leerlas:
+
+- **GTK**: Soporte nativo via ATK/AT-SPI2
+- **Qt**: Soporte nativo via QAccessible/AT-SPI2
+- **Firefox**: Soporte completo de WAI-ARIA para contenido web
+- **LibreOffice**: Soporte completo de accesibilidad
+
+### Variables de entorno relevantes
+```bash
+# Activar accesibilidad para aplicaciones GTK
+export GTK_MODULES=gail:atk-bridge
+
+# Activar soporte AT-SPI2 (normalmente automatico)
+export GNOME_ACCESSIBILITY=1
+
+# Forzar accesibilidad en Qt
+export QT_ACCESSIBILITY=1
+export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1
+```
+
+---
+
+## 10. Activacion de las funciones de accesibilidad
 
 ### En GNOME
 - Configuracion > Accesibilidad (o Universal Access)

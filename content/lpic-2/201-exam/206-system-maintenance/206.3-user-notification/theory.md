@@ -240,6 +240,100 @@ ls /run/systemd/ask-password/
 
 > **Para el examen:** `systemd-ask-password` se usa para solicitar contrasenas durante el arranque, como claves de descifrado LUKS. No es una herramienta de notificacion general, sino de interaccion segura con el usuario.
 
+## Notificaciones automatizadas
+
+### Mensajes automaticos en el login con /etc/profile.d/
+
+Los scripts en `/etc/profile.d/` se ejecutan al iniciar sesion en un shell de login. Se pueden usar para mostrar informacion personalizada:
+
+```bash
+# /etc/profile.d/system-info.sh
+#!/bin/bash
+echo "======================================"
+echo " Servidor: $(hostname)"
+echo " Fecha: $(date)"
+echo " Uptime: $(uptime -p)"
+echo " Usuarios: $(who | wc -l) conectados"
+echo " Disco /home: $(df -h /home | awk 'NR==2{print $5}') usado"
+echo "======================================"
+```
+
+```bash
+# Los scripts deben tener permiso de ejecucion
+chmod +x /etc/profile.d/system-info.sh
+```
+
+> **Para el examen**: Los scripts en `/etc/profile.d/` se ejecutan para shells de login (no para shells no interactivos). Son una alternativa dinamica a `/etc/motd` para mostrar informacion actualizada del sistema.
+
+### Notificaciones por cron
+
+Se puede usar `cron` para enviar recordatorios o avisos periodicos:
+
+```bash
+# Enviar aviso de mantenimiento todos los viernes a las 16:00
+0 16 * * 5 /usr/bin/wall "Recordatorio: mantenimiento programado manana sabado a las 3:00 AM"
+
+# Aviso de disco cuando supera el 80%
+*/30 * * * * /usr/local/bin/check-disk-alert.sh
+```
+
+```bash
+# /usr/local/bin/check-disk-alert.sh
+#!/bin/bash
+USO=$(df /home | awk 'NR==2{gsub(/%/,""); print $5}')
+if [ "$USO" -gt 80 ]; then
+  wall "AVISO: /home al ${USO}% de capacidad. Liberar espacio."
+fi
+```
+
+### Mensajes de logout con .bash_logout
+
+El archivo `~/.bash_logout` (o `/etc/bash.bash_logout` para todos los usuarios) se ejecuta al cerrar sesion:
+
+```bash
+# /etc/bash.bash_logout
+echo "Sesion finalizada: $(date)" >> /var/log/user-activity.log
+```
+
+> **Para el examen**: `.bash_logout` se ejecuta al cerrar un shell bash de login. Se puede usar para limpieza, registro o mensajes de despedida.
+
+---
+
+## Mensajeria interactiva entre usuarios
+
+### talk y ytalk
+
+`talk` permite conversacion interactiva en tiempo real entre dos usuarios:
+
+```bash
+# Invitar a un usuario a conversar
+talk usuario@hostname
+
+# ytalk soporta multiples participantes
+ytalk usuario1 usuario2
+```
+
+- La pantalla se divide en dos mitades (una para cada usuario)
+- El usuario receptor ve la invitacion y acepta con `talk remitente@hostname`
+- Requiere que el daemon `talkd` este activo
+- `mesg n` bloquea las invitaciones de talk
+
+### notify-send (escritorios graficos)
+
+Para notificaciones en escritorios graficos:
+
+```bash
+# Enviar notificacion en el escritorio
+notify-send "Mantenimiento" "El servidor se reiniciara en 30 minutos"
+
+# Con icono y urgencia
+notify-send -u critical -i dialog-warning "URGENTE" "Disco al 95%"
+```
+
+> **Para el examen**: `notify-send` solo funciona en entornos graficos con un servicio de notificaciones D-Bus activo. No es una herramienta de servidor, sino de escritorio.
+
+---
+
 ## Resumen de archivos y comandos
 
 | Mecanismo | Momento | Alcance |

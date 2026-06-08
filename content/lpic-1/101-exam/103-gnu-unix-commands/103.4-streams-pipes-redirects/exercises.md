@@ -404,3 +404,41 @@ Que comando usarias para vaciar completamente el contenido de un archivo sin eli
 La forma mas corta de vaciar un archivo en bash es `> archivo.txt`, que redirige "nada" al archivo, sobreescribiendolo con contenido vacio. Alternativas equivalentes son: `cat /dev/null > archivo.txt`, `truncate -s 0 archivo.txt`, o `echo -n > archivo.txt`. Esto es util para limpiar archivos de log sin eliminarlos, ya que el archivo mantiene su inodo y los procesos que lo tienen abierto pueden seguir escribiendo en el.
 
 </details>
+
+---
+
+### Pregunta 24
+Un administrador ejecuta `find / -name "*.log" 2>/dev/null`. Que efecto tiene `2>/dev/null`?
+
+A) Redirige la salida estandar a /dev/null
+B) Redirige los errores de permisos a /dev/null, mostrando solo los resultados
+C) Duplica la salida al archivo /dev/null
+D) Envia tanto stdout como stderr a /dev/null
+
+<details>
+<summary>Respuesta</summary>
+
+**B) Redirige los errores de permisos a /dev/null, mostrando solo los resultados**
+
+`2>/dev/null` redirige el descriptor de archivo 2 (stderr) a `/dev/null`, descartando los mensajes de error. En el caso de `find`, cuando se busca desde `/`, se generan muchos errores "Permission denied" para directorios sin acceso. Redirigir stderr permite ver solo los archivos encontrados (stdout, descriptor 1) sin ruido de errores. `>/dev/null` (sin el 2) redigiria stdout. `&>/dev/null` o `>/dev/null 2>&1` redigiria ambos (stdout y stderr).
+
+</details>
+
+---
+
+### Pregunta 25
+Cual es la diferencia entre `comando | tee archivo.txt` y `comando > archivo.txt`?
+
+A) `tee` comprime la salida, `>` no
+B) `tee` escribe al archivo Y muestra en pantalla, `>` solo escribe al archivo
+C) `tee` anade al final del archivo, `>` lo sobreescribe
+D) No hay diferencia, son equivalentes
+
+<details>
+<summary>Respuesta</summary>
+
+**B) `tee` escribe al archivo Y muestra en pantalla, `>` solo escribe al archivo**
+
+`tee` lee de stdin y escribe simultaneamente a stdout (pantalla) y a uno o mas archivos. Es como una "T" que bifurca el flujo de datos. `comando > archivo.txt` redirige stdout solo al archivo, sin mostrar nada en pantalla. `tee -a` anade al archivo en lugar de sobreescribir (equivalente a `>>`). Se puede usar `tee` con multiples archivos: `comando | tee archivo1.txt archivo2.txt`. Es especialmente util para registrar la salida de un comando sin perder la visualizacion interactiva.
+
+</details>

@@ -412,3 +412,41 @@ Que comando usarias para ejecutar un proceso en segundo plano que sobreviva al c
 `nohup` hace que el proceso ignore la senal SIGHUP que se envia al cerrar la terminal o la sesion SSH. `> backup.log 2>&1` redirige tanto stdout como stderr al archivo `backup.log`. El `&` al final ejecuta el proceso en segundo plano. Sin la redireccion explicita, `nohup` redigiria la salida a `nohup.out` por defecto. Alternativas modernas incluyen usar `screen` o `tmux` que proporcionan sesiones completas persistentes.
 
 </details>
+
+---
+
+### Pregunta 24
+Un proceso esta ejecutandose en segundo plano con `./script.sh &`. Cual comando lo trae de vuelta al primer plano (foreground)?
+
+A) `front`
+B) `fg`
+C) `bg`
+D) `resume`
+
+<details>
+<summary>Respuesta</summary>
+
+**B) `fg`**
+
+`fg` (foreground) trae el trabajo mas reciente en segundo plano al primer plano. Se puede especificar un trabajo concreto con `fg %N` donde N es el numero de trabajo (mostrado por `jobs`). `bg` hace lo contrario: reanuda un trabajo parado en segundo plano. `front` y `resume` no son comandos estandar de bash. Para ver los trabajos en segundo plano se usa `jobs`. Para suspender un proceso en primer plano se usa `Ctrl+Z`, que envia SIGTSTP.
+
+</details>
+
+---
+
+### Pregunta 25
+Cual es la diferencia entre `kill -9 PID` y `kill -15 PID`?
+
+A) `-9` es mas lento pero seguro, `-15` es rapido pero arriesgado
+B) `-9` termina inmediatamente sin permitir limpieza, `-15` permite al proceso terminar ordenadamente
+C) `-9` envia SIGTERM, `-15` envia SIGKILL
+D) No hay diferencia, ambos terminan el proceso de la misma forma
+
+<details>
+<summary>Respuesta</summary>
+
+**B) `-9` termina inmediatamente sin permitir limpieza, `-15` permite al proceso terminar ordenadamente**
+
+`kill -15` (o simplemente `kill`) envia **SIGTERM** (signal 15), que solicita al proceso terminar de forma ordenada. El proceso puede capturar esta senal, cerrar archivos, liberar recursos y salir limpiamente. `kill -9` envia **SIGKILL** (signal 9), que termina el proceso inmediatamente sin posibilidad de captura ni limpieza. SIGKILL solo debe usarse como ultimo recurso cuando SIGTERM no funciona. La opcion C invierte los numeros: SIGKILL es 9 y SIGTERM es 15.
+
+</details>

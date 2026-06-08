@@ -192,6 +192,126 @@ Una vez identificada la tendencia, las acciones posibles incluyen:
 
 > **Para el examen:** Debes entender que la prediccion no es solo sobre hardware. Optimizar software, ajustar configuraciones y redistribuir servicios son estrategias validas que deben considerarse antes de comprar hardware nuevo.
 
+## Herramientas de monitorizacion a largo plazo
+
+### collectd - Recopilador de metricas del sistema
+
+`collectd` es un daemon que recopila metricas del sistema periodicamente y las almacena para analisis posterior.
+
+```bash
+# Archivo de configuracion principal
+/etc/collectd/collectd.conf
+# o en algunas distribuciones
+/etc/collectd.conf
+```
+
+#### Arquitectura de plugins de collectd
+
+| Tipo | Funcion | Ejemplos |
+|------|---------|----------|
+| **Read plugins** | Recopilan datos | cpu, memory, disk, interface, load, df |
+| **Write plugins** | Almacenan datos | rrdtool, csv, network, write_graphite |
+| **Log plugins** | Registran eventos | logfile, syslog |
+| **Filter plugins** | Procesan datos | match_regex, target_scale |
+
+```apache
+# Ejemplo de configuracion de collectd
+LoadPlugin cpu
+LoadPlugin memory
+LoadPlugin disk
+LoadPlugin interface
+LoadPlugin df
+LoadPlugin rrdtool
+
+<Plugin rrdtool>
+  DataDir "/var/lib/collectd/rrd"
+  CacheFlush 120
+  CacheTimeout 300
+</Plugin>
+
+<Plugin df>
+  MountPoint "/home"
+  MountPoint "/var"
+  ReportByDevice false
+  ReportInodes true
+</Plugin>
+
+<Plugin interface>
+  Interface "eth0"
+  IgnoreSelected false
+</Plugin>
+```
+
+> **Para el examen**: collectd usa una arquitectura de plugins. Los plugins de lectura recopilan datos, los de escritura los almacenan. El plugin `rrdtool` es el mas comun para almacenamiento. Los datos se guardan en `/var/lib/collectd/rrd/`.
+
+### MRTG (Multi Router Traffic Grapher)
+
+MRTG genera graficos HTML de trafico de red a partir de datos SNMP:
+
+```bash
+# Configuracion principal
+/etc/mrtg/mrtg.cfg
+
+# Generar configuracion automatica desde un router SNMP
+cfgmaker community@192.168.1.1 > /etc/mrtg/mrtg.cfg
+
+# Ejecutar MRTG (normalmente via cron cada 5 minutos)
+mrtg /etc/mrtg/mrtg.cfg
+
+# Crear paginas indice
+indexmaker /etc/mrtg/mrtg.cfg > /var/www/html/mrtg/index.html
+```
+
+> **Para el examen**: MRTG se ejecuta periodicamente (cada 5 minutos via cron) y genera graficos HTML estaticos. Usa SNMP para obtener datos de red. `cfgmaker` genera la configuracion automaticamente a partir de un dispositivo SNMP.
+
+### Cacti - Interfaz web para RRDtool
+
+Cacti es un frontend web para `rrdtool` que proporciona graficos interactivos y gestion de dispositivos SNMP:
+
+- Interfaz web para configurar que datos recopilar
+- Usa `rrdtool` como motor de almacenamiento y graficos
+- Soporta templates para facilitar la configuracion
+- Poller (recopilador) que se ejecuta via cron cada 5 minutos
+- Soporta SNMP y scripts personalizados como fuentes de datos
+
+### Nagios y capacidad
+
+Nagios se centra en alertas, pero sus datos son utiles para prediccion:
+
+```bash
+# Configurar umbrales de alerta en Nagios
+define service {
+  use                 generic-service
+  host_name           servidor-web
+  service_description Disk Usage
+  check_command       check_disk!20%!10%!/home
+  # Alerta warning al 80%, critica al 90%
+}
+```
+
+- Los **datos de performance** de los plugins se pueden exportar a graficos
+- **PNP4Nagios** o **Grafana** pueden consumir estos datos para analisis de tendencias
+- El historial de alertas indica cuando se superaron umbrales (picos de uso)
+
+### SNMP para recopilacion de datos
+
+SNMP (Simple Network Management Protocol) es fundamental para recopilar datos de dispositivos de red y servidores:
+
+```bash
+# Consultar uso de CPU via SNMP
+snmpwalk -v2c -c community servidor .1.3.6.1.4.1.2021.11
+
+# Consultar uso de disco
+snmpwalk -v2c -c community servidor .1.3.6.1.4.1.2021.9
+
+# Consultar interfaces de red
+snmpwalk -v2c -c community servidor .1.3.6.1.2.1.2.2
+```
+
+> **Para el examen**: SNMP es el protocolo estandar para recopilar metricas de dispositivos de red. MRTG y Cacti dependen de SNMP para obtener datos. Las versiones son SNMPv1 (sin seguridad), SNMPv2c (community strings), SNMPv3 (autenticacion y cifrado).
+
+---
+
 ## Documentacion y comunicacion
 
 La planificacion de capacidad debe documentarse:

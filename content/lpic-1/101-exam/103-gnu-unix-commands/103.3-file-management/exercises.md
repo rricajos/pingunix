@@ -398,3 +398,41 @@ Que comando usarias para crear la estructura de directorios `proyecto/src/main` 
 `mkdir -p` crea directorios y todos los directorios padre necesarios que no existan. Sin `-p`, `mkdir proyecto/src/main` fallaria si `proyecto/` o `proyecto/src/` no existen. La opcion `-p` tambien tiene la ventaja de que no da error si el directorio ya existe, lo que la hace segura para usar en scripts. La opcion `-m` permite especificar permisos al crear: `mkdir -p -m 755 proyecto/src/main`.
 
 </details>
+
+---
+
+### Pregunta 24
+Un administrador ejecuta `cp -a /home/usuario/ /backup/`. Que hace la opcion `-a` que no hace `-r`?
+
+A) Copia solo archivos, no directorios
+B) Preserva permisos, propietarios, timestamps y enlaces simbolicos
+C) Copia solo los archivos modificados recientemente
+D) Comprime los archivos durante la copia
+
+<details>
+<summary>Respuesta</summary>
+
+**B) Preserva permisos, propietarios, timestamps y enlaces simbolicos**
+
+La opcion `-a` (archive) equivale a `-dpR`: preserva enlaces simbolicos (`-d`), copia recursivamente (`-R`) y preserva todos los atributos como permisos, propietario, grupo y timestamps (`--preserve=all`). Con `-r` solo se copia recursivamente pero los atributos pueden no preservarse (los symlinks se siguen en lugar de copiarse como symlinks, los permisos pueden cambiar segun la umask). Para backups y migraciones, `-a` es la opcion correcta.
+
+</details>
+
+---
+
+### Pregunta 25
+Cual comando lista archivos en el directorio actual ordenados por tamano, mostrando el mas grande primero?
+
+A) `ls -lS`
+B) `ls -lt`
+C) `ls -lr`
+D) `ls -ls`
+
+<details>
+<summary>Respuesta</summary>
+
+**A) `ls -lS`**
+
+`ls -lS` (S mayuscula) lista archivos en formato largo ordenados por tamano de mayor a menor. `-lt` ordena por tiempo de modificacion (mas reciente primero). `-lr` invierte el orden (reverse) de la ordenacion por defecto (alfabetica). `-ls` (s minuscula) muestra el tamano en bloques pero ordena alfabeticamente. Para invertir el orden de tamano (menor primero): `ls -lSr`. Para ver tamanos legibles: `ls -lSh`.
+
+</details>

@@ -425,3 +425,41 @@ Escribe el comando para abrir el archivo `datos.txt` con vi directamente en la l
 La opcion `+N` de vi permite abrir un archivo posicionando el cursor directamente en la linea N. `vi +25 datos.txt` abre el archivo en la linea 25. Tambien se puede usar `vi +/patron archivo.txt` para abrir en la primera coincidencia de un patron de busqueda. Estas opciones de linea de comandos son utiles cuando se conoce la ubicacion exacta donde se necesita editar.
 
 </details>
+
+---
+
+### Pregunta 24
+En vi, un administrador esta en modo normal y quiere eliminar desde la posicion del cursor hasta el final de la linea. Cual comando es correcto?
+
+A) `dw`
+B) `D`
+C) `dd`
+D) `d0`
+
+<details>
+<summary>Respuesta</summary>
+
+**B) `D`**
+
+`D` (mayuscula) elimina desde la posicion del cursor hasta el final de la linea actual. Es equivalente a `d$`. `dw` elimina desde el cursor hasta el inicio de la siguiente palabra. `dd` elimina la linea completa (incluyendo lo que esta antes del cursor). `d0` elimina desde el cursor hasta el inicio de la linea (hacia atras). Recordar: `D` = borrar hasta el final; `C` = cambiar hasta el final (borra y entra en modo insercion); `dd` = linea entera.
+
+</details>
+
+---
+
+### Pregunta 25
+En vi, cual comando en modo normal reemplaza todas las ocurrencias de "foo" por "bar" en todo el archivo?
+
+A) `:s/foo/bar/`
+B) `:%s/foo/bar/g`
+C) `:replace foo bar`
+D) `:%r/foo/bar/`
+
+<details>
+<summary>Respuesta</summary>
+
+**B) `:%s/foo/bar/g`**
+
+`:%s/foo/bar/g` usa el comando de sustitucion (`:s`) con rango `%` (todo el archivo) y flag `g` (global, todas las ocurrencias en cada linea). Sin `%`, solo se aplicaria a la linea actual. Sin `g`, solo se reemplazaria la primera ocurrencia en cada linea. `:s/foo/bar/` solo reemplaza la primera ocurrencia en la linea actual. Para pedir confirmacion en cada reemplazo se anade `c`: `:%s/foo/bar/gc`. `:replace` y `:%r` no son comandos validos de vi.
+
+</details>

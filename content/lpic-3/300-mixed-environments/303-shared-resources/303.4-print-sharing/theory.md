@@ -233,6 +233,116 @@ Se pueden definir impresoras individuales con configuración específica:
    directory mask = 0775
 ```
 
+## CUPS: Configuracion del servidor de impresion
+
+### Protocolo IPP (Internet Printing Protocol)
+
+CUPS usa IPP como protocolo nativo de comunicacion:
+
+- **Puerto 631** (TCP): Interfaz web y comunicacion IPP
+- Basado en HTTP/1.1 con extensiones para impresion
+- Soporta autenticacion, cifrado y descubrimiento automatico
+- Los clientes Linux y macOS usan IPP de forma nativa
+
+```bash
+# Acceder a la interfaz web de CUPS
+# Abrir navegador en http://localhost:631
+
+# Ver version de CUPS
+cupsd -v
+```
+
+### /etc/cups/cupsd.conf - Configuracion del daemon CUPS
+
+```apache
+# Escuchar en localhost y red local
+Listen localhost:631
+Listen /var/run/cups/cups.sock
+
+# Interfaz web accesible desde la red local
+<Location />
+  Order allow,deny
+  Allow @LOCAL
+</Location>
+
+# Administracion solo desde localhost
+<Location /admin>
+  Order allow,deny
+  Allow localhost
+  AuthType Default
+  Require user @SYSTEM
+</Location>
+
+# Compartir impresoras en la red
+Browsing On
+BrowseLocalProtocols dnssd
+DefaultAuthType Basic
+
+# Logging
+LogLevel warn
+MaxLogSize 1m
+```
+
+### Gestion de impresoras con lpadmin
+
+```bash
+# Anadir impresora
+lpadmin -p LaserJet -E -v socket://192.168.1.50:9100 -m everywhere
+
+# Anadir impresora con driver PPD
+lpadmin -p ColorLaser -E -v ipp://192.168.1.51/ipp/print \
+  -P /usr/share/ppd/HP/hp-color_laserjet.ppd
+
+# Establecer impresora por defecto
+lpadmin -d LaserJet
+
+# Eliminar impresora
+lpadmin -x LaserJet
+
+# Configurar opciones de impresora
+lpadmin -p LaserJet -o media=A4 -o sides=two-sided-long-edge
+
+# Aceptar/rechazar trabajos en cola
+cupsaccept LaserJet
+cupsreject LaserJet
+
+# Habilitar/deshabilitar impresion
+cupsenable LaserJet
+cupsdisable LaserJet -r "En mantenimiento"
+```
+
+### cupsctl - Configuracion rapida de CUPS
+
+```bash
+# Compartir impresoras en la red
+cupsctl --share-printers
+
+# Deshabilitar comparticion
+cupsctl --no-share-printers
+
+# Permitir administracion remota
+cupsctl --remote-admin
+
+# Activar logging de debug
+cupsctl --debug-logging
+
+# Ver configuracion actual
+cupsctl
+```
+
+> **Para el examen:** `lpadmin` es la herramienta principal para gestionar impresoras CUPS desde CLI. `cupsctl` modifica la configuracion de cupsd.conf sin editarlo manualmente. `cupsaccept`/`cupsreject` controlan la cola; `cupsenable`/`cupsdisable` controlan la impresion fisica.
+
+### Diferencia entre accept/reject y enable/disable
+
+| Estado | Comando | Efecto |
+|--------|---------|--------|
+| Accepting + Enabled | Normal | Acepta trabajos y los imprime |
+| Accepting + Disabled | Cola activa, impresora parada | Acepta trabajos pero no imprime (mantenimiento) |
+| Rejecting + Enabled | No acepta nuevos trabajos | Imprime los que ya estan en cola, rechaza nuevos |
+| Rejecting + Disabled | Totalmente parada | No acepta trabajos ni imprime |
+
+---
+
 ## Diagnóstico de problemas
 
 ```bash

@@ -436,3 +436,41 @@ Escribe el comando grep con expresiones regulares extendidas que busca lineas qu
 La opcion `-E` activa las expresiones regulares extendidas (ERE), donde `{3}` funciona directamente sin necesidad de escapar con `\`. El patron `[0-9]{3}` busca exactamente 3 digitos consecutivos. En BRE (sin `-E`), el mismo patron se escribiria como `[0-9]\{3\}`. Nota: este patron encontrara lineas que contengan 3 o mas digitos seguidos. Para exactamente 3 se usaria `\b[0-9]{3}\b` con limites de palabra.
 
 </details>
+
+---
+
+### Pregunta 24
+En una expresion regular basica (BRE), cual es la forma correcta de buscar lineas que contengan exactamente "error" o "Error" (case insensitive para la primera letra)?
+
+A) `grep '[eE]rror' archivo.txt`
+B) `grep '(e|E)rror' archivo.txt`
+C) `grep '{eE}rror' archivo.txt`
+D) `grep 'e?Error' archivo.txt`
+
+<details>
+<summary>Respuesta</summary>
+
+**A) `grep '[eE]rror' archivo.txt`**
+
+Los corchetes `[eE]` definen una clase de caracteres que coincide con una 'e' minuscula o 'E' mayuscula. Esta sintaxis funciona tanto en BRE como en ERE. La opcion B usa `(e|E)` que es sintaxis ERE y en BRE requeriria escapar los parentesis: `\(e\|E\)`. La opcion C usa `{}` que en regex son cuantificadores, no clases de caracteres. La opcion D usa `?` que en BRE es literal. Alternativamente, `grep -i 'error'` buscaria case-insensitive.
+
+</details>
+
+---
+
+### Pregunta 25
+Cual es la diferencia entre los metacaracteres `*` y `+` en expresiones regulares extendidas (ERE)?
+
+A) `*` coincide con uno o mas; `+` coincide con cero o mas
+B) `*` coincide con cero o mas; `+` coincide con uno o mas
+C) `*` coincide con cualquier caracter; `+` coincide con digitos
+D) No hay diferencia, son equivalentes
+
+<details>
+<summary>Respuesta</summary>
+
+**B) `*` coincide con cero o mas; `+` coincide con uno o mas**
+
+En ERE, `*` es un cuantificador que significa "cero o mas repeticiones" del elemento anterior, mientras que `+` significa "una o mas repeticiones". La diferencia clave es que `+` requiere al menos una coincidencia. Por ejemplo, `[0-9]*` coincide con cadenas vacias y con numeros, pero `[0-9]+` solo coincide si hay al menos un digito. En BRE, `+` no existe como metacaracter (es literal); se necesita `\+` o usar `grep -E`. `?` es otro cuantificador: "cero o una" repeticion.
+
+</details>
